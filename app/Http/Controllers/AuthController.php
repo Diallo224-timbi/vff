@@ -11,6 +11,7 @@ use App\Mail\welcomEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerificationMail;
 use Illuminate\Validation\ValidationException;
+use App\Models\Structure;
 
 
 
@@ -35,22 +36,22 @@ class AuthController extends Controller
         return view('auth.login');
     }
     // fonction pour gérer la soumission du formulaire d'inscription
-public function login(Request $request)
-{
-    // 1️⃣ Validation du formulaire
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
+    public function login(Request $request)
+    {
+        // 1️⃣ Validation du formulaire
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    // 2️⃣ Récupérer l'utilisateur par email
-    $user = User::where('email', $request->email)->first();
+        // 2️⃣ Récupérer l'utilisateur par email
+        $user = User::where('email', $request->email)->first();
 
-    // 3️⃣ Vérifier si l'utilisateur existe
-    if (!$user) {
-        return back()
-            ->withErrors(['email' => 'Identifiants invalides'])
-            ->withInput();
+        // 3️⃣ Vérifier si l'utilisateur existe
+        if (!$user) {
+            return back()
+                ->withErrors(['email' => 'Identifiants invalides'])
+                ->withInput();
     }
 
     // 4️⃣ Vérifier si le compte est validé
@@ -66,27 +67,33 @@ public function login(Request $request)
     }
 
     // 6️⃣ Si le mot de passe est incorrect
-    return back()
-        ->withErrors(['email' => 'Identifiants invalides'])
-        ->withInput();
-}
+        return back()
+            ->withErrors(['email' => 'Identifiants invalides'])
+            ->withInput();
+    }
     // fonction pour gérer la soumission du formulaire d'inscription
 
-
-public function signUp(Request $request){
+    public function showRegistrationForm()
+    {
+        $structures = Structure::orderBy('nom_structure')->get();
+        return view('auth.register', compact('structures'));
+    }
+    public function signUp(Request $request){
     try {
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|unique:users,email',
-            'confirmEmail' => 'required|email|same:email',
             'password' => 'required|string|min:6',
             'adresse' => 'required|string|max:255',
             'ville' => 'required|string|max:255',
             'code_postal' => 'required|string|max:10',
+            'id_structure' => 'nullable|exists:structure,id',
+            'chart' => 'required|boolean',
         ],[
             'confirmEmail.same' => 'L\'adresse e-mail de confirmation ne correspond pas.',
             'email.unique' => 'Cette adresse e-mail est déjà utilisée.',
+            'chart' => 'Vous devez accepter la charte pour vous inscrire.',
         ]);
 
         $user = User::create([
@@ -97,6 +104,8 @@ public function signUp(Request $request){
             'adresse' => $request->adresse,
             'ville' => $request->ville,
             'code_postal' => $request->code_postal,
+            'id_structure' => $request->id_structure,
+            'chart' => $request->chart,
         ]);
 
         // Nettoyer les sessions liées à la vérification email

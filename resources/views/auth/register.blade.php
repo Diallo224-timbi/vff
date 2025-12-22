@@ -149,6 +149,28 @@
                         @enderror
                     </div>
                 </div>
+                <!-- Structure -->
+                <div>
+                    <label for="id_structure" class="block text-sm font-medium text-gray-700">Structure</label>
+                    <select name="id_structure" id="id_structure" required
+                        class="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- Sélectionnez votre structure --</option>
+                        @foreach($structures as $structure)
+                            <option value="{{ $structure->id }}">{{ $structure->nom_structure }}</option>
+                        @endforeach
+                    </select>
+                    @error('id_structure') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                </div>
+                <!-- Chart opt-in -->
+                <div class="flex items-center space-x-2 mt-4">
+                    <input type="checkbox" name="chart" id="charte_accepted" class="h-4 w-4 text-blue-600 border-gray-300 rounded" required value="1">
+                    <label for="charte_accepted" class="text-sm text-gray-700">
+                        J'accepte la <a href="{{ route('charte') }}" class="text-blue-600 underline">charte</a>
+                    </label>
+                </div>
+                @error('charte_accepted')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
 
                 <!-- Bouton -->
                 <div>

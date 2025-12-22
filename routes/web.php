@@ -18,6 +18,8 @@ Route::get('/dashboard', function () {
 
 // Routes pour l'authentification
 Route::get('/register',[AuthController::class, 'showSignUp'])->name('register');
+// 
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 // afficher le formulaire d'inscription
 Route::post('/register',[AuthController::class, 'signUp'])->name('registration.register');
 // gérer la soumission du formulaire d'inscription
@@ -59,6 +61,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
+
+// route pour la charte
+
+Route::get('/charte', function () {
+    return view('auth.charte');
+})->name('charte');
 
 
 

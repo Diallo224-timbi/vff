@@ -28,6 +28,8 @@ class User extends Authenticatable
         'ville',
         'code_postal',
         'created_at',
+        'id_structure',
+        'chart'
     ];
 
     /**

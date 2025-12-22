@@ -20,17 +20,14 @@
                     <p class="text-gray-700 font-semibold">Email: <span class="font-normal">{{ $user->email }}</span></p>
                 </div>
                 <div class="flex-1 min-w-[150px]">
-                    <p class="text-gray-700 font-semibold">Phone: <span class="font-normal">{{ $user->phone }}</span></p>
+                    <p class="text-gray-700 font-semibold">Ville: <span class="font-normal">{{ $user->ville }}</span></p>
                     <p class="text-gray-700 font-semibold">Adresse: <span class="font-normal">{{ $user->adresse }}</span></p>
                     <p class="text-gray-700 font-semibold">Code postal: <span class="font-normal">{{ $user->code_postal }}</span></p>
                 </div>
                 <div class="flex-1 min-w-[150px]">
-                    <p class="text-gray-700 font-semibold">Ville: <span class="font-normal">{{ $user->ville }}</span></p>
-                     <p class="text-gray-700 font-semibold">Date de création:
-                        <span class="font-normal">
-                            {{ $user->created_at ? $user->created_at->format('d/m/Y H:i') : 'Inconnue' }}
-                        </span>
-                    </p> 
+                    <p class="text-gray-700 font-semibold">Phone: <span class="font-normal">{{ $user->phone }}</span></p>
+                    <p class="text-gray-700 font-semibold">Date de création: <span class="font-normal">{{ $user->created_at ? $user->created_at->format('d/m/Y H:i') : 'Inconnue' }}</span></p>
+                    <p>Charte acceptée: <span class="font-normal">{{ $user->chart ? 'Oui' : 'Non' }}</span></p>
                 </div>
                 <div class="flex-1 min-w-[100px] text-center">
                     <p class="text-gray-700 font-semibold">État: 
@@ -46,10 +43,11 @@
                             </form>
                         @endif
                         @if($user->etatV !== 'bloqué')
-                            <form action="{{ route('admin.users.block', $user->id) }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200">Bloquer</button>
-                            </form>
+                            <button type="button"
+                                onclick="openBlockModal({{ $user->id }}, '{{ $user->name }}')"
+                                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200">
+                                Bloquer
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -57,4 +55,38 @@
         @endforeach
     </div>
 </div>
+
+<!-- Modal de blocage -->
+<div id="blockModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg w-96 p-6 relative">
+        <h3 class="text-lg font-semibold mb-4">Bloquer l'utilisateur <span id="modalUserName"></span></h3>
+        <form id="blockForm" method="POST" action="">
+            @csrf
+            <div class="mb-4">
+                <label for="reason" class="block font-medium text-gray-700">Motif du blocage</label>
+                <textarea name="reason" id="reason" required placeholder="Motif du blocage" class="w-full border border-gray-300 rounded-lg p-2"></textarea>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeBlockModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Annuler</button>
+                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Bloquer</button>
+            </div>
+        </form>
+        <button type="button" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeBlockModal()">✕</button>
+    </div>
+</div>
+
+<script>
+function openBlockModal(userId, userName) {
+    const modal = document.getElementById('blockModal');
+    modal.classList.remove('hidden');
+    document.getElementById('modalUserName').innerText = userName;
+    const form = document.getElementById('blockForm');
+    form.action = `/admin/users/${userId}/block`;
+}
+
+function closeBlockModal() {
+    document.getElementById('blockModal').classList.add('hidden');
+    document.getElementById('reason').value = '';
+}
+</script>
 @endsection
