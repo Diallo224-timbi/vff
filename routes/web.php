@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
+
 
 
 
@@ -37,4 +40,27 @@ Route::post('/send-verification-code', [AuthController::class, 'sendVerification
 
 // Route pour vérifier le code de vérification
 Route::post('/verify-code', [AuthController::class, 'verifyCode'])->name('verifyCode');
+
+
+// Route pour le tableau de bord admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
+    //Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
+    //Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
+});
+
+// Aroute pour le tableau de bord admin
+Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.users');
+Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
+Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
+
+// Route pour le profil utilisateur
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+
+
+
 

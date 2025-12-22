@@ -22,6 +22,12 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'etatV',
+        'role',
+        'adresse',
+        'ville',
+        'code_postal',
+        'created_at',
     ];
 
     /**
@@ -45,5 +51,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getEtatVAttribute($value)
+    {
+        return strtolower($value);
+    }
+
+    /**
+     * Vérifie si l'utilisateur est validé
+     *
+     * @return bool
+     */
+    public function isValidated(): bool
+    {
+        return $this->etatV === 'valider';
     }
 }

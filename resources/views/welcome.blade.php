@@ -3,69 +3,223 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Bienvenue — Soutien contre la violence faite aux femmes</title>
+  <title>Accueil — Plateforme multi-acteurs contre la violence faite aux femmes</title>
   <style>
-    /* Styles simples, autonomes et accessibles */
-    :root{--accent:#b30059;--muted:#f6f3f6;--text:#222}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; color:var(--text);background:linear-gradient(180deg,#fff 0%,#f9f6f8 100%)}
-    .container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
-    .card{width:100%;max-width:1000px;background:white;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden;display:grid;grid-template-columns:1fr 420px}
-    .hero{padding:48px;display:flex;flex-direction:column;gap:18px}
-    .eyebrow{display:inline-block;padding:6px 12px;border-radius:999px;background:var(--muted);font-weight:600;font-size:13px;color:var(--accent);width:max-content}
-    h1{margin:0;font-size:28px;line-height:1.05}
-    p.lead{margin:0;color:#444}
-    .links{margin-top:14px;display:flex;gap:12px}
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;text-decoration:none}
-    .btn-primary{background:linear-gradient(90deg,var(--accent),#ff3b7a);color:white}
-    .btn-ghost{background:transparent;border:2px solid #eee;color:var(--accent)}
-    .side{background:linear-gradient(180deg,#fdeef6,#fff);padding:28px;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center}
-    .logo{font-weight:800;color:var(--accent);font-size:18px}
-    .stat{font-size:14px;color:#333}
-    .hotline{background:#fff;border-radius:10px;padding:12px;width:100%;box-shadow:0 6px 18px rgba(179,0,89,.06);text-align:center}
-    .hotline strong{display:block;font-size:20px;color:var(--accent)}
-    footer{padding:18px 24px;border-top:1px solid #f1eaf0;font-size:13px;color:#666}
-    @media (max-width:900px){.card{grid-template-columns:1fr;padding:0}.side{order:2;padding:20px}.hero{padding:24px}}
+    :root {
+      --accent: #b30059;
+      --muted: #f6f3f6;
+      --text: #222;
+    }
+
+    html, body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: var(--text);
+      background: linear-gradient(180deg,#fff 0%,#f9f6f8 100%);
+      scroll-behavior: smooth;
+    }
+
+    .container { max-width: 1200px; margin: auto; padding: 2rem; }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      padding: 60px 20px;
+      background: linear-gradient(180deg, #fdeef6, #fff);
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin: 0;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .hero .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      margin: 6px;
+      transition: transform 0.2s;
+    }
+
+    .hero .btn-primary {
+      background: linear-gradient(90deg, var(--accent), #ff3b7a);
+      color: white;
+      border: none;
+    }
+
+    .hero .btn-primary:hover { transform: translateY(-2px); }
+
+    .hero .btn-ghost {
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .actors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .actor-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .actor-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .actor-card h3 {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .actor-card p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .resources {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .resource {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .resource:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+
+    .resource h4 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid #f1eaf0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    @media(max-width:768px){
+      .hero h1 { font-size: 2rem; }
+    }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <div class="card" role="main">
-      <section class="hero" aria-labelledby="welcome-title">
-        <span class="eyebrow">Bienvenue</span>
-        <h1 id="welcome-title">Soutien & ressources — Violence faite aux femmes</h1>
-        <p class="lead">Cette plateforme propose des informations, de l'aide et un espace sûr pour s'orienter vers des services d'accompagnement. Si tu es en danger immédiat, appelle les services d'urgence locaux.</p>
+    
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Plateforme multi-acteurs contre la violence faite aux femmes</h1>
+      <p>Notre objectif est de fournir un espace sécurisé où victimes, associations, professionnels et bénévoles peuvent se connecter, partager des ressources et accéder à de l'aide.</p>
+      <div>
+        <a href="{{ route('login') }}" class="btn btn-primary">Se connecter</a>
+        <a href="{{ route('register') }}" class="btn btn-ghost">S'inscrire</a>
+      </div>
+    </section>
 
-        <div class="links" role="navigation" aria-label="Accès rapide">
-          <a class="btn btn-primary" href="{{ route('login') }}">Se connecter</a>
-          <a class="btn btn-ghost" href="{{ route('register') }}">S'inscrire</a>
+    <!-- Acteurs -->
+    <section>
+      <h2 style="color:var(--accent);margin-bottom:20px;">Nos acteurs partenaires</h2>
+      <div class="actors">
+        <div class="actor-card">
+          <h3>Association A</h3>
+          <p>Accompagnement psychologique et juridique pour les victimes.</p>
         </div>
-
-        <div style="margin-top:18px;color:#444;font-size:14px;line-height:1.4">
-          <strong>Confidentialité & sécurité</strong>
-          <p style="margin:6px 0 0">Ton anonymat et ta sécurité sont prioritaires. Les informations partagées ici doivent être traitées avec discrétion.</p>
+        <div class="actor-card">
+          <h3>Service B</h3>
+          <p>Numéro d’urgence et hébergement sécurisé.</p>
         </div>
-      </section>
-
-      <aside class="side" aria-labelledby="side-title">
-        <div class="logo">Plateforme d'appui</div>
-        <div class="stat">Ressources locales • Numéros d'aide • Conseils pratiques</div>
-
-        <div class="hotline" role="contentinfo">
-          <div>Numéro d'urgence / Ligne d'écoute</div>
-          <strong>+33 0X XX XX XX XX</strong>
-          <div style="font-size:13px;color:#555;margin-top:8px">Disponible 24h/24</div>
+        <div class="actor-card">
+          <h3>Professionnel C</h3>
+          <p>Consultations spécialisées et soutien médical.</p>
         </div>
-
-        <div style="font-size:13px;color:#555;text-align:center">Tu peux créer un compte sécurisé pour accéder à des guides, signaler et trouver de l'aide.</div>
-      </aside>
-
-      <footer style="grid-column:1/-1">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-          <div>© {{ date('Y') }} — Respect, soutien et ressources</div>
-          <div style="font-size:13px;color:#888">Confidentiel • Accessible</div>
+        <div class="actor-card">
+          <h3>Bénévoles D</h3>
+          <p>Guides, conseils et accompagnement dans vos démarches.</p>
         </div>
-      </footer>
-    </div>
+      </div>
+    </section>
+
+    <!-- Resources -->
+    <section>
+      <h2 style="color:var(--accent);margin-bottom:20px;">Ressources et conseils</h2>
+      <div class="resources">
+        <div class="resource">
+          <h4>Guide pratique pour se protéger</h4>
+          <p>Conseils pour sécuriser votre environnement et savoir vers qui se tourner en urgence.</p>
+        </div>
+        <div class="resource">
+          <h4>Numéros d’aide</h4>
+          <p>Lignes d’écoute disponibles 24h/24 et 7j/7.</p>
+        </div>
+        <div class="resource">
+          <h4>Information légale</h4>
+          <p>Vos droits et démarches pour signaler un abus ou une violence.</p>
+        </div>
+      </div>
+    </section>
+    
   </div>
+
+  <footer>
+    © {{ date('Y') }} — Plateforme multi-acteurs de soutien contre la violence faite aux femmes. Confidentiel & sécurisé.
+  </footer>
+
+  <script>
+    // Légère animation scroll sur les sections
+    const sections = document.querySelectorAll('section');
+    window.addEventListener('scroll', () => {
+      sections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if(rect.top < window.innerHeight * 0.85) {
+          sec.style.opacity = 1;
+          sec.style.transform = 'translateY(0)';
+          sec.style.transition = 'all 0.8s ease-out';
+        } else {
+          sec.style.opacity = 0;
+          sec.style.transform = 'translateY(30px)';
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>

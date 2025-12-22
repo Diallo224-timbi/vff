@@ -9,3 +9,32 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.menu-link {
+    @apply text-xl p-3 rounded-full transition-all duration-300 hover:bg-blue-500/20 hover:scale-110;
+}
+
+.tooltip {
+    @apply absolute -bottom-9 left-1/2 -translate-x-1/2 
+    bg-gray-800 text-white text-xs px-3 py-1 rounded-md
+    opacity-0 group-hover:opacity-100 transition duration-300
+    pointer-events-none whitespace-nowrap;
+}
+
+.btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all;
+}
+
+.btn-outline {
+    @apply border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-lg transition-all;
+}
+
+.dropdown {
+    @apply absolute right-0 mt-3 w-44 bg-gray-800 text-white rounded-lg shadow-lg
+    opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100
+    transition-all duration-300 origin-top-right;
+}
+
+.dropdown-item {
+    @apply flex items-center gap-2 px-4 py-2 hover:bg-gray-700 transition;
+}

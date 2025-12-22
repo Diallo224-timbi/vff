@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,74 +13,111 @@
 
     <title>@yield('title', 'Mon site')</title>
 </head>
+
 <body class="bg-gray-100 text-gray-900">
 
-    <!-- Navbar -->
-   <!-- Navbar -->
-<nav class="bg-gray-900 text-white p-4 flex justify-between items-center">
-    <ul class="flex space-x-4">
-        <li>
-            <a href="/" class="hover:text-gray-300">
-               <i class="bx bx-home"></i> 
-               <span>Home</span>
-            </a>
-        </li>
+<!-- Navbar -->
+<nav class="sticky top-0 z-50 backdrop-blur-md bg-gray-900/80 border-b border-gray-700 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
-        @auth
-            <!-- Liens visibles uniquement pour les utilisateurs connectés -->
-            <li>
-                <a href="/cartographie" class="hover:text-gray-300">
-                    <i class="bx bx-map"></i>
-                    <span>Cartographie</span>
-                </a>
-            </li>
-            <li>
-                <a href="/forum" class="hover:text-gray-300">
-                    <i class="bx bx-chat"></i>
-                    <span>Forum</span>
-                </a>
-            </li>
-            <li>
-                <a href="/projet" class="hover:text-gray-300">
-                    <i class="bx bx-briefcase"></i>
-                    <span>Projet</span>
-                </a>
-            </li>
-        @endauth
-    </ul>
+        <!-- Logo -->
+        <div class="flex items-center space-x-2 text-xl font-bold text-white">
+            <i class="bx bx-layer text-blue-400 text-2xl animate-pulse"></i>
+            <span class="">pmvff</span>
+        </div>
 
-    <div class="flex space-x-4">
-        @guest
-            <!-- Lien login uniquement pour les invités -->
-            <a href="{{ route('login') }}" class="flex items-center space-x-1 hover:text-gray-300">
-                <i class='bx bx-log-in'></i>
-                <span>Login</span>
-            </a>
-            <a href="{{ route('register') }}" class="flex items-center space-x-1 hover:text-gray-300">
-                <i class='bx bx-user-plus'></i>
-                <span>Register</span>
-            </a>
-        @else
-            <!-- Bouton logout pour les utilisateurs connectés -->
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="flex items-center space-x-1 hover:text-gray-300 bg-transparent border-none cursor-pointer">
-                    <i class='bx bx-log-out'></i>
-                    <span>Logout</span>
-                </button>
-            </form>
-        @endguest
+        <!-- Menu -->
+        <ul class="flex items-center space-x-6 text-white">
+
+            <!-- Item -->
+            <li class="group relative">
+                <a href="/" class="menu-link">
+                    <i class="bx bx-home">Accueil</i>
+                </a>
+                <span class="tooltip">Retour à la page d'accueil pour voir nos publication</span>
+            </li>
+
+            @auth
+            <li class="group relative">
+                <a href="/cartographie" class="menu-link">
+                    <i class="bx bx-map">Cartographie</i>
+                </a>
+                <span class="tooltip">Acceder à la cartographie</span>
+            </li>
+
+            <li class="group relative">
+                <a href="/forum" class="menu-link">
+                    <i class="bx bx-chat">Forum</i>
+                </a>
+                <span class="tooltip">Participer aux forum</span>
+            </li>
+
+            <li class="group relative">
+                <a href="/projet" class="menu-link">
+                    <i class="bx bx-briefcase">Projets</i>
+                </a>
+                <span class="tooltip">Visiter les projets en cours</span>
+            </li>
+              <li class="group relative">
+                <a href="/agenda" class="menu-link">
+                    <i class="bx bx-calendar">Agenda</i>
+                </a>
+                <span class="tooltip">Consulter l'agenda</span>
+            </li>
+
+            @if(auth()->user()->role === 'admin')
+            <li class="group relative">
+                <a href="{{ route('admin.users') }}" class="menu-link text-yellow-400">
+                    <i class="bx bx-shield">users</i>
+                </a>
+                <span class="tooltip">Administration</span>
+            </li>
+          
+            @endif
+            @endauth
+        </ul>
+
+        <!-- User -->
+        <div class="flex items-center space-x-4">
+            @guest
+                <a href="{{ route('login') }}" class="btn-primary">Login</a>
+                <a href="{{ route('register') }}" class="btn-outline">Register</a>
+            @else
+                <div class="relative group">
+                    <div class="flex items-center space-x-2 cursor-pointer">
+                        <i class="bx bx-user-circle text-2xl text-blue-400"></i>
+                        <span class="text-white font-medium">
+                            {{ Auth::user()->name }}
+                        </span>
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div class="dropdown">
+                        <a href="{{ route('profile.show') }}" class="dropdown-item">
+                            <i class="bx bx-user"></i> Profil
+                        </a>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="dropdown-item w-full text-left">
+                                <i class="bx bx-log-out"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endguest
+        </div>
     </div>
 </nav>
 
 
-    <!-- Content -->
-    <main class="container mx-auto mt-6 px-4">
-        @yield('content')
-    </main>
+<!-- Content -->
+<main class="container mx-auto mt-6 px-4">
+    @yield('content')
+</main>
 
-    <!-- Scripts -->
-    @yield('scripts')
+<!-- Scripts -->
+@yield('scripts')
 
 </body>
 </html>
