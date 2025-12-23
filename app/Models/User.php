@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'prenom',
         'email',
         'password',
         'phone',
@@ -69,4 +70,19 @@ class User extends Authenticatable
     {
         return $this->etatV === 'valider';
     }
+    //relation avec la table structure
+    public function structure()
+    {
+        return $this->belongsTo(Structure::class, 'id_structure');
+    }
+    //relation avec la table threads
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
+    }
+    //relation avec la table comments
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    } 
 }

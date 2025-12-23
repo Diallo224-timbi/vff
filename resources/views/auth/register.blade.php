@@ -73,6 +73,12 @@
                         @error('name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
+                        <label for="prenom" class="block text-sm font-medium text-gray-700 mt-4">Prénom</label>
+                        <input type="text" name="prenom" id="prenom" required
+                            class="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500">
+                        @error('prenom')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Téléphone -->

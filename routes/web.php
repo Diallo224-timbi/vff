@@ -5,6 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CategoryController;
 
 
 
@@ -56,6 +59,9 @@ Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.user
 Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
 Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
 
+// route pour modifier les utilisateurs
+Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+
 // Route pour le profil utilisateur
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -67,6 +73,26 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/charte', function () {
     return view('auth.charte');
 })->name('charte');
+
+// Routes pour le forum et les commentaires
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+    Route::get('/forum/{thread}', [ForumController::class, 'show'])->name('forum.show');
+    Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
+    Route::post('/forum/{thread}/comment', [CommentController::class, 'store'])->name('comment.store');
+});
+
+
+// Routes pour la gestion des catégories
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+});
+
+
 
 
 

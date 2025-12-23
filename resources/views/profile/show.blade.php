@@ -22,12 +22,20 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Nom (non modifiable) -->
+                @if(auth()->user()->role === 'admin')
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">Nom</label>
-                    <input type="text" value="{{ $user->name }}" disabled 
-                        class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 cursor-not-allowed">
+                    <input type="text" value="{{ $user->prenom }} {{ $user->name }}" name="name" 
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                 </div>
-
+            @else 
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-1">Nom</label>
+                    <input type="text" name="name" value="{{ $user->prenom }} {{ $user->name }}" disabled grised
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none ">
+                    <b class="tooltip">Vous ne pouvez pas modifier votre nom. Veuillez contacter un administrateur.</b>
+                </div>
+            @endif
                 <!-- Email -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-1">Email</label>
@@ -63,7 +71,7 @@
                         class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                 </div>
             </div>
-
+           
             <!-- Bouton -->
             <div class="text-center mt-6">
                 <button type="submit" 

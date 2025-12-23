@@ -82,6 +82,7 @@ class AuthController extends Controller
     try {
         $request->validate([
             'name' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
@@ -98,6 +99,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
+            'prenom' => $request->prenom,
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
