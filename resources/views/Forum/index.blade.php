@@ -34,12 +34,12 @@
             <h2 class="text-xl font-bold text-gray-800">Catégories</h2>
         </div>
         <div class="flex flex-wrap gap-3">
-            <a href="{{ route('forum.index') }}" 
+            <a href="{{ route('categories.index') }}" 
                class="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-all duration-300 group">
                <i class="fas fa-layer-group text-gray-600"></i>
                <span class="font-medium">Toutes</span>
             </a>
-            @foreach($categories as $category)
+            @foreach($categoriesLimite as $category)
                 <a href="{{ route('forum.index', ['category' => $category->id]) }}" 
                    class="flex items-center gap-2 px-4 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-full transition-all duration-300 group">
                    <i class="fas fa-folder text-blue-500"></i>
@@ -251,9 +251,7 @@
                     </div>
                     <p class="text-sm text-gray-500 mt-1">Choisissez la catégorie la plus appropriée pour votre sujet</p>
                 </div>
-            </form>
-            
-            <div class="modal-footer bg-gray-50 p-6 border-t border-gray-200">
+                <div class="modal-footer bg-gray-50 p-6 border-t border-gray-200">
                 <div class="flex flex-col sm:flex-row gap-3 w-full">
                     <button type="button" 
                             class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all duration-300 font-semibold flex items-center justify-center gap-2"
@@ -261,13 +259,16 @@
                         <i class="fas fa-times"></i>
                         Annuler
                     </button>
-                    <button type="submit" form="newThreadModal" 
+                    <button type="submit"  
                             class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                         <i class="fas fa-paper-plane"></i>
                         Publier le sujet
                     </button>
                 </div>
             </div>
+            </form>
+            
+            
         </div>
     </div>
 </div>

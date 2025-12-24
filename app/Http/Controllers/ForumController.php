@@ -12,7 +12,9 @@ class ForumController extends Controller
     public function index() {
         $threads = Thread::latest()->with('user', 'category')->paginate(10);
         $categories = Category::all();
-        return view('forum.index', compact('threads', 'categories'));
+        $categories->loadCount('threads');
+        $categoriesLimite = Category::latest()->take(5)->get(); // récupère les 10 dernières catégories
+        return view('forum.index', compact('threads', 'categories', 'categoriesLimite'));
     }
 
     public function show(Thread $thread) {
