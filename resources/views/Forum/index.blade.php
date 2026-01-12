@@ -45,7 +45,7 @@
                    <i class="fas fa-folder text-blue-500"></i>
                    <span class="font-medium text-blue-700">{{ $category->name }}</span>
                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full">
-                       {{ $category->threads_count ?? 0 }}
+                          <!--{{ $category->threads_count ?? 0 }}-->
                    </span>
                 </a>
             @endforeach

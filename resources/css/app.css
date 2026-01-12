@@ -38,3 +38,23 @@
 .dropdown-item {
     @apply flex items-center gap-2 px-4 py-2 hover:bg-gray-700 transition;
 }
+a {
+    text-decoration: none;
+}
+/* Menu actif */
+.menu-link.active {
+    background-color: #59BEC9; /* couleur secondaire de ta charte */
+    color: #2D2926 !important; /* texte sombre pour contraste */
+    font-weight: 600;
+    border-radius: 0.5rem; /* arrondir légèrement le bouton */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Effet hover */
+.menu-link:hover {
+    background-color: #59BEC9;
+    color: #2D2926 !important;
+}
+
+
