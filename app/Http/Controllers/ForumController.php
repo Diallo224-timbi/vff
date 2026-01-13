@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Thread;
 use App\Models\Category;
+use App\Models\ThreadReaction;  
 
 class ForumController extends Controller
 {
@@ -38,5 +39,24 @@ class ForumController extends Controller
 
         return redirect()->route('forum.show', $thread)->with('success', 'Sujet créé !');
     }
+
+    public function react(Request $request, Thread $thread)
+    {
+        $request->validate([
+            'type' => 'required|in:like,dislike',
+        ]);
+
+        $reaction = ThreadReaction::updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'thread_id' => $thread->id,
+            ],
+            [
+                'type' => $request->type,
+            ]
+        );
+
+        return back()->with('success', 'Réaction enregistrée !');
+    }   
 
 }

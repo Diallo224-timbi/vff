@@ -8,6 +8,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ThreadController;
+
 
 
 
@@ -81,6 +83,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/forum/{thread}', [ForumController::class, 'show'])->name('forum.show');
     Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
     Route::post('/forum/{thread}/comment', [CommentController::class, 'store'])->name('comment.store');
+
+    Route::prefix('forum')->name('forum.')->group(function () {
+        Route::get('/{thread}/edit', [ForumController::class, 'edit'])->name('edit');      // <--- EDIT
+        Route::put('/{thread}', [ForumController::class, 'update'])->name('update');       // <--- UPDATE
+        Route::delete('/{thread}', [ForumController::class, 'destroy'])->name('destroy');  // <--- DELETE
+        Route::post('/{thread}/react', [ForumController::class, 'react'])->name('react');
+    });
+
+    //commentaire routes
+    Route::prefix('comment')->name('comment.')->group(function () {
+        Route::get('/{comment}/edit', [CommentController::class, 'edit'])->name('edit');         // <--- EDIT
+        Route::put('/{comment}', [CommentController::class, 'update'])->name('update');        // <--- UPDATE
+        Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');   // <--- DELETE
+        Route::post('/{comment}/react', [CommentController::class, 'react'])->name('react');
+    }); 
 });
 
 
@@ -90,7 +107,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
+
+Route::post('/forum/{thread}/react', [ThreadController::class, 'react'])->name('forum.react');
 
 
 

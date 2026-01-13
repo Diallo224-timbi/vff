@@ -43,39 +43,45 @@
                 <span class="tooltip">Retour à la page d'accueil pour voir nos publication</span>
             </li>
             @auth
-            <li class="group relative">
-                <a href="/cartographie" class="menu-link  text-white hover:text-[#50bd3a]">
-                    <i class="bx bx-map">Cartographie</i>
-                </a>
-                <span class="tooltip">Acceder à la cartographie</span>
-            </li>
-            <li class="group relative">
-                <a href="/forum" class="menu-link text-white hover:text-[#59BEC9] {{ request()->is('forum*') ? 'active' : '' }}">
-                    <i class="bx bx-chat">Forum</i>
-                </a>
-                <span class="tooltip">Participer aux forum</span>
-            </li>
-            <li class="group relative">
-                <a href="/projet" class="menu-link  text-white hover:text-[#59BEC9]">
-                    <i class="bx bx-briefcase">Projets</i>
-                </a>
-                <span class="tooltip">Visiter les projets en cours</span>
-            </li>
-            <li class="group relative">
-                <a href="/agenda" class="menu-link text-white hover:text-[#59BEC9]">
-                    <i class="bx bx-calendar">Agenda</i>
-                </a>
-                <span class="tooltip">Consulter l'agenda</span>
-            </li>
-            @if(auth()->user()->role === 'admin')
                 <li class="group relative">
-                    <a href="{{ route('admin.users') }}"  class="px-4 py-2 rounded-lg transition
-                    menu-link text-white hover:text-[#59BEC9] {{ request()->is('admin*') ? 'active' : '' }}">
-                        <i class="bx bx-shield">users</i>
+                    <a href="/cartographie" class="menu-link  text-white hover:text-[#50bd3a]">
+                        <i class="bx bx-map">Cartographie</i>
                     </a>
-                    <span class="tooltip">Administration</span>
+                    <span class="tooltip">Acceder à la cartographie</span>
                 </li>
-            @endif
+                <li class="group relative">
+                    <a href="/forum" class="menu-link text-white hover:text-[#59BEC9] {{ request()->is('forum*') ? 'active' : '' }}">
+                        <i class="bx bx-chat">Forum</i>
+                    </a>
+                    <span class="tooltip">Participer aux forum</span>
+                </li>
+                <li class="group relative">
+                    <a href="/wiki" class="menu-link text-white hover:text-[#59BEC9]">
+                        <i class="bx bx-book-open">Ressources</i>
+                    </a>
+                    <span class="tooltip">Partager vos ressources</span>
+                </li>
+                <li class="group relative">
+                    <a href="/projet" class="menu-link  text-white hover:text-[#59BEC9]">
+                        <i class="bx bx-briefcase">Projets</i>
+                    </a>
+                    <span class="tooltip">Visiter les projets en cours</span>
+                </li>
+                <li class="group relative">
+                    <a href="/agenda" class="menu-link text-white hover:text-[#59BEC9]">
+                        <i class="bx bx-calendar">Agenda</i>
+                    </a>
+                    <span class="tooltip">Consulter l'agenda</span>
+                </li>
+                @if(auth()->user()->role === 'admin')
+                    <li class="group relative">
+                        <a href="{{ route('admin.users') }}"  class="px-4 py-2 rounded-lg transition
+                        menu-link text-white hover:text-[#59BEC9] {{ request()->is('admin*') ? 'active' : '' }}">
+                            <i class="bx bx-shield">users</i>
+                        </a>
+                        <span class="tooltip">Administration</span>
+                    </li>
+                @endif
             @endauth
         </ul>
 

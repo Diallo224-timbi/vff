@@ -24,4 +24,17 @@ class Comment extends Model
     {
         return $this->belongsTo(Thread::class);
     }
+    //relation avec la table comment_reactions
+    public function reactions()
+    {
+        return $this->hasMany(CommentReaction::class);
+    }
+    public function likes():int
+    {
+        return $this->reactions()->where('type', 'like')->count();
+    }
+    public function dislikes():int
+    {
+        return $this->reactions()->where('type', 'dislike')->count();
+    }   
 }

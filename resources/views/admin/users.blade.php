@@ -102,7 +102,11 @@
                     <p class="card-text flex items-center gap-3"><i class="fa fa-map-marked-alt text-blue-600"></i> <strong>Adresse:</strong></p>
                     <p class="card-text ml-6">
                         <a target="_blank"
-                           href="https://www.google.com/maps/search/{{ urlencode($user->structure->adresse . ', ' . $user->structure->code_postal . ' ' . $user->structure->ville) }}"
+                           href="https://www.google.com/maps/search/{{ urlencode(
+                                                                                    ($user->structure?->adresse ?? '') . ', ' .
+                                                                                    ($user->structure?->code_postal ?? '') . ' ' .
+                                                                                    ($user->structure?->ville ?? '')
+                                                                    ) }}"
                            class="hover:underline text-blue-600">
                             {{ $user->structure->adresse ?? '—' }}, {{ $user->structure->code_postal ?? '' }} {{ $user->structure->ville ?? '' }}
                         </a>
@@ -167,66 +171,98 @@
 
 <!-- MODAL MODIFICATION UTILISATEUR -->
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
+
+            <!-- HEADER -->
             <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
+                <h5 class="modal-title" id="editUserModalLabel">
+                    Modifier l'utilisateur
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <!-- BODY -->
             <div class="modal-body">
-                <form id="editUserForm" method="POST" action="{{ route('admin.users.update', 0)}}">
+                <form id="editUserForm" method="POST" action="{{ route('admin.users.update', 0) }}">
                     @csrf
                     @method('PUT')
-                    
-                    <div class="mb-3">
-                        <label for="modalPrenom" class="form-label">Prénom</label>
-                        <input type="text" name="prenom" id="modalPrenom" class="form-control" required>
+
+                    <!-- Prénom / Nom -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="modalPrenom" class="form-label">Prénom</label>
+                            <input type="text" name="prenom" id="modalPrenom" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="modalName" class="form-label">Nom</label>
+                            <input type="text" name="name" id="modalName" class="form-control" required>
+                        </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="modalName" class="form-label">Nom</label>
-                        <input type="text" name="name" id="modalName" class="form-control" required>
+
+                    <!-- Email / Téléphone -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="modalEmail" class="form-label">Email</label>
+                            <input type="email" name="email" id="modalEmail" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="modalPhone" class="form-label">Téléphone</label>
+                            <input type="text" name="phone" id="modalPhone" class="form-control">
+                        </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="modalEmail" class="form-label">Email</label>
-                        <input type="email" name="email" id="modalEmail" class="form-control" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="modalPhone" class="form-label">Téléphone</label>
-                        <input type="text" name="phone" id="modalPhone" class="form-control">
-                    </div>
+
+                    <!-- Adresse -->
                     <div class="mb-3">
                         <label for="modalAdresse" class="form-label">Adresse</label>
                         <input type="text" name="adresse" id="modalAdresse" class="form-control">
                     </div>
-                    <div class="mb-3">
-                        <label for="modalVille" class="form-label">Ville</label>
-                        <input type="text" name="ville" id="modalVille" class="form-control">
+
+                    <!-- Ville / Code postal -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="modalVille" class="form-label">Ville</label>
+                            <input type="text" name="ville" id="modalVille" class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="modalCodePostal" class="form-label">Code postal</label>
+                            <input type="text" name="code_postal" id="modalCodePostal" class="form-control">
+                        </div>
                     </div>
+
+                    <!-- Structure -->
                     <div class="mb-3">
-                        <label for="modalCodePostal" class="form-label">Code Postal</label>
-                        <input type="text" name="code_postal" id="modalCodePostal" class="form-control">
-                    </div>
-                    <div class="mt-6">
                         <label for="modalStructure" class="form-label">Structure</label>
-                        <select name="id_structure" id="modalStructure" class="form-control w-full">
-                            <option value="{{$user->id_structure}}" id="modalStructureOption"></option>
+                        <select name="id_structure" id="modalStructure" class="form-select">
+                            <option value="{{ $user->id_structure }}" id="modalStructureOption"></option>
                             @foreach($structures as $structure)
-                                <option value="{{ $structure->id }}">{{ $structure->nom_structure }}</option>
+                                <option value="{{ $structure->id }}">
+                                    {{ $structure->nom_structure }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
+
                 </form>
             </div>
+
+            <!-- FOOTER -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="submit" form="editUserForm" class="btn btn-primary">Enregistrer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <button type="submit" form="editUserForm" class="btn btn-primary">
+                    Enregistrer
+                </button>
             </div>
+
         </div>
     </div>
 </div>
+
 
 <!-- MODAL BLOCAGE MOTIF -->
 <div class="modal fade" id="blockReasonModal" tabindex="-1" aria-labelledby="blockReasonModalLabel" aria-hidden="true">
