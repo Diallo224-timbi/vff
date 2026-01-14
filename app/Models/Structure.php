@@ -20,11 +20,16 @@ class Structure extends Model
         'ville',
         'email',
         'code_postal',
+        'pays',
+        'responsable',
     ];
     //relation un a plusieurs entre Structure et User
      public function users()
     {
         return $this->hasMany(User::class, 'id_structure');
     }
-   
+   public function members_count()
+    {
+        return $this->hasMany(User::class, 'id_structure')->count();
+    }
 }

@@ -9,8 +9,8 @@ use App\Http\Controllers\ForumController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ThreadController;
-
-
+use App\Http\Controllers\StructureController;
+use App\Http\Controllers\AnnuaireController;
 
 
 
@@ -111,8 +111,30 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
-
+// Route pour réagir à un fil de discussion
 Route::post('/forum/{thread}/react', [ThreadController::class, 'react'])->name('forum.react');
+
+// Routes pour la gestion des structures
+Route::middleware('auth')->group(function () {
+    Route::get('/structures', [StructureController::class, 'index'])->name('structures.index');
+    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
+    Route::get('/structures/{structure}/edit', [StructureController::class, 'edit'])->name('structures.edit');
+    Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
+    Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
+    Route::get('/structures/map', [StructureController::class, 'map'])->name('structures.map');
+
+});
+
+// Routes pour l'annuaire
+Route::middleware('auth')->group(function () {
+     
+        Route::get('/annuaire', [AnnuaireController::class, 'index'])->name('annuaire.index');
+        Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
+        Route::get('/annuaire/export/pdf', [AnnuaireController::class, 'exportPdf'])->name('annuaire.export.pdf');
+    });
+
+
 
 
 

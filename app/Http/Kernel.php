@@ -7,6 +7,7 @@ use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\ThrottleRequests;
 
+
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -57,5 +58,6 @@ class Kernel extends HttpKernel
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
         'admin' => AdminMiddleware::class, // ton middleware admin
+
     ];
 }

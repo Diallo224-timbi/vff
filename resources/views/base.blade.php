@@ -43,12 +43,21 @@
                 <span class="tooltip">Retour à la page d'accueil pour voir nos publication</span>
             </li>
             @auth
-                <li class="group relative">
-                    <a href="/cartographie" class="menu-link  text-white hover:text-[#50bd3a]">
-                        <i class="bx bx-map">Cartographie</i>
-                    </a>
-                    <span class="tooltip">Acceder à la cartographie</span>
-                </li>
+               <div class="relative group">
+                    <div class="flex items-center space-x-2 cursor-pointer">
+                        <i class="bx bx-map text-white menu-link hover:text-[#59BEC9]">Cartographie</i>  
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div class="dropdown">
+                        <a href="/annuaire" class="dropdown-item">
+                            <i class="bx bx-address-book"></i> annuaire
+                        </a>   
+                        <a href="/structures/map" class="dropdown-item">
+                            <i class="bx bx-map"></i> carte interactive
+                        </a> 
+                    </div>
+                </div>
                 <li class="group relative">
                     <a href="/forum" class="menu-link text-white hover:text-[#59BEC9] {{ request()->is('forum*') ? 'active' : '' }}">
                         <i class="bx bx-chat">Forum</i>
@@ -73,6 +82,11 @@
                     </a>
                     <span class="tooltip">Consulter l'agenda</span>
                 </li>
+                <li class="group relative">
+                    <a href="/structures" class="menu-link text-white hover:text-[#59BEC9]">
+                        <i class="bx bx-building">Structure</i>
+                    </a>
+                    <span class="tooltip">Acceder à la structure pour ajouter des informations ou faire des modifications</span>
                 @if(auth()->user()->role === 'admin')
                     <li class="group relative">
                         <a href="{{ route('admin.users') }}"  class="px-4 py-2 rounded-lg transition
@@ -126,6 +140,7 @@
 
 <!-- Scripts -->
 <script src="{{ asset('resources/js/forum.js') }}"></script>
+<script src="//unpkg.com/alpinejs" defer></script>
 
 @yield('scripts')
 
