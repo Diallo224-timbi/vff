@@ -43,6 +43,7 @@ class StructureController extends Controller
         // Validation
         $validated = $request->validate([
             'nom_structure' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'adresse' => 'required|string|max:255',
             'ville' => 'nullable|string|max:255',
             'code_postal' => 'nullable|string|max:10',
@@ -84,6 +85,7 @@ class StructureController extends Controller
     {
         $validated = $request->validate([
             'nom_structure' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'adresse' => 'required|string|max:255',
             'ville' => 'nullable|string|max:255',
             'code_postal' => 'nullable|string|max:10',

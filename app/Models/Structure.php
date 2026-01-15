@@ -13,6 +13,7 @@ class Structure extends Model
     protected $table = 'structure';
     protected $fillable = [
         'nom_structure',
+        'description',
         'adresse',
         'contact',
         'latitude',

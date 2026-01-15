@@ -16,15 +16,12 @@
 
         <!-- Actions -->
         <div class="flex space-x-2">
-            <a href="{{ route('annuaire.export.csv') }}"
-               class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition">
-                Export CSV
-            </a>
+            
             <a href="{{ route('annuaire.export.pdf') }}"
                class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition">
                 Export PDF
             </a>
-        </div>
+        </div> 
     </div>
 
     <!-- Barre de recherche -->
@@ -38,19 +35,22 @@
     </div>
 
     <!-- Table responsive -->
-    <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <div class="overflow-xl-auto bg-white rounded-lg">
         <table class="min-w-full text-sm text-left">
-            <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
-                <tr>
-                    <th class="px-3 py-2">ID</th>
-                    <th class="px-3 py-2">Nom</th>
-                    <th class="px-3 py-2">Adresse</th>
-                    <th class="px-3 py-2">Ville</th>
-                    <th class="px-3 py-2">CP</th>
-                    <th class="px-3 py-2">Contact</th>
-                    <th class="px-3 py-2">Email</th>
-                    <th class="px-3 py-2">Responsable</th>
-                    <th class="px-3 py-2 text-center">Membres</th>
+            <thead class="bg-gray-100 text-gray-700 uppercase text-xs ">
+                <tr class="">
+                    <th class="px-3 py-2 border border-gray-300">ID</th>
+                    <th class="px-3 py-2 border border-gray-300">Nom</th>
+                    <th class="px-3 py-2 border border-gray-300">Description</th>
+                    <th class="px-3 py-2 border border-gray-300">Adresse</th>
+                    <th class="px-3 py-2 border border-gray-300">Ville</th>
+                    <th class="px-3 py-2 border border-gray-300">CP</th>
+                    <th class="px-3 py-2 border border-gray-300">Latitude</th>
+                    <th class="px-3 py-2 border border-gray-300">Longitude</th>
+                    <th class="px-3 py-2 border border-gray-300">Contact</th>
+                    <th class="px-3 py-2 border border-gray-300">Email</th>
+                    <th class="px-3 py-2 border border-gray-300">Responsable</th>
+                    <th class="px-3 py-2 text-center border border-gray-300">Membres</th>
                 </tr>
             </thead>
 
@@ -61,19 +61,22 @@
                     x-transition.opacity
                     class="border-t hover:bg-blue-50 transition"
                 >
-                    <td class="px-3 py-2">{{ $structure->id }}</td>
-                    <td class="px-3 py-2 font-semibold text-gray-800">
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->id }}</td>
+                    <td class="px-3 py-2 font-semibold text-gray-800 border border-gray-300">
                         {{ $structure->nom_structure }}
                     </td>
-                    <td class="px-3 py-2">{{ $structure->adresse }}</td>
-                    <td class="px-3 py-2">{{ $structure->ville }}</td>
-                    <td class="px-3 py-2">{{ $structure->code_postal }}</td>
-                    <td class="px-3 py-2">{{ $structure->contact }}</td>
-                    <td class="px-3 py-2 text-blue-600">
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->description }}</td>
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->adresse }}</td>
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->ville }}</td>
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->code_postal }}</td>
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->latitude }}</td>
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->longitude }}</td>
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->contact }}</td>
+                    <td class="px-3 py-2 text-blue-600 border border-gray-300">
                         {{ $structure->email }}
                     </td>
-                    <td class="px-3 py-2">{{ $structure->responsable }}</td>
-                    <td class="px-3 py-2 text-center">
+                    <td class="px-3 py-2 border border-gray-300">{{ $structure->responsable }}</td>
+                    <td class="px-3 py-2 text-center border border-gray-300">
                         <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
                             {{ $structure->members_count() }} 
                         </span>
