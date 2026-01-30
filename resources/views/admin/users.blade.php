@@ -12,7 +12,7 @@
             <p class="text-gray-500 mt-1 text-sm">Administration & validation des comptes</p>
         </div>
         <div class="flex items-center gap-3">
-            <span class="text-sm text-gray-600">Admin</span>
+            <span class="text-sm text-gray-600">{{ auth()->user()->role }}</span>
             <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
@@ -69,6 +69,7 @@
                     <p class="w-16 h-16 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-xl mx-auto mt-2">
                         {{ strtoupper(substr($user->prenom, 0, 1)) }}{{ strtoupper(substr($user->name, 0, 1)) }}
                     </p>
+                    <strong class="text-xs"><i class="fa fa-user-tag text-blue-600">{{ $user->role }}</i> </strong>
                     <p class="card-text flex items-center gap-2 text-gray-700 text-sm mt-2">
                         <i class="fa fa-envelope text-blue-600 text-lg"></i>
                         <strong>Email:</strong>
@@ -149,6 +150,7 @@
                             data-adresse="{{ $user->adresse }}"
                             data-ville="{{ $user->ville }}"
                             data-code-postal="{{ $user->code_postal }}"
+                            data-role="{{ $user->role }}"
                             class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs flex items-center gap-1 edit-user-btn">
                         <i class="fa fa-edit text-[0.6rem]"></i> Modifier
                     </button>
@@ -176,9 +178,9 @@
 
             <!-- HEADER -->
             <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">
+                <h3 class="modal-title " id="editUserModalLabel">
                     Modifier l'utilisateur
-                </h5>
+                </h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -244,8 +246,16 @@
                                 </option>
                             @endforeach
                         </select>
+                    @if(@auth()->user()->role === 'admin')
+                        <label for="modalRole" class="form-label">Rôle</label>
+                        <select name="role" id="modalRole" class="form-select">
+                            <option value="user">user</option>
+                            <option value="moderateur">moderateur</option>
+                            <option value="admin">admin</option>
+                        </select>
+                    @endif
                     </div>
-
+                    
                 </form>
             </div>
 
@@ -344,6 +354,7 @@
             const adresse = this.getAttribute('data-adresse') || '';
             const ville = this.getAttribute('data-ville') || '';
             const codePostal = this.getAttribute('data-code-postal') || '';
+            const role = this.getAttribute('data-role') || '';
             
             // Remplir le formulaire modal
             document.getElementById('modalPrenom').value = prenom;
@@ -355,6 +366,7 @@
             document.getElementById('modalAdresse').value = adresse;
             document.getElementById('modalVille').value = ville;
             document.getElementById('modalCodePostal').value = codePostal;
+            document.getElementById('modalRole').value = role;
 
             
             // Mettre à jour l'action du formulaire

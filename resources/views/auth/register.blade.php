@@ -155,18 +155,41 @@
                         @enderror
                     </div>
                 </div>
+               <!-- Responsable ? -->
+                <div class="mt-4">
+                    <p class="block text-sm font-medium text-gray-700">Souhaitez-vous devenir responsable d'une structure ?</p>
+                    <div class="flex items-center space-x-4 mt-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="is_responsable" value="1" class="responsable-radio" required>
+                            <span>Oui</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="is_responsable" value="0" class="responsable-radio" required>
+                            <span>Non</span>
+                        </label>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">
+                        En répondant "Oui", vous vous engagez à être responsable d'une structure. Sinon, l’administrateur pourra bloquer votre compte et merci d’envoyer votre demande d’adhésion par mail.
+                    </p>
+                    @error('is_responsable')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Structure -->
-                <div>
+                <div class="mt-4" id="structureField">
                     <label for="id_structure" class="block text-sm font-medium text-gray-700">Structure</label>
-                    <select name="id_structure" id="id_structure" required
-                        class="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500">
+                    <select name="id_structure" id="id_structure" class="mt-1 block w-full border border-gray-300 rounded-lg p-3 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Sélectionnez votre structure --</option>
                         @foreach($structures as $structure)
                             <option value="{{ $structure->id }}">{{ $structure->nom_structure }}</option>
                         @endforeach
                     </select>
-                    @error('id_structure') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                    @error('id_structure')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
+
                 <!-- Chart opt-in -->
                 <div class="flex items-center space-x-2 mt-4">
                     <input type="checkbox" name="chart" id="charte_accepted" class="h-4 w-4 text-blue-600 border-gray-300 rounded" required value="1">
@@ -236,6 +259,30 @@ function checkPasswordStrength() {
             break;
     }
 }
+// Script pour afficher/masquer le champ structure
+    document.addEventListener('DOMContentLoaded', () => {
+        const radios = document.querySelectorAll('.responsable-radio');
+        const structureField = document.getElementById('structureField');
+
+        const toggleStructureField = () => {
+            const selected = document.querySelector('.responsable-radio:checked');
+            if (selected && selected.value === "1") {
+                // Si oui → masquer le champ structure
+                structureField.style.display = 'none';
+            } else {
+                // Si non → afficher le champ structure
+                structureField.style.display = 'block';
+            }
+        };
+
+        // Au changement
+        radios.forEach(radio => radio.addEventListener('change', toggleStructureField));
+
+        // Initialisation
+        toggleStructureField();
+    });
+
+
 </script>
 @endif
 @endsection

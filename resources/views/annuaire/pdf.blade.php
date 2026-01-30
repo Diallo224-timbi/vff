@@ -31,7 +31,7 @@
         th, td {
             border: 1px solid #000;
             padding: 5px;
-            font-size: 10px;
+            font-size: 9px;
             text-align: left;
             vertical-align: top;
         }
@@ -60,34 +60,46 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Nom</th>
+            <th>Organisme</th>
             <th>Description</th>
-            <th>Adresse</th>
+            <th>Siège Ville</th>
+            <th>Siège Adresse</th>
+            <th>Catégories</th>
+            <th>Public Cible</th>
+            <th>Zone</th>
+            <th>Type Structure</th>
+            <th>Détails</th>
+            <th>Hébergement</th>
             <th>Ville</th>
             <th>Code Postal</th>
-            <th>Longitude</th>
-            <th>Latitude</th>
-            <th>Contact</th>
-            <th>Email</th>
-            <th>Responsable</th>
-            <th>Membres</th>
+            <th>Adresse</th>
+            <th>Site</th>
         </tr>
     </thead>
     <tbody>
         @foreach($structures as $structure)
         <tr>
             <td>{{ $structure->id }}</td>
-            <td>{{ $structure->nom_structure }}</td>
-            <td>{{ $structure->description }}</td>
-            <td>{{ $structure->adresse }}</td>
-            <td>{{ $structure->ville }}</td>
-            <td>{{ $structure->code_postal }}</td>
-            <td>{{ $structure->longitude }}</td>
-            <td>{{ $structure->latitude }}</td>
-            <td>{{ $structure->contact }}</td>
-            <td>{{ $structure->email }}</td>
-            <td>{{ $structure->responsable }}</td>
-            <td>{{ $structure->members_count() }}</td>
+            <td>{{ $structure->organisme }}</td>
+            <td>{{ $structure->description ?? '-' }}</td>
+            <td>{{ $structure->siege_ville ?? '-' }}</td>
+            <td>{{ $structure->siege_adresse ?? '-' }}</td>
+            <td>{{ $structure->categories ?? '-' }}</td>
+            <td>{{ $structure->public_cible ?? '-' }}</td>
+            <td>{{ $structure->zone ?? '-' }}</td>
+            <td>{{ $structure->type_structure ?? '-' }}</td>
+            <td>{{ $structure->details ?? '-' }}</td>
+            <td>{{ $structure->hebergement ?? '-' }}</td>
+            <td>{{ $structure->ville ?? '-' }}</td>
+            <td>{{ $structure->code_postal ?? '-' }}</td>
+            <td>{{ $structure->adresse ?? '-' }}</td>
+            <td>
+                @if($structure->site)
+                    <a href="{{ $structure->site }}" target="_blank">{{ $structure->site }}</a>
+                @else
+                    -
+                @endif
+            </td>
         </tr>
         @endforeach
     </tbody>
@@ -97,8 +109,6 @@
     Généré le {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}
     <p>Page <span class="pageNumber"></span> </p>
 </footer>
-
-
 
 </body>
 </html>

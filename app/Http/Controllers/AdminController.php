@@ -18,8 +18,33 @@ class AdminController extends Controller
         //$this->middleware('admin');
     }   
     public function indexx()
+{
+    $authUser = auth()->user();
+
+    $query = User::query()
+        ->whereIn('role', ['user', 'moderateur'])
+        ->orderBy('created_at', 'desc');
+
+    // 👉 Si c'est un modérateur, on limite à SA structure
+    if ($authUser->role === 'moderateur') {
+        $query->where('id_structure', $authUser->id_structure);
+    }
+
+    $users = $query->get();
+
+    $structures = Structure::orderBy('nom_structure')->get();
+
+    return view('admin.users', compact('users', 'structures'));
+}
+
+    //methode pour filtrer les utilisateurs par structure
+    public function getAllUsersByStructure($structureId)
     {
-        $users=User::where('role','user')->orderBy('created_at','desc')->get();
+        $users = User::where('id_structure', $structureId)
+                     ->whereIn('role', ['user', 'moderateur', 'admin'])
+                     ->orderBy('created_at', 'desc')
+                     ->get();
+
         $structures = Structure::orderBy('nom_structure')->get();
         return view('admin.users', compact('users', 'structures'));
     }
@@ -67,6 +92,7 @@ class AdminController extends Controller
 
         return back()->with('success', 'Utilisateur bloqué avec succès.');
     }
+    //methode de debloquage des utilisateurs
     public function dblockUser($id)
     {
         $user = User::findOrFail($id);
@@ -74,6 +100,7 @@ class AdminController extends Controller
         $user->save();
         return redirect()->back()->with('success', 'Utilisateur debloqué avec succès.');
     }
+    //methode de suppression des utilisateurs
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -93,7 +120,8 @@ class AdminController extends Controller
             'id_structure' => 'nullable|exists:structure,id',
             'adresse' => 'nullable|string|max:255',
             'ville' => 'nullable|string|max:255',
-            'code_postal' => 'nullable|string|max:10'
+            'code_postal' => 'nullable|string|max:10',
+            'role' => 'required|string|in:user,moderateur,admin'
         ]);
 
         // Mise à jour des informations de l'utilisateur
@@ -105,7 +133,8 @@ class AdminController extends Controller
             'id_structure' => $request->id_structure,
             'adresse' => $request->adresse,
             'ville' => $request->ville,
-            'code_postal' => $request->code_postal
+            'code_postal' => $request->code_postal,
+            'role' => $request->role
         ]);
 
         return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');  

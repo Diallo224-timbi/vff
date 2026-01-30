@@ -15,7 +15,6 @@
         >
             {{ session('success') }}
         </div>
-    <!-- Message d'erreur -->
     @elseif(session('errors'))
         <div 
             x-data="{ show: true }"
@@ -42,13 +41,15 @@
         <table class="table table-bordered table-striped w-full">
             <thead class="bg-gray-100 sticky top-0 z-10">
                 <tr>
-                    <th>Nom</th>
-                    <th>Adresse</th>
+                    <th>Nom / Organisme</th>
+                    <th>Adresse siège</th>
+                    <th>Ville siège</th>
                     <th>Ville</th>
                     <th>Code Postal</th>
                     <th>Contact</th>
                     <th>Email</th>
-                    <th>Responsable</th>
+                    <th>Type / Catégorie</th>
+                    <th>site internet</th>
                     @if(auth()->user()->role === 'admin')
                     <th>Actions</th>
                     @endif
@@ -57,28 +58,35 @@
             <tbody>
                 @foreach($structures as $structure)
                     <tr>
-                        <td>{{ $structure->nom_structure }}</td>
-                        <td>{{ $structure->adresse }}</td>
+                        <td>{{ $structure->organisme }}</td>
+                        <td>{{ $structure->siege_adresse }}</td>
+                        <td>{{ $structure->siege_ville }}</td>
                         <td>{{ $structure->ville }}</td>
                         <td>{{ $structure->code_postal }}</td>
-                        <td>{{ $structure->contact }}</td>
-                        <td>{{ $structure->email }}</td>
-                        <td>{{ $structure->responsable }}</td>
-                         @if(auth()->user()->role === 'admin')
+                        <td>{{ $structure->contact ?? '-' }}</td>
+                        <td>{{ $structure->email ?? '-' }}</td>
+                        <td>{{ $structure->type_structure ?? $structure->categories ?? '-' }}</td>
+                        <td>
+                            @if($structure->site)
+                                <a href="{{ $structure->site }}" target="_blank" class="text-blue-600 underline">
+                                    {{ Str::limit($structure->site, 30) }}
+                                </a>
+                            @else
+                                -
+                            @endif
+                        @if(auth()->user()->role === 'admin')
                         <td class="d-flex gap-2">
-                           
-                                <!-- Modifier -->
-                                <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $structure->id }}" data-bs-toggle="modal" data-bs-target="#editModal">
-                                    Modifier
-                                </button>
-                           
+                            <!-- Modifier -->
+                            <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $structure->id }}" data-bs-toggle="modal" data-bs-target="#editModal">
+                                Modifier
+                            </button>
+
                             <!-- Supprimer -->
-                            <form action="{{ route('structures.destroy', $structure) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer! attention tous les utilisateurs rattachés se suppriment aussi ?')">
+                            <form action="{{ route('structures.destroy', $structure) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ! attention tous les utilisateurs rattachés se suppriment aussi ?')">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger">Supprimer</button>
                             </form>
-                            
                         </td>
                         @endif
                     </tr>
@@ -103,7 +111,7 @@
       </div>
       <div class="modal-body">
         @include('structures.form', [
-            'structure' => new \App\Models\Structure,
+            'structure' => new \App\Models\structures,
             'action' => route('structures.store'),
             'method' => 'POST'
         ])
@@ -145,7 +153,5 @@
                 .catch(err => console.error(err));
         });
     });
-
-    
 </script>
 @endsection

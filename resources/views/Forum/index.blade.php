@@ -151,45 +151,70 @@
     </div>
 </div>
 
+
 <!-- Modal création sujet -->
-<div class="modal fade fixed inset-0 z-50 overflow-y-auto" id="newThreadModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered max-w-2xl">
-        <div class="modal-content bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div class="modal-header bg-[#008C95] text-white p-4 flex justify-between items-center">
-                <h5 class="text-lg font-bold flex items-center gap-2"><i class="fas fa-plus-circle"></i> Nouveau sujet</h5>
-                <button type="button" class="text-white text-xl" data-bs-dismiss="modal">&times;</button>
-            </div>
-            <form action="{{ route('forum.store') }}" method="POST" class="p-4 space-y-4">
-                @csrf
-                <div>
-                    <label for="title" class="font-semibold text-gray-700">Titre</label>
-                    <input type="text" name="title" id="title" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-[#008C95]" placeholder="Titre du sujet" required>
-                </div>
-                <div>
-                    <label for="body" class="font-semibold text-gray-700">Message</label>
-                    <textarea name="body" id="body" rows="4" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-[#008C95]" placeholder="Développez votre idée..." required></textarea>
-                </div>
-                <div>
-                    <label for="category_id" class="font-semibold text-gray-700">Catégorie</label>
-                    <select name="category_id" id="category_id" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-[#008C95]" required>
-                        <option value="">Sélectionnez une catégorie</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="flex justify-end gap-2 mt-2">
-                    <button type="button" data-bs-dismiss="modal" class="px-4 py-2 bg-gray-200 rounded">Annuler</button>
-                    <button type="submit" class="px-4 py-2 bg-[#008C95] text-white rounded">Publier</button>
-                </div>
-            </form>
+<div class="modal fade" id="newThreadModal" tabindex="-1" aria-labelledby="newThreadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="newThreadModalLabel">
+          <i class="fas fa-plus-circle me-2"></i> Nouveau sujet
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <form action="{{ route('forum.store') }}" method="POST">
+        @csrf
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="title" class="form-label">Titre du sujet</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="Titre du sujet" required value="{{ old('title') }}">
+            @error('title')
+              <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label for="body" class="form-label">Message</label>
+            <textarea name="body" id="body" rows="5" class="form-control" placeholder="Développez votre idée..." required>{{ old('body') }}</textarea>
+            @error('body')
+              <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label for="category_id" class="form-label">Catégorie</label>
+            <select name="category_id" id="category_id" class="form-select" required>
+              <option value="">Sélectionnez une catégorie</option>
+              @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                  {{ $category->name }}
+                </option>
+              @endforeach
+            </select>
+            @error('category_id')
+              <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i> Annuler
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane me-1"></i> Publier
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
+
 
 <script>
 function openNewThreadModal() {
     new bootstrap.Modal(document.getElementById('newThreadModal')).show();
 }
+
 </script>
 @endsection

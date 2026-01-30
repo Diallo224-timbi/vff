@@ -21,9 +21,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-// Routes pour l'authentification
+// Routes pour l'authentification pour l'inscription et la connexion
 Route::get('/register',[AuthController::class, 'showSignUp'])->name('register');
-// 
+// route pour afficher le formulaire d'inscription
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 // afficher le formulaire d'inscription
 Route::post('/register',[AuthController::class, 'signUp'])->name('registration.register');
@@ -133,6 +133,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
         Route::get('/annuaire/export/pdf', [AnnuaireController::class, 'exportPdf'])->name('annuaire.export.pdf');
     });
+
+Route::get('/formulaire/inscription', [StructureController::class, 'createPDF'])->name('auth.create');
+Route::post('/formulaire/inscription/pdf', [StructureController::class, 'generatePDF'])->name('auth.pdf');
+
 
 
 
