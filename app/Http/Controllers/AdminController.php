@@ -7,8 +7,7 @@ use App\Models\User;
 use App\Mail\UserValidatedMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserBlockedMail;
-use App\Models\Structure;
-
+use App\Models\structures;
 
 
 class AdminController extends Controller
@@ -32,7 +31,7 @@ class AdminController extends Controller
 
     $users = $query->get();
 
-    $structures = Structure::orderBy('nom_structure')->get();
+    $structures = Structures::orderBy('organisme')->get();
 
     return view('admin.users', compact('users', 'structures'));
 }
@@ -45,14 +44,14 @@ class AdminController extends Controller
                      ->orderBy('created_at', 'desc')
                      ->get();
 
-        $structures = Structure::orderBy('nom_structure')->get();
+        $structures = Structures::orderBy('organisme')->get();
         return view('admin.users', compact('users', 'structures'));
     }
     public function index2()
     {
         $users = User::all();
-        $structures = Structure::orderBy('nom_structure')->get();
-       return view('admin.users',compact('users'));
+        $structures = Structures::orderBy('organisme')->get();
+       return view('admin.users',compact('users', 'structures'));
        console.log($users);
     }
 

@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class structures extends Model
 {
-    protected $table = 'structures';
+    protected $table = 'structure';
+    
     protected $fillable = [
         'organisme',
         'description',
         'siege_ville',
         'siege_adresse',
+        'siege_code_postal',
         'categories',
         'public_cible',
         'zone',
@@ -24,11 +26,17 @@ class structures extends Model
         'site',
         'latitude',
         'longitude',
+        'email',
+        'telephone',
+        'horaires',
+        'pays',
     ];
+    
     public function users()
     {
         return $this->hasMany(User::class, 'id_structure');
     }
+    
     public function members_count()
     {
         return $this->hasMany(User::class, 'id_structure')->count();

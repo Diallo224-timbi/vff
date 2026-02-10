@@ -73,7 +73,7 @@ class User extends Authenticatable
     //relation avec la table structure
     public function structure()
     {
-        return $this->belongsTo(Structure::class, 'id_structure');
+        return $this->belongsTo(Structures::class, 'id_structure');
     }
     //relation avec la table threads
     public function threads()

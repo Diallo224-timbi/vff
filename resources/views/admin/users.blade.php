@@ -95,8 +95,8 @@
 
                 <!-- COL 3 : STRUCTURE -->
                 <div class="flex flex-col justify-between h-full text-xs text-gray-700 card-content space-y-1 border border-gray-200 p-2 rounded md:col-span-1">
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-building text-blue-600"></i> <strong>Structure:</strong> {{ $user->structure->nom_structure ?? '—' }}</p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-user-tie text-blue-600"></i> <strong>Responsable:</strong> {{ $user->structure->responsable ?? '—' }}</p>
+                    <p class="card-text flex items-center gap-3"><i class="fa fa-building text-blue-600"></i> <strong>Structure:</strong> {{ $user->structure->organisme ?? '—' }}</p>
+                    <p class="card-text flex items-center gap-3"><i class="fa fa-user-tie text-blue-600"></i> <strong>Zone_intervention:</strong> {{ $user->structure->zone ?? '—' }}</p>
                     <p class="card-text flex items-center gap-3"><i class="fa fa-envelope text-blue-600"></i> <strong>Email:</strong>
                         <a href="mailto:{{ $user->structure->email ?? '' }}" class="hover:underline text-blue-600">{{ $user->structure->email ?? '—' }}</a>
                     </p>
@@ -146,7 +146,7 @@
                             data-email="{{ $user->email }}"
                             data-phone="{{ $user->phone }}"
                             data-structure-id="{{ $user->structure->id ?? '' }}"
-                            data-structure-name="{{ $user->structure->nom_structure ?? '' }}"
+                            data-structure-name="{{ $user->structure->organisme ?? '' }}"
                             data-adresse="{{ $user->adresse }}"
                             data-ville="{{ $user->ville }}"
                             data-code-postal="{{ $user->code_postal }}"
@@ -242,7 +242,7 @@
                             <option value="{{ $user->id_structure }}" id="modalStructureOption"></option>
                             @foreach($structures as $structure)
                                 <option value="{{ $structure->id }}">
-                                    {{ $structure->nom_structure }}
+                                    {{ $structure->organisme }} ({{ $structure->ville }} -- {{ $structure->code_postal }})
                                 </option>
                             @endforeach
                         </select>

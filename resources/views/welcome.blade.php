@@ -398,13 +398,6 @@ body {
     <strong>MULTI ACTEURS</strong>
   </div>
 
-  <nav class="nav">
-    <a href="">Guide</a>
-    <a href="/login">Se connecter</a>
-    <a href="">Information</a>
-    <a href="" class="active">Événement</a>
-  </nav>
-
   <!-- Solution temporaire - utilisez le chemin direct -->
   <div>
   <a href="/register" class="btn-login">S'inscrire</a>
@@ -427,25 +420,6 @@ body {
       TOUS<br>
       ENSEMBLES
     </h1>
-    
-    <div class="services">
-      <div class="service-item">
-        <h3>Service</h3>
-        <p>Solutions intégrées</p>
-      </div>
-      <div class="service-item">
-        <h3>Information</h3>
-        <p>Données partagées</p>
-      </div>
-      <div class="service-item">
-        <h3>Événement</h3>
-        <p>Rencontres collaboratives</p>
-      </div>
-      <div class="service-item">
-        <h3>Connexion</h3>
-        <p>Accès sécurisé</p>
-      </div>
-    </div>
   </div>
   
   <div class="scroll-indicator">

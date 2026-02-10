@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\structures;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Barryvdh\DomPDF\Facade\Pdf; // si tu utilises barryvdh/laravel-dompdf
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StructureController extends Controller
 {
@@ -64,25 +64,30 @@ class StructureController extends Controller
         $validated = $request->validate([
             'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'siege_ville' => 'nullable|string|max:255',
-            'siege_adresse' => 'nullable|string|max:255',
-            'ville' => 'nullable|string|max:255',
+            'siege_ville' => 'required|string|max:100',
+            'siege_adresse' => 'required|string|max:255',
+            'siege_code_postal' => 'required|string|max:10',
+            'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:10',
-            'pays' => 'nullable|string|max:255',
+            'pays' => 'nullable|string|max:100',
+            'adresse' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            'categories' => 'nullable|string|max:255',
-            'public_cible' => 'nullable|string|max:255',
-            'zone' => 'nullable|string|max:255',
-            'type_structure' => 'nullable|string|max:255',
+            'categories' => 'nullable|string',
+            'public_cible' => 'nullable|string',
+            'zone' => 'nullable|string|max:100',
+            'type_structure' => 'nullable|string|max:100',
             'details' => 'nullable|string',
-            'hebergement' => 'nullable|string|max:255',
-            'site' => 'nullable|string|max:255',
+            'hebergement' => 'nullable|string',
+            'site' => 'nullable|string|max:500',
+            'email' => 'nullable|email|max:50',
+            'telephone' => 'nullable|string|max:25',
+            'horaires' => 'nullable|string|max:255',
         ]);
 
         // Si latitude ou longitude absentes, récupérer via Nominatim
-        if (!$validated['latitude'] || !$validated['longitude']) {
-            $address = urlencode($validated['siege_adresse'] . ', ' . $validated['siege_ville']);
+        if ((!$validated['latitude'] || !$validated['longitude']) && $validated['adresse']) {
+            $address = urlencode($validated['adresse']);
             $response = Http::get("https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1");
             $data = $response->json();
 
@@ -92,9 +97,16 @@ class StructureController extends Controller
             }
         }
 
+        // Si pas de localisation spécifique, utiliser le siège social
+        if (empty($validated['ville']) && $validated['siege_ville']) {
+            $validated['ville'] = $validated['siege_ville'];
+            $validated['code_postal'] = $validated['siege_code_postal'];
+        }
+
         structures::create($validated);
 
-        return redirect()->route('structures.index')->with('success', 'Structure créée avec succès !');
+        return redirect()->route('annuaire.index')
+            ->with('success', 'Structure créée avec succès !');
     }
 
     public function edit(structures $structure)
@@ -106,54 +118,45 @@ class StructureController extends Controller
         ]);
     }
 
-    public function update(Request $request, structures $structure)
+    public function update(Request $request, Structures $structure)
     {
         $validated = $request->validate([
             'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'siege_ville' => 'nullable|string|max:255',
-            'siege_adresse' => 'nullable|string|max:255',
-            'ville' => 'nullable|string|max:255',
-            'code_postal' => 'nullable|string|max:10',
-            'pays' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'categories' => 'nullable|string|max:255',
-            'public_cible' => 'nullable|string|max:255',
-            'zone' => 'nullable|string|max:255',
-            'type_structure' => 'nullable|string|max:255',
+            'siege_ville' => 'required|string|max:100',
+            'siege_adresse' => 'required|string|max:255',
+            'siege_code_postal' => 'required|string|max:10',
+            'type_structure' => 'nullable|string|max:100',
+            'hebergement' => 'nullable|string',
             'details' => 'nullable|string',
-            'hebergement' => 'nullable|string|max:255',
-            'site' => 'nullable|string|max:255',
+            'telephone' => 'nullable|string|max:25',
+            'email' => 'nullable|email|max:50',
+            'site' => 'nullable|string|max:500',
+            'horaires' => 'nullable|string|max:255',
+            'categories' => 'nullable|string',
+            'public_cible' => 'nullable|string',
+            'zone' => 'nullable|string|max:100',
         ]);
-
-        if (!$validated['latitude'] || !$validated['longitude']) {
-            $address = urlencode($validated['siege_adresse'] . ', ' . $validated['siege_ville']);
-            $response = Http::get("https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1");
-            $data = $response->json();
-
-            if (!empty($data[0])) {
-                $validated['latitude'] = $data[0]['lat'];
-                $validated['longitude'] = $data[0]['lon'];
-            }
-        }
 
         $structure->update($validated);
 
-        return redirect()->route('structures.index')->with('success', 'Structure modifiée avec succès !');
+        return redirect()
+            ->route('annuaire.index')
+            ->with('success', 'Structure modifiée avec succès');
     }
 
     public function destroy(structures $structure)
     {
-        // Vérifier s'il y a des utilisateurs liés à cette structure (si relation définie)
+        // Vérifier s'il y a des utilisateurs liés à cette structure
         if (method_exists($structure, 'users') && $structure->users()->count() > 0) {
             return redirect()->route('structures.index')
-                ->with('errors', 'Impossible de supprimer cette structure : des utilisateurs y sont rattachés.');
+                ->with('error', 'Impossible de supprimer cette structure : des utilisateurs y sont rattachés.');
         }
 
         $structure->delete();
 
-        return redirect()->route('structures.index')->with('success', 'Structure supprimée avec succès !');
+        return redirect()->route('annuaire.index')
+            ->with('success', 'Structure supprimée avec succès !');
     }
 
     public function map()
