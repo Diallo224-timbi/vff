@@ -50,19 +50,28 @@ Route::post('/verify-code', [AuthController::class, 'verifyCode'])->name('verify
 
 
 // Route pour le tableau de bord admin
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/users', [AdminController::class, 'index'])->name('admin.users');
-    //Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
-    //Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.users');
+    Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
+    Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
+    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
 });
 
-// Aroute pour le tableau de bord admin
+// Route pour filtrer les utilisateurs par structure
+Route::middleware(['auth'])->group(function () {
+    Route::get('/annuaire/list', [AnnuaireController::class, 'listeGroupee'])
+        ->name('annuaire.list');
+    
+    // Autres routes qui nécessitent une connexion...
+});
+
+/* route pour le tableau de bord admin
 Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.users');
 Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
 Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
-
+*/
 // route pour modifier les utilisateurs
-Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+
 
 // Route pour le profil utilisateur
 Route::middleware(['auth'])->group(function () {

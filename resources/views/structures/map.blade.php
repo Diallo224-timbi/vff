@@ -245,10 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!type) return '#6b7280';
         
         const typeLower = type.toLowerCase();
-        if (typeLower.includes('siège') || typeLower.includes('siege')) return '#3b82f6';
+        if (typeLower.includes('siége') || typeLower.includes('siege')) return '#3b82f6';
         if (typeLower.includes('antenne')) return '#10b981';
         if (typeLower.includes('association')) return '#ef4444';
-        if (typeLower.includes('public') || typeLower.includes('institution')) return '#8b5cf6';
+        if (typeLower.includes('santé') || typeLower.includes('droit')) return '#8b5cf6';
         return '#f59e0b';
     }
 
@@ -316,8 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${structure.zone ? `<p><strong>Zone:</strong> ${structure.zone}</p>` : ''}
                         ${structure.latitude && structure.longitude ? `
                             <p class="text-xs text-gray-500 mt-1">
-                                <i class="fas fa-crosshairs mr-1"></i>
-                                Coordonnées: ${parseFloat(structure.latitude).toFixed(6)}, ${parseFloat(structure.longitude).toFixed(6)}
+                                <i class="fas fa-person m-1"></i>
+                                Responsable: ${structure.responsable || 'Non spécifié'}
                             </p>
                         ` : ''}
                         ${googleMapsLink ? `

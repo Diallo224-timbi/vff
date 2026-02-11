@@ -66,7 +66,7 @@
             </div>
             {{-- fiche structure pour voir la liste des strure antenne responsable et contact --}}
             <div class="flex items-center gap-3">
-                <a href="" 
+                <a href="{{ route('annuaire.list') }}" 
                 class="btn-secondary-custom flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]">
                     <i class="fas fa-list"></i>
                     Voir la liste
@@ -314,9 +314,9 @@
                             </td>
                             
                             <!-- Actions -->
-                            <td class="px-3 py-2 flex items-center gap-1">
+                            <td class="px-3 py-2">
                                 <div class="flex items-center gap-1">
-                                    <!-- Bouton Voir détails -->
+                                    <!-- Bouton Voir détails (tous les utilisateurs) -->
                                     <button class="btn-action-primary view-details-btn" 
                                             title="Voir les détails"
                                             data-bs-toggle="modal" 
@@ -325,27 +325,47 @@
                                         <i class="fas fa-eye text-xs"></i>
                                     </button>
 
-                                    <!-- Modifier (admin seulement) -->
+                                    <!-- ADMIN : Peut modifier et supprimer TOUTES les structures -->
                                     @if(auth()->user()->role === 'admin')
-                                    <button class="btn-action-warning edit-btn" 
-                                            data-id="{{ $structure->id }}" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#editModal"
-                                            title="Modifier">
-                                        <i class="fas fa-edit text-xs"></i>
-                                    </button>
-
-                                    <!-- Supprimer (admin seulement) -->
-                                    <form action="{{ route('structures.destroy', $structure) }}" 
-                                          method="POST" 
-                                          class="inline"
-                                          onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure ? Attention, tous les utilisateurs rattachés seront aussi supprimés.')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn-action-danger" type="submit" title="Supprimer">
-                                            <i class="fas fa-trash text-xs"></i>
+                                        <button class="btn-action-warning edit-btn" 
+                                                data-id="{{ $structure->id }}" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#editModal"
+                                                title="Modifier">
+                                            <i class="fas fa-edit text-xs"></i>
                                         </button>
-                                    </form>
+
+                                        <form action="{{ route('structures.destroy', $structure) }}" 
+                                            method="POST" 
+                                            class="inline"
+                                            onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure ? Attention, tous les utilisateurs rattachés seront aussi supprimés.')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn-action-danger" type="submit" title="Supprimer">
+                                                <i class="fas fa-trash text-xs"></i>
+                                            </button>
+                                        </form>
+
+                                    <!-- MODERATEUR : Peut modifier et supprimer UNIQUEMENT sa propre structure -->
+                                    @elseif(auth()->user()->role === 'moderateur' && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
+                                        <button class="btn-action-warning edit-btn" 
+                                                data-id="{{ $structure->id }}" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#editModal"
+                                                title="Modifier ma structure">
+                                            <i class="fas fa-edit text-xs"></i>
+                                        </button>
+
+                                        <form action="{{ route('structures.destroy', $structure) }}" 
+                                            method="POST" 
+                                            class="inline"
+                                            onsubmit="return confirm('Voulez-vous vraiment supprimer VOTRE structure ? Attention, tous les utilisateurs rattachés seront aussi supprimés.')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn-action-danger" type="submit" title="Supprimer ma structure">
+                                                <i class="fas fa-trash text-xs"></i>
+                                            </button>
+                                        </form>
                                     @endif
                                 </div>
                             </td>
@@ -373,303 +393,254 @@
     </div>
 </div>
 
-<!-- MODAL AJOUT -->
+<!-- MODAL AJOUT (admin seulement) -->
 @if(auth()->user()->role === 'admin')
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content border-0 shadow-2xl">
-      <div class="modal-header bg-gradient-to-r from-[#255156] to-[#4b7479] text-white rounded-t-lg">
-        <h5 class="modal-title text-xl font-bold flex items-center gap-3">
-          <i class="fas fa-plus-circle"></i>
-          Ajouter une structure
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body bg-gray-50">
-        @include('structures.form', [
-            'structure' => new \App\Models\Structures,
-            'action' => route('structures.store'),
-            'method' => 'POST'
-        ])
-      </div>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-0 shadow-2xl">
+            <div class="modal-header bg-gradient-to-r from-[#255156] to-[#4b7479] text-white rounded-t-lg">
+                <h5 class="modal-title text-xl font-bold flex items-center gap-3">
+                    <i class="fas fa-plus-circle"></i>
+                    Ajouter une structure
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body bg-gray-50">
+                @include('structures.form', [
+                    'structure' => new \App\Models\Structures,
+                    'action' => route('structures.store'),
+                    'method' => 'POST'
+                ])
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
-<!-- MODAL MODIFIER -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content border-0 shadow-2xl">
-      <div class="modal-header bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white rounded-t-lg">
-        <h5 class="modal-title text-xl font-bold flex items-center gap-3">
-          <i class="fas fa-edit"></i>
-          Modifier la structure
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body bg-gray-50" id="editModalBody">
-        <!-- Formulaire chargé dynamiquement via fetch -->
-      </div>
-    </div>
-  </div>
 </div>
 @endif
-    <!-- Modal amélioré avec animations -->
-    <div class="modal fade animate__animated" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered animate__animated animate__zoomIn">
-            <div class="modal-content border-0 shadow-2xl overflow-hidden">
-                <!-- Header avec animation -->
-                <div class="modal-header bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4">
-                    <div class="flex items-center gap-3 animate__animated animate__fadeInLeft">
-                        <div class="bg-white/20 p-2 rounded-lg">
-                            <i class="fas fa-building text-xl"></i>
-                        </div>
-                        <div>
-                            <h5 class="modal-title text-lg font-bold" id="detailsModalLabel">
-                                <span id="modal-organisme">AFCCC 06</span>
-                            </h5>
-                            <p class="text-sm text-white/80 font-medium">Structure détaillée</p>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white opacity-80 hover:opacity-100 transition-opacity" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
 
-                <!-- Body avec espace réduit -->
-                <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
-                    
-                    <!-- Informations principales (2 colonnes compactes) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                        <!-- Colonne gauche -->
-                        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
-                            <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
-                                <i class="fas fa-info-circle text-xs"></i> 
-                                <span>Informations principales</span>
-                            </h6>
-                            <div class="space-y-1.5 text-sm">
-                                <div class="flex justify-between py-1 border-b border-gray-100">
-                                    <span class="font-medium text-gray-600">Organisme:</span>
-                                    <span class="text-gray-800 font-semibold" id="modal-organisme-text">AFCCC 06</span>
-                                </div>
-                                <div class="flex justify-between py-1 border-b border-gray-100">
-                                    <span class="font-medium text-gray-600">Catégories:</span>
-                                    <span class="text-gray-800" id="modal-categories">psychologie</span>
-                                </div>
-                                <div class="flex justify-between py-1 border-b border-gray-100">
-                                    <span class="font-medium text-gray-600">Type:</span>
-                                    <span class="text-gray-800" id="modal-type_structure">Association</span>
-                                </div>
-                                <div class="flex justify-between py-1 border-b border-gray-100">
-                                    <span class="font-medium text-gray-600">Public:</span>
-                                    <span class="text-gray-800" id="modal-public_cible">victimes, majeurs, mineurs</span>
-                                </div>
-                                <div class="flex justify-between py-1 border-b border-gray-100">
-                                    <span class="font-medium text-gray-600">Zone:</span>
-                                    <span class="text-gray-800" id="modal-zone">Siège social</span>
-                                </div>
-                                <div class="flex justify-between py-1">
-                                    <span class="font-medium text-gray-600">Site web:</span>
-                                    <a href="#" class="text-[#255156] hover:text-[#8bbdc3] font-medium truncate max-w-[120px]" id="modal-site">https://afccc-...</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Colonne droite - Localisation -->
-                        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
-                            <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
-                                <i class="fas fa-map-marker-alt text-xs"></i> 
-                                <span>Localisation</span>
-                            </h6>
-                            
-                            <!-- Siège social -->
-                            <div class="mb-3 p-2 bg-blue-50/50 rounded border border-blue-100">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <i class="fas fa-landmark text-blue-500 text-xs"></i>
-                                    <span class="font-semibold text-blue-700 text-xs">SIÈGE SOCIAL</span>
-                                </div>
-                                <div class="text-xs space-y-1">
-                                    <div class="flex">
-                                        <span class="w-16 text-gray-500">Ville:</span>
-                                        <span class="text-gray-700 font-medium" id="modal-siege_ville">Nice</span>
-                                    </div>
-                                    <div class="flex">
-                                        <span class="w-16 text-gray-500">Adresse:</span>
-                                        <span class="text-gray-700 truncate" id="modal-siege_adresse" title="12 rue Michel...">12 rue Michel...</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Antenne locale -->
-                            <div class="p-2 bg-green-50/50 rounded border border-green-100">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <i class="fas fa-map-pin text-green-500 text-xs"></i>
-                                    <span class="font-semibold text-green-700 text-xs">ANTENNE LOCALE</span>
-                                </div>
-                                <div class="text-xs space-y-1">
-                                    <div class="flex">
-                                        <span class="w-20 text-gray-500">Ville:</span>
-                                        <span class="text-gray-700 font-medium" id="modal-ville">Nice</span>
-                                    </div>
-                                    <div class="flex">
-                                        <span class="w-20 text-gray-500">Code postal:</span>
-                                        <span class="text-gray-700" id="modal-code_postal">06000</span>
-                                    </div>
-                                    <div class="flex">
-                                        <span class="w-20 text-gray-500">Adresse:</span>
-                                        <span class="text-gray-700 truncate" id="modal-adresse" title="12 rue Mich...">12 rue Mich...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Contact (ligne unique compacte) -->
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
-                        <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
-                            <i class="fas fa-address-book text-xs"></i> 
-                            <span>Contact</span>
-                        </h6>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                            <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                                <i class="fas fa-phone text-green-500"></i>
-                                <div>
-                                    <div class="text-xs text-gray-500">Téléphone</div>
-                                    <div class="font-medium" id="modal-telephone">+33 4 XX XX XX XX</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                                <i class="fas fa-envelope text-blue-500"></i>
-                                <div>
-                                    <div class="text-xs text-gray-500">Email</div>
-                                    <a href="mailto:contact@exemple.org" class="font-medium text-[#255156] hover:text-[#8bbdc3] truncate" id="modal-email">contact@afccc06.fr</a>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                                <i class="fas fa-user text-purple-500"></i>
-                                <div>
-                                    <div class="text-xs text-gray-500">Contact</div>
-                                    <div class="font-medium truncate" id="modal-contact">Responsable AFCCC</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Description avec badge -->
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
-                        <div class="flex items-center justify-between mb-2">
-                            <h6 class="text-[#255156] font-semibold text-sm flex items-center gap-2">
-                                <i class="fas fa-file-alt text-xs"></i> 
-                                <span>Description</span>
-                            </h6>
-                            <span class="text-xs bg-[#255156]/10 text-[#255156] px-2 py-1 rounded-full font-medium">
-                                <i class="fas fa-align-left mr-1"></i> Détails
-                            </span>
-                        </div>
-                        <div class="text-sm text-gray-700 leading-relaxed p-2 bg-gray-50 rounded" id="modal-description">
-                            Association spécialisée dans l'accompagnement psychologique des victiques. Interventions individuelles et collectives, soutien aux majeurs et mineurs. Approche humaniste et bienveillante.
-                        </div>
-                    </div>
-
-                    <!-- Informations complémentaires (en ligne) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
-                        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                            <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
-                                <i class="fas fa-bed text-xs"></i> 
-                                <span>Hébergement</span>
-                            </h6>
-                            <div class="flex items-center justify-between">
-                                <div class="text-sm text-gray-700" id="modal-hebergement">Non disponible</div>
-                                <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                                    <i class="fas fa-times mr-1"></i> Non
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                            <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
-                                <i class="fas fa-list-ul text-xs"></i> 
-                                <span>Détails spécifiques</span>
-                            </h6>
-                            <div class="text-sm text-gray-700" id="modal-details">
-                                Consultation sur rendez-vous, interventions à domicile possibles, partenariat avec la justice.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer avec actions -->
-                <div class="modal-footer bg-white p-3 border-t border-gray-200">
-                    <div class="flex justify-between items-center w-full">
-                        <div class="text-xs text-gray-500 flex items-center gap-2">
-                            <i class="fas fa-clock"></i>
-                            <span>Dernière mise à jour: {{$structure->created_at}}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button type="button" 
-                                    class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-2"
-                                    data-bs-dismiss="modal">
-                                <i class="fas fa-times"></i>
-                                Fermer
-                            </button>
-                            <button type="button" 
-                                    class="px-4 py-1.5 bg-gradient-to-r from-[#255156] to-[#8bbdc3] hover:from-[#1d4144] hover:to-[#7aa8ad] text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-2">
-                                <i class="fas fa-print"></i>
-                                Imprimer
-                            </button>
-                        </div>
+<!-- MODAL MODIFIER - ACCESSIBLE À TOUS (ADMIN ET MODERATEUR) -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-0 shadow-2xl">
+            <div class="modal-header bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white rounded-t-lg">
+                <h5 class="modal-title text-xl font-bold flex items-center gap-3">
+                    <i class="fas fa-edit"></i>
+                    Modifier la structure
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body bg-gray-50" id="editModalBody">
+                <!-- Formulaire chargé dynamiquement via fetch -->
+                <div class="flex justify-center items-center p-8">
+                    <div class="spinner-border text-[#255156]" role="status">
+                        <span class="visually-hidden">Chargement...</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Script pour gérer les animations -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animation du bouton d'ouverture
-            const openBtn = document.querySelector('[data-bs-target="#detailsModal"]');
-            openBtn.addEventListener('click', function() {
-                this.classList.add('animate__pulse');
-                setTimeout(() => {
-                    this.classList.remove('animate__pulse');
-                }, 500);
-            });
+<!-- MODAL DETAILS - ACCESSIBLE À TOUS -->
+<div class="modal fade animate__animated" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered animate__animated animate__zoomIn">
+        <div class="modal-content border-0 shadow-2xl overflow-hidden">
+            <!-- Header avec animation -->
+            <div class="modal-header bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4">
+                <div class="flex items-center gap-3 animate__animated animate__fadeInLeft">
+                    <div class="bg-white/20 p-2 rounded-lg">
+                        <i class="fas fa-building text-xl"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title text-lg font-bold" id="detailsModalLabel">
+                            <span id="modal-organisme">-</span>
+                        </h5>
+                        <p class="text-sm text-white/80 font-medium">Structure détaillée</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white opacity-80 hover:opacity-100 transition-opacity" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-            // Animation lors de l'ouverture du modal
-            const modal = document.getElementById('detailsModal');
-            modal.addEventListener('show.bs.modal', function () {
-                const modalDialog = this.querySelector('.modal-dialog');
-                modalDialog.classList.add('animate__zoomIn');
-                modalDialog.classList.remove('animate__zoomOut');
-            });
-
-            modal.addEventListener('hide.bs.modal', function () {
-                const modalDialog = this.querySelector('.modal-dialog');
-                modalDialog.classList.remove('animate__zoomIn');
-                modalDialog.classList.add('animate__zoomOut');
-            });
-
-            // Effet hover sur les cartes
-            const cards = document.querySelectorAll('.bg-white');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-2px)';
-                    this.style.transition = 'transform 0.2s ease';
-                });
+            <!-- Body avec espace réduit -->
+            <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
                 
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
+                <!-- Informations principales (2 colonnes compactes) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <!-- Colonne gauche -->
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
+                        <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                            <i class="fas fa-info-circle text-xs"></i> 
+                            <span>Informations principales</span>
+                        </h6>
+                        <div class="space-y-1.5 text-sm">
+                            <div class="flex justify-between py-1 border-b border-gray-100">
+                                <span class="font-medium text-gray-600">Organisme:</span>
+                                <span class="text-gray-800 font-semibold" id="modal-organisme-text">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-100">
+                                <span class="font-medium text-gray-600">Catégories:</span>
+                                <span class="text-gray-800" id="modal-categories">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-100">
+                                <span class="font-medium text-gray-600">Type:</span>
+                                <span class="text-gray-800" id="modal-type_structure">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-100">
+                                <span class="font-medium text-gray-600">Public:</span>
+                                <span class="text-gray-800" id="modal-public_cible">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-gray-100">
+                                <span class="font-medium text-gray-600">Zone:</span>
+                                <span class="text-gray-800" id="modal-zone">-</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="font-medium text-gray-600">Site web:</span>
+                                <span id="modal-site" class="text-gray-800">-</span>
+                            </div>
+                        </div>
+                    </div>
 
-            // Animation des infos au chargement
-            setTimeout(() => {
-                const infoItems = document.querySelectorAll('.animate__animated');
-                infoItems.forEach((item, index) => {
-                    item.style.animationDelay = `${index * 0.1}s`;
-                });
-            }, 300);
-        });
-    </script>
+                    <!-- Colonne droite - Localisation -->
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                        <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-xs"></i> 
+                            <span>Localisation</span>
+                        </h6>
+                        
+                        <!-- Siège social -->
+                        <div class="mb-3 p-2 bg-blue-50/50 rounded border border-blue-100">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fas fa-landmark text-blue-500 text-xs"></i>
+                                <span class="font-semibold text-blue-700 text-xs">SIÈGE SOCIAL</span>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">Ville:</span>
+                                    <span class="text-gray-700 font-medium" id="modal-siege_ville">-</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16 text-gray-500">Adresse:</span>
+                                    <span class="text-gray-700 truncate" id="modal-siege_adresse" title="-">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Antenne locale -->
+                        <div class="p-2 bg-green-50/50 rounded border border-green-100">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fas fa-map-pin text-green-500 text-xs"></i>
+                                <span class="font-semibold text-green-700 text-xs">ANTENNE LOCALE</span>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <div class="flex">
+                                    <span class="w-20 text-gray-500">Ville:</span>
+                                    <span class="text-gray-700 font-medium" id="modal-ville">-</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-20 text-gray-500">Code postal:</span>
+                                    <span class="text-gray-700" id="modal-code_postal">-</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-20 text-gray-500">Adresse:</span>
+                                    <span class="text-gray-700 truncate" id="modal-adresse" title="-">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact (ligne unique compacte) -->
+                <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+                    <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                        <i class="fas fa-address-book text-xs"></i> 
+                        <span>Contact</span>
+                    </h6>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                            <i class="fas fa-phone text-green-500"></i>
+                            <div>
+                                <div class="text-xs text-gray-500">Téléphone</div>
+                                <div class="font-medium" id="modal-telephone">-</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                            <i class="fas fa-envelope text-blue-500"></i>
+                            <div>
+                                <div class="text-xs text-gray-500">Email</div>
+                                <span id="modal-email" class="font-medium text-gray-800">-</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                            <i class="fas fa-user text-purple-500"></i>
+                            <div>
+                                <div class="text-xs text-gray-500">Contact</div>
+                                <div class="font-medium truncate" id="modal-contact">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description avec badge -->
+                <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                    <div class="flex items-center justify-between mb-2">
+                        <h6 class="text-[#255156] font-semibold text-sm flex items-center gap-2">
+                            <i class="fas fa-file-alt text-xs"></i> 
+                            <span>Description</span>
+                        </h6>
+                        <span class="text-xs bg-[#255156]/10 text-[#255156] px-2 py-1 rounded-full font-medium">
+                            <i class="fas fa-align-left mr-1"></i> Détails
+                        </span>
+                    </div>
+                    <div class="text-sm text-gray-700 leading-relaxed p-2 bg-gray-50 rounded" id="modal-description">
+                        -
+                    </div>
+                </div>
+
+                <!-- Informations complémentaires (en ligne) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                        <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                            <i class="fas fa-bed text-xs"></i> 
+                            <span>Hébergement</span>
+                        </h6>
+                        <div class="text-sm text-gray-700" id="modal-hebergement">-</div>
+                    </div>
+                    
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                        <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                            <i class="fas fa-list-ul text-xs"></i> 
+                            <span>Détails spécifiques</span>
+                        </h6>
+                        <div class="text-sm text-gray-700" id="modal-details">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer avec actions -->
+            <div class="modal-footer bg-white p-3 border-t border-gray-200">
+                <div class="flex justify-between items-center w-full">
+                    <div class="text-xs text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-clock"></i>
+                        <span>Dernière mise à jour: <span id="modal-created_at">-</span></span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" 
+                                class="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-2"
+                                data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i>
+                            Fermer
+                        </button>
+                        <button type="button" 
+                                class="px-4 py-1.5 bg-gradient-to-r from-[#255156] to-[#8bbdc3] hover:from-[#1d4144] hover:to-[#7aa8ad] text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center gap-2"
+                                onclick="window.print()">
+                            <i class="fas fa-print"></i>
+                            Imprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -795,7 +766,7 @@
         outline: none;
     }
     
-    /* Table stylisée comme la capture */
+    /* Table stylisée */
     table {
         border-collapse: collapse;
         width: 100%;
@@ -842,194 +813,6 @@
         white-space: nowrap;
     }
     
-    /* Styles pour le modal detail */
-    
-    /* Cartes d'information */
-    .info-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 12px;
-        transition: all 0.2s ease;
-    }
-    
-    .info-card:hover {
-        border-color: var(--secondary-color);
-        box-shadow: 0 2px 8px rgba(139, 189, 195, 0.1);
-    }
-    
-    .info-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 4px;
-    }
-    
-    .info-value {
-        font-size: 14px;
-        color: #1f2937;
-        line-height: 1.5;
-    }
-    
-    /* Cartes de localisation */
-    .location-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        overflow: hidden;
-        transition: all 0.2s ease;
-    }
-    
-    .location-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(37, 81, 86, 0.1);
-    }
-    
-    .location-header {
-        background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
-        padding: 12px 16px;
-        font-weight: 600;
-        color: var(--primary-color);
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-    }
-    
-    .location-body {
-        padding: 16px;
-    }
-    
-    .location-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 8px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .location-item:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-    
-    .location-label {
-        font-size: 13px;
-        color: #6b7280;
-        font-weight: 500;
-        min-width: 100px;
-    }
-    
-    .location-value {
-        font-size: 14px;
-        color: #1f2937;
-        font-weight: 500;
-        text-align: right;
-        flex: 1;
-    }
-    
-    /* Cartes de contact */
-    .contact-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
-    .contact-header {
-        background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-        padding: 12px 16px;
-        font-weight: 600;
-        color: #4b5563;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-    }
-    
-    .contact-body {
-        padding: 16px;
-    }
-    
-    .contact-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 12px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .contact-item:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-    
-    .contact-label {
-        font-size: 13px;
-        color: #6b7280;
-        font-weight: 500;
-        min-width: 120px;
-    }
-    
-    .contact-value {
-        font-size: 14px;
-        color: #1f2937;
-        font-weight: 500;
-        text-align: right;
-        flex: 1;
-    }
-    
-    /* Description */
-    .description-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 20px;
-    }
-    
-    .description-content {
-        line-height: 1.6;
-        color: #4b5563;
-        font-size: 14px;
-        white-space: pre-line;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .table-professional {
-            display: block;
-            overflow-x: auto;
-        }
-        
-        .btn-primary-custom,
-        .btn-danger-custom {
-            padding: 10px 16px;
-            font-size: 14px;
-        }
-        
-        .location-item,
-        .contact-item {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .location-label,
-        .contact-label {
-            margin-bottom: 4px;
-            min-width: auto;
-        }
-        
-        .location-value,
-        .contact-value {
-            text-align: left;
-        }
-    }
-    
     /* Scrollbar personnalisée */
     ::-webkit-scrollbar {
         width: 8px;
@@ -1063,23 +846,23 @@
 
     // Fonction principale de filtrage et recherche
     function filterAndSearch() {
-        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-        const categoryFilter = document.getElementById('filterCategory').value.toLowerCase();
-        const cityFilter = document.getElementById('filterCity').value.toLowerCase();
-        const typeFilter = document.getElementById('filterType').value.toLowerCase();
-        const zoneFilter = document.getElementById('filterZone').value.toLowerCase();
-        const publicFilter = document.getElementById('filterPublic').value.toLowerCase();
+        const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || '';
+        const categoryFilter = document.getElementById('filterCategory')?.value.toLowerCase() || '';
+        const cityFilter = document.getElementById('filterCity')?.value.toLowerCase() || '';
+        const typeFilter = document.getElementById('filterType')?.value.toLowerCase() || '';
+        const zoneFilter = document.getElementById('filterZone')?.value.toLowerCase() || '';
+        const publicFilter = document.getElementById('filterPublic')?.value.toLowerCase() || '';
         
         const rows = document.querySelectorAll('.structure-row');
         let visibleCount = 0;
         
         rows.forEach(row => {
             const rowText = row.textContent.toLowerCase();
-            const rowCategory = row.dataset.category.toLowerCase();
-            const rowCity = row.dataset.city.toLowerCase();
-            const rowType = row.dataset.type.toLowerCase();
-            const rowZone = row.dataset.zone.toLowerCase();
-            const rowPublic = row.dataset.public.toLowerCase();
+            const rowCategory = (row.dataset.category || '').toLowerCase();
+            const rowCity = (row.dataset.city || '').toLowerCase();
+            const rowType = (row.dataset.type || '').toLowerCase();
+            const rowZone = (row.dataset.zone || '').toLowerCase();
+            const rowPublic = (row.dataset.public || '').toLowerCase();
             
             // Vérifier chaque condition de filtre
             const matchesSearch = searchQuery === '' || rowText.includes(searchQuery);
@@ -1113,19 +896,21 @@
         const filteredCount = document.getElementById('filteredCount');
         const filteredNumber = document.getElementById('filteredNumber');
         
-        filteredNumber.textContent = visible;
+        if (filteredNumber) filteredNumber.textContent = visible;
         
-        if (visible < total) {
-            filteredCount.classList.remove('hidden');
-            resultCount.textContent = `${visible} structures trouvées (sur ${total})`;
-        } else {
-            filteredCount.classList.add('hidden');
-            resultCount.textContent = `${total} structures trouvées`;
+        if (resultCount) {
+            if (visible < total) {
+                if (filteredCount) filteredCount.classList.remove('hidden');
+                resultCount.textContent = `${visible} structures trouvées (sur ${total})`;
+            } else {
+                if (filteredCount) filteredCount.classList.add('hidden');
+                resultCount.textContent = `${total} structures trouvées`;
+            }
         }
     }
 
-    // Initialisation des écouteurs d'événements
     document.addEventListener('DOMContentLoaded', function() {
+        // RECHERCHE ET FILTRES
         // Recherche dynamique
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -1148,8 +933,10 @@
         if (toggleFiltersBtn && advancedFilters) {
             toggleFiltersBtn.addEventListener('click', () => {
                 advancedFilters.classList.toggle('hidden');
-                filterArrow.classList.toggle('fa-chevron-down');
-                filterArrow.classList.toggle('fa-chevron-up');
+                if (filterArrow) {
+                    filterArrow.classList.toggle('fa-chevron-down');
+                    filterArrow.classList.toggle('fa-chevron-up');
+                }
             });
         }
         
@@ -1158,133 +945,161 @@
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
                 // Réinitialiser les champs
-                document.getElementById('searchInput').value = '';
-                document.getElementById('filterCategory').value = '';
-                document.getElementById('filterCity').value = '';
-                document.getElementById('filterType').value = '';
-                document.getElementById('filterZone').value = '';
-                document.getElementById('filterPublic').value = '';
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.value = '';
+                
+                const filterCategory = document.getElementById('filterCategory');
+                if (filterCategory) filterCategory.value = '';
+                
+                const filterCity = document.getElementById('filterCity');
+                if (filterCity) filterCity.value = '';
+                
+                const filterType = document.getElementById('filterType');
+                if (filterType) filterType.value = '';
+                
+                const filterZone = document.getElementById('filterZone');
+                if (filterZone) filterZone.value = '';
+                
+                const filterPublic = document.getElementById('filterPublic');
+                if (filterPublic) filterPublic.value = '';
                 
                 // Appliquer le filtrage
                 filterAndSearch();
             });
         }
-        
-        // Edit modal
+
+        // EDIT MODAL - Chargement dynamique du formulaire
         const editButtons = document.querySelectorAll('.edit-btn');
         editButtons.forEach(btn => {
-            btn.addEventListener('click', function(){
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
                 const id = this.dataset.id;
+                
+                // Afficher le loader
+                document.getElementById('editModalBody').innerHTML = `
+                    <div class="flex justify-center items-center p-8">
+                        <div class="spinner-border text-[#255156]" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Charger le formulaire
                 fetch(`/structures/${id}/edit`)
-                    .then(res => res.text())
+                    .then(res => {
+                        if (!res.ok) throw new Error('Erreur réseau');
+                        return res.text();
+                    })
                     .then(html => {
                         document.getElementById('editModalBody').innerHTML = html;
                     })
-                    .catch(err => console.error(err));
+                    .catch(err => {
+                        console.error(err);
+                        document.getElementById('editModalBody').innerHTML = `
+                            <div class="text-center p-8 text-red-600">
+                                <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+                                <p>Erreur lors du chargement du formulaire.</p>
+                            </div>
+                        `;
+                    });
             });
         });
 
-        // Details modal avec les nouveaux champs
+        // DETAILS MODAL - Remplissage des données
         const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
-        
         viewDetailsButtons.forEach(btn => {
             btn.addEventListener('click', function(){
-                const structure = JSON.parse(this.getAttribute('data-structure'));
-                
-                // Remplir la modal avec formatage professionnel
-                document.getElementById('modal-organisme').textContent = structure.organisme || '-';
-                document.getElementById('modal-organisme-text').textContent = structure.organisme || '-';
-                
-                // Description
-                const descriptionElement = document.getElementById('modal-description');
-                if (structure.description && structure.description.trim() !== '') {
-                    descriptionElement.textContent = structure.description;
-                    descriptionElement.classList.remove('text-muted');
-                } else {
-                    descriptionElement.textContent = 'Aucune description disponible';
-                    descriptionElement.classList.add('text-muted');
-                }
-                
-                // Informations principales
-                document.getElementById('modal-categories').textContent = structure.categories || 'Non spécifié';
-                document.getElementById('modal-type_structure').textContent = structure.type_structure || 'Non spécifié';
-                document.getElementById('modal-public_cible').textContent = structure.public_cible || 'Non spécifié';
-                document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
-                
-                // Site web
-                const siteElement = document.getElementById('modal-site');
-                if (structure.site && structure.site.trim() !== '') {
-                    siteElement.innerHTML = `<a href="${structure.site}" target="_blank" 
-                                           class="text-[#255156] hover:text-[#8bbdc3] font-medium underline transition-colors">
-                        <i class="fas fa-external-link-alt mr-1"></i>${structure.site}
-                    </a>`;
-                } else {
-                    siteElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
-                }
-                
-                // Localisation - Siège social
-                document.getElementById('modal-siege_ville').textContent = structure.siege_ville || 'Non spécifié';
-                document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || 'Non spécifié';
-                
-                // Localisation - Antenne locale
-                document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
-                document.getElementById('modal-code_postal').textContent = structure.code_postal || 'Non spécifié';
-                
-                const adresseElement = document.getElementById('modal-adresse');
-                if (structure.adresse && structure.adresse.trim() !== '') {
-                    adresseElement.textContent = structure.adresse;
-                } else {
-                    adresseElement.innerHTML = '<span class="text-gray-400 italic">Non spécifiée</span>';
-                }
-                
-                // Contact
-                const telephoneElement = document.getElementById('modal-telephone');
-                if (structure.telephone && structure.telephone.trim() !== '') {
-                    telephoneElement.innerHTML = `<a href="tel:${structure.telephone}" 
+                try {
+                    const structure = JSON.parse(this.getAttribute('data-structure'));
+                    
+                    // Remplir la modal avec les données
+                    document.getElementById('modal-organisme').textContent = structure.organisme || '-';
+                    document.getElementById('modal-organisme-text').textContent = structure.organisme || '-';
+                    
+                    // Description
+                    const descriptionElement = document.getElementById('modal-description');
+                    if (structure.description && structure.description.trim() !== '') {
+                        descriptionElement.textContent = structure.description;
+                        descriptionElement.classList.remove('text-gray-400');
+                    } else {
+                        descriptionElement.textContent = 'Aucune description disponible';
+                        descriptionElement.classList.add('text-gray-400');
+                    }
+                    
+                    // Informations principales
+                    document.getElementById('modal-categories').textContent = structure.categories || 'Non spécifié';
+                    document.getElementById('modal-type_structure').textContent = structure.type_structure || 'Non spécifié';
+                    document.getElementById('modal-public_cible').textContent = structure.public_cible || 'Non spécifié';
+                    document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
+                    
+                    // Site web
+                    const siteElement = document.getElementById('modal-site');
+                    if (structure.site && structure.site.trim() !== '') {
+                        siteElement.innerHTML = `<a href="${structure.site}" target="_blank" 
+                                               class="text-[#255156] hover:text-[#8bbdc3] font-medium underline transition-colors">
+                            <i class="fas fa-external-link-alt mr-1"></i>${structure.site}
+                        </a>`;
+                    } else {
+                        siteElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+                    }
+                    
+                    // Localisation - Siège social
+                    document.getElementById('modal-siege_ville').textContent = structure.siege_ville || 'Non spécifié';
+                    document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || 'Non spécifié';
+                    
+                    // Localisation - Antenne locale
+                    document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
+                    document.getElementById('modal-code_postal').textContent = structure.code_postal || 'Non spécifié';
+                    
+                    const adresseElement = document.getElementById('modal-adresse');
+                    if (structure.adresse && structure.adresse.trim() !== '') {
+                        adresseElement.textContent = structure.adresse;
+                    } else {
+                        adresseElement.innerHTML = '<span class="text-gray-400 italic">Non spécifiée</span>';
+                    }
+                    
+                    // Contact
+                    const telephoneElement = document.getElementById('modal-telephone');
+                    if (structure.telephone && structure.telephone.trim() !== '') {
+                        telephoneElement.innerHTML = `<a href="tel:${structure.telephone}" 
+                                                       class="text-[#255156] hover:text-[#8bbdc3] font-medium">
+                            <i class="fas fa-phone mr-1"></i>${structure.telephone}
+                        </a>`;
+                    } else {
+                        telephoneElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+                    }
+                    
+                    const emailElement = document.getElementById('modal-email');
+                    if (structure.email && structure.email.trim() !== '') {
+                        emailElement.innerHTML = `<a href="mailto:${structure.email}" 
                                                    class="text-[#255156] hover:text-[#8bbdc3] font-medium">
-                        <i class="fas fa-phone mr-1"></i>${structure.telephone}
-                    </a>`;
-                } else {
-                    telephoneElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
-                }
-                
-                const emailElement = document.getElementById('modal-email');
-                if (structure.email && structure.email.trim() !== '') {
-                    emailElement.innerHTML = `<a href="mailto:${structure.email}" 
-                                               class="text-[#255156] hover:text-[#8bbdc3] font-medium">
-                        <i class="fas fa-envelope mr-1"></i>${structure.email}
-                    </a>`;
-                } else {
-                    emailElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
-                }
-                
-                const contactElement = document.getElementById('modal-contact');
-                if (structure.contact && structure.contact.trim() !== '') {
-                    contactElement.textContent = structure.contact;
-                } else {
-                    contactElement.innerHTML = '<span class="text-gray-400 italic">Non spécifié</span>';
-                }
-                
-                // Informations complémentaires
-                const hebergementElement = document.getElementById('modal-hebergement');
-                if (structure.hebergement && structure.hebergement.trim() !== '') {
-                    hebergementElement.textContent = structure.hebergement;
-                } else {
-                    hebergementElement.innerHTML = '<span class="text-gray-400 italic">Non spécifié</span>';
-                }
-                
-                const detailsElement = document.getElementById('modal-details');
-                if (structure.details && structure.details.trim() !== '') {
-                    detailsElement.textContent = structure.details;
-                } else {
-                    detailsElement.innerHTML = '<span class="text-gray-400 italic">Aucun détail spécifique</span>';
+                            <i class="fas fa-envelope mr-1"></i>${structure.email}
+                        </a>`;
+                    } else {
+                        emailElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+                    }
+                    
+                    const contactElement = document.getElementById('modal-contact');
+                    if (structure.contact && structure.contact.trim() !== '') {
+                        contactElement.textContent = structure.contact;
+                    } else {
+                        contactElement.innerHTML = '<span class="text-gray-400 italic">Non spécifié</span>';
+                    }
+                    
+                    // Informations complémentaires
+                    document.getElementById('modal-hebergement').textContent = structure.hebergement || 'Non spécifié';
+                    document.getElementById('modal-details').textContent = structure.details || 'Aucun détail spécifique';
+                    document.getElementById('modal-created_at').textContent = structure.created_at ? new Date(structure.created_at).toLocaleDateString('fr-FR') : '-';
+                    
+                } catch (e) {
+                    console.error('Erreur parsing JSON:', e);
                 }
             });
         });
         
         // Initialiser le compteur
-        updateResultCount(document.querySelectorAll('.structure-row').length, 
-                         document.querySelectorAll('.structure-row').length);
+        const totalRows = document.querySelectorAll('.structure-row').length;
+        updateResultCount(totalRows, totalRows);
     });
 </script>
 @endsection

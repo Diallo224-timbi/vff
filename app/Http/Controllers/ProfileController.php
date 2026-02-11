@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Structure;
+use App\Models\Structures;
 
 class ProfileController extends Controller
 {
@@ -11,7 +11,7 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $structures = Structure::all();
+        $structures = Structures::all();
         return view('profile.show', compact('user', 'structures'));
     }
 

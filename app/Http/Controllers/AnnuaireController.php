@@ -33,9 +33,33 @@ class AnnuaireController extends Controller
         }
 
         // Pagination
-        $structures = $query->orderBy('organisme')->paginate(10)->withQueryString();
+        $structures = $query->orderBy('organisme')->paginate(50)->withQueryString();
 
         return view('annuaire.index', compact('structures'));
+    }
+// Affichage de la liste groupée par siège
+    public function listeGroupee()
+    {
+        $structures = Structures::orderBy('siege_ville')->get();
+        
+        // Regroupement par siège (ville du siège)
+        $groupes = $structures->groupBy(function($item) {
+            return $item->organisme ?? 'Non spécifié';
+        })->sortKeys();
+        
+        // Créer une adresse complète pour chaque structure
+        foreach ($structures as $structure) {
+            $adresse_complete = trim($structure->adresse ?? '');
+            if ($structure->code_postal || $structure->ville) {
+                $adresse_complete .= $adresse_complete ? ', ' : '';
+                $adresse_complete .= trim($structure->code_postal . ' ' . $structure->ville);
+            }
+            $structure->adresse_complete = $adresse_complete ?: null;
+        }
+        
+        $totalStructures = $structures->count();
+        
+        return view('annuaire.list', compact('groupes', 'totalStructures'));
     }
 
     public function exportCsv()

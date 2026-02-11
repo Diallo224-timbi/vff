@@ -52,7 +52,7 @@
             data-prenom="{{ $user->prenom }}"
             data-email="{{ strtolower($user->email) }}"
             data-phone="{{ $user->phone ?? '' }}"
-            data-structure="{{ strtolower($user->structure->nom_structure ?? '') }}"
+            data-structure="{{ strtolower($user->structure->organisme ?? '') }}"
             data-etatv="{{ strtolower($user->etatV) }}"
         >
             <!-- Carte cliquable vers profil -->
@@ -242,7 +242,7 @@
                             <option value="{{ $user->id_structure }}" id="modalStructureOption"></option>
                             @foreach($structures as $structure)
                                 <option value="{{ $structure->id }}">
-                                    {{ $structure->organisme }} ({{ $structure->ville }} -- {{ $structure->code_postal }})
+                                    {{ $structure->organisme }} ({{ $structure->ville }} -- {{ $structure->code_postal }} -- {{ $structure->adresse }} )
                                 </option>
                             @endforeach
                         </select>
@@ -370,7 +370,7 @@
 
             
             // Mettre à jour l'action du formulaire
-            document.getElementById('editUserForm').action = `/admin/users/${userId}`;
+            //document.getElementById('editUserForm').action = `/admin/users/${userId}`;
         });
     });
 
