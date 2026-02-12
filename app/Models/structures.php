@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class structures extends Model
+class Structures extends Model
 {
     protected $table = 'structure';
     
@@ -30,6 +30,7 @@ class structures extends Model
         'telephone',
         'horaires',
         'pays',
+        'logo',
     ];
     
     public function users()

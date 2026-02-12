@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\structures;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class StructureController extends Controller
@@ -26,7 +27,7 @@ class StructureController extends Controller
 
         $structures = $query->orderBy('organisme')->paginate(20)->withQueryString();
 
-        return view('structures.index', compact('structures'));
+        return view('annuaire.index', compact('structures'));
     }
 
     public function createPDF()
@@ -83,12 +84,27 @@ class StructureController extends Controller
             'email' => 'nullable|email|max:50',
             'telephone' => 'nullable|string|max:25',
             'horaires' => 'nullable|string|max:255',
+            // ✅ NOUVEAU : Validation du logo
+            'logo' => 'nullable|file|mimes:jpg,jpeg,png,svg|max:2048', // 2Mo max
         ]);
+
+        // ✅ NOUVEAU : Gestion de l'upload du logo
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('logos', 'public');
+            $validated['logo'] = $path;
+        }
 
         // Si latitude ou longitude absentes, récupérer via Nominatim
         if ((!$validated['latitude'] || !$validated['longitude']) && $validated['adresse']) {
             $address = urlencode($validated['adresse']);
-            $response = Http::get("https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1");
+            $response = Http::withHeaders([
+                'User-Agent' => 'AnnuaireSocial/1.0',
+            ])->get("https://nominatim.openstreetmap.org/search", [
+                'q' => $validated['adresse'],
+                'format' => 'json',
+                'limit' => 1,
+            ]);
+            
             $data = $response->json();
 
             if (!empty($data[0])) {
@@ -118,7 +134,7 @@ class StructureController extends Controller
         ]);
     }
 
-    public function update(Request $request, Structures $structure)
+    public function update(Request $request, structures $structure)
     {
         $validated = $request->validate([
             'organisme' => 'required|string|max:255',
@@ -136,7 +152,39 @@ class StructureController extends Controller
             'categories' => 'nullable|string',
             'public_cible' => 'nullable|string',
             'zone' => 'nullable|string|max:100',
+            'adresse' => 'nullable|string|max:255',
+            'ville' => 'nullable|string|max:100',
+            'code_postal' => 'nullable|string|max:10',
+            'pays' => 'nullable|string|max:100',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            // ✅ NOUVEAU : Validation du logo en modification
+            'logo' => 'sometimes|file|mimes:jpg,jpeg,png,svg|max:2048',
+            // ✅ NOUVEAU : Détection suppression logo
+            'remove_logo' => 'nullable|in:1',
         ]);
+
+        // ✅ NOUVEAU : Gestion de la SUPPRESSION du logo
+        if ($request->has('remove_logo') && $request->remove_logo == '1') {
+            // Supprimer l'ancien fichier physique
+            if ($structure->logo) {
+                Storage::disk('public')->delete($structure->logo);
+            }
+            // Mettre à null en base
+            $validated['logo'] = null;
+        }
+
+        // ✅ NOUVEAU : Gestion du NOUVEAU logo (écrase l'ancien)
+        if ($request->hasFile('logo')) {
+            // Supprimer l'ancien logo s'il existe
+            if ($structure->logo) {
+                Storage::disk('public')->delete($structure->logo);
+            }
+            
+            // Stocker le nouveau
+            $path = $request->file('logo')->store('logos', 'public');
+            $validated['logo'] = $path;
+        }
 
         $structure->update($validated);
 
@@ -147,6 +195,11 @@ class StructureController extends Controller
 
     public function destroy(structures $structure)
     {
+        // ✅ NOUVEAU : Supprimer le logo physique avant de supprimer la structure
+        if ($structure->logo) {
+            Storage::disk('public')->delete($structure->logo);
+        }
+
         // Vérifier s'il y a des utilisateurs liés à cette structure
         if (method_exists($structure, 'users') && $structure->users()->count() > 0) {
             return redirect()->route('structures.index')

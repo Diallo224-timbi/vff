@@ -237,10 +237,25 @@
                             data-type="{{ $structure->type_structure ?? '' }}"
                             data-zone="{{ $structure->zone ?? '' }}"
                             data-public="{{ $structure->public_cible ?? '' }}">
-                            <!-- Organisme -->
-                            <td class="px-3 py-2 truncate max-w-[120px]">
-                                <div class="font-semibold text-gray-800 text-sm truncate max-w-[120px]" title="{{ $structure->organisme }}">
-                                    {{ $structure->organisme }}
+                            
+                            <!-- 🟢 ORGANISME AVEC LOGO -->
+                            <td class="px-3 py-2">
+                                <div class="flex items-center gap-2">
+                                    <!-- Logo de la structure -->
+                                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
+                                        @if($structure->logo)
+                                            <img src="{{ asset('storage/' . $structure->logo) }}" 
+                                                 alt="Logo {{ $structure->organisme }}"
+                                                 class="w-full h-full object-contain"
+                                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-building text-gray-400 text-sm\'></i>';">
+                                        @else
+                                            <i class="fas fa-building text-gray-400 text-sm"></i>
+                                        @endif
+                                    </div>
+                                    <!-- Nom de l'organisme -->
+                                    <div class="font-semibold text-gray-800 text-sm truncate max-w-[100px]" title="{{ $structure->organisme }}">
+                                        {{ $structure->organisme }}
+                                    </div>
                                 </div>
                             </td>
                             
@@ -440,15 +455,19 @@
     </div>
 </div>
 
-<!-- MODAL DETAILS - ACCESSIBLE À TOUS -->
+<!-- 🟢 MODAL DETAILS - AVEC AFFICHAGE DU LOGO -->
 <div class="modal fade animate__animated" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered animate__animated animate__zoomIn">
         <div class="modal-content border-0 shadow-2xl overflow-hidden">
-            <!-- Header avec animation -->
+            <!-- Header avec animation et LOGO -->
             <div class="modal-header bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4">
                 <div class="flex items-center gap-3 animate__animated animate__fadeInLeft">
-                    <div class="bg-white/20 p-2 rounded-lg">
-                        <i class="fas fa-building text-xl"></i>
+                    <!-- 🟢 LOGO DANS L'EN-TÊTE DE LA MODAL -->
+                    <div id="modal-logo-container" class="bg-white/20 p-1 rounded-lg w-12 h-12 flex items-center justify-center">
+                        <div id="modal-logo-placeholder" class="hidden">
+                            <i class="fas fa-building text-white text-2xl"></i>
+                        </div>
+                        <img id="modal-logo-img" src="" alt="Logo" class="w-10 h-10 object-contain hidden">
                     </div>
                     <div>
                         <h5 class="modal-title text-lg font-bold" id="detailsModalLabel">
@@ -498,14 +517,12 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Colonne droite - Localisation -->
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
                         <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
                             <i class="fas fa-map-marker-alt text-xs"></i> 
                             <span>Localisation</span>
-                        </h6>
-                        
+                        </h6>      
                         <!-- Siège social -->
                         <div class="mb-3 p-2 bg-blue-50/50 rounded border border-blue-100">
                             <div class="flex items-center gap-2 mb-1">
@@ -522,8 +539,7 @@
                                     <span class="text-gray-700 truncate" id="modal-siege_adresse" title="-">-</span>
                                 </div>
                             </div>
-                        </div>
-                        
+                        </div>    
                         <!-- Antenne locale -->
                         <div class="p-2 bg-green-50/50 rounded border border-green-100">
                             <div class="flex items-center gap-2 mb-1">
@@ -594,7 +610,6 @@
                         -
                     </div>
                 </div>
-
                 <!-- Informations complémentaires (en ligne) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
@@ -832,6 +847,16 @@
     ::-webkit-scrollbar-thumb:hover {
         background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
     }
+
+    /* 🟢 Style pour le logo */
+    .logo-container {
+        transition: all 0.3s ease;
+    }
+    
+    .logo-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
 </style>
 @endsection
 
@@ -1005,12 +1030,27 @@
             });
         });
 
-        // DETAILS MODAL - Remplissage des données
+        // 🟢 DETAILS MODAL - Remplissage des données AVEC LOGO
         const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
         viewDetailsButtons.forEach(btn => {
             btn.addEventListener('click', function(){
                 try {
                     const structure = JSON.parse(this.getAttribute('data-structure'));
+                    
+                    // 🟢 GESTION DU LOGO DANS LA MODAL
+                    const modalLogoImg = document.getElementById('modal-logo-img');
+                    const modalLogoPlaceholder = document.getElementById('modal-logo-placeholder');
+                    
+                    if (structure.logo) {
+                        // Afficher l'image
+                        modalLogoImg.src = '{{ asset('storage') }}/' + structure.logo;
+                        modalLogoImg.classList.remove('hidden');
+                        modalLogoPlaceholder.classList.add('hidden');
+                    } else {
+                        // Afficher le placeholder
+                        modalLogoImg.classList.add('hidden');
+                        modalLogoPlaceholder.classList.remove('hidden');
+                    }
                     
                     // Remplir la modal avec les données
                     document.getElementById('modal-organisme').textContent = structure.organisme || '-';

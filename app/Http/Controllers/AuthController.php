@@ -75,8 +75,8 @@ class AuthController extends Controller
 
     public function showRegistrationForm()
     {
-        $Structures = Structures::orderBy('organisme')->get();
-        return view('auth.register', compact('Structures'));
+        $structures = Structures::orderBy('organisme')->get();
+        return view('auth.register', compact('structures'));
     }
     public function signUp(Request $request){
     try {
@@ -89,7 +89,7 @@ class AuthController extends Controller
             'adresse' => 'required|string|max:255',
             'ville' => 'required|string|max:255',
             'code_postal' => 'required|string|max:10',
-            'id_Structures' => 'nullable|exists:Structures,id',
+            'id_structure' => 'nullable|exists:structure,id',
             'chart' => 'required|boolean',
         ],[
             'confirmEmail.same' => 'L\'adresse e-mail de confirmation ne correspond pas.',
@@ -106,7 +106,7 @@ class AuthController extends Controller
             'adresse' => $request->adresse,
             'ville' => $request->ville,
             'code_postal' => $request->code_postal,
-            'id_Structures' => $request->id_Structures,
+            'id_structure' => $request->id_structure,
             'chart' => $request->chart,
         ]);
 

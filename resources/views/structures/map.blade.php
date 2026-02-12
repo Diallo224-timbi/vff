@@ -84,7 +84,6 @@
                                     ->values();
                             @endphp
 
-
                             @foreach($categories as $category)
                                 <label class="flex items-center cursor-pointer hover:bg-gray-50 p-1 rounded">
                                     <input type="checkbox" 
@@ -235,8 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeBtn) {
             activeBtn.classList.remove('bg-gradient-to-r');
             activeBtn.classList.add('bg-white', 'ring-2', 'ring-offset-1');
-            
-        
         }
     };
 
@@ -272,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fonction pour afficher les détails d'une structure
+    // 🟢 FONCTION POUR AFFICHER LES DÉTAILS D'UNE STRUCTURE AVEC LOGO
     function showStructureDetails(structure) {
         console.log('Affichage des détails pour:', structure);
         
@@ -285,22 +282,41 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const emailLink = structure.email ? 
             `mailto:${structure.email}` : '';
+
+        // 🟢 GÉNÉRER L'URL DU LOGO
+        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
         
         const detailsHtml = `
             <div class="space-y-4 animate-fade-in">
-                <!-- En-tête -->
+                <!-- 🟢 EN-TÊTE AVEC LOGO ET NOM -->
                 <div class="border-b pb-3">
-                    <h4 class="text-xl font-bold text-[#255156] mb-2">${structure.organisme || 'Structure'}</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white" 
-                              style="background-color: ${getColorByType(structure.type_structure)}">
-                            ${structure.type_structure || 'Non spécifié'}
-                        </span>
-                        ${structure.categories ? `
-                            <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                                ${structure.categories}
-                            </span>
-                        ` : ''}
+                    <div class="flex items-center gap-3 mb-2">
+                        <!-- Logo de la structure -->
+                        <div class="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden border-2 border-gray-200 flex items-center justify-center shadow-md">
+                            ${logoUrl ? `
+                                <img src="${logoUrl}" 
+                                     alt="Logo ${structure.organisme || 'Structure'}"
+                                     class="w-full h-full object-contain"
+                                     onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-building text-gray-400 text-2xl\\'></i>';">
+                            ` : `
+                                <i class="fas fa-building text-gray-400 text-2xl"></i>
+                            `}
+                        </div>
+                        <!-- Nom et type -->
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold text-[#255156]">${structure.organisme || 'Structure'}</h4>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white" 
+                                      style="background-color: ${getColorByType(structure.type_structure)}">
+                                    ${structure.type_structure || 'Non spécifié'}
+                                </span>
+                                ${structure.categories ? `
+                                    <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                                        ${structure.categories}
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -316,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${structure.zone ? `<p><strong>Zone:</strong> ${structure.zone}</p>` : ''}
                         ${structure.latitude && structure.longitude ? `
                             <p class="text-xs text-gray-500 mt-1">
-                                <i class="fas fa-person m-1"></i>
+                                <i class="fas fa-user-tie m-1"></i>
                                 Responsable: ${structure.responsable || 'Non spécifié'}
                             </p>
                         ` : ''}
@@ -411,6 +427,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <p class="mt-1 text-gray-600 bg-gray-50 p-2 rounded text-sm">${structure.description}</p>
                             </div>
                         ` : ''}
+                        ${structure.horaires ? `
+                            <div>
+                                <strong>Horaires:</strong>
+                                <p class="mt-1 text-gray-600">${structure.horaires}</p>
+                            </div>
+                        ` : ''}
+                        ${structure.details ? `
+                            <div>
+                                <strong>Détails spécifiques:</strong>
+                                <p class="mt-1 text-gray-600">${structure.details}</p>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
 
@@ -431,11 +459,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 Ouvrir dans Google Maps
                             </a>
                         ` : ''}
-                        <a href="/structures/${structure.id}" 
-                           class="w-full bg-white border border-[#255156] text-[#255156] py-2 px-3 rounded text-sm font-medium hover:bg-[#255156]/5 transition-colors flex items-center justify-center gap-2">
-                            <i class="fas fa-external-link-alt"></i>
-                            Page détaillée
-                        </a>
                     </div>
                 </div>
             </div>
@@ -467,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Fonction pour ajouter un marker
+    // 🟢 FONCTION POUR AJOUTER UN MARKER AVEC LOGO DANS LE POPUP
     function addMarker(structure) {
         if (structure.latitude && structure.longitude) {
             const color = getColorByType(structure.type_structure);
@@ -476,14 +499,70 @@ document.addEventListener('DOMContentLoaded', () => {
             const marker = L.marker([structure.latitude, structure.longitude], { icon })
                 .addTo(map);
             
-            // Popup simplifiée
+            // 🟢 POPUP AVEC LOGO
+            const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
+            
             marker.bindPopup(`
-                <div class="p-2">
-                    <strong class="text-[#255156]">${structure.organisme}</strong><br>
-                    <small class="text-gray-600">${structure.ville || ''}</small>
+                <div class="min-w-[250px] max-w-[300px] p-3 space-y-2">
+                    <!-- 🟢 EN-TÊTE AVEC LOGO -->
+                    <div class="flex items-center gap-2 border-b pb-2">
+                        <div class="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
+                            ${logoUrl ? `
+                                <img src="${logoUrl}" 
+                                     alt="Logo" 
+                                     class="w-full h-full object-contain"
+                                     onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-building text-gray-400 text-sm\\'></i>';">
+                            ` : `
+                                <i class="fas fa-building text-gray-400 text-sm"></i>
+                            `}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-[#255156] text-sm leading-tight">
+                                ${structure.organisme || 'Structure'}
+                            </h4>
+                            ${structure.ville ? `
+                                <p class="text-xs text-gray-500 mt-0.5">
+                                    <i class="fas fa-map-marker-alt text-red-400 mr-1"></i>
+                                    ${structure.ville}
+                                </p>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="text-xs space-y-1.5">
+                        ${structure.telephone ? `
+                            <div class="flex items-center gap-2 text-gray-700">
+                                <i class="fas fa-phone text-[#255156] w-3"></i>
+                                <a href="tel:${structure.telephone.replace(/\s/g,'')}" 
+                                   class="hover:text-[#1d4144] hover:underline">
+                                    ${structure.telephone}
+                                </a>
+                            </div>
+                        ` : ''}
+
+                        ${structure.email ? `
+                            <div class="flex items-center gap-2 text-gray-700">
+                                <i class="fas fa-envelope text-[#255156] w-3"></i>
+                                <a href="mailto:${structure.email}" 
+                                   class="hover:text-[#1d4144] hover:underline break-all">
+                                    ${structure.email.length > 25 ? structure.email.substring(0, 22) + '...' : structure.email}
+                                </a>
+                            </div>
+                        ` : ''}
+
+                        ${structure.type_structure ? `
+                            <div class="flex items-center gap-2 text-gray-700 mt-1 pt-1 border-t border-gray-100">
+                                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium text-white"
+                                      style="background-color: ${color}">
+                                    ${structure.type_structure}
+                                </span>
+                            </div>
+                        ` : ''}
+                    </div>
                 </div>
             `);
-
+            
             // Événement de clic pour afficher les détails
             marker.on('click', function(e) {
                 // Réinitialiser le style des autres markers
@@ -500,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     originalColor: color
                 };
 
-                // Afficher les détails
+                // 🟢 Afficher les détails avec le logo
                 showStructureDetails(structure);
 
                 // Ouvrir le popup
@@ -555,8 +634,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 map.fitBounds(paddedBounds, {
                     animate: true,
                     duration: 0.5,
-                    padding: [50, 50], // Padding en pixels
-                    maxZoom: 15 // Zoom maximum pour le fitBounds
+                    padding: [50, 50],
+                    maxZoom: 18
                 });
             }
         }
@@ -570,46 +649,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour filtrer les markers avec zoom automatique
     function filterMarkers() {
-    const searchText = document.getElementById('mapSearch').value.toLowerCase();
-    const typeFilters = Array.from(document.querySelectorAll('.type-filter:checked')).map(cb => cb.value);
-    const categoryFilters = Array.from(document.querySelectorAll('.category-filter:checked')).map(cb => cb.value);
+        const searchText = document.getElementById('mapSearch').value.toLowerCase();
+        const typeFilters = Array.from(document.querySelectorAll('.type-filter:checked')).map(cb => cb.value);
+        const categoryFilters = Array.from(document.querySelectorAll('.category-filter:checked')).map(cb => cb.value);
 
-    let visibleCount = 0;
+        let visibleCount = 0;
 
-    markers.forEach(({ marker, structure }) => {
-        const matchesSearch = !searchText || 
-            (structure.organisme && structure.organisme.toLowerCase().includes(searchText)) ||
-            (structure.ville && structure.ville.toLowerCase().includes(searchText)) ||
-            (structure.responsable && structure.responsable.toLowerCase().includes(searchText)) ||
-            (structure.adresse && structure.adresse.toLowerCase().includes(searchText));
+        markers.forEach(({ marker, structure }) => {
+            const matchesSearch = !searchText || 
+                (structure.organisme && structure.organisme.toLowerCase().includes(searchText)) ||
+                (structure.ville && structure.ville.toLowerCase().includes(searchText)) ||
+                (structure.responsable && structure.responsable.toLowerCase().includes(searchText)) ||
+                (structure.adresse && structure.adresse.toLowerCase().includes(searchText));
 
-        const matchesType = typeFilters.length === 0 || 
-            typeFilters.includes(structure.type_structure) ||
-            (!structure.type_structure && typeFilters.includes(''));
+            const matchesType = typeFilters.length === 0 || 
+                typeFilters.includes(structure.type_structure) ||
+                (!structure.type_structure && typeFilters.includes(''));
 
-        const matchesCategory = categoryFilters.length === 0 || 
-            (structure.categories && structure.categories
-                .split(',')
-                .map(c => c.trim())
-                .some(c => categoryFilters.includes(c))
-            ) || (!structure.categories && categoryFilters.includes(''));
+            const matchesCategory = categoryFilters.length === 0 || 
+                (structure.categories && structure.categories
+                    .split(',')
+                    .map(c => c.trim())
+                    .some(c => categoryFilters.includes(c))
+                ) || (!structure.categories && categoryFilters.includes(''));
 
-        const isVisible = matchesSearch && matchesType && matchesCategory;
+            const isVisible = matchesSearch && matchesType && matchesCategory;
 
-        if (isVisible) {
-            marker.addTo(map);
-            visibleCount++;
-        } else {
-            map.removeLayer(marker);
+            if (isVisible) {
+                marker.addTo(map);
+                visibleCount++;
+            } else {
+                map.removeLayer(marker);
 
-            if (currentSelectedMarker && currentSelectedMarker.marker === marker) {
-                resetDetailsPanel();
+                if (currentSelectedMarker && currentSelectedMarker.marker === marker) {
+                    resetDetailsPanel();
+                }
             }
-        }
-    });
+        });
 
-
-        
         document.getElementById('visibleCount').textContent = visibleCount;
         
         // Zoom automatique sur les markers visibles avec un délai pour éviter trop d'animations
@@ -678,8 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (panelElement) {
             const panelOffset = panelElement.getBoundingClientRect().top;
-            
-            const availableHeight = windowHeight - panelOffset - headerHeight - actionsHeight - 32; // 32px pour le padding
+            const availableHeight = windowHeight - panelOffset - headerHeight - actionsHeight - 32;
             panelContent.style.maxHeight = `${Math.max(availableHeight, 200)}px`;
         }
     }

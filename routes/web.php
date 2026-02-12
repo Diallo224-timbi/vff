@@ -110,7 +110,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// Routes pour la gestion des catégories
+// Routes pour la gestion des catégories du forum
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
