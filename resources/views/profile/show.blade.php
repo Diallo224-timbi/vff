@@ -98,21 +98,8 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     <i class="fas fa-user mr-1 text-gray-400"></i> Prénom
                                 </label>
-                                @if(auth()->user()->role === 'admin')
-                                    <input type="text" name="prenom" value="{{ old('prenom', $user->prenom ?? '') }}" 
-                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm">
-                                @else
-                                    <div class="relative group">
-                                        <input type="text" name="prenom" value="{{ old('prenom', $user->prenom ?? '') }}" disabled
-                                            class="w-full px-4 py-2.5 border border-gray-200 bg-gray-50 rounded-lg text-gray-600 cursor-not-allowed">
-                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                            <i class="fas fa-lock text-gray-400"></i>
-                                        </div>
-                                        <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
-                                            <i class="fas fa-info-circle mr-1"></i> Contacter un administrateur pour modifier
-                                        </div>
-                                    </div>
-                                @endif
+                                <input type="text" name="prenom" value="{{ old('prenom', $user->prenom) }}" 
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm">  
                             </div>
 
                             <!-- Nom -->
@@ -120,21 +107,10 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     <i class="fas fa-user mr-1 text-gray-400"></i> Nom
                                 </label>
-                                @if(auth()->user()->role === 'admin')
-                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" 
-                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm">
-                                @else
-                                    <div class="relative group">
-                                        <input type="text" value="{{ $user->name }}" disabled
-                                            class="w-full px-4 py-2.5 border border-gray-200 bg-gray-50 rounded-lg text-gray-600 cursor-not-allowed">
-                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                            <i class="fas fa-lock text-gray-400"></i>
-                                        </div>
-                                        <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2">
-                                            ⚠️ Modification réservée aux administrateurs
-                                        </div>
-                                    </div>
-                                @endif
+
+                                <input type="text" name="name"
+                                    value="{{ old('name', $user->name) }}"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm">
                             </div>
                         </div>
                     </div>
@@ -172,43 +148,35 @@
                         <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4 flex items-center">
                             <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i> Adresse
                         </h3>
-                        <div class="space-y-4">
-                            <!-- Adresse complète -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    <i class="fas fa-road mr-1 text-gray-400"></i> Rue / Avenue
-                                </label>
-                                <input type="text" name="adresse" value="{{ old('adresse', $user->adresse) }}" 
-                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
-                                    placeholder="Numéro et nom de rue">
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <!-- Code Postal -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
-                                    <input type="text" name="code_postal" value="{{ old('code_postal', $user->code_postal) }}" 
-                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
-                                        placeholder="75001">
-                                </div>
-                                
-                                <!-- Ville -->
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                                    <input type="text" name="ville" value="{{ old('ville', $user->ville) }}" 
-                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
-                                        placeholder="Paris">
-                                </div>
-                            </div>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <!-- Adresse -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                        <input type="text" name="adresse" value="{{ old('adresse', $user->adresse) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                            placeholder="123 Rue Exemple">
+                    </div>
+
+                    <!-- Code postal -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
+                        <input type="text" name="code_postal" value="{{ old('code_postal', $user->code_postal) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                            placeholder="75001">
+                    </div>
+
+                    <!-- Ville -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                        <input type="text" name="ville" value="{{ old('ville', $user->ville) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                            placeholder="Paris">
+                    </div>
+                </div>
                     </div>
 
                     <!-- Barre d'actions -->
                     <div class="flex items-center justify-between pt-4 border-t border-gray-200">
-                        <div class="flex items-center text-sm text-gray-500">
-                            <i class="fas fa-info-circle mr-2 text-blue-400"></i>
-                            Tous les champs sont modifiables sauf votre nom
-                        </div>
                         <div class="flex space-x-3">
                             <button type="reset" 
                                 class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition font-medium text-sm flex items-center">
@@ -241,12 +209,6 @@
                             {{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->format('d/m/Y H:i') : 'Première connexion' }}
                         </span>
                     </div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm text-gray-600">Compte créé le</span>
-                        <span class="text-sm font-semibold text-gray-800">
-                            {{ $user->created_at?->format('d/m/Y') ?? 'N/A' }}
-                        </span>
-                    </div>
                     <div class="border-t border-gray-200 my-3"></div>
                     <a href="{{ route('password.request') }}" 
                         class="block w-full py-2.5 px-4 bg-gray-50 hover:bg-gray-100 text-blue-600 rounded-lg transition text-sm font-medium text-center">
@@ -257,7 +219,7 @@
 
             <!-- Carte rôle et permissions -->
             <div class="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-100">
-                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 px-3 py-3 border-b border-gray-200">
                     <div class="flex items-center">
                         <i class="fas fa-user-tag text-purple-500 text-xl mr-3"></i>
                         <h3 class="text-lg font-semibold text-gray-800">Rôle & Permissions</h3>

@@ -3,473 +3,452 @@
 @section('title', 'Gestion des utilisateurs')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-6">
-
-    <!-- HEADER -->
-    <div class="flex items-center justify-between mb-6">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Gestion des utilisateurs</h1>
-            <p class="text-gray-500 mt-1 text-sm">Administration & validation des comptes</p>
+<div class="container mx-auto px-4 py-4">
+    <!-- Messages de succès -->
+    @if(session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg shadow-sm"
+             x-data="{ show: true }"
+             x-show="show"
+             x-init="setTimeout(() => show = false, 3000)">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <p>{{ session('success') }}</p>
+            </div>
         </div>
-        <div class="flex items-center gap-3">
-            <span class="text-sm text-gray-600">{{ auth()->user()->role }}</span>
-            <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
+    @endif
+
+    <!-- HEADER avec bouton statistiques -->
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-800">
+            <i class="fas fa-users text-[#255156] mr-2"></i>
+            Gestion des utilisateurs
+        </h1>
+        <div class="flex items-center gap-2">
+            <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1d4144] text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-1">
+                <i class="fas fa-chart-pie"></i>
+                Statistiques
+            </button>
+            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">{{ auth()->user()->role }}</span>
+            <div class="w-8 h-8 rounded-full bg-[#255156] flex items-center justify-center text-white font-bold text-sm">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
         </div>
     </div>
 
-    <!-- SEARCH BAR -->
-    <div class="mb-6">
-        <div class="relative">
-            <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input
-                id="searchInput"
-                type="text"
-                placeholder="Rechercher par nom, email, structure ou état…"
-                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700 text-sm"
-            >
-        </div>
-    </div>
-    <!-- message de succès -->
-    @if(session('success'))
-        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-        {{ session('success') }}
-        </div>
-        <script>
-            setTimeout(() => {
-                document.querySelector('.bg-green-100').remove();
-            }, 5000);
-        </script>
-    @endif
-    <!-- USERS LIST -->
-    <div id="usersContainer" class="space-y-4">
-        @foreach($users as $user)
-        <div
-            class="relative group user-card bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-transform transform hover:scale-102 cursor-pointer"
-            data-user-id="{{ $user->id }}"
-            data-name="{{ strtolower($user->name) }}"
-            data-prenom="{{ $user->prenom }}"
-            data-email="{{ strtolower($user->email) }}"
-            data-phone="{{ $user->phone ?? '' }}"
-            data-structure="{{ strtolower($user->structure->organisme ?? '') }}"
-            data-etatv="{{ strtolower($user->etatV) }}"
+    <!-- RECHERCHE -->
+    <div class="mb-4">
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Rechercher par nom, email, structure..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-[#255156] focus:outline-none"
         >
-            <!-- Carte cliquable vers profil -->
-            <a href="{{ route('profile.show', $user->id) }}" class="absolute inset-0 z-10"></a>
+    </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 min-h-[140px] relative z-25 transition-all duration-300 ease-in-out">
+    <!-- LISTE DES UTILISATEURS -->
+    <div id="usersContainer" class="space-y-2">
+        @forelse($users as $user)
+        <div class="user-card bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow"
+             data-search="{{ strtolower($user->prenom.' '.$user->name.' '.$user->email.' '.($user->structure->organisme ?? '')) }}">
 
-                <!-- COL 1 : IDENTITÉ -->
-                <div class="flex flex-col justify-between h-full card-content border border-gray-200 p-2 rounded">
-                    <p class="card-text flex items-center gap-2 text-gray-900 font-semibold text-sm">
-                        <i class="fa fa-user text-blue-600 text-lg"></i>
-                        <strong>{{ $user->prenom }} {{ $user->name }}</strong>
-                    </p>
-                    <p class="w-16 h-16 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-xl mx-auto mt-2">
+            <!-- Infos principales -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-[#255156] flex items-center justify-center text-white font-bold text-sm">
                         {{ strtoupper(substr($user->prenom, 0, 1)) }}{{ strtoupper(substr($user->name, 0, 1)) }}
-                    </p>
-                    <strong class="text-xs"><i class="fa fa-user-tag text-blue-600">{{ $user->role }}</i> </strong>
-                    <p class="card-text flex items-center gap-2 text-gray-700 text-sm mt-2">
-                        <i class="fa fa-envelope text-blue-600 text-lg"></i>
-                        <strong>Email:</strong>
-                        <a href="mailto:{{ $user->email }}" class="hover:underline text-blue-600">{{ $user->email }}</a>
-                    </p>
+                    </div>
+                    <div>
+                        <div class="font-medium text-sm">{{ $user->prenom }} {{ $user->name }}</div>
+                        <div class="text-xs text-gray-500">{{ $user->email }}</div>
+                    </div>
                 </div>
-
-                <!-- COL 2 : INFOS UTILISATEUR -->
-                <div class="flex flex-col justify-between h-full text-xs text-gray-700 card-content space-y-1 border border-gray-200 p-2 rounded">
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-phone text-blue-600"></i> <strong>Téléphone:</strong> {{ $user->phone ?? '—' }}</p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-map-marker-alt text-blue-600"></i> <strong>Adresse:</strong></p>
-                    <p class="card-text ml-6">
-                        <a target="_blank"
-                           href="https://www.google.com/maps/search/{{ urlencode($user->adresse . ', ' . $user->code_postal . ' ' . $user->ville) }}"
-                           class="hover:underline text-blue-600">
-                            {{ $user->adresse ?? '—' }}
-                        </a>
-                    </p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-city text-blue-600"></i> <strong>Ville:</strong> {{ $user->ville ?? '—' }}</p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-mail-bulk text-blue-600"></i> <strong>Code Postal:</strong> {{ $user->code_postal ?? '—' }}</p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-clock text-blue-600"></i> <strong>Créé le:</strong> {{ $user->created_at?->format('d/m/Y H:i') }}</p>
-                </div>
-
-                <!-- COL 3 : STRUCTURE -->
-                <div class="flex flex-col justify-between h-full text-xs text-gray-700 card-content space-y-1 border border-gray-200 p-2 rounded md:col-span-1">
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-building text-blue-600"></i> <strong>Structure:</strong> {{ $user->structure->organisme ?? '—' }}</p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-user-tie text-blue-600"></i> <strong>Zone_intervention:</strong> {{ $user->structure->zone ?? '—' }}</p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-envelope text-blue-600"></i> <strong>Email:</strong>
-                        <a href="mailto:{{ $user->structure->email ?? '' }}" class="hover:underline text-blue-600">{{ $user->structure->email ?? '—' }}</a>
-                    </p>
-                    <p class="card-text flex items-center gap-3"><i class="fa fa-map-marked-alt text-blue-600"></i> <strong>Adresse:</strong></p>
-                    <p class="card-text ml-6">
-                        <a target="_blank"
-                           href="https://www.google.com/maps/search/{{ urlencode(
-                                                                                    ($user->structure?->adresse ?? '') . ', ' .
-                                                                                    ($user->structure?->code_postal ?? '') . ' ' .
-                                                                                    ($user->structure?->ville ?? '')
-                                                                    ) }}"
-                           class="hover:underline text-blue-600">
-                            {{ $user->structure->adresse ?? '—' }}, {{ $user->structure->code_postal ?? '' }} {{ $user->structure->ville ?? '' }}
-                        </a>
-                    </p>
-                </div>
-
-                <!-- COL 4 : ACTIONS -->
-                <div class="flex flex-col justify-between h-full items-end text-xs z-30 w-65 card-content border border-gray-200 p-2 rounded space-y-1 md:col-span-1">
-                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full font-medium
+                <div class="flex items-center gap-2">
+                    <!-- État -->
+                    <span class="px-2 py-0.5 rounded-full text-xs font-medium
                         {{ $user->etatV === 'valider' ? 'bg-green-100 text-green-700' :
-                           ($user->etatV === 'bloqué' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700') }}">
-                        <i class="fa fa-circle text-[0.5rem]"></i> {{ ucfirst($user->etatV) }}
+                           ($user->etatV === 'bloqué' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                        {{ ucfirst($user->etatV) }}
                     </span>
-
-                    @if($user->etatV !== 'valider')
-                    <form method="POST" action="{{ route('admin.users.validate', $user->id) }}">
-                        @csrf
-                        <button class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs flex items-center gap-1">
-                            <i class="fa fa-check text-[0.6rem]"></i> Valider
-                        </button>
-                    </form>
-                    @endif
-
-                    @if($user->etatV === 'bloqué')
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#blockReasonModal"
-                            data-reason="{{ $user->block_reason }}"
-                            class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs flex items-center gap-1 block-reason-btn">
-                        <i class="fa fa-info-circle text-[0.6rem]"></i> Motif du blocage
-                    </button>
-                    @endif
-
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#editUserModal"
-                            data-user-id="{{ $user->id }}"
-                            data-prenom="{{ $user->prenom }}"
-                            data-name="{{ $user->name }}"
-                            data-email="{{ $user->email }}"
-                            data-phone="{{ $user->phone }}"
-                            data-structure-id="{{ $user->structure->id ?? '' }}"
-                            data-structure-name="{{ $user->structure->organisme ?? '' }}"
-                            data-adresse="{{ $user->adresse }}"
-                            data-ville="{{ $user->ville }}"
-                            data-code-postal="{{ $user->code_postal }}"
-                            data-role="{{ $user->role }}"
-                            class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs flex items-center gap-1 edit-user-btn">
-                        <i class="fa fa-edit text-[0.6rem]"></i> Modifier
-                    </button>
-
-                    @if($user->etatV !== 'bloqué')
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#blockModal"
-                            data-user-id="{{ $user->id }}"
-                            data-user-name="{{ $user->name }}"
-                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs flex items-center gap-1 block-user-btn">
-                        <i class="fa fa-ban text-[0.6rem]"></i> Bloquer
-                    </button>
-                    @endif
+                    <!-- Rôle -->
+                    <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
+                        {{ $user->role }}
+                    </span>
                 </div>
-
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div>
-
-<!-- MODAL MODIFICATION UTILISATEUR -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <!-- HEADER -->
-            <div class="modal-header">
-                <h3 class="modal-title " id="editUserModalLabel">
-                    Modifier l'utilisateur
-                </h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <!-- BODY -->
-            <div class="modal-body">
-                <form id="editUserForm" method="POST" action="{{ route('admin.users.update', 0) }}">
+            <!-- Structure de rattachement -->
+            <div class="mt-1 text-xs text-gray-600">
+                <i class="fas fa-building text-[#255156] mr-1"></i>
+                {{ $user->structure->organisme ?? 'Aucune structure' }}
+                @if($user->structure)
+                    <span class="text-gray-400">({{ $user->structure->ville ?? '' }})</span>
+                @endif
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
+                @if($user->etatV !== 'valider')
+                <form method="POST" action="{{ route('admin.users.validate', $user->id) }}" class="inline">
                     @csrf
-                    @method('PUT')
-
-                    <!-- Prénom / Nom -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="modalPrenom" class="form-label">Prénom</label>
-                            <input type="text" name="prenom" id="modalPrenom" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="modalName" class="form-label">Nom</label>
-                            <input type="text" name="name" id="modalName" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <!-- Email / Téléphone -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="modalEmail" class="form-label">Email</label>
-                            <input type="email" name="email" id="modalEmail" class="form-control" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="modalPhone" class="form-label">Téléphone</label>
-                            <input type="text" name="phone" id="modalPhone" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Adresse -->
-                    <div class="mb-3">
-                        <label for="modalAdresse" class="form-label">Adresse</label>
-                        <input type="text" name="adresse" id="modalAdresse" class="form-control">
-                    </div>
-
-                    <!-- Ville / Code postal -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="modalVille" class="form-label">Ville</label>
-                            <input type="text" name="ville" id="modalVille" class="form-control">
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="modalCodePostal" class="form-label">Code postal</label>
-                            <input type="text" name="code_postal" id="modalCodePostal" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Structure -->
-                    <div class="mb-3">
-                        <label for="modalStructure" class="form-label">Structure</label>
-                        <select name="id_structure" id="modalStructure" class="form-select">
-                            <option value="{{ $user->id_structure }}" id="modalStructureOption"></option>
-                            @foreach($structures as $structure)
-                                <option value="{{ $structure->id }}">
-                                    {{ $structure->organisme }} ({{ $structure->ville }} -- {{ $structure->code_postal }} -- {{ $structure->adresse }} )
-                                </option>
-                            @endforeach
-                        </select>
-                    @if(@auth()->user()->role === 'admin')
-                        <label for="modalRole" class="form-label">Rôle</label>
-                        <select name="role" id="modalRole" class="form-select">
-                            <option value="user">user</option>
-                            <option value="moderateur">moderateur</option>
-                            <option value="admin">admin</option>
-                        </select>
-                    @endif
-                    </div>
-                    
+                    <button class="bg-green-500 hover:bg-green-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Valider">
+                        <i class="fas fa-check text-xs"></i>
+                    </button>
                 </form>
-            </div>
+                @endif
 
-            <!-- FOOTER -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Annuler
+                @if($user->etatV === 'bloqué')
+                <button type="button" onclick="showReason('{{ addslashes($user->block_reason) }}')"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Voir motif">
+                    <i class="fas fa-info-circle text-xs"></i>
                 </button>
-                <button type="submit" form="editUserForm" class="btn btn-primary">
-                    Enregistrer
-                </button>
-            </div>
+                @endif
 
+                <button type="button" onclick="openEditModal({{ $user->id }}, '{{ addslashes($user->prenom) }}', '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->adresse }}', '{{ $user->ville }}', '{{ $user->code_postal }}', '{{ $user->id_structure }}', '{{ $user->role }}')"
+                        class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Modifier">
+                    <i class="fas fa-edit text-xs"></i>
+                </button>
+
+                @if($user->etatV !== 'bloqué')
+                <button type="button" onclick="openBlockModal({{ $user->id }}, '{{ addslashes($user->prenom) }} {{ addslashes($user->name) }}')"
+                        class="bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Bloquer">
+                    <i class="fas fa-ban text-xs"></i>
+                </button>
+                @endif
+            </div>
         </div>
+        @empty
+        <div class="text-center py-8 text-gray-500">
+            Aucun utilisateur trouvé
+        </div>
+        @endforelse
     </div>
 </div>
 
-
-<!-- MODAL BLOCAGE MOTIF -->
-<div class="modal fade" id="blockReasonModal" tabindex="-1" aria-labelledby="blockReasonModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="blockReasonModalLabel">Motif du blocage</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p id="blockReasonText" class="text-gray-700 whitespace-pre-line"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
+<!-- MODAL STATISTIQUES -->
+<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="statsModal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+        <div class="bg-[#255156] text-white px-4 py-3 flex justify-between items-center">
+            <h3 class="font-semibold">
+                <i class="fas fa-chart-pie mr-2"></i>
+                Statistiques des utilisateurs
+            </h3>
+            <button onclick="closeStatsModal()" class="text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-    </div>
-</div>
+        <div class="p-4">
+            @php
+                $total = $users->count();
+                $valides = $users->where('etatV', 'valider')->count();
+                $attente = $users->where('etatV', 'attente')->count();
+                $bloques = $users->where('etatV', 'bloqué')->count();
+                $admins = $users->where('role', 'admin')->count();
+                $moderateurs = $users->where('role', 'moderateur')->count();
+                $utilisateurs = $users->where('role', 'user')->count();
+            @endphp
 
-<!-- MODAL BLOCAGE ADMIN -->
-<div class="modal fade" id="blockModal" tabindex="-1" aria-labelledby="blockModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="blockModalLabel">
-                    ⛔ Bloquer <span id="modalUserName"></span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Cartes stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-[#255156]">{{ $total }}</div>
+                    <div class="text-xs text-gray-600">Total</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-green-600">{{ $valides }}</div>
+                    <div class="text-xs text-gray-600">Validés</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-yellow-600">{{ $attente }}</div>
+                    <div class="text-xs text-gray-600">En attente</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-red-600">{{ $bloques }}</div>
+                    <div class="text-xs text-gray-600">Bloqués</div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form id="blockForm" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="blockReason" class="form-label">Motif du blocage (visible par l'utilisateur)</label>
-                        <textarea name="reason" id="blockReason" class="form-control" rows="3" required></textarea>
+
+            <!-- Répartition par rôle -->
+            <div class="border-t border-gray-200 pt-3">
+                <h4 class="text-sm font-medium text-gray-700 mb-2">Répartition par rôle</h4>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <span class="text-xs w-24">Administrateurs</span>&nbsp
+                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#255156]" style="width: {{ $total > 0 ? ($admins/$total)*100 : 0 }}%"></div>
+                        </div>
+                        <span class="text-xs w-12 text-right">{{ $admins }}</span>
                     </div>
-                </form>
+                    <div class="flex items-center">
+                        <span class="text-xs w-24">Modérateurs</span>&nbsp
+                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#8bbdc3]" style="width: {{ $total > 0 ? ($moderateurs/$total)*100 : 0 }}%"></div>
+                        </div>
+                        <span class="text-xs w-12 text-right">{{ $moderateurs }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-xs w-24">Utilisateurs</span>&nbsp
+                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-gray-400" style="width: {{ $total > 0 ? ($utilisateurs/$total)*100 : 0 }}%"></div>
+                        </div>
+                        <span class="text-xs w-12 text-right">{{ $utilisateurs }}</span>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="submit" form="blockForm" class="btn btn-danger">Confirmer le blocage</button>
-            </div>
+        </div>
+        <div class="px-4 py-3 border-t border-gray-200 flex justify-end">
+            <button onclick="closeStatsModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+                Fermer
+            </button>
         </div>
     </div>
 </div>
 
-<!-- JS SEARCH + MODAL HANDLERS -->
+<!-- MODAL MOTIF BLOCAGE -->
+<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="reasonModal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="bg-yellow-600 text-white px-4 py-3 flex justify-between items-center">
+            <h3 class="font-semibold">
+                <i class="fas fa-info-circle mr-2"></i>
+                Motif du blocage
+            </h3>
+            <button onclick="closeReasonModal()" class="text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <p id="reasonText" class="text-gray-700"></p>
+        </div>
+        <div class="px-4 py-3 border-t border-gray-200 flex justify-end">
+            <button onclick="closeReasonModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+                Fermer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MODIFICATION  -->
+<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="editModal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#255156] text-white px-4 py-3 flex justify-between items-center sticky top-0">
+            <h3 class="font-semibold">
+                <i class="fas fa-edit mr-2"></i>
+                Modifier l'utilisateur
+            </h3>
+            <button onclick="closeEditModal()" class="text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <form id="editForm" method="POST" action="">
+                @csrf
+                @method('PUT')
+                
+                <!-- Identité -->
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Prénom</label>
+                        <input type="text" name="prenom" id="editPrenom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Nom</label>
+                        <input type="text" name="name" id="editNom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div class="mb-3">
+                    <label class="block text-xs text-gray-600 mb-1">Email</label>
+                    <input type="email" name="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="block text-xs text-gray-600 mb-1">Téléphone</label>
+                    <input type="text" name="phone" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                </div>
+                
+                <!-- Adresse -->
+                <div class="mb-3">
+                    <label class="block text-xs text-gray-600 mb-1">Adresse</label>
+                    <input type="text" name="adresse" id="editAdresse" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Ville</label>
+                        <input type="text" name="ville" id="editVille" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Code postal</label>
+                        <input type="text" name="code_postal" id="editCodePostal" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    </div>
+                </div>
+                
+                <!-- Structure de rattachement -->
+                <div class="mb-3">
+                    <label class="block text-xs text-gray-600 mb-1">Structure de rattachement</label>
+                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <option value="">Aucune structure</option>
+                        @foreach($structures as $structure)
+                            <option value="{{ $structure->id }}" {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
+                                {{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <!-- Rôle (admin seulement) -->
+                @if(auth()->user()->role === 'admin')
+                <div class="mb-3">
+                    <label class="block text-xs text-gray-600 mb-1">Rôle</label>
+                    <select name="role" id="editRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <option value="user">Utilisateur</option>
+                        <option value="moderateur">Modérateur</option>
+                        <option value="admin">Administrateur</option>
+                    </select>
+                </div>
+                @endif
+                
+                <!-- Boutons -->
+                <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-gray-200">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-[#255156] hover:bg-[#1d4144] text-white rounded-lg text-sm">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BLOCAGE -->
+<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="blockModal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+        <div class="bg-red-600 text-white px-4 py-3 flex justify-between items-center">
+            <h3 class="font-semibold">
+                <i class="fas fa-ban mr-2"></i>
+                Bloquer <span id="blockUserName"></span>
+            </h3>
+            <button onclick="closeBlockModal()" class="text-white hover:text-gray-200">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <form id="blockForm" method="POST" action="">
+                @csrf
+                <div class="mb-3">
+                    <label class="block text-xs text-gray-600 mb-1">Motif du blocage</label>
+                    <textarea name="reason" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" rows="3" required></textarea>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeBlockModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">
+                        Bloquer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', () => {
-        const term = searchInput.value.toLowerCase();
+    // Recherche
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
         document.querySelectorAll('.user-card').forEach(card => {
-            const name = card.dataset.name;
-            const email = card.dataset.email;
-            const structure = card.dataset.structure;
-            const etatV = card.dataset.etatv;
-            card.style.display = (name.includes(term) || email.includes(term) || structure.includes(term) || etatV.includes(term)) ? '' : 'none';
+            card.style.display = card.dataset.search.includes(term) ? '' : 'none';
         });
     });
 
-    // Gestionnaire pour le bouton "Motif du blocage"
-    document.querySelectorAll('.block-reason-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const reason = this.getAttribute('data-reason');
-            document.getElementById('blockReasonText').textContent = reason;
-        });
+    // MODAL STATISTIQUES
+    function openStatsModal() {
+        document.getElementById('statsModal').classList.remove('hidden');
+        document.getElementById('statsModal').classList.add('flex');
+    }
+    
+    function closeStatsModal() {
+        document.getElementById('statsModal').classList.add('hidden');
+        document.getElementById('statsModal').classList.remove('flex');
+    }
+
+    // MODAL MOTIF
+    function showReason(reason) {
+        document.getElementById('reasonText').textContent = reason || 'Aucun motif spécifié';
+        document.getElementById('reasonModal').classList.remove('hidden');
+        document.getElementById('reasonModal').classList.add('flex');
+    }
+    
+    function closeReasonModal() {
+        document.getElementById('reasonModal').classList.add('hidden');
+        document.getElementById('reasonModal').classList.remove('flex');
+    }
+
+    // MODAL MODIFICATION (avec tous les champs)
+    function openEditModal(id, prenom, nom, email, phone, adresse, ville, codePostal, structureId, role) {
+        document.getElementById('editPrenom').value = prenom;
+        document.getElementById('editNom').value = nom;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editPhone').value = phone || '';
+        document.getElementById('editAdresse').value = adresse || '';
+        document.getElementById('editVille').value = ville || '';
+        document.getElementById('editCodePostal').value = codePostal || '';
+        document.getElementById('editStructure').value = structureId || '';
+        
+        if(document.getElementById('editRole')) {
+            document.getElementById('editRole').value = role;
+        }
+        
+        document.getElementById('editForm').action = `/admin/users/${id}`;
+        document.getElementById('editModal').classList.remove('hidden');
+        document.getElementById('editModal').classList.add('flex');
+    }
+    
+    function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+        document.getElementById('editModal').classList.remove('flex');
+    }
+
+    // MODAL BLOCAGE
+    function openBlockModal(userId, userName) {
+        document.getElementById('blockUserName').textContent = userName;
+        document.getElementById('blockForm').action = `/admin/users/${userId}/block`;
+        document.getElementById('blockModal').classList.remove('hidden');
+        document.getElementById('blockModal').classList.add('flex');
+    }
+    
+    function closeBlockModal() {
+        document.getElementById('blockModal').classList.add('hidden');
+        document.getElementById('blockModal').classList.remove('flex');
+    }
+
+    // Fermeture avec Échap
+    document.addEventListener('keydown', function(e) {
+        if(e.key === 'Escape') {
+            closeStatsModal();
+            closeReasonModal();
+            closeEditModal();
+            closeBlockModal();
+        }
     });
 
-    // Gestionnaire pour le bouton "Modifier"
-    document.querySelectorAll('.edit-user-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
-            const prenom = this.getAttribute('data-prenom');
-            const name = this.getAttribute('data-name');
-            const email = this.getAttribute('data-email');
-            const phone = this.getAttribute('data-phone') || '';
-            const structureId = this.getAttribute('data-structure-id') || '';
-            const structureName = this.getAttribute('data-structure-name') || '';
-            const adresse = this.getAttribute('data-adresse') || '';
-            const ville = this.getAttribute('data-ville') || '';
-            const codePostal = this.getAttribute('data-code-postal') || '';
-            const role = this.getAttribute('data-role') || '';
-            
-            // Remplir le formulaire modal
-            document.getElementById('modalPrenom').value = prenom;
-            document.getElementById('modalName').value = name;
-            document.getElementById('modalEmail').value = email;
-            document.getElementById('modalPhone').value = phone;
-            document.getElementById('modalStructureOption').value = structureId;
-            document.getElementById('modalStructureOption').textContent = structureName || 'Aucune';
-            document.getElementById('modalAdresse').value = adresse;
-            document.getElementById('modalVille').value = ville;
-            document.getElementById('modalCodePostal').value = codePostal;
-            document.getElementById('modalRole').value = role;
-
-            
-            // Mettre à jour l'action du formulaire
-            //document.getElementById('editUserForm').action = `/admin/users/${userId}`;
-        });
-    });
-
-    // Gestionnaire pour le bouton "Bloquer"
-    document.querySelectorAll('.block-user-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
-            const userName = this.getAttribute('data-user-name');
-            
-            // Mettre à jour le nom dans le modal
-            document.getElementById('modalUserName').textContent = userName;
-            
-            // Mettre à jour l'action du formulaire
-            document.getElementById('blockForm').action = `/admin/users/${userId}/block`;
-        });
-    });
-
-    // Réinitialiser les formulaires quand les modales sont fermées
-    document.getElementById('editUserModal').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('editUserForm').reset();
+    // Fermeture en cliquant sur le fond
+    document.getElementById('statsModal').addEventListener('click', function(e) {
+        if(e.target === this) closeStatsModal();
     });
     
-    document.getElementById('blockModal').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('blockForm').reset();
-        document.getElementById('modalUserName').textContent = '';
+    document.getElementById('reasonModal').addEventListener('click', function(e) {
+        if(e.target === this) closeReasonModal();
     });
     
-    document.getElementById('blockReasonModal').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('blockReasonText').textContent = '';
+    document.getElementById('editModal').addEventListener('click', function(e) {
+        if(e.target === this) closeEditModal();
     });
-
-    // Fonction pour focus sur une carte
-    document.querySelectorAll('.user-card').forEach(card => {
-        card.addEventListener('click', e => {
-            if (e.target.closest('button, form, a[href]')) return;
-            card.classList.toggle('card-focused');
-        });
+    
+    document.getElementById('blockModal').addEventListener('click', function(e) {
+        if(e.target === this) closeBlockModal();
     });
 </script>
-
-<style>
-    .card-focused {
-        transform: scale(1.03);
-        z-index: 50 !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        position: relative;
-        overflow: hidden;
-    }
-    .card-focused .card-text {
-        font-size: 0.95rem;
-    }
-    .card-focused .card-label {
-        font-size: 0.75rem;
-    }
-    .card-focused::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-color: rgba(59, 130, 246, 0.1);
-        pointer-events: none;
-        border-radius: 0.5rem;
-    }
-    
-    /* Style pour les modales Bootstrap */
-    .modal-header {
-        border-bottom: 1px solid #dee2e6;
-        padding: 1rem;
-    }
-    
-    .modal-footer {
-        border-top: 1px solid #dee2e6;
-        padding: 1rem;
-    }
-    
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        display: block;
-        color: #374151;
-    }
-    
-    .form-control {
-        display: block;
-        width: 100%;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-    
-    .form-control:focus {
-        border-color: #80bdff;
-        outline: 0;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-</style>
 @endsection

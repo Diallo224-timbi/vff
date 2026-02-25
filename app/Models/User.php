@@ -30,7 +30,9 @@ class User extends Authenticatable
         'code_postal',
         'created_at',
         'id_structure',
-        'chart'
+        'chart',
+        'last_login_at'
+        
     ];
 
     /**

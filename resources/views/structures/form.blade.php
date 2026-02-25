@@ -57,7 +57,7 @@
             <div class="col-md-4">
                 <label class="form-label">Type</label>
                 <select name="type_structure" class="form-select">
-                    <option value="Siége social" {{ old('type_structure', $structure->type_structure ?? '') == 'siége social' ? 'selected' : '' }}>Siége social</option>
+                    <option value="Siège social" {{ old('type_structure', $structure->type_structure ?? '') == 'siège social' ? 'selected' : '' }}>siège social</option>
                     <option value="Antenne" {{ old('type_structure', $structure->type_structure ?? '') == 'antenne' ? 'selected' : '' }}>Antenne</option>
                 </select>
             </div>

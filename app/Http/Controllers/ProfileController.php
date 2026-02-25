@@ -22,6 +22,8 @@ class ProfileController extends Controller
 
         // Validation des données
         $request->validate([
+            'name' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'adresse' => 'nullable|string|max:255',
@@ -31,7 +33,8 @@ class ProfileController extends Controller
         ]);
         // Mise à jour des informations de l'utilisateur
         $user->update([
-            
+            'name' => $request->name,
+            'prenom' => $request->prenom,
             'email' => $request->email,
             'phone' => $request->phone,
             'adresse' => $request->adresse,

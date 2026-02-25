@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\structures;
+use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\StructuresExport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use function _PHPStan_781aefaf6\React\Promise\all;
 class AnnuaireController extends Controller
 {
     public function index(Request $request)
@@ -33,7 +35,7 @@ class AnnuaireController extends Controller
         }
 
         // Pagination
-        $structures = $query->orderBy('organisme')->paginate(50)->withQueryString();
+        $structures = $query->orderBy('organisme')->paginate(200)->withQueryString();
 
         return view('annuaire.index', compact('structures'));
     }

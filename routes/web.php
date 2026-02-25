@@ -11,15 +11,17 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\AnnuaireController;
-
-
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('dashboard');
 
 // Routes pour l'authentification pour l'inscription et la connexion
 Route::get('/register',[AuthController::class, 'showSignUp'])->name('register');
@@ -55,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
     Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    
 });
 
 // Route pour filtrer les utilisateurs par structure
@@ -132,7 +135,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
     Route::get('/structures/map', [StructureController::class, 'map'])->name('structures.map');
-
+    
 });
 
 // Routes pour l'annuaire
@@ -142,6 +145,70 @@ Route::middleware('auth')->group(function () {
         Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
         Route::get('/annuaire/export/pdf', [AnnuaireController::class, 'exportPdf'])->name('annuaire.export.pdf');
     });
+
+// Routes pour les logs d'activité
+
+Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->group(function () {
+    Route::get('/', [ActivityLogController::class, 'index'])->name('index');
+    Route::get('/stats', [ActivityLogController::class, 'stats'])->name('stats');
+    Route::get('/export', [ActivityLogController::class, 'export'])->name('export');
+
+    Route::delete('/bulk-destroy', [ActivityLogController::class, 'bulkDestroy'])->name('bulkDestroy');
+    Route::delete('/destroy-all', [ActivityLogController::class, 'destroyAll'])->name('destroyAll');
+    Route::get('/{id}', [ActivityLogController::class, 'show'])->name('show');
+    Route::delete('/{id}', [ActivityLogController::class, 'destroy'])->name('destroy');
+});
+
+
+// Routes pour la gestion des ressources
+
+Route::middleware(['auth'])->group(function () {
+    
+    // ===== ROUTES RESSOURCES =====
+    
+    // Liste des ressources (page principale)
+    Route::get('/ressources', [ResourceController::class, 'index'])->name('resources.index');
+    
+    // Formulaire de création
+    Route::get('/ressources/creer', [ResourceController::class, 'create'])->name('resources.create');
+    
+    // Enregistrement d'une nouvelle ressource
+    Route::post('/ressources', [ResourceController::class, 'store'])->name('resources.store');
+    
+    // Formulaire d'édition
+    Route::get('/ressources/{resource}/modifier', [ResourceController::class, 'edit'])->name('resources.edit');
+    
+    // Mise à jour
+    Route::put('/ressources/{resource}', [ResourceController::class, 'update'])->name('resources.update');
+    
+    // Suppression
+    Route::delete('/ressources/{resource}', [ResourceController::class, 'destroy'])->name('resources.destroy');
+    
+    // Téléchargement
+    Route::get('/ressources/{resource}/telecharger', [ResourceController::class, 'download'])->name('resources.download');
+    // Route pour la mise à jour en masse (ex: via AJAX)
+    Route::post('/resources/batch-update', [ResourceController::class, 'batchUpdate'])->name('resources.batch-update');
+    Route::get('/ressources/{resource}/edit', [ResourceController::class, 'edit'])->name('resources.edit');
+});
+
+// Route de test pour vérifier (à supprimer après test)
+Route::get('/test-routes', function() {
+    return [
+        'resources.index' => route('resources.index', [], false),
+        'resources.create' => route('resources.create', [], false),
+        'resources.store' => route('resources.store', [], false),
+    ];
+});
+
+
+
+
+
+
+
+
+
+// Routes pour le formulaire d'inscription avec génération de PDF
 
 Route::get('/formulaire/inscription', [StructureController::class, 'createPDF'])->name('auth.create');
 Route::post('/formulaire/inscription/pdf', [StructureController::class, 'generatePDF'])->name('auth.pdf');
