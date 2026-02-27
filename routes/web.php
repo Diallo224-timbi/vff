@@ -14,12 +14,13 @@ use App\Http\Controllers\AnnuaireController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
 
@@ -202,10 +203,25 @@ Route::get('/test-routes', function() {
 
 
 
-
-
-
-
+//route pour events
+Route::middleware(['auth'])->group(function () {
+    Route::get('/events', [EventController::class, 'index'])->name('events.index');
+    Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::post('/events', [EventController::class, 'store'])->name('events.store');
+    
+    // ROUTE SPÉCIFIQUE - À PLACER AVANT LES ROUTES AVEC PARAMÈTRES
+    Route::get('/events/calendrier', [EventController::class, 'calendrier'])->name('events.calendrier'); 
+    
+    // Routes avec paramètre {event} - À PLACER APRÈS
+    Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+    Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+    Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
+    
+    // Routes d'inscription (avec paramètre aussi)
+    Route::post('/events/{event}/inscrire', [EventController::class, 'inscrire'])->name('events.inscrire'); 
+    Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');   
+});
 
 
 // Routes pour le formulaire d'inscription avec génération de PDF

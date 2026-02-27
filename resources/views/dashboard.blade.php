@@ -141,16 +141,21 @@
 
     <!-- ACTIVITÉ DES LOGS (admin seulement) -->
     @if(auth()->user()->role === 'admin')
-    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-4">
-        <h3 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
-            <i class="fas fa-chart-line text-[#255156] mr-2"></i>
-            Activité des 7 derniers jours
-        </h3>
-        <div style="height: 300px;">
-            <canvas id="activityChart"></canvas>
+        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-sm font-semibold text-gray-700 flex items-center">
+                    <i class="fas fa-chart-line text-[#255156] mr-2"></i>
+                    Activité des 7 derniers jours
+                </h3>
+                <a href="{{ route('activity_logs.index') }}" class="text-xs text-[#255156] hover:underline">
+                    Voir tous les logs →
+                </a>
+            </div>
+            <div style="height: 300px;">
+                <canvas id="activityChart"></canvas>
+            </div>
         </div>
-    </div>
-    @endif
+        @endif
 
     <!-- DERNIERS ÉLÉMENTS -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -365,39 +370,43 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(activityCtx, {
             type: 'line',
             data: {
-                labels: {!! json_encode($activityLabels ?? ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']) !!},
+                labels: {!! json_encode($activityLabels) !!},
                 datasets: [
                     {
                         label: 'Connexions',
-                        data: {!! json_encode($activityConnexions ?? [0,0,0,0,0,0,0]) !!},
+                        data: {!! json_encode($activityConnexions) !!},
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         tension: 0.3,
-                        fill: true
+                        fill: true,
+                        pointBackgroundColor: '#10b981'
                     },
                     {
                         label: 'Créations',
-                        data: {!! json_encode($activityCreations ?? [0,0,0,0,0,0,0]) !!},
+                        data: {!! json_encode($activityCreations) !!},
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.3,
-                        fill: true
+                        fill: true,
+                        pointBackgroundColor: '#3b82f6'
                     },
                     {
                         label: 'Modifications',
-                        data: {!! json_encode($activityUpdates ?? [0,0,0,0,0,0,0]) !!},
+                        data: {!! json_encode($activityUpdates) !!},
                         borderColor: '#f59e0b',
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
                         tension: 0.3,
-                        fill: true
+                        fill: true,
+                        pointBackgroundColor: '#f59e0b'
                     },
                     {
                         label: 'Suppressions',
-                        data: {!! json_encode($activityDeletes ?? [0,0,0,0,0,0,0]) !!},
+                        data: {!! json_encode($activityDeletes) !!},
                         borderColor: '#ef4444',
                         backgroundColor: 'rgba(239, 68, 68, 0.1)',
                         tension: 0.3,
-                        fill: true
+                        fill: true,
+                        pointBackgroundColor: '#ef4444'
                     }
                 ]
             },
@@ -405,12 +414,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom' }
+                    legend: { 
+                        position: 'bottom',
+                        labels: { boxWidth: 12 }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { stepSize: 1, precision: 0 }
+                        ticks: { 
+                            stepSize: 1, 
+                            precision: 0,
+                            callback: function(value) {
+                                return value + ' act.';
+                            }
+                        }
                     }
                 }
             }

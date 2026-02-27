@@ -57,34 +57,67 @@ class DashboardController extends Controller
             ]
         ];
 
-        // ===== STATISTIQUES LOGS =====
-        $totalConnexions = ActivityLog::where('action', 'login')->count();
-        $connexionsJour = ActivityLog::where('action', 'login')->whereDate('created_at', today())->count();
+       // ===== STATISTIQUES LOGS =====
+$totalConnexions = ActivityLog::where('action', 'Connexion')->count();
+$connexionsJour = ActivityLog::where('action', 'Connexion')
+    ->whereDate('created_at', today())
+    ->count();
 
-        // ===== ACTIVITÉ DES 7 DERNIERS JOURS =====
-        $activityLabels = [];
-        $activityConnexions = [];
-        $activityCreations = [];
-        $activityUpdates = [];
-        $activityDeletes = [];
+// ===== ACTIVITÉ DES 7 DERNIERS JOURS =====
+$activityLabels = [];
+$activityConnexions = [];
+$activityCreations = [];
+$activityUpdates = [];
+$activityDeletes = [];
 
-        for($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
-            $activityLabels[] = $date->format('D d/m');
-            
-            $activityConnexions[] = ActivityLog::where('action', 'login')
-                ->whereDate('created_at', $date)->count();
-            
-            $activityCreations[] = ActivityLog::where('action', 'create')
-                ->whereDate('created_at', $date)->count();
-            
-            $activityUpdates[] = ActivityLog::where('action', 'update')
-                ->whereDate('created_at', $date)->count();
-            
-            $activityDeletes[] = ActivityLog::where('action', 'delete')
-                ->whereDate('created_at', $date)->count();
-        }
-
+for($i = 6; $i >= 0; $i--) {
+    $date = now()->subDays($i);
+    $activityLabels[] = $date->locale('fr')->isoFormat('ddd D/M'); // Ex: "lun 15/03"
+    
+    // Connexions
+    $activityConnexions[] = ActivityLog::where('action', 'Connexion')
+        ->whereDate('created_at', $date)
+        ->count();
+    
+    // Créations (recherche dans action et description)
+    $activityCreations[] = ActivityLog::where(function($q) {
+            $q->where('action', 'like', '%création%')
+              ->orWhere('action', 'like', '%create%')
+              ->orWhere('action', 'create')
+              ->orWhere('action', 'Création%')
+              ->orWhere('description', 'like', '%créé%')
+              ->orWhere('description', 'like', '%ajouté%');
+        })
+        ->whereDate('created_at', $date)
+        ->count();
+    
+    // Modifications
+    $activityUpdates[] = ActivityLog::where(function($q) {
+            $q->where('action', 'like', '%modification%')
+              ->orWhere('action', 'like', '%update%')
+              ->orWhere('action', 'update')
+              ->orWhere('action', 'edit')
+              ->orWhere('description', 'like', '%modifié%')
+              ->orWhere('description', 'like', '%mis à jour%');
+        })
+        ->whereDate('created_at', $date)
+        ->count();
+    
+    // Suppressions
+    $activityDeletes[] = ActivityLog::where(function($q) {
+            $q->where('action', 'like', '%suppression%')
+              ->orWhere('action', 'like', '%delete%')
+              ->orWhere('action', 'delete')
+              ->orWhere('description', 'like', '%supprimé%')
+              ->orWhere('description', 'like', '%effacé%');
+        })
+        ->whereDate('created_at', $date)
+        ->count();
+    // deconnexions
+    $activityDeconnexions[] = ActivityLog::where('action', 'Déconnexion')
+        ->whereDate('created_at', $date)
+        ->count();
+}
         // ===== ÉLÉMENTS RÉCENTS =====
         $recentUsers = User::latest()->take(5)->get();
         $recentDocuments = Resource::latest()->take(5)->get();

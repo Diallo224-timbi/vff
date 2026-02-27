@@ -91,7 +91,7 @@
                 <form method="POST" action="{{ route('admin.users.validate', $user->id) }}" class="inline">
                     @csrf
                     <button class="bg-green-500 hover:bg-green-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Valider">
-                        <i class="fas fa-check text-xs"></i>
+                        <i class="bx bx-check text-xs"></i>
                     </button>
                 </form>
                 @endif
@@ -99,19 +99,19 @@
                 @if($user->etatV === 'bloqué')
                 <button type="button" onclick="showReason('{{ addslashes($user->block_reason) }}')"
                         class="bg-yellow-500 hover:bg-yellow-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Voir motif">
-                    <i class="fas fa-info-circle text-xs"></i>
+                    <i class="bx bx-info-circle text-xs"></i>
                 </button>
                 @endif
 
                 <button type="button" onclick="openEditModal({{ $user->id }}, '{{ addslashes($user->prenom) }}', '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->adresse }}', '{{ $user->ville }}', '{{ $user->code_postal }}', '{{ $user->id_structure }}', '{{ $user->role }}')"
                         class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Modifier">
-                    <i class="fas fa-edit text-xs"></i>
+                    <i class="bx bx-edit text-xs"></i>
                 </button>
 
                 @if($user->etatV !== 'bloqué')
                 <button type="button" onclick="openBlockModal({{ $user->id }}, '{{ addslashes($user->prenom) }} {{ addslashes($user->name) }}')"
                         class="bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Bloquer">
-                    <i class="fas fa-ban text-xs"></i>
+                    <i class="bx bx-block text-xs"></i>
                 </button>
                 @endif
             </div>

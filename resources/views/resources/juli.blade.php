@@ -6,17 +6,17 @@
 <div class="container mx-auto px-0 py-0">
    
     <!-- En-tête fixe -->
-    <div class="sticky top-0 z-40 bg-gray-50 pt-0 pb-2 shadow-sm" style="margin-top: -1px;">
+    <div class="sticky top-0 z-40 bg-gray-50 pt-0 pb-0 shadow-sm" style="margin-top: -1px;">
         <!-- En-tête et légende des actions -->
-        <div class="mb-2 flex justify-between items-center bg-white rounded-xl shadow-lg p-2">
-            <div>
+        <div class="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center bg-white rounded-xl shadow-lg p-4">
+            <div class="mb-4 md:mb-0">
                 <h1 class="text-3xl font-bold text-[#255156] mb-2">📚 Espace documentaire</h1>
                 <small class="text-gray-600">Centralisation des ressources professionnelles</small>
             </div>
             
             <!-- LÉGENDE DES BOUTONS D'ACTION + BOUTON STATISTIQUES -->
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-lg">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 w-full lg:w-auto">
+                <div class="flex flex-wrap items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg">
                     <div class="flex items-center gap-1">
                         <span class="w-6 h-6 bg-red-100 text-red-600 rounded-lg flex items-center justify-center text-xs">
                             <i class="bx bx-play-circle text-lg"></i>
@@ -56,7 +56,7 @@
                 </div>
                 
                 <!-- BOUTON STATISTIQUES -->
-                <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1d4144] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1d4144] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors w-full lg:w-auto justify-center">
                     <i class="fas fa-chart-pie"></i>
                     Statistiques
                 </button>
@@ -98,7 +98,7 @@
                 </div>
             </div>
             
-            <div class="mt-4 flex justify-between items-center">
+            <div class="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div class="flex items-center gap-4">
                     <select id="sortBy" class="text-sm border rounded-lg px-3 py-2">
                         <option value="newest">Plus récents</option>
@@ -108,7 +108,7 @@
                 </div>
                 
                 <button onclick="openCreateModal()" 
-                        class="bg-[#255156] text-white px-4 py-2 rounded-lg hover:bg-[#1d4144] transition-colors flex items-center gap-2">
+                        class="bg-[#255156] text-white px-4 py-2 rounded-lg hover:bg-[#1d4144] transition-colors flex items-center gap-2 w-full sm:w-auto justify-center">
                     <i class="fas fa-upload"></i>
                     Ajouter une ressource
                 </button>
@@ -116,161 +116,175 @@
         </div>
     </div>
 
-    <!-- 📋 TABLEAU DES RESSOURCES avec en-tête fixe -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden relative" style="max-height: calc(100vh - 250px);">
-        <div class="overflow-y-auto" style="max-height: calc(100vh - 250px);">
-            <table class="w-full" id="resourcesTable">
-                <thead class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white sticky top-0 z-30 shadow-md">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Type</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Titre</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Catégorie</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Service</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Taille</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Téléchargements</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold">Ajouté le</th>
-                        <th class="px-4 py-3 text-center text-sm font-semibold">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($resources as $resource)
-                    <tr class="resource-row hover:bg-gray-50 transition-colors"
-                        data-id="{{ $resource->id }}"
-                        data-type="{{ $resource->is_image ? 'image' : ($resource->is_video ? 'video' : 'document') }}"
-                        data-category="{{ $resource->category }}"
-                        data-service="{{ $resource->service }}"
-                        data-date="{{ $resource->created_at->timestamp }}"
-                        data-downloads="{{ $resource->download_count }}"
-                        data-title="{{ strtolower($resource->title) }}">
-                        
-                        <!-- Type avec icône -->
-                        <td class="px-4 py-3">
-                            @if($resource->is_image)
-                                <span class="flex items-center gap-2 text-purple-600">
-                                    <i class="fas fa-image"></i>
-                                    <span class="text-xs">Image</span>
-                                </span>
-                            @elseif($resource->is_video)
-                                <span class="flex items-center gap-2 text-red-600">
-                                    <i class="fas fa-video"></i>
-                                    <span class="text-xs">Vidéo</span>
-                                </span>
-                            @else
-                                <span class="flex items-center gap-2 text-blue-600">
-                                    <i class="fas {{ $resource->file_icon }}"></i>
-                                    <span class="text-xs">{{ strtoupper($resource->file_type) }}</span>
-                                </span>
-                            @endif
-                        </td>
-                        
-                        <!-- Titre et description -->
-                        <td class="px-4 py-3">
-                            <div class="font-medium text-gray-800">{{ $resource->title }}</div>
-                            @if($resource->description)
-                                <div class="text-xs text-gray-500 truncate max-w-xs" title="{{ $resource->description }}">{{ $resource->description }}</div>
-                            @endif
-                            <div class="text-xs text-gray-400 mt-1 truncate max-w-xs">{{ $resource->file_name }}</div>
-                        </td>
-                        
-                        <!-- Catégorie -->
-                        <td class="px-4 py-3">
-                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
-                                {{ ucfirst($resource->category) }}
+    <!-- 📋 GRILLE DES RESSOURCES (CARTES) -->
+    <div class="mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="resourcesGrid">
+            @forelse($resources as $resource)
+            <div class="resource-card bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                 data-id="{{ $resource->id }}"
+                 data-type="{{ $resource->is_image ? 'image' : ($resource->is_video ? 'video' : 'document') }}"
+                 data-category="{{ $resource->category }}"
+                 data-service="{{ $resource->service }}"
+                 data-date="{{ $resource->created_at->timestamp }}"
+                 data-downloads="{{ $resource->download_count }}"
+                 data-title="{{ strtolower($resource->title) }}">
+                
+                <!-- En-tête de la carte avec type et icône -->
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        @if($resource->is_image)
+                            <span class="flex items-center gap-2 text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+                                <i class="fas fa-image"></i>
+                                <span class="text-xs font-medium">Image</span>
                             </span>
-                        </td>
-                        
-                        <!-- Service -->
-                        <td class="px-4 py-3">
-                            @if($resource->service)
-                                <span class="text-sm text-gray-600">{{ $resource->service }}</span>
-                            @else
-                                <span class="text-sm text-gray-400">-</span>
-                            @endif
-                        </td>
-                        
-                        <!-- Taille -->
-                        <td class="px-4 py-3 text-sm text-gray-600">
-                            {{ $resource->formatted_size }}
-                        </td>
-                        
-                        <!-- Téléchargements -->
-                        <td class="px-4 py-3 text-sm text-gray-600">
-                            <span class="flex items-center gap-1">
-                                <i class="fas fa-download text-gray-400"></i>
+                        @elseif($resource->is_video)
+                            <span class="flex items-center gap-2 text-red-600 bg-red-50 px-3 py-1 rounded-full">
+                                <i class="fas fa-video"></i>
+                                <span class="text-xs font-medium">Vidéo</span>
+                            </span>
+                        @else
+                            <span class="flex items-center gap-2 text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                                <i class="fas {{ $resource->file_icon }}"></i>
+                                <span class="text-xs font-medium">{{ strtoupper($resource->file_type) }}</span>
+                            </span>
+                        @endif
+                    </div>
+                    
+                    <!-- Badge catégorie -->
+                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                        {{ ucfirst($resource->category) }}
+                    </span>
+                </div>
+                
+                <!-- Miniature ou icône selon le type -->
+                <div class="px-4 pt-2 pb-0 flex justify-center">
+                    @if($resource->is_image)
+                        <div class="w-full h-32 rounded-lg overflow-hidden bg-gray-100 cursor-pointer" onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')">
+                            <img src="{{ $resource->url }}" alt="{{ $resource->title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                        </div>
+                    @elseif($resource->is_video)
+                        <div class="w-full h-32 rounded-lg overflow-hidden bg-gray-900 relative cursor-pointer group" onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')">
+                            <video class="w-full h-full object-cover opacity-75 group-hover:opacity-100 transition-opacity">
+                                <source src="{{ $resource->url }}" type="video/mp4">
+                            </video>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-play text-white text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="w-full h-32 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center cursor-pointer" onclick="window.open('{{ $resource->url }}', '_blank')">
+                            <div class="text-center">
+                                <i class="fas fa-file-pdf text-5xl text-blue-500"></i>
+                                <p class="text-xs text-gray-600 mt-2">Aperçu non disponible</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                
+                <!-- Contenu de la carte -->
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-800 mb-1 line-clamp-2" title="{{ $resource->title }}">
+                        {{ $resource->title }}
+                    </h3>
+                    
+                    @if($resource->description)
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2" title="{{ $resource->description }}">
+                            {{ $resource->description }}
+                        </p>
+                    @endif
+                    
+                    <!-- Métadonnées -->
+                    <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+                        <div class="bg-gray-50 p-2 rounded-lg">
+                            <span class="text-gray-500 block">Service</span>
+                            <span class="font-medium text-gray-700">{{ $resource->service ?? 'Non spécifié' }}</span>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg">
+                            <span class="text-gray-500 block">Ajouter par</span>
+                            <span class="font-medium text-gray-700">{{ $resource->user->name ?? 'Inconnu' }}</span>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg">
+                            <span class="text-gray-500 block">Téléchargements</span>
+                            <span class="font-medium text-gray-700 flex items-center gap-1">
+                                <i class="fas fa-download text-xs"></i>
                                 {{ $resource->download_count }}
                             </span>
-                        </td>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg">
+                            <span class="text-gray-500 block">Ajouté le</span>
+                            <span class="font-medium text-gray-700">{{ $resource->created_at->format('d/m/Y') }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Nom du fichier -->
+                    <div class="text-xs text-gray-400 truncate mb-3" title="{{ $resource->file_name }}">
+                        <i class="fas fa-paperclip mr-1"></i>
+                        {{ $resource->file_name }}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center justify-center gap-1 pt-2 border-t border-gray-100">
+                        <!-- 🎬 VOIR LA VIDÉO (modal) -->
+                        @if($resource->is_video)
+                            <button onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')"
+                                    class="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                    title="Voir la vidéo">
+                                <i class="bx bx-play-circle text-lg"></i>
+                            </button>
+                        @endif
                         
-                        <!-- Date -->
-                        <td class="px-4 py-3 text-sm text-gray-600">
-                            {{ $resource->created_at->format('d/m/Y') }}
-                            <span class="text-xs text-gray-400 block">{{ $resource->created_at->diffForHumans() }}</span>
-                        </td>
+                        <!-- 🖼️ VOIR L'IMAGE (modal) -->
+                        @if($resource->is_image)
+                            <button onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')"
+                                    class="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
+                                    title="Voir l'image">
+                                <i class="bx bx-image text-lg"></i>
+                            </button>
+                        @endif
                         
-                        <!-- Actions -->
-                        <td class="px-4 py-3">
-                            <div class="flex items-center justify-center gap-2">
-                                <!-- 🎬 VOIR LA VIDÉO (modal) -->
-                                @if($resource->is_video)
-                                    <button onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')"
-                                            class="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                                            title="Voir la vidéo">
-                                        <i class="bx bx-play-circle text-lg"></i>
-                                    </button>
-                                @endif
-                                
-                                <!-- 🖼️ VOIR L'IMAGE (modal) -->
-                                @if($resource->is_image)
-                                    <button onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')"
-                                            class="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
-                                            title="Voir l'image">
-                                        <i class="bx bx-image text-lg"></i>
-                                    </button>
-                                @endif
-                                
-                                <!-- Ouvrir dans un nouvel onglet -->
-                                <a href="{{ $resource->url }}" 
-                                   target="_blank"
-                                   class="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
-                                   title="Ouvrir dans un nouvel onglet">
-                                    <i class="bx bx-link"></i>
-                                </a>
-                                
-                                <!-- Télécharger -->
-                                <a href="{{ route('resources.download', $resource) }}" 
-                                   class="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                                   title="Télécharger">
-                                    <i class="bx bx-download text-lg"></i>
-                                </a>
-                                
-                                <!-- Modifier (admin/propriétaire) en MODAL -->
-                                @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
-                                <button onclick="openEditModal({{ $resource->id }})"
-                                        class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors"
-                                        title="Modifier">
-                                    <i class="bx bx-edit text-lg"></i>
-                                </button>
-                                
-                                <!-- Supprimer -->
-                                <button onclick="deleteResource({{ $resource->id }}, this)"
-                                        class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                                        title="Supprimer">
-                                    <i class="bx bx-trash text-lg"></i>
-                                </button>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" class="px-4 py-12 text-center">
-                            <i class="fas fa-folder-open text-4xl text-gray-300 mb-4"></i>
-                            <p class="text-gray-500">Aucune ressource disponible</p>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        <!-- Ouvrir dans un nouvel onglet -->
+                        <a href="{{ $resource->url }}" 
+                           target="_blank"
+                           class="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+                           title="Ouvrir dans un nouvel onglet">
+                            <i class="bx bx-link"></i>
+                        </a>
+                        
+                        <!-- Télécharger -->
+                        <a href="{{ route('resources.download', $resource) }}" 
+                           class="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                           title="Télécharger">
+                            <i class="bx bx-download text-lg"></i>
+                        </a>
+                        
+                        <!-- Modifier (admin/propriétaire) en MODAL -->
+                        @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
+                        <button onclick="openEditModal({{ $resource->id }})"
+                                class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors"
+                                title="Modifier">
+                            <i class="bx bx-edit text-lg"></i>
+                        </button>
+                        
+                        <!-- Supprimer -->
+                        <button onclick="deleteResource({{ $resource->id }}, this)"
+                                class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                title="Supprimer">
+                            <i class="bx bx-trash text-lg"></i>
+                        </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full">
+                <div class="text-center py-12">
+                    <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 text-lg">Aucune ressource disponible</p>
+                </div>
+            </div>
+            @endforelse
         </div>
     </div>
 
@@ -826,9 +840,9 @@ function closeImageModal() {
 function deleteResource(id, button) {
     if (!confirm('Voulez-vous vraiment supprimer cette ressource ?')) return;
     
-    const row = button.closest('tr');
-    row.style.opacity = '0.5';
-    row.style.backgroundColor = '#fee2e2';
+    const card = button.closest('.resource-card');
+    card.style.opacity = '0.5';
+    card.style.backgroundColor = '#fee2e2';
     
     fetch(`/ressources/${id}`, {
         method: 'DELETE',
@@ -847,15 +861,15 @@ function deleteResource(id, button) {
                 window.location.reload();
             }, 1500);
         } else {
-            row.style.opacity = '1';
-            row.style.backgroundColor = '';
+            card.style.opacity = '1';
+            card.style.backgroundColor = '';
             showNotification('error', 'Erreur lors de la suppression');
         }
     })
     .catch(error => {
         console.error('Erreur:', error);
-        row.style.opacity = '1';
-        row.style.backgroundColor = '';
+        card.style.opacity = '1';
+        card.style.backgroundColor = '';
         showNotification('error', 'Erreur de connexion');
     });
 }
@@ -906,13 +920,13 @@ function filterTable() {
     const categoryFilter = document.getElementById('filterCategory').value;
     const sortBy = document.getElementById('sortBy').value;
     
-    const rows = Array.from(document.querySelectorAll('.resource-row'));
-    const tbody = document.querySelector('tbody');
+    const cards = Array.from(document.querySelectorAll('.resource-card'));
+    const grid = document.getElementById('resourcesGrid');
     
-    const visibleRows = rows.filter(row => {
-        const title = row.dataset.title;
-        const type = row.dataset.type;
-        const category = row.dataset.category;
+    const visibleCards = cards.filter(card => {
+        const title = card.dataset.title;
+        const type = card.dataset.type;
+        const category = card.dataset.category;
         
         const matchesSearch = searchTerm === '' || title.includes(searchTerm);
         const matchesType = typeFilter === '' || type === typeFilter;
@@ -921,7 +935,7 @@ function filterTable() {
         return matchesSearch && matchesType && matchesCategory;
     });
     
-    visibleRows.sort((a, b) => {
+    visibleCards.sort((a, b) => {
         switch(sortBy) {
             case 'newest': return b.dataset.date - a.dataset.date;
             case 'oldest': return a.dataset.date - b.dataset.date;
@@ -930,25 +944,24 @@ function filterTable() {
         }
     });
     
-    rows.forEach(row => row.style.display = 'none');
-    visibleRows.forEach(row => {
-        row.style.display = '';
-        tbody.appendChild(row);
+    cards.forEach(card => card.style.display = 'none');
+    visibleCards.forEach(card => {
+        card.style.display = '';
+        grid.appendChild(card);
     });
     
     // Message aucun résultat
-    const noResults = document.getElementById('noResultsRow');
-    if (visibleRows.length === 0) {
+    const noResults = document.getElementById('noResultsMessage');
+    if (visibleCards.length === 0) {
         if (!noResults) {
-            const tr = document.createElement('tr');
-            tr.id = 'noResultsRow';
-            tr.innerHTML = `
-                <td colspan="8" class="px-4 py-12 text-center">
-                    <i class="fas fa-folder-open text-4xl text-gray-300 mb-4"></i>
-                    <p class="text-gray-500">Aucune ressource trouvée</p>
-                </td>
+            const messageDiv = document.createElement('div');
+            messageDiv.id = 'noResultsMessage';
+            messageDiv.className = 'col-span-full text-center py-12';
+            messageDiv.innerHTML = `
+                <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500 text-lg">Aucune ressource trouvée</p>
             `;
-            tbody.appendChild(tr);
+            grid.appendChild(messageDiv);
         }
     } else if (noResults) {
         noResults.remove();
@@ -972,30 +985,42 @@ document.addEventListener('DOMContentLoaded', function() {
             closeStatsModal();
         }
     });
-    
-    // Ajuster la hauteur du tableau en fonction de la fenêtre
-    function adjustTableHeight() {
-        const headerHeight = document.querySelector('.sticky.top-0')?.offsetHeight || 0;
-        const windowHeight = window.innerHeight;
-        const tableContainer = document.querySelector('.bg-white.rounded-xl.shadow-lg.overflow-hidden');
-        if (tableContainer) {
-            tableContainer.style.maxHeight = `calc(100vh - ${headerHeight + 40}px)`;
-        }
-    }
-    
-    adjustTableHeight();
-    window.addEventListener('resize', adjustTableHeight);
 });
 </script>
 
 <style>
 /* Styles existants */
-.resource-row {
-    transition: background-color 0.2s ease;
+.resource-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
 }
 
-.resource-row:hover {
-    background-color: #f9fafb;
+.resource-card:hover {
+    border-color: #8bbdc3;
+}
+
+/* Animation pour les cartes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resource-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Pour les images et vidéos */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 #videoModal, #imageModal, #resourceModal, #statsModal {
@@ -1038,11 +1063,11 @@ document.addEventListener('DOMContentLoaded', function() {
     animation: slideIn 0.3s ease-out forwards;
 }
 
-.resource-row button, .resource-row a {
+.resource-card button, .resource-card a {
     transition: all 0.2s ease;
 }
 
-.resource-row button:hover, .resource-row a:hover {
+.resource-card button:hover, .resource-card a:hover {
     transform: scale(1.1);
 }
 
@@ -1108,25 +1133,6 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Ombre pour l'en-tête fixe quand on scroll */
 .sticky.shadow-sm {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-/* Style pour l'en-tête du tableau fixe */
-thead.sticky {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* Assurer que le tableau a une hauteur maximale */
-.bg-white.rounded-xl.shadow-lg.overflow-hidden {
-    max-height: calc(100vh - 250px);
-    overflow: hidden;
-}
-
-.bg-white.rounded-xl.shadow-lg.overflow-hidden > div {
-    max-height: calc(100vh - 250px);
-    overflow-y: auto;
 }
 
 /* Style pour les erreurs de validation */

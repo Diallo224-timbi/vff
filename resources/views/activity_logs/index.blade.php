@@ -173,8 +173,8 @@
                                             data-log-id="{{ $log->id }}" 
                                             data-log='@json($log)'
                                             title="Voir les détails complets">
-                                        <i class="fas fa-eye mr-1"></i>
-                                        Détails
+                                        <i class="bx bx-show text-xs mr-1"></i>
+                                        
                                     </button>
                                     
                                     <!-- Bouton Supprimer (admin seulement) -->
@@ -186,8 +186,8 @@
                                                     class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
                                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce log ?')"
                                                     title="Supprimer définitivement">
-                                                <i class="fas fa-trash mr-1"></i>
-                                                Supprimer
+                                                <i class="bx bx-trash text-xs mr-1"></i>
+                                               
                                             </button>
                                         </form>
                                     @endif

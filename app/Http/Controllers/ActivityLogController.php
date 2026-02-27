@@ -45,7 +45,7 @@ class ActivityLogController extends Controller
         }
 
         // Pagination
-        $logs = $query->paginate(20);
+        $logs = $query->paginate(1000);
 
         // Statistiques pour les cartes
         $totalLogs = ActivityLog::count();
