@@ -1,12 +1,11 @@
 @extends('base')
-
 @section('title', 'Annuaire des structures')
 
 @section('content')
 <div class="container mx-auto px-0 py-0">
     <!-- Messages de succès - Style espace documentaire -->
     @if(session('success'))
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-lg mb-6 shadow-lg border-l-4 border-white fixed top-4 right-4 z-50 animate-slide-in"
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-0 py-0 rounded-lg mb-6 shadow-lg border-l-4 border-white fixed top-4 right-4 z-50 animate-slide-in"
              x-data="{ show: true }"
              x-show="show"
              x-init="setTimeout(() => show = false, 5000)"
@@ -22,7 +21,6 @@
             </div>
         </div>
     @endif
-
     <!-- Messages d'erreur - Style espace documentaire -->
     @if(session('error'))
         <div class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-lg mb-6 shadow-lg border-l-4 border-white fixed top-4 right-4 z-50 animate-slide-in"
@@ -41,7 +39,6 @@
             </div>
         </div>
     @endif
-
     <!-- Messages de validation (erreurs de formulaire) -->
     @if($errors->any())
         <div class="fixed top-4 right-4 z-50 space-y-2 max-w-md">
@@ -64,13 +61,12 @@
             @endforeach
         </div>
     @endif
-
     <!-- En-tête fixe - Style espace documentaire -->
     <div class="sticky top-0 z-40 bg-gray-50 pt-4 pb-2 shadow-sm" style="margin-top: -1px;">
         <!-- En-tête et titre -->
         <div class="mb-2 flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold text-[#255156] mb-2">🏢 Annuaire des structures</h1>
+                <h1 class="text-3xl font-bold text-[#255156] mb-2"><i class="bx bx-building"></i>  Annuaire des structures</h1>
                 <small class="text-gray-600">Gestion centralisée des structures et organismes</small>
             </div>
             
@@ -98,7 +94,6 @@
                 @endif
             </div>
         </div>
-
         <!-- Barre d'actions - Style espace documentaire -->
         <div class="flex flex-wrap items-center justify-between mb-2 p-2 bg-white rounded-xl shadow-lg">
             <div class="flex flex-wrap items-center gap-3">
@@ -116,8 +111,7 @@
                         Exporter PDF
                     </a>
                 @endif
-            </div>
-            
+            </div>  
             <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('structures.map') }}" 
                    class="border-2 border-[#255156] text-[#255156] px-4 py-2 rounded-lg hover:bg-[#255156] hover:text-white transition-colors flex items-center gap-2">
@@ -131,7 +125,6 @@
                     Voir fiche strucuture
                 </a>
             </div>
-
             <div class="mt-4 md:mt-0">
                 <div class="text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
                     <i class="fas fa-info-circle mr-2 text-[#255156]"></i>
@@ -267,10 +260,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Table avec design professionnel - Style espace documentaire -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden" style="max-height: calc(100vh - 280px);">
-        <div class="overflow-y-auto" style="max-height: calc(100vh - 280px);">
+    <!-- Tableau d'affichage avec visibilité mobile -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-200px)]">
+    <div class="overflow-y-auto max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-200px)]">
             <table class="w-full" id="structuresTable">
                 <thead class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white sticky top-0 z-30 shadow-md">
                     <tr>
@@ -293,7 +285,6 @@
                             data-type="{{ $structure->type_structure ?? '' }}"
                             data-zone="{{ $structure->zone ?? '' }}"
                             data-public="{{ $structure->public_cible ?? '' }}">
-                            
                             <!-- ORGANISME AVEC LOGO -->
                             <td class="px-3 py-2">
                                 <div class="flex items-center gap-2">
@@ -339,35 +330,30 @@
                                     <span class="text-gray-400 text-sm">-</span>
                                 @endif
                             </td>
-                            
                             <!-- Public Cible -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->public_cible ?? '' }}">
                                     {{ $structure->public_cible ?? '-' }}
                                 </div>
-                            </td>
-                            
+                            </td>    
                             <!-- Zone -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->zone ?? '' }}">
                                     {{ $structure->zone ?? '-' }}
                                 </div>
-                            </td>
-                            
+                            </td>  
                             <!-- Type Structure -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->type_structure ?? '' }}">
                                     {{ $structure->type_structure ?? '-' }}
                                 </div>
-                            </td>
-                            
+                            </td> 
                             <!-- Ville -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->ville ?? '' }}">
                                     {{ $structure->ville ?? '-' }}
                                 </div>
                             </td>
-                            
                             <!-- Actions - Style espace documentaire -->
                             <td class="px-3 py-2">
                                 <div class="flex items-center justify-center gap-1">
@@ -379,7 +365,6 @@
                                             data-structure='@json($structure)'>
                                         <i class="fas fa-eye text-xs"></i>
                                     </button>
-
                                     <!-- ADMIN : Peut modifier et supprimer TOUTES les structures -->
                                     @if(auth()->user()->role === 'admin')
                                         <button class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors edit-btn" 
@@ -389,7 +374,6 @@
                                                 title="Modifier">
                                             <i class="fas fa-edit text-xs"></i>
                                         </button>
-
                                         <form action="{{ route('structures.destroy', $structure) }}" 
                                               method="POST" 
                                               class="inline"
@@ -400,7 +384,6 @@
                                                 <i class="fas fa-trash text-xs"></i>
                                             </button>
                                         </form>
-
                                     <!-- MODERATEUR : Peut modifier et supprimer UNIQUEMENT sa propre structure -->
                                     @elseif(auth()->user()->role === 'moderateur' && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
                                         <button class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors edit-btn" 

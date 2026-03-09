@@ -426,7 +426,7 @@
 
     @auth
     <!-- Profil avec dropdown responsive -->
-    <div class="profile-dropdown">
+    <div class="profile-dropdown ">
       <button id="profileBtn" class="profile-btn">
         <div class="w-8 h-8 rounded-full bg-gradient-to-r from-gray-900 to-gray-500 flex items-center justify-center text-white font-semibold">
           {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
