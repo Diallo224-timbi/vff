@@ -128,6 +128,28 @@ class EventController extends Controller
             ->with('success', 'Événement mis à jour avec succès.');
     }
 
+    public function downloadIcal(Event $event)
+    {
+        $icsContent = "BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//Votre Application//FR
+        CALSCALE:GREGORIAN
+        METHOD:PUBLISH
+        BEGIN:VEVENT
+        UID:{$event->id}@" . request()->getHost() . "
+        DTSTAMP:" . now()->format('Ymd\THis') . "
+        DTSTART:" . $event->date_debut->format('Ymd\THis') . "
+        DTEND:" . $event->date_fin->format('Ymd\THis') . "
+        SUMMARY:" . addslashes($event->titre) . "
+        DESCRIPTION:" . addslashes($event->description ?? '') . "
+        LOCATION:" . addslashes($event->lieu ?? '') . "
+        END:VEVENT
+        END:VCALENDAR";
+
+            return response($icsContent)
+                ->header('Content-Type', 'text/calendar; charset=utf-8')
+                ->header('Content-Disposition', 'attachment; filename="' . $event->titre . '.ics"');
+    }
     /**
      * Supprimer un événement
      */

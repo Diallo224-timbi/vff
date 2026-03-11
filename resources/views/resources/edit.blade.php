@@ -7,7 +7,7 @@
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4">
-                <h1 class="text-xl font-bold">✏️ Modifier la ressource</h1>
+                <h1 class="text-xl font-bold">Modifier la ressource</h1>
             </div>
             <form action="{{ route('resources.update', $resource) }}" 
                   method="POST" 
@@ -85,10 +85,10 @@
                         <select name="category" 
                                 required
                                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3] @error('category') border-red-500 @enderror">
-                            <option value="procedure" {{ old('category', $resource->category) == 'procedure' ? 'selected' : '' }}>📋 Procédure</option>
-                            <option value="outil" {{ old('category', $resource->category) == 'outil' ? 'selected' : '' }}>🛠️ Outil</option>
-                            <option value="fiche_reflexe" {{ old('category', $resource->category) == 'fiche_reflexe' ? 'selected' : '' }}>⚡ Fiche réflexe</option>
-                            <option value="ressource" {{ old('category', $resource->category) == 'ressource' ? 'selected' : '' }}>📄 Ressource générale</option>
+                            <option value="procedure" {{ old('category', $resource->category) == 'procedure' ? 'selected' : '' }}>Procédure</option>
+                            <option value="outil" {{ old('category', $resource->category) == 'outil' ? 'selected' : '' }}>Outil</option>
+                            <option value="fiche_reflexe" {{ old('category', $resource->category) == 'fiche_reflexe' ? 'selected' : '' }}>Fiche réflexe</option>
+                            <option value="ressource" {{ old('category', $resource->category) == 'ressource' ? 'selected' : '' }}>Ressource générale</option>
                         </select>
                         @error('category')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

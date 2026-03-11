@@ -220,7 +220,8 @@ Route::middleware(['auth'])->group(function () {
     
     // Routes d'inscription (avec paramètre aussi)
     Route::post('/events/{event}/inscrire', [EventController::class, 'inscrire'])->name('events.inscrire'); 
-    Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');   
+    Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
+    Route::delete('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
 });
 
 

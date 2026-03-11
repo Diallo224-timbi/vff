@@ -3,15 +3,14 @@
 @section('title', 'Espace documentaire')
 
 @section('content')
-<div class="container mx-auto px-4 py-4">
-   
+<div class="container mx-auto px-4 py-4">  
     <!-- En-tête fixe -->
     <div class="sticky top-0 z-40 bg-gray-50 pt-2 pb-2 shadow-sm" style="margin-top: -1px;">
         <!-- En-tête et légende des actions -->
         <div class="mb-3 flex flex-col md:flex-row justify-between items-start md:items-center bg-white rounded-lg shadow p-3">
             <div class="mb-2 md:mb-0">
                 <h1 class="text-2xl font-bold text-[#255156]"><i class="fas fa-folder-open mr-2"></i>Espace documentaire</h1>
-                <p class="text-xs text-gray-600">Centralisation des ressources professionnelles</p>
+                <p class="text-xs text-gray-600"><i class=""></i> des ressources professionnelles</p>
             </div>
             
             <!-- BOUTON STATISTIQUES -->
@@ -20,7 +19,6 @@
                 Statistiques
             </button>
         </div>
-
         <!-- Barre de recherche et filtres -->
         <div class="bg-white rounded-lg shadow p-3">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -38,9 +36,9 @@
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Type</label>
                     <select id="filterType" class="w-full px-2 py-1.5 text-sm border rounded-lg focus:ring-1 focus:ring-[#8bbdc3]">
                         <option value="">Tous</option>
-                        <option value="image">🖼️ Images</option>
-                        <option value="video">🎥 Vidéos</option>
-                        <option value="document">📄 Documents</option>
+                        <option value="image">Images</option>
+                        <option value="video">Vidéos</option>
+                        <option value="document">Documents</option>
                     </select>
                 </div>
                 
@@ -48,10 +46,10 @@
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Catégorie</label>
                     <select id="filterCategory" class="w-full px-2 py-1.5 text-sm border rounded-lg focus:ring-1 focus:ring-[#8bbdc3]">
                         <option value="">Toutes</option>
-                        <option value="procedure">📋 Procédures</option>
-                        <option value="outil">🛠️ Outils</option>
-                        <option value="fiche_reflexe">⚡ Fiches réflexes</option>
-                        <option value="ressource">📄 Ressources</option>
+                        <option value="procedure">Procédures</option>
+                        <option value="outil">Outils</option>
+                        <option value="fiche_reflexe">Fiches réflexes</option>
+                        <option value="ressource">Ressources</option>
                     </select>
                 </div>
             </div>
@@ -74,7 +72,7 @@
         </div>
     </div>
 
-    <!-- 📋 GRILLE DES RESSOURCES (CARTES COMPACTES) -->
+    <!-- GRILLE DES RESSOURCES (CARTES COMPACTES) -->
     <div class="mt-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" id="resourcesGrid">
             @forelse($resources as $resource)
@@ -244,7 +242,7 @@
 </div>
 
 <!-- Les modales restent identiques -->
-<!-- 🎬 MODAL VIDÉO -->
+<!-- MODAL VIDÉO -->
 <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-95 hidden items-center justify-center z-50" onclick="closeVideoModal()">
     <div class="relative w-full max-w-5xl mx-4" onclick="event.stopPropagation()">
         <button onclick="closeVideoModal()" 
@@ -267,7 +265,7 @@
     </div>
 </div>
 
-<!-- 🖼️ MODAL IMAGE -->
+<!-- MODAL IMAGE -->
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-95 hidden items-center justify-center z-50" onclick="closeImageModal()">
     <div class="relative max-w-6xl mx-4" onclick="event.stopPropagation()">
         <button onclick="closeImageModal()" 
@@ -281,7 +279,7 @@
     </div>
 </div>
 
-<!-- 📝 MODAL DE CRÉATION/MODIFICATION -->
+<!-- MODAL DE CRÉATION/MODIFICATION -->
 <div id="resourceModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50" onclick="closeResourceModal()">
     <div class="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
         <div class="bg-white rounded-xl shadow-2xl">
@@ -349,10 +347,10 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie *</label>
                         <select id="category" name="category" required
                                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
-                            <option value="procedure">📋 Procédure</option>
-                            <option value="outil">🛠️ Outil</option>
-                            <option value="fiche_reflexe">⚡ Fiche réflexe</option>
-                            <option value="ressource">📄 Ressource</option>
+                            <option value="procedure">Procédure</option>
+                            <option value="outil">Outil</option>
+                            <option value="fiche_reflexe">Fiche réflexe</option>
+                            <option value="ressource">Ressource</option>
                         </select>
                     </div>
                     
@@ -387,7 +385,7 @@
     </div>
 </div>
 
-<!-- 📊 MODAL STATISTIQUES (identique) -->
+<!-- MODAL STATISTIQUES (identique) -->
 <div id="statsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" onclick="closeStatsModal()">
     <div class="relative w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
         <div class="bg-white rounded-xl shadow-2xl">

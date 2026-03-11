@@ -7,7 +7,7 @@
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4">
-                <h1 class="text-xl font-bold">📤 Ajouter une ressource</h1>
+                <h1 class="text-xl font-bold"><i class="bx bx-plus"></i>Ajouter une ressource</h1>
             </div>   
             <form action="{{ route('resources.store') }}" 
                   method="POST" 

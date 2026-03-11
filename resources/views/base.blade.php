@@ -428,7 +428,7 @@
     <!-- Profil avec dropdown responsive -->
     <div class="profile-dropdown ">
       <button id="profileBtn" class="profile-btn">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-gray-900 to-gray-500 flex items-center justify-center text-white font-semibold">
+        <div class="w-8 h-8 rounded-full bg-linear-to-r from-gray-900 to-gray-500 flex items-center justify-center text-white font-semibold">
           {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
         </div>
         <span class="hidden md:inline">{{ Auth::user()->name }}</span>
@@ -484,11 +484,12 @@
           <i class='bx bx-book-open'></i>
           <span>Ressources</span>
         </a>
-
+<!--
         <a href="/projets" class="sidebar-link">
           <i class='bx bx-briefcase'></i>
           <span>Projets</span>
         </a>
+-->
         <a href="{{ route('forum.index') }}" class="sidebar-link">
           <i class='bx bx-chat'></i>
           <span>Forum</span>
