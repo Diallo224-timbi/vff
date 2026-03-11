@@ -128,7 +128,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                            <i class="fas fa-user text-purple-500"></i>
+                            <i class="fas fa-user text-[#255156]"></i>
                             <div>
                                 <div class="text-xs text-gray-500">Contact</div>
                                 <div class="font-medium truncate" id="modal-contact">-</div>

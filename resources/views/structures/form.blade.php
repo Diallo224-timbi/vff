@@ -4,7 +4,6 @@
         @if($method === 'PUT')
             @method('PUT')
         @endif
-
         <!-- LIGNE 0: LOGO STRUCTURE -->
         <div class="row mb-3 align-items-end">
             <div class="col-md-12">
@@ -18,7 +17,6 @@
                             <i class="fas fa-building" style="font-size: 2rem; color: #cbd5e0;"></i>
                         @endif
                     </div>
-                    
                     <!-- Contrôles d'upload -->
                     <div class="flex-grow-1">
                         <label class="form-label mb-1">
@@ -69,7 +67,6 @@
                 </select>
             </div>
         </div>
-
         <!-- LIGNE 2: DESCRIPTION + DÉTAILS -->
         <div class="row mb-2">
             <div class="col-md-6">
@@ -106,13 +103,33 @@
                 <input type="text" name="horaires" class="form-control" value="{{ old('horaires', $structure->horaires ?? '') }}" placeholder="Lun-Ven 9h-18h">
             </div>
             <div class="col-md-3">
-                <label class="form-label">Catégories</label>
-                <input type="text" name="categories" class="form-control" value="{{ old('categories', $structure->categories ?? '') }}" placeholder="social, formation">
+                <!-- ==================================== -->
+            <label class="form-label">Catégories</label>
+            <div class="d-flex gap-1">
+                <select id="categoriesSelect" class="form-select form-select-sm flex-grow-1">
+                    <option value="">-- Choisir --</option>
+                    <option value="santé">Santé</option>
+                    <option value="social">Social</option>
+                    <option value="psychologique">Psychologique</option>
+                    <option value="juridique">Juridique</option>
+                </select>
+                <button type="button" class="btn btn-sm btn-primary" id="addCategoryBtn">Ajouter</button>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Publics cibles</label>
-                <input type="text" name="public_cible" class="form-control" value="{{ old('public_cible', $structure->public_cible ?? '') }}">
+            <textarea name="categories" id="categoriesTextarea" class="form-control mt-1" rows="1">{{ old('categories', $structure->categories ?? '') }}</textarea>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Publics cibles</label>
+            <div class="d-flex gap-1">
+                <select id="publicSelect" class="form-select form-select-sm flex-grow-1">
+                    <option value="">-- Choisir --</option>
+                    <option value="victimes">Victimes</option>
+                    <option value="mineurs">Mineurs</option>
+                </select>
+                <button type="button" class="btn btn-sm btn-primary" id="addPublicBtn">Ajouter</button>
             </div>
+            <textarea name="public_cible" id="publicTextarea" class="form-control mt-1" rows="1">{{ old('public_cible', $structure->public_cible ?? '') }}</textarea>
+        </div>
             <div class="col-md-3">
                 <label class="form-label">Zone d'intervention</label>
                 <input type="text" name="zone" class="form-control" value="{{ old('zone', $structure->zone ?? '') }}">
@@ -825,4 +842,28 @@
             });
         }
     });
+// Fonction générique pour ajouter des items aux listes de catégories et de publics
+document.addEventListener('DOMContentLoaded', function() {
+    function addItem(selectId, textareaId) {
+        const select = document.getElementById(selectId);
+        const textarea = document.getElementById(textareaId);
+        const value = select.value.trim();
+        if (!value) return;
+
+        let items = textarea.value.split(',').map(i => i.trim()).filter(i => i);
+        if (!items.includes(value)) {
+            items.push(value);
+            textarea.value = items.join(', ');
+        }
+    }
+
+    document.getElementById('addCategoryBtn').addEventListener('click', function() {
+        addItem('categoriesSelect', 'categoriesTextarea');
+    });
+
+    document.getElementById('addPublicBtn').addEventListener('click', function() {
+        addItem('publicSelect', 'publicTextarea');
+    });
+});
+
 </script>
