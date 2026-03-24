@@ -4,6 +4,78 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-4">
+    <div class="container mx-auto px-5 py-5">
+    <!-- Messages de succès - Version Bootstrap -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
+             role="alert" 
+             style="z-index: 9999; min-width: 300px;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle me-2"></i>
+                <div>{{ session('success') }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <!-- Script pour auto-fermeture après 5 secondes -->
+        <script>
+            setTimeout(function() {
+                const alert = document.querySelector('.alert-success');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        </script>
+    @endif
+
+    <!-- Messages d'erreur - Version Bootstrap -->
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
+             role="alert" 
+             style="z-index: 9999; min-width: 300px;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <div>{{ session('error') }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <script>
+            setTimeout(function() {
+                const alert = document.querySelector('.alert-danger');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        </script>
+    @endif
+
+    <!-- Messages de validation (erreurs de formulaire) -->
+    @if($errors->any())
+        <div class="position-fixed top-0 end-0 m-3" style="z-index: 9999; max-width: 400px;">
+            @foreach($errors->all() as $error)
+                <div class="alert alert-danger alert-dismissible fade show shadow-lg mb-2" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <div>{{ $error }}</div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endforeach
+        </div>
+        
+        <script>
+            setTimeout(function() {
+                document.querySelectorAll('.alert-danger').forEach(alert => {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 8000);
+        </script>
+    @endif
+
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tous Ensembles - Plateforme Multi-Acteurs</title>
+<title>Plateforme Multi-Acteurs</title>
 
 <style>
 /* Votre CSS reste identique */
@@ -403,7 +403,6 @@ body {
   <a href="/register" class="btn-login">S'inscrire</a>
   <a href="/login" class="btn-login">Se connecter</a>
   </div>
-  <!-- Ou si vous avez une route login : -->
   <!-- <a href="{{ route('register') }}" class="btn-login">Se connecter</a> -->
 </header>
 

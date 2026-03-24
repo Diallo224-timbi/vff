@@ -124,7 +124,7 @@ class EventController extends Controller
 
         ActivityLog::log('Modification événement', 'Événement modifié: ' . $event->titre. ' par ' . auth()->user()->name);
 
-        return redirect()->route('events.show', $event)
+        return redirect()->route('events.index', $event)
             ->with('success', 'Événement mis à jour avec succès.');
     }
 

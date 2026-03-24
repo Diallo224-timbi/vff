@@ -145,29 +145,193 @@
         </div>
     </div>
 </div>
-<!-- MODAL DÉTAILS -->
+
+<!-- MODAL DÉTAILS COMPLET -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white">
-                <h5 class="modal-title" id="detailsModalLabel">
-                    <i class="fas fa-building mr-2"></i>
-                    Détails complets de la structure
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalDetailsContent">
-                <div class="text-center py-4">
-                    <div class="spinner-border text-[#255156]" role="status">
-                        <span class="visually-hidden">Chargement...</span>
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-2xl overflow-hidden rounded-2xl">
+            <!-- Header avec gradient et logo -->
+            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <!-- Logo container -->
+                        <div class="relative">
+                            <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
+                                <div id="modal-logo-placeholder" class="flex items-center justify-center">
+                                    <i class="fas fa-building text-white text-4xl"></i>
+                                </div>
+                                <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-cover hidden">
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold" id="modal-organisme">-</h3>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-medium" id="modal-type-badge">-</span>
+                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-medium" id="modal-hebergement-badge">-</span>
+                            </div>
+                        </div>
                     </div>
-                    <p class="mt-2 text-gray-600">Chargement des détails...</p>
+                    <button type="button" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors" data-bs-dismiss="modal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm" data-bs-dismiss="modal">
-                    Fermer
-                </button>
+
+            <!-- Body avec toutes les informations -->
+            <div class="modal-body bg-gray-50 p-6 max-h-[70vh] overflow-y-auto">
+                <!-- Grille d'informations principale -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Colonne gauche -->
+                    <div class="space-y-4">
+                        <!-- Informations générales -->
+                        <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-4 flex items-center gap-2">
+                                <i class="fas fa-info-circle"></i>
+                                Informations générales
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-2">
+                                    <span class="text-gray-500 text-sm">Organisme</span>
+                                    <span class="text-gray-800 font-medium text-right" id="modal-organisme-text">-</span>
+                                </div>
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-2">
+                                    <span class="text-gray-500 text-sm">Type</span>
+                                    <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium" id="modal-type_structure">-</span>
+                                </div>
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-2">
+                                    <span class="text-gray-500 text-sm">Catégories</span>
+                                    <div class="flex flex-wrap gap-1 justify-end" id="modal-categories-list"></div>
+                                </div>
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-2">
+                                    <span class="text-gray-500 text-sm">Public cible</span>
+                                    <div class="flex flex-wrap gap-1 justify-end" id="modal-public-list"></div>
+                                </div>
+                                <div class="flex justify-between items-start border-b border-gray-100 pb-2">
+                                    <span class="text-gray-500 text-sm">Zone d'intervention</span>
+                                    <span class="text-gray-800 text-right" id="modal-zone">-</span>
+                                </div>
+                                <div class="flex justify-between items-start">
+                                    <span class="text-gray-500 text-sm">Site web</span>
+                                    <span id="modal-site" class="text-right">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-align-left"></i>
+                                Description
+                            </h4>
+                            <p class="text-gray-700 text-sm leading-relaxed" id="modal-description">-</p>
+                        </div>
+
+                        <!-- Détails spécifiques -->
+                        <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-list-ul"></i>
+                                Détails spécifiques
+                            </h4>
+                            <p class="text-gray-700 text-sm" id="modal-details">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Colonne droite -->
+                    <div class="space-y-4">
+                        <!-- Localisation -->
+                        <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-4 flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Localisation
+                            </h4>
+                            
+                            <!-- Siège social -->
+                            <div class="mb-4 p-3 bg-blue-50 rounded-lg">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-landmark text-blue-600"></i>
+                                    <span class="font-semibold text-blue-700 text-sm">SIÈGE SOCIAL</span>
+                                </div>
+                                <div class="space-y-1 text-sm">
+                                    <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-siege_ville">-</span></p>
+                                    <p><span class="text-gray-500">Adresse :</span> <span id="modal-siege_adresse">-</span></p>
+                                </div>
+                            </div>
+                            
+                            <!-- Antenne locale -->
+                            <div class="p-3 bg-green-50 rounded-lg">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="fas fa-map-pin text-green-600"></i>
+                                    <span class="font-semibold text-green-700 text-sm">ANTENNE LOCALE</span>
+                                </div>
+                                <div class="space-y-1 text-sm">
+                                    <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-ville">-</span> <span id="modal-code_postal" class="text-gray-500"></span></p>
+                                    <p><span class="text-gray-500">Adresse :</span> <span id="modal-adresse">-</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-4 flex items-center gap-2">
+                                <i class="fas fa-address-card"></i>
+                                Contact
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                                    <i class="fas fa-phone text-green-500 w-5"></i>
+                                    <div>
+                                        <div class="text-xs text-gray-500">Téléphone</div>
+                                        <div id="modal-telephone" class="font-medium">-</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                                    <i class="fas fa-envelope text-blue-500 w-5"></i>
+                                    <div>
+                                        <div class="text-xs text-gray-500">Email</div>
+                                        <div id="modal-email" class="font-medium break-all">-</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                                    <i class="fas fa-user text-purple-500 w-5"></i>
+                                    <div>
+                                        <div class="text-xs text-gray-500">Personne de contact</div>
+                                        <div id="modal-contact" class="font-medium">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Horaires -->
+                        <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100" id="horaires-container" style="display: none;">
+                            <h4 class="text-[#255156] font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-clock"></i>
+                                Horaires
+                            </h4>
+                            <p class="text-gray-700 text-sm" id="modal-horaires">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer bg-white p-4 border-t border-gray-200">
+                <div class="flex justify-end gap-3 w-full">
+                        <i class="">dernier mise à jour: <span id="modal-created_at" class="">-</span></i>
+                    <button type="button" 
+                            class="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
+                            data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                        Fermer
+                    </button>
+                    <button type="button" 
+                            id="modal-itineraire-btn"
+                            class="px-5 py-2 bg-blue-400 text-white rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2">
+                        <i class="fas fa-directions"></i>
+                        Itinéraire
+                    </button>
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -190,7 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Variables globales
     let markers = [];
     let currentSelectedMarker = null;
-    let zoomTimeout = null;
+    let map;
+    let currentStructure = null;
     
     // Limites
     const coteAzurBounds = L.latLngBounds(
@@ -199,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     
     // Initialisation carte
-    const map = L.map('map', {
+    map = L.map('map', {
         center: [43.6, 7.0],
         zoom: 9,
         maxBounds: coteAzurBounds,
@@ -214,6 +379,188 @@ document.addEventListener('DOMContentLoaded', () => {
     // Données
     const structures = @json($structures);
 
+    // Fonction d'échappement HTML
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Fonction pour échapper les caractères spéciaux pour JSON dans un attribut HTML
+    function escapeJsonForAttribute(obj) {
+        return JSON.stringify(obj).replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/'/g, '&#39;');
+    }
+
+    // Fonction pour formater les catégories en badges
+    function formatCategoriesBadges(categories) {
+        if (!categories) return '<span class="text-gray-400 text-xs">Non spécifié</span>';
+        const cats = categories.split(',').map(c => c.trim()).filter(c => c);
+        return cats.map(cat => 
+            `<span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs">${escapeHtml(cat)}</span>`
+        ).join('');
+    }
+
+    // Fonction pour formater les publics en badges
+    function formatPublicBadges(publics) {
+        if (!publics) return '<span class="text-gray-400 text-xs">Non spécifié</span>';
+        const pubs = publics.split(',').map(p => p.trim()).filter(p => p);
+        return pubs.map(pub => 
+            `<span class="inline-block px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">${escapeHtml(pub)}</span>`
+        ).join('');
+    }
+
+    // Couleur selon type
+    function getColorByType(type) {
+        if (!type) return '#6b7280';
+        const t = type.toLowerCase();
+        if (t.includes('siége') || t.includes('siege')) return '#3b82f6';
+        if (t.includes('antenne')) return '#10b981';
+        if (t.includes('association')) return '#ef4444';
+        if (t.includes('santé') || t.includes('droit')) return '#8b5cf6';
+        return '#f59e0b';
+    }
+
+    // Fonction pour afficher les détails complets dans le modal
+    function showFullDetailsModal(structure) {
+        currentStructure = structure;
+        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
+        
+        // Logo
+        const modalLogoImg = document.getElementById('modal-logo-img');
+        const modalLogoPlaceholder = document.getElementById('modal-logo-placeholder');
+        
+        if (logoUrl) {
+            modalLogoImg.src = logoUrl;
+            modalLogoImg.classList.remove('hidden');
+            modalLogoPlaceholder.classList.add('hidden');
+        } else {
+            modalLogoImg.classList.add('hidden');
+            modalLogoPlaceholder.classList.remove('hidden');
+        }
+        
+        // En-tête
+        document.getElementById('modal-organisme').textContent = structure.organisme || 'Structure sans nom';
+        document.getElementById('modal-type-badge').textContent = structure.type_structure || 'Type non spécifié';
+        document.getElementById('modal-hebergement-badge').textContent = structure.hebergement === 'oui' ? '🏠 Avec hébergement' : (structure.hebergement === 'non' ? '❌ Sans hébergement' : 'Hébergement non spécifié');
+        
+        // Informations générales
+        document.getElementById('modal-organisme-text').textContent = structure.organisme || '-';
+        document.getElementById('modal-type_structure').innerHTML = `<span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs" style="background-color: ${getColorByType(structure.type_structure)}20; color: ${getColorByType(structure.type_structure)}">${escapeHtml(structure.type_structure || 'Non spécifié')}</span>`;
+        document.getElementById('modal-categories-list').innerHTML = formatCategoriesBadges(structure.categories);
+        document.getElementById('modal-public-list').innerHTML = formatPublicBadges(structure.public_cible);
+        document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
+        
+        // Site web
+        const siteElement = document.getElementById('modal-site');
+        if (structure.site && structure.site.trim() !== '') {
+            siteElement.innerHTML = `<a href="${structure.site}" target="_blank" class="text-[#255156] hover:underline break-all">${escapeHtml(structure.site)} <i class="fas fa-external-link-alt text-xs ml-1"></i></a>`;
+        } else {
+            siteElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+        }
+        
+        // Description
+        const descriptionElement = document.getElementById('modal-description');
+        if (structure.description && structure.description.trim() !== '') {
+            descriptionElement.textContent = structure.description;
+            descriptionElement.classList.remove('text-gray-400', 'italic');
+        } else {
+            descriptionElement.textContent = 'Aucune description disponible';
+            descriptionElement.classList.add('text-gray-400', 'italic');
+        }
+        
+        // Détails spécifiques
+        const detailsElement = document.getElementById('modal-details');
+        if (structure.details && structure.details.trim() !== '') {
+            detailsElement.textContent = structure.details;
+            detailsElement.classList.remove('text-gray-400', 'italic');
+        } else {
+            detailsElement.textContent = 'Aucun détail spécifique';
+            detailsElement.classList.add('text-gray-400', 'italic');
+        }
+        
+        // Localisation - Siège social
+        document.getElementById('modal-siege_ville').textContent = structure.siege_ville || 'Non spécifié';
+        document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || 'Non spécifiée';
+        
+        // Localisation - Antenne locale
+        document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
+        document.getElementById('modal-code_postal').textContent = structure.code_postal ? `(${structure.code_postal})` : '';
+        document.getElementById('modal-adresse').textContent = structure.adresse || 'Non spécifiée';
+        
+        // Contact
+        const telephoneElement = document.getElementById('modal-telephone');
+        if (structure.telephone && structure.telephone.trim() !== '') {
+            telephoneElement.innerHTML = `<a href="tel:${structure.telephone.replace(/\s/g, '')}" class="text-[#255156] hover:underline">${escapeHtml(structure.telephone)}</a>`;
+        } else {
+            telephoneElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+        }
+        
+        const emailElement = document.getElementById('modal-email');
+        if (structure.email && structure.email.trim() !== '') {
+            emailElement.innerHTML = `<a href="mailto:${structure.email}" class="text-[#255156] hover:underline break-all">${escapeHtml(structure.email)}</a>`;
+        } else {
+            emailElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+        }
+        
+        document.getElementById('modal-contact').textContent = structure.contact || 'Non spécifié';
+        
+        // Horaires
+        const horairesContainer = document.getElementById('horaires-container');
+        const horairesElement = document.getElementById('modal-horaires');
+        if (structure.horaires && structure.horaires.trim() !== '') {
+            horairesElement.textContent = structure.horaires;
+            horairesContainer.style.display = 'block';
+        } else {
+            horairesContainer.style.display = 'none';
+        }
+        
+        // Date de mise à jour
+        const dateElement = document.getElementById('modal-created_at');
+        if (structure.updated_at) {
+            const date = new Date(structure.updated_at);
+            dateElement.textContent = date.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } else if (structure.created_at) {
+            const date = new Date(structure.created_at);
+            dateElement.textContent = date.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } else {
+            dateElement.textContent = '-';
+        }
+        
+        // Bouton itinéraire
+        const itineraireBtn = document.getElementById('modal-itineraire-btn');
+        if (structure.latitude && structure.longitude) {
+            itineraireBtn.onclick = () => {
+                window.open(`https://www.google.com/maps/dir/?api=1&destination=${structure.latitude},${structure.longitude}`, '_blank');
+            };
+            itineraireBtn.disabled = false;
+            itineraireBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            itineraireBtn.onclick = () => {
+                alert('Coordonnées GPS non disponibles pour cette structure');
+            };
+            itineraireBtn.disabled = true;
+            itineraireBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
     // Fonctions check/uncheck
     window.checkAll = function(selector) {
         document.querySelectorAll(selector).forEach(cb => cb.checked = true);
@@ -224,208 +571,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll(selector).forEach(cb => cb.checked = false);
         filterMarkers();
     };
-
-    // Fonction pour afficher les détails dans le modal
-    function showFullDetails(structure) {
-        const modalContent = document.getElementById('modalDetailsContent');
-        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
-        
-        // Formater les catégories
-        let categoriesHtml = '';
-        if (structure.categories) {
-            const categoriesList = structure.categories.split(',').map(c => c.trim()).filter(c => c);
-            categoriesHtml = categoriesList.map(cat => 
-                `<span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm mr-2 mb-2">${cat}</span>`
-            ).join('');
-        }
-        
-        // Formater les publics cibles
-        let publicsHtml = '';
-        if (structure.public_cible) {
-            const publicsList = structure.public_cible.split(',').map(p => p.trim()).filter(p => p);
-            publicsHtml = publicsList.map(pub => 
-                `<span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm mr-2 mb-2">${pub}</span>`
-            ).join('');
-        }
-
-        // Couleur du type
-        function getColorByType(type) {
-            if (!type) return '#6b7280';
-            const t = type.toLowerCase();
-            if (t.includes('siége') || t.includes('siege')) return '#3b82f6';
-            if (t.includes('antenne')) return '#10b981';
-            if (t.includes('association')) return '#ef4444';
-            if (t.includes('santé') || t.includes('droit')) return '#8b5cf6';
-            return '#f59e0b';
-        }
-
-        const html = `
-            <div class="space-y-6">
-                <!-- En-tête avec logo -->
-                <div class="flex items-center gap-4 border-b pb-4">
-                    <div class="w-16 h-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 flex items-center justify-center shadow-sm">
-                        ${logoUrl ? `
-                            <img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">
-                        ` : `
-                            <i class="fas fa-building text-gray-400 text-2xl"></i>
-                        `}
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-xl text-[#255156]">${structure.organisme || 'Structure sans nom'}</h4>
-                        <div class="flex items-center gap-2 mt-2 flex-wrap">
-                            <span class="inline-block px-3 py-1 text-xs rounded-full text-white font-medium" 
-                                  style="background-color: ${getColorByType(structure.type_structure)}">
-                                ${structure.type_structure || 'Type non spécifié'}
-                            </span>
-                            ${structure.hebergement ? `
-                                <span class="inline-block px-3 py-1 text-xs rounded-full ${structure.hebergement === 'oui' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                                    ${structure.hebergement === 'oui' ? '🏠 Hébergement oui' : '❌ Sans hébergement'}
-                                </span>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Coordonnées -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Localisation -->
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h5 class="font-semibold text-blue-800 mb-3 flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            Localisation
-                        </h5>
-                        <div class="space-y-2 text-sm">
-                            ${structure.adresse ? `
-                                <p><span class="font-medium">Adresse :</span><br>${structure.adresse}</p>
-                            ` : ''}
-                            <p><span class="font-medium">Ville :</span> ${structure.ville || 'Non spécifiée'} ${structure.code_postal ? '('+structure.code_postal+')' : ''}</p>
-                            ${structure.zone ? `
-                                <p><span class="font-medium">Zone d'intervention :</span><br>${structure.zone}</p>
-                            ` : ''}
-                        </div>
-                    </div>
-
-                    <!-- Contact -->
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <h5 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-address-card mr-2"></i>
-                            Contact
-                        </h5>
-                        <div class="space-y-2 text-sm">
-                            ${structure.telephone ? `
-                                <div class="flex items-center">
-                                    <i class="fas fa-phone text-[#255156] w-6"></i>
-                                    <a href="tel:${structure.telephone.replace(/\s/g,'')}" class="text-gray-800 hover:text-[#255156]">
-                                        ${structure.telephone}
-                                    </a>
-                                </div>
-                            ` : ''}
-                            ${structure.email ? `
-                                <div class="flex items-center">
-                                    <i class="fas fa-envelope text-[#255156] w-6"></i>
-                                    <a href="mailto:${structure.email}" class="text-gray-800 hover:text-[#255156] break-all">
-                                        ${structure.email}
-                                    </a>
-                                </div>
-                            ` : ''}
-                            ${structure.site ? `
-                                <div class="flex items-center">
-                                    <i class="fas fa-globe text-[#255156] w-6"></i>
-                                    <a href="${structure.site}" target="_blank" class="text-gray-800 hover:text-[#255156] break-all">
-                                        ${structure.site}
-                                    </a>
-                                </div>
-                            ` : ''}
-                            ${structure.responsable ? `
-                                <div class="flex items-center">
-                                    <i class="fas fa-user-tie text-[#255156] w-6"></i>
-                                    <span class="text-gray-800">${structure.responsable}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Catégories -->
-                ${structure.categories ? `
-                    <div class="bg-purple-50 p-4 rounded-lg">
-                        <h5 class="font-semibold text-purple-800 mb-3 flex items-center">
-                            <i class="fas fa-tags mr-2"></i>
-                            Catégories
-                        </h5>
-                        <div class="flex flex-wrap">
-                            ${categoriesHtml}
-                        </div>
-                    </div>
-                ` : ''}
-
-                <!-- Publics cibles -->
-                ${structure.public_cible ? `
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h5 class="font-semibold text-green-800 mb-3 flex items-center">
-                            <i class="fas fa-users mr-2"></i>
-                            Publics cibles
-                        </h5>
-                        <div class="flex flex-wrap">
-                            ${publicsHtml}
-                        </div>
-                    </div>
-                ` : ''}
-
-                <!-- Horaires -->
-                ${structure.horaires ? `
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <h5 class="font-semibold text-yellow-800 mb-3 flex items-center">
-                            <i class="fas fa-clock mr-2"></i>
-                            Horaires
-                        </h5>
-                        <p class="text-gray-800">${structure.horaires}</p>
-                    </div>
-                ` : ''}
-
-                <!-- Description -->
-                ${structure.description ? `
-                    <div class="bg-white p-4 rounded-lg border border-gray-200">
-                        <h5 class="font-semibold text-gray-700 mb-2">Description :</h5>
-                        <p class="text-gray-800 leading-relaxed">${structure.description}</p>
-                    </div>
-                ` : ''}
-
-                <!-- Détails spécifiques -->
-                ${structure.details ? `
-                    <div class="bg-white p-4 rounded-lg border border-gray-200">
-                        <h5 class="font-semibold text-gray-700 mb-2">Détails spécifiques :</h5>
-                        <p class="text-gray-800 leading-relaxed">${structure.details}</p>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-
-        modalContent.innerHTML = html;
-    }
-
-    // Fonction pour ouvrir le modal
-    function openDetailsModal(structure) {
-        showFullDetails(structure);
-        const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
-        modal.show();
-    }
-
-    // Écouter les clics sur les boutons de détails
-    document.addEventListener('click', function(e) {
-        const viewDetailsBtn = e.target.closest('.view-details-btn');
-        if (viewDetailsBtn) {
-            e.preventDefault();
-            e.stopPropagation();
-            const structureData = viewDetailsBtn.getAttribute('data-structure');
-            try {
-                const structure = JSON.parse(structureData);
-                openDetailsModal(structure);
-            } catch (error) {
-                console.error('Erreur lors du parsing des données:', error);
-            }
-        }
-    });
 
     // Icône de géolocalisation
     function createCustomIcon(color) {
@@ -458,38 +603,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Couleur selon type (version globale)
-    window.getColorByType = function(type) {
-        if (!type) return '#6b7280';
-        const t = type.toLowerCase();
-        if (t.includes('siége') || t.includes('siege')) return '#3b82f6';
-        if (t.includes('antenne')) return '#10b981';
-        if (t.includes('association')) return '#ef4444';
-        if (t.includes('santé') || t.includes('droit')) return '#8b5cf6';
-        return '#f59e0b';
-    };
-
-    // Fonction pour créer le contenu de l'infobulle (popup)
+    // Fonction pour créer le contenu de l'infobulle (popup) - Utilisation d'une approche sécurisée
     function createPopupContent(structure) {
         const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
         const color = getColorByType(structure.type_structure);
         
+        // Échapper les données pour le JSON dans l'attribut data-structure
+        const safeStructureJson = escapeJsonForAttribute(structure);
+        
         return `
-            <div class="popup-content" style="min-width: 250px; max-width: 280px;">
+            <div class="popup-content" style="min-width: 260px; max-width: 300px;">
                 <!-- En-tête avec logo -->
-                <div class="flex items-center gap-2 border-b pb-2 mb-2">
-                    <div class="w-8 h-8 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
+                <div class="flex items-center gap-3 border-b pb-2 mb-2">
+                    <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                         ${logoUrl ? `
                             <img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">
                         ` : `
-                            <i class="fas fa-building text-gray-400 text-sm"></i>
+                            <i class="fas fa-building text-gray-400 text-lg"></i>
                         `}
                     </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-sm text-[#255156]">${structure.organisme || 'Structure'}</h4>
-                        <span class="inline-block px-2 py-0.5 text-[9px] rounded-full text-white" 
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-sm text-[#255156] truncate" title="${escapeHtml(structure.organisme || 'Structure')}">
+                            ${escapeHtml(structure.organisme || 'Structure')}
+                        </h4>
+                        <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white mt-1" 
                               style="background-color: ${color};">
-                            ${structure.type_structure || 'Non spécifié'}
+                            ${escapeHtml(structure.type_structure || 'Non spécifié')}
                         </span>
                     </div>
                 </div>
@@ -498,72 +637,73 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="space-y-1.5 text-xs">
                     <p class="flex items-center">
                         <i class="fas fa-map-marker-alt text-red-500 w-4"></i>
-                        <span class="text-gray-700">${structure.ville || 'Ville non spécifiée'}</span>
+                        <span class="text-gray-700 truncate">${escapeHtml(structure.ville || 'Ville non spécifiée')}</span>
                     </p>
                     
                     ${structure.telephone ? `
                         <p class="flex items-center">
                             <i class="fas fa-phone text-[#255156] w-4"></i>
-                            <span class="text-gray-700">${structure.telephone}</span>
-                        </p>
-                    ` : ''}
-                    
-                    ${structure.email ? `
-                        <p class="flex items-center">
-                            <i class="fas fa-envelope text-[#255156] w-4"></i>
-                            <span class="text-gray-700 truncate">${structure.email.substring(0, 25)}...</span>
+                            <span class="text-gray-700">${escapeHtml(structure.telephone)}</span>
                         </p>
                     ` : ''}
                     
                     ${structure.categories ? `
                         <p class="flex items-start mt-1">
                             <i class="fas fa-tag text-gray-500 w-4 mt-0.5"></i>
-                            <span class="text-gray-600 text-[9px]">${structure.categories.split(',').slice(0, 2).join(', ')}${structure.categories.split(',').length > 2 ? '...' : ''}</span>
+                            <span class="text-gray-600 text-[10px] leading-relaxed">${escapeHtml(structure.categories.split(',').slice(0, 2).join(', '))}${structure.categories.split(',').length > 2 ? '...' : ''}</span>
                         </p>
                     ` : ''}
                 </div>
 
-                <!-- Bouton pour voir plus de détails -->
-                <button class="view-details-btn text-xs bg-[#255156]/10 hover:bg-[#255156] text-[#255156] hover:text-white px-2 py-1 rounded-lg font-medium transition-all duration-200 flex items-center gap-1 w-full justify-center mt-2"
-                    data-structure='${JSON.stringify(structure)}'>
-                    <i class="fas fa-info-circle mr-1"></i>
-                    Voir tous les détails
-                </button>
+                <!-- Boutons d'action -->
+                <div class="mt-3 space-y-1">
+                    <button class="view-details-btn w-full text-xs bg-[#255156] hover:bg-[#1d4144] text-white px-3 py-1.5 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-1"
+                        data-structure='${safeStructureJson}'>
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Voir tous les détails
+                    </button>
+                    ${structure.latitude && structure.longitude ? `
+                        <a href="https://www.google.com/maps/search/?api=1&query=${structure.latitude},${structure.longitude}" target="_blank" 
+                           class="flex items-center justify-center gap-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium transition-all duration-200">
+                            <i class="fas fa-directions mr-1"></i>
+                            Itinéraire
+                        </a>
+                    ` : ''}
+                </div>
             </div>
         `;
     }
 
-    // Afficher détails (panneau latéral)
+    // Afficher détails dans le panneau latéral
     function showStructureDetails(structure) {
-        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;  
+        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
+        const color = getColorByType(structure.type_structure);
+        
+        // Échapper les données pour le JSON dans l'attribut data-structure
+        const safeStructureJson = escapeJsonForAttribute(structure);
+        
         const detailsHtml = `
             <div class="space-y-4">
                 <!-- En-tête avec logo -->
                 <div class="flex items-center gap-3 border-b pb-3">
-                    <div class="w-12 h-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 flex items-center justify-center shadow-sm">
+                    <div class="w-14 h-14 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center shadow-sm flex-shrink-0">
                         ${logoUrl ? `
                             <img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">
                         ` : `
-                            <i class="fas fa-building text-gray-400 text-xl"></i>
+                            <i class="fas fa-building text-gray-400 text-2xl"></i>
                         `}
                     </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-[#255156]">${structure.organisme || 'Structure'}</h4>
-                        <div class="flex items-center gap-1 mt-1">
-                            <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white font-medium" 
-                                  style="background-color: ${getColorByType(structure.type_structure)}">
-                                ${structure.type_structure || 'Non spécifié'}
-                            </span>
-                            ${structure.categories ? `
-                                <span class="inline-block px-3 py-1 bg-gray-200 text-gray-900 rounded-lg text-[12px] font-semibold shadow-sm">
-                                    ${structure.categories.split(',').length} cat.
-                                    </br>
-                                    ${structure.categories}
-                                </span>
-                            ` : ''}
-                        </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-[#255156] truncate" title="${escapeHtml(structure.organisme || 'Structure')}">
+                            ${escapeHtml(structure.organisme || 'Structure')}
+                        </h4>
+                        <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white mt-1" 
+                              style="background-color: ${color}">
+                            ${escapeHtml(structure.type_structure || 'Non spécifié')}
+                        </span>
                     </div>
                 </div>
+                
                 <!-- Localisation -->
                 <div class="bg-blue-50 p-3 rounded-lg">
                     <h5 class="text-xs font-semibold text-blue-800 mb-2 flex items-center">
@@ -571,9 +711,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         Localisation
                     </h5>
                     <div class="text-xs space-y-1">
-                        ${structure.adresse ? `<p class="text-gray-700"><span class="font-medium">Adresse:</span> ${structure.adresse}</p>` : ''}
-                        <p class="text-gray-700"><span class="font-medium">Ville:</span> ${structure.ville || 'Non spécifié'} ${structure.code_postal ? '('+structure.code_postal+')' : ''}</p>
-                        ${structure.zone ? `<p class="text-gray-700"><span class="font-medium">Zone:</span> ${structure.zone}</p>` : ''}
+                        <p class="text-gray-700"><span class="font-medium">Ville:</span> ${escapeHtml(structure.ville || 'Non spécifié')} ${structure.code_postal ? '('+escapeHtml(structure.code_postal)+')' : ''}</p>
+                        ${structure.adresse ? `<p class="text-gray-700"><span class="font-medium">Adresse:</span> ${escapeHtml(structure.adresse)}</p>` : ''}
+                        ${structure.zone ? `<p class="text-gray-700"><span class="font-medium">Zone:</span> ${escapeHtml(structure.zone)}</p>` : ''}
                     </div>
                 </div>
 
@@ -588,60 +728,43 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="flex items-center">
                                 <i class="fas fa-phone text-[#255156] w-5"></i>
                                 <a href="tel:${structure.telephone.replace(/\s/g,'')}" class="text-gray-700 hover:text-[#255156]">
-                                    ${structure.telephone}
+                                    ${escapeHtml(structure.telephone)}
                                 </a>
                             </div>
                         ` : ''}
                         ${structure.email ? `
                             <div class="flex items-center">
                                 <i class="fas fa-envelope text-[#255156] w-5"></i>
-                                <a href="mailto:${structure.email}" class="text-gray-700 hover:text-[#255156] break-all">
-                                    ${structure.email}
+                                <a href="mailto:${structure.email}" class="text-gray-700 hover:text-[#255156] break-all text-xs">
+                                    ${escapeHtml(structure.email)}
                                 </a>
-                            </div>
-                        ` : ''}
-                        ${structure.site ? `
-                            <div class="flex items-center">
-                                <i class="fas fa-globe text-[#255156] w-5"></i>
-                                <a href="${structure.site}" target="_blank" class="text-gray-700 hover:text-[#255156] break-all">
-                                    ${structure.site.substring(0, 30)}...
-                                </a>
-                            </div>
-                        ` : ''}
-                        ${structure.responsable ? `
-                            <div class="flex items-center">
-                                <i class="fas fa-user-tie text-[#255156] w-5"></i>
-                                <span class="text-gray-700">${structure.responsable}</span>
                             </div>
                         ` : ''}
                     </div>
                 </div>
 
-                <!-- Description -->
-                ${structure.description ? `
-                    <div class="text-xs">
-                        <h5 class="font-medium text-gray-700 mb-1">Description:</h5>
-                        <p 
-                            class="text-gray-800 bg-gray-100 p-3 rounded-md text-sm"
-                            title="${structure.description}">
-                            ${structure.description.length > 100 
-                                ? structure.description.slice(0, 100) + "..." 
-                                : structure.description
-                            }
-                        </p>
+                <!-- Catégories -->
+                ${structure.categories ? `
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <h5 class="text-xs font-semibold text-purple-800 mb-2">Catégories</h5>
+                        <div class="flex flex-wrap gap-1">
+                            ${structure.categories.split(',').map(cat => 
+                                `<span class="inline-block px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">${escapeHtml(cat.trim())}</span>`
+                            ).join('')}
+                        </div>
                     </div>
                 ` : ''}
 
                 <!-- Bouton pour voir tous les détails -->
                 <button class="view-details-btn w-full bg-[#255156] text-white py-2 rounded-lg text-xs hover:bg-[#1d4144] transition-colors flex items-center justify-center gap-2"
-                    data-structure='${JSON.stringify(structure)}'>
+                    data-structure='${safeStructureJson}'>
                     <i class="fas fa-info-circle"></i>
                     Voir tous les détails
                 </button>
 
                 <!-- Bouton zoom -->
                 ${structure.latitude && structure.longitude ? `
-                    <button onclick="zoomToStructure(${structure.latitude}, ${structure.longitude})" 
+                    <button onclick="window.zoomToStructure(${structure.latitude}, ${structure.longitude})" 
                             class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg text-xs hover:bg-gray-300 transition-colors flex items-center justify-center gap-2">
                         <i class="fas fa-search-plus"></i>
                         Centrer sur la carte
@@ -660,14 +783,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.zoomToStructure = function(lat, lon) {
         map.setView([lat, lon], 15);
-        
-        // Réinitialiser la sélection
-        if (currentSelectedMarker) {
-            currentSelectedMarker.marker.setIcon(createCustomIcon(currentSelectedMarker.originalColor));
-        }
     };
 
-    // Ajouter marker avec la nouvelle icône et popup
+    // Ajouter marker
     function addMarker(structure) {
         if (!structure.latitude || !structure.longitude) return;
         
@@ -676,28 +794,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const marker = L.marker([structure.latitude, structure.longitude], { icon }).addTo(map);
         
-        // AJOUT DE L'INFOBULLE (POPUP)
-        marker.bindPopup(createPopupContent(structure), {
-            maxWidth: 300,
-            minWidth: 250,
+        const popupContent = createPopupContent(structure);
+        marker.bindPopup(popupContent, {
+            maxWidth: 320,
+            minWidth: 260,
             className: 'custom-popup'
         });
         
         marker.on('click', function() {
-            // Ouvrir le popup
             marker.openPopup();
             
-            // Mettre à jour la sélection
             if (currentSelectedMarker) {
                 currentSelectedMarker.marker.setIcon(createCustomIcon(currentSelectedMarker.originalColor));
             }
             marker.setIcon(createSelectedIcon());
             currentSelectedMarker = { marker, structure, originalColor: color };
             
-            // Afficher les détails dans le panneau latéral
             showStructureDetails(structure);
-            
-            // Animation de zoom léger
             map.setView([structure.latitude, structure.longitude], Math.max(map.getZoom(), 13));
         });
 
@@ -706,7 +819,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     structures.forEach(addMarker);
 
-    // Filtrer
+    // Filtrer les marqueurs
     function filterMarkers() {
         const search = document.getElementById('mapSearch').value.toLowerCase();
         const typeFilters = Array.from(document.querySelectorAll('.type-filter:checked')).map(cb => cb.value);
@@ -720,7 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 (structure.ville && structure.ville.toLowerCase().includes(search)) ||
                 (structure.responsable && structure.responsable.toLowerCase().includes(search));
 
-            const matchType = typeFilters.length === 0 || typeFilters.includes(structure.type_structure);
+            const matchType = typeFilters.length === 0 || (structure.type_structure && typeFilters.includes(structure.type_structure));
             
             const matchCategory = categoryFilters.length === 0 || 
                 (structure.categories && structure.categories.split(',').map(c => c.trim()).some(c => categoryFilters.includes(c)));
@@ -741,6 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById('visibleCount').textContent = visibleCount;
+        document.getElementById('totalStructures').textContent = markers.length;
     }
 
     // Événements
@@ -762,9 +876,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('structureDetails').classList.add('hidden');
         document.getElementById('defaultMessage').classList.remove('hidden');
-        
-        // Fermer tous les popups
         map.closePopup();
+    });
+
+    // Gestionnaire global pour les boutons de détails
+    document.addEventListener('click', function(e) {
+        const viewDetailsBtn = e.target.closest('.view-details-btn');
+        if (viewDetailsBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const structureData = viewDetailsBtn.getAttribute('data-structure');
+            try {
+                // Remplacer les entités HTML avant le parsing
+                const decodedData = structureData.replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                const structure = JSON.parse(decodedData);
+                showFullDetailsModal(structure);
+                const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Erreur lors du parsing des données:', error);
+                console.log('Données reçues:', structureData);
+            }
+        }
     });
 
     filterMarkers();
@@ -772,6 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style>
+/* Styles identiques à avant... */
 .custom-marker, .selected-marker {
     background: none !important;
     border: none !important;
@@ -842,9 +976,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 }
 
-/* Style pour le popup */
 .custom-popup .leaflet-popup-content-wrapper {
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 0;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     overflow: hidden;
@@ -853,14 +986,6 @@ document.addEventListener('DOMContentLoaded', () => {
 .custom-popup .leaflet-popup-content {
     margin: 0;
     padding: 12px;
-}
-
-.custom-popup .leaflet-popup-tip {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.popup-content {
-    font-family: system-ui, -apple-system, sans-serif;
 }
 
 #map {
@@ -885,43 +1010,18 @@ document.addEventListener('DOMContentLoaded', () => {
     border-radius: 3px;
 }
 
-#detailsPanelContent::-webkit-scrollbar-thumb:hover {
-    background-color: #94a3b8;
-}
-
-/* Style pour les cases à cocher */
 input[type="checkbox"] {
     accent-color: #255156;
 }
 
-/* Animation de survol pour les marqueurs */
-.custom-marker:hover .marker-pin,
-.selected-marker:hover .marker-pin {
-    transform: rotate(-45deg) scale(1.1);
-    transition: transform 0.2s ease;
-}
-
-/* Style du modal */
 .modal-content {
     border: none;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-}
-
-.modal-header {
-    border-bottom: none;
-    padding: 1rem 1.5rem;
-}
-
-.modal-body {
-    padding: 1.5rem;
-    max-height: 70vh;
-    overflow-y: auto;
 }
 
 .modal-footer {
     border-top: 1px solid #e5e7eb;
-    padding: 1rem 1.5rem;
 }
 
 .btn-close-white {

@@ -9,12 +9,12 @@
         <!-- En-tête et légende des actions -->
         <div class="mb-3 flex flex-col md:flex-row justify-between items-start md:items-center bg-white rounded-lg shadow p-3">
             <div class="mb-2 md:mb-0">
-                <h1 class="text-2xl font-bold text-[#255156]"><i class="fas fa-folder-open mr-2"></i>Espace documentaire</h1>
+                <h1 class="text-2xl font-bold text-[#255156]"><i class="bx bx-folder-open mr-2"></i>Espace documentaire</h1>
                 <p class="text-xs text-gray-600"><i class=""></i> des ressources professionnelles</p>
             </div>
             
             <!-- BOUTON STATISTIQUES -->
-            <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1d4144] text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 transition-colors">
+            <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1b5b61] text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 transition-colors">
                 <i class="fas fa-chart-pie text-xs"></i>
                 Statistiques
             </button>
@@ -109,8 +109,7 @@
                     <span class="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded-full text-[10px]">
                         {{ ucfirst($resource->category) }}
                     </span>
-                </div>
-                
+                </div>  
                 <!-- Miniature compacte -->
                 <div class="px-2 pt-1 pb-0 flex justify-center">
                     @if($resource->is_image)
@@ -135,8 +134,7 @@
                             </div>
                         </div>
                     @endif
-                </div>
-                
+                </div>   
                 <!-- Contenu compact -->
                 <div class="p-2">
                     <h3 class="font-semibold text-gray-800 text-sm mb-0.5 line-clamp-1" title="{{ $resource->title }}">
@@ -148,7 +146,6 @@
                             {{ $resource->description }}
                         </p>
                     @endif
-                    
                     <!-- Métadonnées compactes -->
                     <div class="grid grid-cols-2 gap-1 mb-1 text-[10px]">
                         <div class="bg-gray-50 p-1 rounded">
@@ -240,10 +237,8 @@
         {{ $resources->links() }}
     </div>
 </div>
-
-<!-- Les modales restent identiques -->
 <!-- MODAL VIDÉO -->
-<div id="videoModal" class="fixed inset-0 bg-black bg-opacity-95 hidden items-center justify-center z-50" onclick="closeVideoModal()">
+<div id="videoModal" class="fixed inset-0 bg-[#255156] bg-opacity-95 hidden items-center justify-center z-50" onclick="closeVideoModal()">
     <div class="relative w-full max-w-5xl mx-4" onclick="event.stopPropagation()">
         <button onclick="closeVideoModal()" 
                 class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors flex items-center gap-2">
@@ -266,7 +261,7 @@
 </div>
 
 <!-- MODAL IMAGE -->
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-95 hidden items-center justify-center z-50" onclick="closeImageModal()">
+<div id="imageModal" class="fixed inset-0 bg-[#255156] bg-opacity-95 hidden items-center justify-center z-50" onclick="closeImageModal()">
     <div class="relative max-w-6xl mx-4" onclick="event.stopPropagation()">
         <button onclick="closeImageModal()" 
                 class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors flex items-center gap-2">
@@ -280,18 +275,16 @@
 </div>
 
 <!-- MODAL DE CRÉATION/MODIFICATION -->
-<div id="resourceModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50" onclick="closeResourceModal()">
+<div id="resourceModal" class="fixed inset-0 bg-[#255156] bg-opacity-70 hidden items-center justify-center z-50 " onclick="closeResourceModal()">
     <div class="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
         <div class="bg-white rounded-xl shadow-2xl">
             <!-- En-tête -->
-            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4 rounded-t-xl flex justify-between items-center">
+            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-8 rounded-t-xl flex justify-between items-center">
                 <h3 id="modalTitle" class="text-xl font-bold">Ajouter une ressource</h3>
                 <button onclick="closeResourceModal()" class="text-white hover:text-gray-200 transition-colors">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            
-            <!-- Formulaire (identique) -->
             <form id="resourceForm" enctype="multipart/form-data" class="p-6">
                 @csrf
                 <input type="hidden" id="resourceId" name="id">
@@ -311,7 +304,8 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                         <textarea id="description" name="description" rows="3"
-                                  class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]"></textarea>
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
+                        </textarea>
                     </div>
                     
                     <!-- Fichier -->
@@ -319,7 +313,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Fichier <span class="text-red-500" id="fileRequired">*</span>
                         </label>
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-[#8bbdc3] transition-colors">
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-1 text-center hover:border-[#8bbdc3] transition-colors">
                             <input type="file" id="file" name="file" 
                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.svg,.webp,.mp4,.webm,.avi,.mov,.mkv,.txt"
                                    class="hidden" onchange="updateFileName(this)">
@@ -331,8 +325,7 @@
                             <p id="file-name" class="text-sm text-gray-500 mt-2">Aucun fichier sélectionné</p>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">Images, Vidéos, Documents. Max 20 Mo</p>
-                    </div>
-                    
+                    </div>   
                     <!-- Fichier actuel -->
                     <div id="currentFileSection" class="hidden bg-gray-50 p-3 rounded-lg">
                         <p class="text-sm font-semibold text-gray-700 mb-2">Fichier actuel :</p>
@@ -340,8 +333,7 @@
                             <i class="fas fa-file text-gray-400"></i>
                             <span id="currentFileName" class="text-sm text-gray-600"></span>
                         </div>
-                    </div>
-                    
+                    </div>   
                     <!-- Catégorie -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie *</label>
@@ -352,8 +344,7 @@
                             <option value="fiche_reflexe">Fiche réflexe</option>
                             <option value="ressource">Ressource</option>
                         </select>
-                    </div>
-                    
+                    </div> 
                     <!-- Thème -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Thème</label>

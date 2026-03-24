@@ -224,4 +224,9 @@ class StructureController extends Controller
         $structures = structures::all();
         return view('structures.map', compact('structures'));
     }
+    // afficher les détails d'une structure dans la carte
+    public function details(structures $structure)
+    {       
+        return view('annuaire.details', compact('structure'));
+    }
 }

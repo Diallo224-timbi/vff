@@ -113,7 +113,6 @@ Route::middleware(['auth'])->group(function () {
     }); 
 });
 
-
 // Routes pour la gestion des catégories du forum
 
 Route::middleware(['auth'])->group(function () {
@@ -136,7 +135,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
     Route::get('/structures/map', [StructureController::class, 'map'])->name('structures.map');
-    
+    // Route pour afficher le details d'une structure dans la carte
+    Route::get('/structures/{structure}/details', [StructureController::class, 'details'])->name('annuaire.details');
 });
 
 // Routes pour l'annuaire
@@ -153,7 +153,6 @@ Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->gr
     Route::get('/', [ActivityLogController::class, 'index'])->name('index');
     Route::get('/stats', [ActivityLogController::class, 'stats'])->name('stats');
     Route::get('/export', [ActivityLogController::class, 'export'])->name('export');
-
     Route::delete('/bulk-destroy', [ActivityLogController::class, 'bulkDestroy'])->name('bulkDestroy');
     Route::delete('/destroy-all', [ActivityLogController::class, 'destroyAll'])->name('destroyAll');
     Route::get('/{id}', [ActivityLogController::class, 'show'])->name('show');

@@ -2,72 +2,87 @@
 @section('title', 'Annuaire des structures')
 
 @section('content')
-<div class="container mx-auto px-0 py-0">
+<div class="container mx-auto px-4 py-4">
     <!-- Messages de succès - Style espace documentaire -->
+    <div class="container mx-auto px-5 py-5">
+    <!-- Messages de succès  -->
     @if(session('success'))
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-0 py-0 rounded-lg mb-6 shadow-lg border-l-4 border-white fixed top-4 right-4 z-50 animate-slide-in"
-             x-data="{ show: true }"
-             x-show="show"
-             x-init="setTimeout(() => show = false, 5000)"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-x-8"
-             x-transition:enter-end="opacity-100 transform translate-x-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 transform translate-x-0"
-             x-transition:leave-end="opacity-0 transform translate-x-8">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle text-xl mr-3"></i>
-                <p class="font-semibold">{{ session('success') }}</p>
+        <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
+             role="alert" 
+             style="z-index: 9999; min-width: 300px;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle me-2"></i>
+                <div>{{ session('success') }}</div>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        
+        <!-- Script pour auto-fermeture après 5 secondes -->
+        <script>
+            setTimeout(function() {
+                const alert = document.querySelector('.alert-success');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        </script>
     @endif
-    <!-- Messages d'erreur - Style espace documentaire -->
+
+    <!-- Messages d'erreur - Version Bootstrap -->
     @if(session('error'))
-        <div class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-lg mb-6 shadow-lg border-l-4 border-white fixed top-4 right-4 z-50 animate-slide-in"
-             x-data="{ show: true }"
-             x-show="show"
-             x-init="setTimeout(() => show = false, 5000)"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform translate-x-8"
-             x-transition:enter-end="opacity-100 transform translate-x-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 transform translate-x-0"
-             x-transition:leave-end="opacity-0 transform translate-x-8">
-            <div class="flex items-center">
-                <i class="fas fa-exclamation-circle text-xl mr-3"></i>
-                <p class="font-semibold">{{ session('error') }}</p>
+        <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
+             role="alert" 
+             style="z-index: 9999; min-width: 300px;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <div>{{ session('error') }}</div>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        
+        <script>
+            setTimeout(function() {
+                const alert = document.querySelector('.alert-danger');
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        </script>
     @endif
+
     <!-- Messages de validation (erreurs de formulaire) -->
     @if($errors->any())
-        <div class="fixed top-4 right-4 z-50 space-y-2 max-w-md">
+        <div class="position-fixed top-0 end-0 m-3" style="z-index: 9999; max-width: 400px;">
             @foreach($errors->all() as $error)
-                <div class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-4 rounded-lg shadow-lg border-l-4 border-white animate-slide-in"
-                     x-data="{ show: true }"
-                     x-show="show"
-                     x-init="setTimeout(() => show = false, 5000)"
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 transform translate-x-8"
-                     x-transition:enter-end="opacity-100 transform translate-x-0"
-                     x-transition:leave="transition ease-in duration-300"
-                     x-transition:leave-start="opacity-100 transform translate-x-0"
-                     x-transition:leave-end="opacity-0 transform translate-x-8">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-triangle text-xl mr-3"></i>
-                        <p class="font-semibold">{{ $error }}</p>
+                <div class="alert alert-danger alert-dismissible fade show shadow-lg mb-2" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <div>{{ $error }}</div>
                     </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endforeach
         </div>
+        
+        <script>
+            setTimeout(function() {
+                document.querySelectorAll('.alert-danger').forEach(alert => {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 8000);
+        </script>
     @endif
+
     <!-- En-tête fixe - Style espace documentaire -->
     <div class="sticky top-0 z-40 bg-gray-50 pt-4 pb-2 shadow-sm" style="margin-top: -1px;">
         <!-- En-tête et titre -->
         <div class="mb-2 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold text-[#255156] mb-2"><i class="bx bx-building"></i>  Annuaire des structures</h1>
-                <small class="text-gray-600">Gestion centralisée des structures et organismes</small>
+                <small class="text-gray-600 "><i class="bx bx-info-circle"></i>Gestion centralisée des structures et organismes</small>
             </div>
             
             <!-- LÉGENDE DES ACTIONS - Style espace documentaire -->

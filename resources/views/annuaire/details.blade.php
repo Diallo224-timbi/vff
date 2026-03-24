@@ -1,4 +1,4 @@
-<!-- Modal amélioré avec animations -->
+<!-- Modal avec animations -->
 <div class="modal fade animate__animated" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered animate__animated animate__zoomIn">
         <div class="modal-content border-0 shadow-2xl overflow-hidden">
@@ -17,7 +17,6 @@
                 </div>
                 <button type="button" class="btn-close btn-close-white opacity-80 hover:opacity-100 transition-opacity" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <!-- Body avec espace réduit -->
             <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
                 
