@@ -132,7 +132,6 @@
                         Détails de la structure
                     </h3>
                 </div>
-
                 <!-- Contenu défilant -->
                 <div class="flex-1 overflow-y-auto p-4" id="detailsPanelContent">
                     <div id="defaultMessage" class="text-center py-12">
@@ -146,7 +145,6 @@
         </div>
     </div>
 </div>
-
 <!-- MODAL DÉTAILS -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">

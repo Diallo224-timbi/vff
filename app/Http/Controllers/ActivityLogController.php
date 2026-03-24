@@ -190,12 +190,19 @@ class ActivityLogController extends Controller
 
         return redirect()->back()->with('success', 'Log supprimé avec succès.');
     }
-
-    // Supprimer tous les logs
+    // Supprimer tous les logs (avec confirmation) 
     public function destroyAll()
     {
         ActivityLog::truncate();
         
         return redirect()->back()->with('success', 'Tous les logs ont été supprimés.');
+    }
+    // supprimer tous les logs aprés 60 jours
+    public function destroyOld()
+    {
+        $thresholdDate = Carbon::now()->subDays(60);
+        ActivityLog::where('created_at', '<', $thresholdDate)->delete();
+        
+        return redirect()->back()->with('success', 'Les logs de plus de 60 jours ont été supprimés.');
     }
 }

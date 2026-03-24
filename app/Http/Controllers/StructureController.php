@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\ActivityLog;
 
 class StructureController extends Controller
 {
@@ -158,13 +159,13 @@ class StructureController extends Controller
             'pays' => 'nullable|string|max:100',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            // ✅ NOUVEAU : Validation du logo en modification
+            //  NOUVEAU : Validation du logo en modification
             'logo' => 'sometimes|file|mimes:jpg,jpeg,png,svg|max:2048',
-            // ✅ NOUVEAU : Détection suppression logo
+            //  NOUVEAU : Détection suppression logo
             'remove_logo' => 'nullable|in:1',
         ]);
 
-        // ✅ NOUVEAU : Gestion de la SUPPRESSION du logo
+        //  NOUVEAU : Gestion de la SUPPRESSION du logo
         if ($request->has('remove_logo') && $request->remove_logo == '1') {
             // Supprimer l'ancien fichier physique
             if ($structure->logo) {
@@ -174,7 +175,7 @@ class StructureController extends Controller
             $validated['logo'] = null;
         }
 
-        // ✅ NOUVEAU : Gestion du NOUVEAU logo (écrase l'ancien)
+        //  NOUVEAU : Gestion du NOUVEAU logo (écrase l'ancien)
         if ($request->hasFile('logo')) {
             // Supprimer l'ancien logo s'il existe
             if ($structure->logo) {
@@ -187,7 +188,8 @@ class StructureController extends Controller
         }
 
         $structure->update($validated);
-
+    //log de l'activité
+        ActivityLog::log('Modification structure', 'Structure modifiée: ' . $structure->organisme);
         return redirect()
             ->route('annuaire.index')
             ->with('success', 'Structure modifiée avec succès');
@@ -195,7 +197,7 @@ class StructureController extends Controller
 
     public function destroy(structures $structure)
     {
-        // ✅ NOUVEAU : Supprimer le logo physique avant de supprimer la structure
+        // NOUVEAU : Supprimer le logo physique avant de supprimer la structure
         if ($structure->logo) {
             Storage::disk('public')->delete($structure->logo);
         }
@@ -207,9 +209,14 @@ class StructureController extends Controller
         }
 
         $structure->delete();
+        //log de l'activité
+        ActivityLog::log('Suppression structure', 'Structure supprimée: ' . $structure->organisme);
 
         return redirect()->route('annuaire.index')
             ->with('success', 'Structure supprimée avec succès !');
+
+        
+        
     }
 
     public function map()

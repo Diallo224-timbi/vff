@@ -68,21 +68,24 @@
                     <div class="flex items-center gap-2 mb-1">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium
                             @if($event->type == 'réunion') bg-blue-100 text-blue-700
-                            @elseif($event->type == 'formation') bg-green-100 text-green-700
-                            @elseif($event->type == 'atelier') bg-purple-100 text-purple-700
-                            @else bg-gray-100 text-gray-700
+                            @elseif($event->type == 'formation')
+                            @elseif($event->type == 'atelier')
+                            @else
                             @endif">
                             {{ ucfirst($event->type) }}
                         </span>
-                        @if($event->date_debut > now())
-                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">À venir</span>
-                        @elseif($event->date_fin < now())
-                            <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">Passé</span>
-                        @else
-                            <span class="nline-flex items-center gap-2 
-                                        bg-amber-300 text-amber-800 
-                                        px-3 py-1 rounded-full 
-                                        font-semibold animate-en-cours animate-en-cours">En cours</span>
+                        @if($event->date_debut > now()->addHour(1) )
+                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">
+                                À venir . {{ $event->date_debut->diffForHumans() }} 
+                            </span>
+                        @elseif($event->date_fin < now()->addHour(1))
+                            <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">
+                                Passé
+                            </span>
+                        @elseif($event->date_debut <= now()->addHour(1))
+                             <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs">
+                                En cours . {{ $event->date_debut->diffForHumans() }}
+                            </span>
                         @endif
                     </div>
                     

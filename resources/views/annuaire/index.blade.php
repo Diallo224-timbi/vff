@@ -265,7 +265,7 @@
     <div class="overflow-y-auto max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-200px)]">
             <table class="w-full" id="structuresTable">
                 <thead class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white sticky top-0 z-30 shadow-md">
-                    <tr>
+                     <tr>
                         <th class="px-3 py-3 text-left text-sm font-semibold">Organisme</th>
                         <th class="px-3 py-3 text-left text-sm font-semibold">Siège Ville</th>
                         <th class="px-3 py-3 text-left text-sm font-semibold">Catégories</th>
@@ -275,11 +275,12 @@
                         <th class="px-3 py-3 text-left text-sm font-semibold">Type</th>
                         <th class="px-3 py-3 text-left text-sm font-semibold">Ville</th>
                         <th class="px-3 py-3 text-center text-sm font-semibold">Actions</th>
-                    </tr>
+                     </tr>
                 </thead>
                 <tbody id="structuresTableBody" class="divide-y divide-gray-200">
                     @forelse($structures as $structure)
                         <tr class="structure-row hover:bg-gray-50 transition-colors duration-150" 
+                            data-id="{{ $structure->id }}"
                             data-category="{{ $structure->categories ?? '' }}"
                             data-city="{{ $structure->ville ?? '' }}"
                             data-type="{{ $structure->type_structure ?? '' }}"
@@ -302,21 +303,21 @@
                                         {{ $structure->organisme }}
                                     </div>
                                 </div>
-                            </td>
+                             </td>
                             
                             <!-- Siège Ville -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->siege_ville ?? '' }}">
                                     {{ $structure->siege_ville ?? '-' }}
                                 </div>
-                            </td>
+                             </td>
                             
                             <!-- Catégories -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->categories ?? '' }}">
                                     {{ $structure->categories ?? '-' }}
                                 </div>
-                            </td>
+                             </td>
                             
                             <!-- Site web -->
                             <td class="px-3 py-2">
@@ -329,31 +330,31 @@
                                 @else
                                     <span class="text-gray-400 text-sm">-</span>
                                 @endif
-                            </td>
+                             </td>
                             <!-- Public Cible -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->public_cible ?? '' }}">
                                     {{ $structure->public_cible ?? '-' }}
                                 </div>
-                            </td>    
+                             </td>    
                             <!-- Zone -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->zone ?? '' }}">
                                     {{ $structure->zone ?? '-' }}
                                 </div>
-                            </td>  
+                             </td>  
                             <!-- Type Structure -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->type_structure ?? '' }}">
                                     {{ $structure->type_structure ?? '-' }}
                                 </div>
-                            </td> 
+                             </td> 
                             <!-- Ville -->
                             <td class="px-3 py-2">
                                 <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->ville ?? '' }}">
                                     {{ $structure->ville ?? '-' }}
                                 </div>
-                            </td>
+                             </td>
                             <!-- Actions - Style espace documentaire -->
                             <td class="px-3 py-2">
                                 <div class="flex items-center justify-center gap-1">
@@ -367,13 +368,11 @@
                                     </button>
                                     <!-- ADMIN : Peut modifier et supprimer TOUTES les structures -->
                                     @if(auth()->user()->role === 'admin')
-                                        <button class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors edit-btn" 
-                                                data-id="{{ $structure->id }}" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#editModal"
-                                                title="Modifier">
+                                        <a href="{{ route('structures.edit', $structure) }}" 
+                                           class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors inline-flex items-center justify-center"
+                                           title="Modifier">
                                             <i class="fas fa-edit text-xs"></i>
-                                        </button>
+                                        </a>
                                         <form action="{{ route('structures.destroy', $structure) }}" 
                                               method="POST" 
                                               class="inline"
@@ -386,14 +385,11 @@
                                         </form>
                                     <!-- MODERATEUR : Peut modifier et supprimer UNIQUEMENT sa propre structure -->
                                     @elseif(auth()->user()->role === 'moderateur' && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
-                                        <button class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors edit-btn" 
-                                                data-id="{{ $structure->id }}" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#editModal"
-                                                title="Modifier ma structure">
+                                        <a href="{{ route('structures.edit', $structure) }}" 
+                                           class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors inline-flex items-center justify-center"
+                                           title="Modifier ma structure">
                                             <i class="fas fa-edit text-xs"></i>
-                                        </button>
-
+                                        </a>
                                         <form action="{{ route('structures.destroy', $structure) }}" 
                                               method="POST" 
                                               class="inline"
@@ -406,19 +402,19 @@
                                         </form>
                                     @endif
                                 </div>
-                            </td>
-                        </tr>
+                             </td>
+                         </tr>
                     @empty
                         <tr id="noResultsRow">
                             <td colspan="9" class="px-6 py-12 text-center">
                                 <i class="fas fa-building text-4xl text-gray-300 mb-4"></i>
                                 <p class="text-gray-500">Aucune structure trouvée</p>
                                 <p class="text-sm text-gray-400 mt-2">Essayez de modifier vos critères de recherche</p>
-                            </td>
-                        </tr>
+                             </td>
+                         </tr>
                     @endforelse
                 </tbody>
-            </table>
+             </table>
         </div>
     </div>
 
@@ -452,29 +448,7 @@
 </div>
 @endif
 
-<!-- MODAL MODIFIER -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content border-0 shadow-2xl">
-            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4 rounded-t-xl d-flex justify-content-between align-items-center">
-                <h5 class="text-xl font-bold flex items-center gap-3">
-                    <i class="fas fa-edit"></i>
-                    Modifier la structure
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="p-6 bg-gray-50" id="editModalBody">
-                <div class="flex justify-center items-center p-8">
-                    <div class="spinner-border text-[#255156]" role="status">
-                        <span class="visually-hidden">Chargement...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL DETAILS - Version corrigée sans doublon -->
+<!-- MODAL DETAILS -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-2xl overflow-hidden">
@@ -928,41 +902,6 @@
                 filterAndSearch();
             });
         }
-
-        // EDIT MODAL - Chargement dynamique
-        const editButtons = document.querySelectorAll('.edit-btn');
-        editButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const id = this.dataset.id;
-                
-                document.getElementById('editModalBody').innerHTML = `
-                    <div class="flex justify-center items-center p-8">
-                        <div class="spinner-border text-[#255156]" role="status">
-                            <span class="visually-hidden">Chargement...</span>
-                        </div>
-                    </div>
-                `;
-                
-                fetch(`/structures/${id}/edit`)
-                    .then(res => {
-                        if (!res.ok) throw new Error('Erreur réseau');
-                        return res.text();
-                    })
-                    .then(html => {
-                        document.getElementById('editModalBody').innerHTML = html;
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        document.getElementById('editModalBody').innerHTML = `
-                            <div class="text-center p-8 text-red-600">
-                                <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
-                                <p>Erreur lors du chargement du formulaire.</p>
-                            </div>
-                        `;
-                    });
-            });
-        });
 
         // DETAILS MODAL - Remplissage complet des données
         const viewDetailsButtons = document.querySelectorAll('.view-details-btn');

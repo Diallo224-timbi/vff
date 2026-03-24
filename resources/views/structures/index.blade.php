@@ -129,14 +129,19 @@
         <h5 class="modal-title">Modifier la structure</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" id="editModalBody">
-        <!-- Formulaire chargé dynamiquement via fetch -->
+      <div class="modal-body">
+        @include('structures.edit', [
+            'structure' => $structure, 
+            'action' => route('structures.update', $structure->id),
+            'method' => 'PUT'
+        ])
       </div>
     </div>
   </div>
 </div>
 @endif
 @endsection
+
 
 @section('scripts')
 <script>

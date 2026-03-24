@@ -143,12 +143,12 @@
                 <!-- Contenu dynamique -->
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-2"></i>Fermer
-                </button>
-                <a href="#" id="eventModalLink" class="btn btn-primary rounded-pill px-4">
-                    <i class="fas fa-eye me-2"></i>Voir détails
+                <a href="#" id="eventModalLink" >
+                   
                 </a>
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                    Fermer
+                </button>
             </div>
         </div>
     </div>

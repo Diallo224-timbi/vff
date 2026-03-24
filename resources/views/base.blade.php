@@ -13,7 +13,7 @@
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4V4lF7+v1wZz0+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   

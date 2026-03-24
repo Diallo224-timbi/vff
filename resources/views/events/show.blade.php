@@ -372,7 +372,7 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                 @endif
             </div>
             <!-- Participants (si admin) -->
-            @if(auth()->user()->role === 'admin' && $event->inscriptions->count() > 0)
+            @if((auth()->user()->role === 'admin' || auth()->user()->id == $event->cree_par) && $event->inscriptions->count() > 0)
             <div class="modern-card p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <i class="fas fa-users text-[#255156]"></i>

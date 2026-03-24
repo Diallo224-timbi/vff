@@ -25,7 +25,7 @@ class EventController extends Controller
                     $q->where('date_fin', '<', now());
                 }
             })
-            ->orderBy('date_debut')
+            ->orderBy('date_debut','desc')
             ->paginate(10);
 
         return view('events.index', compact('events'));
@@ -122,7 +122,7 @@ class EventController extends Controller
             'nombre_places' => $request->nombre_places
         ]);
 
-        ActivityLog::log('Modification événement', 'Événement modifié: ' . $event->titre);
+        ActivityLog::log('Modification événement', 'Événement modifié: ' . $event->titre. ' par ' . auth()->user()->name);
 
         return redirect()->route('events.show', $event)
             ->with('success', 'Événement mis à jour avec succès.');
@@ -146,6 +146,8 @@ class EventController extends Controller
         END:VEVENT
         END:VCALENDAR";
 
+        //log de l'activité
+        ActivityLog::log('Téléchargement iCal', 'iCal téléchargé pour: ' . $event->titre. ' par ' . auth()->user()->name);
             return response($icsContent)
                 ->header('Content-Type', 'text/calendar; charset=utf-8')
                 ->header('Content-Disposition', 'attachment; filename="' . $event->titre . '.ics"');
@@ -158,7 +160,7 @@ class EventController extends Controller
         $titre = $event->titre;
         $event->delete();
 
-        ActivityLog::log('Suppression événement', 'Événement supprimé: ' . $titre);
+        ActivityLog::log('Suppression événement', 'Événement supprimé: ' . $titre. ' par ' . auth()->user()->name);
 
         return redirect()->route('events.index')
             ->with('success', 'Événement supprimé avec succès.');

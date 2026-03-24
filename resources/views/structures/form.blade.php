@@ -3,12 +3,12 @@
         @csrf
         @if($method === 'PUT')
             @method('PUT')
-        @endif
+        @endif  
+        
         <!-- LIGNE 0: LOGO STRUCTURE -->
         <div class="row mb-3 align-items-end">
             <div class="col-md-12">
                 <div class="d-flex align-items-center gap-3">
-                    <!-- Zone de prévisualisation du logo -->
                     <div class="logo-preview-container" id="logoPreviewContainer" 
                          style="width: 80px; height: 80px; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
                         @if(isset($structure) && $structure->logo)
@@ -17,7 +17,6 @@
                             <i class="fas fa-building" style="font-size: 2rem; color: #cbd5e0;"></i>
                         @endif
                     </div>
-                    <!-- Contrôles d'upload -->
                     <div class="flex-grow-1">
                         <label class="form-label mb-1">
                             <i class="fas fa-image me-1"></i>Logo de la structure
@@ -27,18 +26,21 @@
                             <div class="position-relative">
                                 <input type="file" name="logo" id="logoUpload" class="form-control" 
                                        accept="image/png,image/jpeg,image/svg+xml,image/jpg"
-                                       style="width: 250px; padding: 4px 8px; height: 32px;">
+                                       style="width: 250px; padding: 4px 8px; height: 32px;"
+                                       onchange="previewLogo(this)">
                                 <div id="logoLoadingSpinner" class="position-absolute top-0 end-0 mt-1 me-1 d-none">
                                     <div class="spinner-border spinner-border-sm text-primary" role="status">
                                         <span class="visually-hidden">Chargement...</span>
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" id="removeLogoBtn" class="btn btn-sm btn-outline-danger {{ !isset($structure) || !$structure->logo ? 'd-none' : '' }}">
-                                <i class="fas fa-trash"></i> Retirer
+                            @if (@$method == 'POST' )
+                                 <button type="button" id="removeLogoBtn" class="btn btn-sm btn-outline-danger {{ !isset($structure) || !$structure->logo ? 'd-none' : '' }}" onclick="removeLogo()">
+                                <i class="bx bx-x" title="retirer le logo"></i> Retirer
                             </button>
+                            @endif
                             <small id="logoHelp" class="text-muted align-self-center d-none">
-                                <i class="fas fa-check-circle text-success"></i> Logo chargé avec succès
+                                <i class="bx bx-check-circle text-success"></i> Logo chargé avec succès
                             </small>
                         </div>
                     </div>
@@ -55,7 +57,7 @@
             <div class="col-md-4">
                 <label class="form-label">Type</label>
                 <select name="type_structure" class="form-select">
-                    <option value="Siège social" {{ old('type_structure', $structure->type_structure ?? '') == 'siège social' ? 'selected' : '' }}>siège social</option>
+                    <option value="Siège social" {{ old('type_structure', $structure->type_structure ?? '') == 'siège social' ? 'selected' : '' }}>Siège social</option>
                     <option value="Antenne" {{ old('type_structure', $structure->type_structure ?? '') == 'antenne' ? 'selected' : '' }}>Antenne</option>
                 </select>
             </div>
@@ -67,6 +69,7 @@
                 </select>
             </div>
         </div>
+        
         <!-- LIGNE 2: DESCRIPTION + DÉTAILS -->
         <div class="row mb-2">
             <div class="col-md-6">
@@ -96,40 +99,70 @@
             </div>
         </div>
 
-        <!-- LIGNE 4: HORAIRES + CATÉGORIES -->
+        <!-- LIGNE 4: HORAIRES + CATÉGORIES + PUBLICS + ZONE -->
         <div class="row mb-2">
             <div class="col-md-3">
                 <label class="form-label">Horaires</label>
                 <input type="text" name="horaires" class="form-control" value="{{ old('horaires', $structure->horaires ?? '') }}" placeholder="Lun-Ven 9h-18h">
             </div>
+            
+            <!-- CATÉGORIES AVEC ICÔNE POUR EFFACER -->
             <div class="col-md-3">
-                <!-- ==================================== -->
-            <label class="form-label">Catégories</label>
-            <div class="d-flex gap-1">
-                <select id="categoriesSelect" class="form-select form-select-sm flex-grow-1">
-                    <option value="">-- Choisir --</option>
-                    <option value="santé">Santé</option>
-                    <option value="social">Social</option>
-                    <option value="psychologique">Psychologique</option>
-                    <option value="juridique">Juridique</option>
-                </select>
-                <button type="button" class="btn btn-sm btn-primary" id="addCategoryBtn">Ajouter</button>
+                <label class="form-label">Catégories</label>
+                <div class="d-flex gap-1">
+                    <select id="categoriesSelect" class="form-select form-select-sm grow">
+                        <option value="">-- Choisir --</option>
+                        <option value="droit généraliste">Droit généraliste</option>   
+                        <option value="droit notarial">Droit notarial</option>
+                        <option value="formation">Formation</option>
+                        <option value="global">Global</option>
+                        <option value="hébergement">Hébergement</option>
+                        <option value="insertion professionnelle">Insertion professionnelle</option>
+                        <option value="juridique">Juridique</option>
+                        <option value="psychologique">Psychologique</option>
+                        <option value="santé">Santé</option>
+                        <option value="social">Social</option>
+                        <option value="autres">Autres</option>
+                    </select>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="addCategory()">Ajouter</button>
+                </div>
+                <div class="position-relative mt-1">
+                    <textarea name="categories" id="categoriesTextarea" class="form-control" rows="1" readonly>{{ old('categories', $structure->categories ?? '') }}</textarea>
+                    <!-- effacer le contenu du textarea --> 
+                    <button type="button" class="btn-clear-textarea position-absolute top-50 end-0 translate-middle-y me-2" 
+                            onclick="clearTextarea('categoriesTextarea')" 
+                            style="background: none; border: none; color: #dc3545; cursor: pointer; z-index: 10; display: {{ old('categories', $structure->categories ?? '') ? 'block' : 'none' }};">
+                        <i class="bx bx-x" title="vider le contenu"></i>
+                    </button>
+                </div>
             </div>
-            <textarea name="categories" id="categoriesTextarea" class="form-control mt-1" rows="1">{{ old('categories', $structure->categories ?? '') }}</textarea>
-        </div>
 
-        <div class="col-md-3">
-            <label class="form-label">Publics cibles</label>
-            <div class="d-flex gap-1">
-                <select id="publicSelect" class="form-select form-select-sm flex-grow-1">
-                    <option value="">-- Choisir --</option>
-                    <option value="victimes">Victimes</option>
-                    <option value="mineurs">Mineurs</option>
-                </select>
-                <button type="button" class="btn btn-sm btn-primary" id="addPublicBtn">Ajouter</button>
+            <!-- PUBLICS CIBLES AVEC ICÔNE POUR EFFACER -->
+            <div class="col-md-3">
+                <label class="form-label">Publics cibles</label>
+                <div class="d-flex gap-1">
+                    <select id="publicSelect" class="form-select form-select-sm grow">
+                        <option value="">-- Choisir --</option>
+                        <option value="victimes">Victimes</option>
+                        <option value="auteurs">Auteurs</option>
+                        <option value="mineurs">Mineurs</option>
+                        <option value="majeurs">Majeurs</option>
+                        <option value="tous">Tous publics</option>
+                    </select>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="addPublic()">Ajouter</button>
+                </div>
+                <div class="position-relative mt-1">
+                    <textarea name="public_cible" id="publicTextarea" class="form-control" rows="1" readonly>{{ old('public_cible', $structure->public_cible ?? '') }}</textarea>
+                    <button type="button" class="btn-clear-textarea position-absolute top-50 end-0 translate-middle-y me-2" 
+                            onclick="clearTextarea('publicTextarea')" 
+                            style="background: none; border: none; color: #dc3545; cursor: pointer; z-index: 10; display: {{ old('public_cible', $structure->public_cible ?? '') ? 'block' : 'none' }};">
+                        <i class="bx bx-x" title="vider le contenu"></i>
+                    </button>
+                    
+                </div>
             </div>
-            <textarea name="public_cible" id="publicTextarea" class="form-control mt-1" rows="1">{{ old('public_cible', $structure->public_cible ?? '') }}</textarea>
-        </div>
+            
+            <!-- ZONE D'INTERVENTION -->
             <div class="col-md-3">
                 <label class="form-label">Zone d'intervention</label>
                 <input type="text" name="zone" class="form-control" value="{{ old('zone', $structure->zone ?? '') }}">
@@ -138,7 +171,7 @@
 
         <!-- BLOC SIÈGE SOCIAL -->
         <fieldset>
-            <legend class="h6 fw-bold">🏢 SIÈGE SOCIAL</legend>
+            <legend class="h6 fw-bold"><i class="fas fa-building me-2"></i> SIÈGE SOCIAL</legend>
             <div class="row mb-2">
                 <div class="col-md-4">
                     <label class="form-label">Adresse <span class="text-danger">*</span></label>
@@ -149,7 +182,7 @@
                     <input type="text" name="siege_ville" id="siege_ville" class="form-control" value="{{ old('siege_ville', $structure->siege_ville ?? '') }}" required>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">CP <span class="text-danger">*</span></label>
+                    <label class="form-label">Code postal <span class="text-danger">*</span></label>
                     <input type="text" name="siege_code_postal" id="siege_code_postal" class="form-control" value="{{ old('siege_code_postal', $structure->siege_code_postal ?? '') }}" required>
                 </div>
                 <div class="col-md-2">
@@ -157,99 +190,85 @@
                     <input type="text" name="pays" id="pays" class="form-control" value="{{ old('pays', $structure->pays ?? 'France') }}">
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" id="geocodeSiegeBtn" class="btn btn-outline-primary w-100" style="height: 32px; padding: 0;">
-                        <i class="fas fa-map-marker-alt"></i>
+                    <button type="button" id="geocodeSiegeBtn" class="btn btn-outline-primary w-100" style="height: 32px; padding: 0;" onclick="geocodeSiege()">
+                        <i class="bx bx-map" title="géocoder"></i>
                     </button>
                 </div>
             </div>
         </fieldset>
 
-        <!-- BLOC LOCALISATION STRUCTURE -->
+        <!-- BLOC LOCALISATION STRUCTURE (REFONDU) -->
         <fieldset>
             <legend class="h6 fw-bold d-flex align-items-center">
-                <span>📍 LOCALISATION STRUCTURE</span>
+                <span><i class="fas fa-map-marker-alt me-2"></i> LOCALISATION STRUCTURE</span>
                 @if($method === 'PUT')
-                    <span class="ms-3 badge bg-warning text-dark geocode-toggle" id="toggleEditMode" style="cursor: pointer; font-size: 0.7rem;">
+                    <span class="ms-3 badge bg-warning text-dark" id="toggleEditMode" style="cursor: pointer; font-size: 0.7rem;" onclick="toggleEditMode()">
                         <i class="fas fa-lock me-1"></i> Mode édition désactivé
                     </span>
                 @endif
             </legend>
             
-            <!-- MODE MODIFICATION AVEC POSSIBILITÉ DE DÉVERROUILLER -->
             <div id="locationFieldsContainer">
+                <!-- Lignes d'adresse comme pour le siège social -->
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                        <input type="text" name="adresse" id="structure_adresse" class="form-control" 
+                               value="{{ old('adresse', $structure->adresse ?? '') }}" 
+                               {{ $method === 'PUT' ? 'readonly' : '' }}
+                               required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Ville <span class="text-danger">*</span></label>
+                        <input type="text" name="ville" id="structure_ville" class="form-control" 
+                               value="{{ old('ville', $structure->ville ?? '') }}"
+                               {{ $method === 'PUT' ? 'readonly' : '' }}
+                               required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Code postal <span class="text-danger">*</span></label>
+                        <input type="text" name="code_postal" id="structure_code_postal" class="form-control" 
+                               value="{{ old('code_postal', $structure->code_postal ?? '') }}"
+                               {{ $method === 'PUT' ? 'readonly' : '' }}
+                               required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Pays</label>
+                        <input type="text" name="structure_pays" id="structure_pays" class="form-control" 
+                               value="{{ old('structure_pays', $structure->structure_pays ?? 'France') }}"
+                               {{ $method === 'PUT' ? 'readonly' : '' }}>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" id="geocodeStructureBtn" class="btn btn-outline-primary w-100" style="height: 32px; padding: 0;" 
+                                onclick="geocodeStructure()" {{ $method === 'PUT' ? 'disabled' : '' }}>
+                            <i class="bx bx-map" title="géocoder"></i>
+                        </button>
+                    </div>
+                </div>
+                
                 @if($method === 'PUT')
-                    <!-- Mode modification avec toggle -->
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <label class="form-label">Adresse</label>
-                            <div class="input-group">
-                                <input type="text" name="adresse" id="autocomplete" 
-                                       class="form-control" 
-                                       value="{{ old('adresse', $structure->adresse ?? '') }}" 
-                                       readonly>
-                                <button type="button" id="geocodeBtn" class="btn btn-outline-primary" disabled title="Déverrouillez d'abord le mode édition">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Ville</label>
-                            <input type="text" name="ville" id="locality" class="form-control" value="{{ old('ville', $structure->ville ?? '') }}" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Code postal</label>
-                            <input type="text" name="code_postal" id="postal_code" class="form-control" value="{{ old('code_postal', $structure->code_postal ?? '') }}" readonly>
-                        </div>
+                <div class="mb-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
+                    <div>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            <span id="editModeStatus">Les champs d'adresse sont verrouillés</span>
+                        </small>
                     </div>
-                    
-                    <!-- Boutons de contrôle du mode édition -->
-                    <div class="mb-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
-                        <div>
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle"></i> 
-                                <span id="editModeStatus">Les champs d'adresse sont verrouillés</span>
-                            </small>
-                        </div>
-                        <div>
-                            <button type="button" id="disableEditBtn" class="btn btn-sm btn-secondary d-none">
-                                <i class="fas fa-lock"></i> Verrouiller
-                            </button>
-                            <button type="button" id="resetLocationBtn" class="btn btn-sm btn-outline-danger d-none">
-                                <i class="fas fa-undo"></i> Restaurer
-                            </button>
-                        </div>
+                    <div>
+                        <button type="button" id="enableEditBtn" class="btn btn-sm btn-primary" onclick="enableEditMode()">
+                            <i class="fas fa-unlock"></i> Déverrouiller
+                        </button>
+                        <button type="button" id="disableEditBtn" class="btn btn-sm btn-secondary d-none" onclick="disableEditMode()">
+                            <i class="fas fa-lock"></i> Verrouiller
+                        </button>
+                        <button type="button" id="resetLocationBtn" class="btn btn-sm btn-outline-danger d-none" onclick="resetLocation()">
+                            <i class="fas fa-undo"></i> Restaurer
+                        </button>
                     </div>
-                    
-                    <!-- Suggestions (cachées par défaut en mode édition) -->
-                    <div id="suggestions" class="border bg-white shadow-sm mt-1 rounded" style="position:absolute; z-index:1000; display:none; max-height:150px; overflow-y:auto; width:90%;"></div>
-                @else
-                    <!-- MODE CRÉATION (inchangé) -->
-                    <div class="position-relative mb-2">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <label class="form-label">Adresse</label>
-                                <div class="input-group">
-                                    <input type="text" name="adresse" id="autocomplete" class="form-control" value="{{ old('adresse', $structure->adresse ?? '') }}" placeholder="Tapez l'adresse...">
-                                    <button type="button" id="geocodeBtn" class="btn btn-outline-primary">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                    </button>
-                                </div>
-                                <div id="suggestions" class="border bg-white shadow-sm mt-1 rounded" style="position:absolute; z-index:1000; display:none; max-height:150px; overflow-y:auto; width:90%;"></div>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Ville</label>
-                                <input type="text" name="ville" id="locality" class="form-control" value="{{ old('ville', $structure->ville ?? '') }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">CP</label>
-                                <input type="text" name="code_postal" id="postal_code" class="form-control" value="{{ old('code_postal', $structure->code_postal ?? '') }}">
-                            </div>
-                        </div>
-                    </div>
+                </div>
                 @endif
             </div>
 
-            <!-- HIDDEN LAT/LON + COORDONNÉES -->
             <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $structure->latitude ?? '') }}">
             <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $structure->longitude ?? '') }}">
             
@@ -265,24 +284,23 @@
                     </span>
                 </div>
                 @if($method === 'PUT')
-                    <button type="button" id="clearLocationBtn" class="btn btn-sm btn-outline-danger d-none" title="Vider">
-                        <i class="fas fa-trash"></i>
+                    <button type="button" id="clearLocationBtn" class="btn btn-sm btn-outline-danger d-none" onclick="clearLocation()" title="Vider">
+                        <i class="bx bx-trash"></i>
                     </button>
-                    <button type="button" id="saveLocationBtn" class="btn btn-sm btn-success d-none" title="Enregistrer">
-                        <i class="fas fa-save"></i>
+                    <button type="button" id="saveLocationBtn" class="btn btn-sm btn-success d-none" onclick="saveLocation()" title="Enregistrer">
+                        <i class="bx bx-save"></i>
                     </button>
                 @else
-                    <button type="button" id="clearLocationBtn" class="btn btn-sm btn-outline-danger" title="Vider">
-                        <i class="fas fa-trash"></i>
+                    <button type="button" id="clearLocationBtn" class="btn btn-sm btn-outline-danger" onclick="clearLocation()" title="Vider">
+                        <i class="bx bx-trash"></i>
                     </button>
                 @endif
             </div>
             
             @if($method === 'PUT')
-            <!-- Message de confirmation pour la sauvegarde -->
             <div id="saveConfirmation" class="mt-1" style="display: none;">
                 <div class="alert alert-success p-1 mb-0" style="font-size:0.7rem;">
-                    <i class="fas fa-check-circle"></i> N'oubliez pas de soumettre le formulaire pour enregistrer les modifications GPS
+                    <i class="bx bx-check-circle"></i> N'oubliez pas de soumettre le formulaire pour enregistrer les modifications GPS
                 </div>
             </div>
             @endif
@@ -306,7 +324,6 @@
 </div>
 
 <style>
-    /* STYLE COMPACT - TOUT EN UN SEUL ÉCRAN */
     * { box-sizing: border-box; }
     
     .form-compact {
@@ -320,20 +337,14 @@
         overflow-y: auto;
     }
     
-    /* Ajustements ultra-compacts */
-    .row {
-        margin-left: -5px;
-        margin-right: -5px;
-    }
+    .row { margin-left: -5px; margin-right: -5px; }
     
     .col-md-4, .col-md-3, .col-md-2, .col-md-6, .col-md-7 {
         padding-left: 5px;
         padding-right: 5px;
     }
     
-    .mb-3, .mb-4 {
-        margin-bottom: 8px !important;
-    }
+    .mb-3, .mb-4 { margin-bottom: 8px !important; }
     
     .form-label {
         font-size: 0.75rem;
@@ -356,6 +367,27 @@
         height: auto;
         min-height: 45px;
         resize: none;
+        padding-right: 30px;
+    }
+    
+    .btn-clear-textarea {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.9);
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-clear-textarea:hover {
+        transform: scale(1.1);
+        background: #fff;
+    }
+    
+    .btn-clear-textarea i {
+        font-size: 1rem;
     }
     
     fieldset {
@@ -378,94 +410,26 @@
         color: #4a5568;
     }
     
-    .btn {
-        padding: 5px 12px;
-        font-size: 0.8rem;
-        border-radius: 8px;
-    }
-    
-    .btn-sm {
-        padding: 2px 8px;
-        font-size: 0.7rem;
-    }
-    
-    .form-text {
-        font-size: 0.65rem;
-        margin-top: 2px;
-        color: #718096;
-    }
-    
-    .alert {
-        padding: 6px 10px;
-        margin-bottom: 0;
-        border-radius: 8px;
-        font-size: 0.75rem;
-    }
-    
+    .btn { padding: 5px 12px; font-size: 0.8rem; border-radius: 8px; }
+    .btn-sm { padding: 2px 8px; font-size: 0.7rem; }
+    .form-text { font-size: 0.65rem; margin-top: 2px; color: #718096; }
+    .alert { padding: 6px 10px; margin-bottom: 0; border-radius: 8px; font-size: 0.75rem; }
     .text-danger { font-size: 0.7rem; }
     .border { border-width: 1px; }
     .rounded { border-radius: 8px !important; }
     
-    #suggestions { 
-        position: absolute; 
-        max-height: 150px; 
-        font-size: 0.75rem; 
-        width: 90%;
-        z-index: 1000;
-    }
-    
-    /* Barre de scroll fine */
     .form-compact::-webkit-scrollbar { width: 4px; }
     .form-compact::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
     
-    /* Style pour le mode édition */
-    .edit-mode-active .form-control:not([readonly]) {
-        background-color: #fff3cd !important;
-        border-color: #ffc107 !important;
-    }
+    .logo-preview-container { transition: all 0.3s ease; }
+    .logo-preview-container:hover { border-color: #4299e1; background: #ebf8ff; }
     
-    .geocode-toggle {
-        cursor: pointer;
-        transition: all 0.2s;
-    }
+    #logoUpload { cursor: pointer; transition: all 0.2s; }
+    #logoUpload:hover { border-color: #4299e1; background: #f7fafc; }
     
-    .geocode-toggle.active {
-        background-color: #28a745;
-        color: white;
-        border-color: #28a745;
-    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .spinner-border { animation: spin 0.75s linear infinite; }
     
-    /* Style pour l'upload de logo */
-    .logo-preview-container {
-        transition: all 0.3s ease;
-    }
-    
-    .logo-preview-container:hover {
-        border-color: #4299e1;
-        background: #ebf8ff;
-    }
-    
-    #logoUpload {
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    
-    #logoUpload:hover {
-        border-color: #4299e1;
-        background: #f7fafc;
-    }
-    
-    /* Animation spinner */
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    
-    .spinner-border {
-        animation: spin 0.75s linear infinite;
-    }
-    
-    /* Ajustements responsifs */
     @media (max-height: 700px) {
         .form-compact { max-height: 96vh; padding: 10px; }
         .form-label { font-size: 0.7rem; }
@@ -475,395 +439,398 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const isEditMode = '{{ $method }}' === 'PUT';
-        
-        // Éléments communs
-        const lat = document.getElementById('latitude');
-        const lon = document.getElementById('longitude');
-        const display = document.getElementById('coordinates-display');
-        const input = document.getElementById('autocomplete');
-        const city = document.getElementById('locality');
-        const postal = document.getElementById('postal_code');
-        const suggestions = document.getElementById('suggestions');
-        const geocodeBtn = document.getElementById('geocodeBtn');
-        const clearBtn = document.getElementById('clearLocationBtn');
-        const siegeBtn = document.getElementById('geocodeSiegeBtn');
-        
-        // Éléments pour le logo
-        const logoUpload = document.getElementById('logoUpload');
-        const logoPreviewContainer = document.getElementById('logoPreviewContainer');
-        const logoLoadingSpinner = document.getElementById('logoLoadingSpinner');
-        const logoHelp = document.getElementById('logoHelp');
-        const removeLogoBtn = document.getElementById('removeLogoBtn');
-        
-        // Éléments spécifiques au mode édition
-        let enableEditBtn, disableEditBtn, resetLocationBtn, saveLocationBtn, editModeStatus, toggleEditMode, originalValues;
-        
-        if (isEditMode) {
-            enableEditBtn = document.getElementById('enableEditBtn');
-            disableEditBtn = document.getElementById('disableEditBtn');
-            resetLocationBtn = document.getElementById('resetLocationBtn');
-            saveLocationBtn = document.getElementById('saveLocationBtn');
-            editModeStatus = document.getElementById('editModeStatus');
-            toggleEditMode = document.getElementById('toggleEditMode');
-            
-            // Sauvegarder les valeurs originales
-            originalValues = {
-                adresse: input?.value || '',
-                ville: city?.value || '',
-                code_postal: postal?.value || '',
-                latitude: lat?.value || '',
-                longitude: lon?.value || ''
-            };
-        }
-        
-        function updateCoordinatesDisplay() {
-            if (lat?.value && lon?.value) {
-                display.textContent = `${parseFloat(lat.value).toFixed(6)}, ${parseFloat(lon.value).toFixed(6)}`;
-                display.className = 'text-success fw-bold';
-            } else {
-                display.textContent = 'Non géocodé';
-                display.className = 'text-danger';
-            }
-        }
+// Variables globales pour le mode édition
+let originalValues = {};
 
-        // Fonction de géocodage améliorée
-        async function geocodeAddress(address, targetLat, targetLon, targetCity, targetPostal, targetInput = null) {
-            if (!address || address.length < 3) {
-                alert('Veuillez entrer une adresse valide (au moins 3 caractères)');
-                return false;
-            }
-            
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(address)}`);
-                const data = await res.json();
-                
-                if (!data.length) {
-                    alert('Aucun résultat trouvé pour cette adresse');
-                    return false;
-                }
-                
-                const place = data[0];
-                
-                if (targetLat) targetLat.value = place.lat;
-                if (targetLon) targetLon.value = place.lon;
-                if (targetCity) targetCity.value = place.address.city || place.address.town || place.address.village || '';
-                if (targetPostal) targetPostal.value = place.address.postcode || '';
-                if (targetInput) targetInput.value = place.display_name;
-                
-                updateCoordinatesDisplay();
-                
-                if (isEditMode) {
-                    const saveConfirmation = document.getElementById('saveConfirmation');
-                    if (saveConfirmation) {
-                        saveConfirmation.style.display = 'block';
-                        setTimeout(() => {
-                            saveConfirmation.style.display = 'none';
-                        }, 3000);
-                    }
-                }
-                
-                return true;
-            } catch (e) {
-                console.error(e);
-                alert('Erreur lors du géocodage. Veuillez réessayer.');
-                return false;
-            }
-        }
-
-        updateCoordinatesDisplay();
-
-        // Activation du mode édition pour PUT
-        if (isEditMode && enableEditBtn) {
-            enableEditBtn.addEventListener('click', function() {
-                // Déverrouiller les champs
-                input.readOnly = false;
-                city.readOnly = false;
-                postal.readOnly = false;
-                geocodeBtn.disabled = false;
-                clearBtn.classList.remove('d-none');
-                saveLocationBtn.classList.remove('d-none');
-                resetLocationBtn.classList.remove('d-none');
-                
-                // UI updates
-                input.classList.remove('bg-light');
-                city.classList.remove('bg-light');
-                postal.classList.remove('bg-light');
-                input.classList.add('bg-white');
-                city.classList.add('bg-white');
-                postal.classList.add('bg-white');
-                
-                enableEditBtn.classList.add('d-none');
-                disableEditBtn.classList.remove('d-none');
-                toggleEditMode.innerHTML = '<i class="fas fa-unlock me-1"></i> Mode édition activé';
-                toggleEditMode.classList.remove('bg-warning');
-                toggleEditMode.classList.add('bg-success', 'text-white');
-                editModeStatus.textContent = 'Mode édition activé - Vous pouvez modifier l\'adresse';
-                
-                // Ajouter la classe pour le style
-                document.querySelector('.form-compact').classList.add('edit-mode-active');
-            });
-            
-            disableEditBtn.addEventListener('click', function() {
-                // Restaurer l'état verrouillé sans restaurer les valeurs
-                input.readOnly = true;
-                city.readOnly = true;
-                postal.readOnly = true;
-                geocodeBtn.disabled = true;
-                clearBtn.classList.add('d-none');
-                saveLocationBtn.classList.add('d-none');
-                resetLocationBtn.classList.add('d-none');
-                
-                // UI updates
-                input.classList.add('bg-light');
-                city.classList.add('bg-light');
-                postal.classList.add('bg-light');
-                input.classList.remove('bg-white');
-                city.classList.remove('bg-white');
-                postal.classList.remove('bg-white');
-                
-                enableEditBtn.classList.remove('d-none');
-                disableEditBtn.classList.add('d-none');
-                toggleEditMode.innerHTML = '<i class="fas fa-lock me-1"></i> Mode édition désactivé';
-                toggleEditMode.classList.add('bg-warning', 'text-dark');
-                toggleEditMode.classList.remove('bg-success', 'text-white');
-                editModeStatus.textContent = 'Les champs d\'adresse sont verrouillés';
-                
-                document.querySelector('.form-compact').classList.remove('edit-mode-active');
-            });
-            
-            resetLocationBtn.addEventListener('click', function() {
-                // Restaurer les valeurs originales
-                input.value = originalValues.adresse;
-                city.value = originalValues.ville;
-                postal.value = originalValues.code_postal;
-                lat.value = originalValues.latitude;
-                lon.value = originalValues.longitude;
-                
-                updateCoordinatesDisplay();
-                
-                // Désactiver le mode édition
-                disableEditBtn.click();
-            });
-            
-            saveLocationBtn.addEventListener('click', function() {
-                // Sauvegarder les nouvelles valeurs comme originales
-                originalValues = {
-                    adresse: input.value,
-                    ville: city.value,
-                    code_postal: postal.value,
-                    latitude: lat.value,
-                    longitude: lon.value
-                };
-                
-                alert('Modifications GPS enregistrées ! Pensez à soumettre le formulaire.');
-            });
-        }
-
-        // Géocodage siège social (disponible dans tous les modes si les champs sont déverrouillés)
-        if (siegeBtn) {
-            siegeBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                const adr = document.getElementById('siege_adresse')?.value || '';
-                const vil = document.getElementById('siege_ville')?.value || '';
-                const cp = document.getElementById('siege_code_postal')?.value || '';
-                const pay = document.getElementById('pays')?.value || 'France';
-                
-                if (!isEditMode || (isEditMode && input && !input.readOnly)) {
-                    await geocodeAddress(`${adr}, ${vil}, ${cp}, ${pay}`, lat, lon, city, postal, input);
-                } else {
-                    alert('Veuillez d\'abord déverrouiller le mode édition');
-                }
-            });
-        }
-
-        // Géocodage principal
-        if (geocodeBtn) {
-            geocodeBtn.addEventListener('click', async function(e) {
-                e.preventDefault();
-                if (!isEditMode || (isEditMode && !input.readOnly)) {
-                    await geocodeAddress(input.value, lat, lon, city, postal, input);
-                } else {
-                    alert('Veuillez d\'abord déverrouiller le mode édition');
-                }
-            });
-        }
-
-        // Effacer les coordonnées
-        if (clearBtn) {
-            clearBtn.addEventListener('click', function() {
-                if (!isEditMode || (isEditMode && !input.readOnly)) {
-                    if (confirm('Voulez-vous vraiment vider les coordonnées GPS ?')) {
-                        lat.value = ''; 
-                        lon.value = ''; 
-                        city.value = ''; 
-                        postal.value = ''; 
-                        input.value = '';
-                        updateCoordinatesDisplay();
-                    }
-                }
-            });
-        }
-
-        // Auto-complétion (uniquement si le champ est éditable)
-        if (input && suggestions) {
-            let debounce;
-            input.addEventListener('input', function() {
-                // Ne fonctionne que si le champ n'est pas en lecture seule
-                if (input.readOnly) return;
-                
-                const query = input.value.trim();
-                if (query.length < 3) { 
-                    suggestions.style.display = 'none'; 
-                    return; 
-                }
-                
-                clearTimeout(debounce);
-                debounce = setTimeout(async () => {
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}`);
-                        const data = await res.json();
-                        
-                        if (!data.length) { 
-                            suggestions.style.display = 'none'; 
-                            return; 
-                        }
-                        
-                        suggestions.innerHTML = data.map(p => `
-                            <div class="p-1 border-bottom suggestion-item" style="cursor:pointer; font-size:0.75rem;" 
-                                 data-lat="${p.lat}" data-lon="${p.lon}"
-                                 data-city="${p.address.city || p.address.town || p.address.village || ''}"
-                                 data-postal="${p.address.postcode || ''}"
-                                 data-display="${p.display_name}">
-                                <div class="fw-bold">${p.display_name.split(',')[0]}</div>
-                                <small>${p.lat.slice(0,7)}, ${p.lon.slice(0,7)}</small>
-                            </div>
-                        `).join('');
-                        
-                        suggestions.style.display = 'block';
-                        
-                        document.querySelectorAll('.suggestion-item').forEach(el => {
-                            el.addEventListener('click', function() {
-                                input.value = this.dataset.display;
-                                lat.value = this.dataset.lat;
-                                lon.value = this.dataset.lon;
-                                city.value = this.dataset.city;
-                                postal.value = this.dataset.postal;
-                                suggestions.style.display = 'none';
-                                updateCoordinatesDisplay();
-                            });
-                        });
-                    } catch (e) { 
-                        console.error(e);
-                        suggestions.style.display = 'none'; 
-                    }
-                }, 300);
-            });
-
-            input.addEventListener('keypress', async function(e) {
-                if (e.key === 'Enter') { 
-                    e.preventDefault(); 
-                    if (!input.readOnly) {
-                        await geocodeAddress(input.value, lat, lon, city, postal, input); 
-                    }
-                }
-            });
-
-            document.addEventListener('click', function(e) {
-                if (!input?.contains(e.target) && !suggestions?.contains(e.target)) {
-                    suggestions.style.display = 'none';
-                }
-            });
-        }
-
-        // =============== GESTION DU LOGO ===============
-        if (logoUpload) {
-            // Simulation d'upload avec spinner
-            logoUpload.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                // Vérifier le type de fichier
-                const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/jpg'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Format de fichier non supporté. Utilisez PNG, JPG ou SVG.');
-                    logoUpload.value = '';
-                    return;
-                }
-                
-                // Vérifier la taille (max 2Mo)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Le fichier est trop volumineux. Taille maximum : 2Mo');
-                    logoUpload.value = '';
-                    return;
-                }
-                
-                // Afficher le spinner
-                logoLoadingSpinner.classList.remove('d-none');
-                logoHelp.classList.remove('d-none');
-                logoHelp.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...';
-                
-                // Simuler un temps de chargement
-                setTimeout(() => {
-                    // Créer un aperçu
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        logoPreviewContainer.innerHTML = `<img src="${event.target.result}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">`;
-                        logoLoadingSpinner.classList.add('d-none');
-                        logoHelp.innerHTML = '<i class="fas fa-check-circle text-success"></i> Logo chargé avec succès';
-                        removeLogoBtn.classList.remove('d-none');
-                    };
-                    reader.readAsDataURL(file);
-                }, 800); // Espace de chargement visible
-            });
-            
-            // Gestion du bouton "Retirer"
-            removeLogoBtn.addEventListener('click', function() {
-                if (confirm('Voulez-vous retirer le logo ?')) {
-                    // Réinitialiser l'aperçu
-                    logoPreviewContainer.innerHTML = '<i class="fas fa-building" style="font-size: 2rem; color: #cbd5e0;"></i>';
-                    logoUpload.value = '';
-                    logoHelp.classList.add('d-none');
-                    removeLogoBtn.classList.add('d-none');
-                    
-                    // Ajouter un champ caché pour signaler la suppression
-                    let hiddenInput = document.querySelector('input[name="remove_logo"]');
-                    if (!hiddenInput) {
-                        hiddenInput = document.createElement('input');
-                        hiddenInput.type = 'hidden';
-                        hiddenInput.name = 'remove_logo';
-                        hiddenInput.value = '1';
-                        logoUpload.closest('form').appendChild(hiddenInput);
-                    } else {
-                        hiddenInput.value = '1';
-                    }
-                }
-            });
-        }
-    });
-// Fonction générique pour ajouter des items aux listes de catégories et de publics
+// Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-    function addItem(selectId, textareaId) {
-        const select = document.getElementById(selectId);
-        const textarea = document.getElementById(textareaId);
-        const value = select.value.trim();
-        if (!value) return;
-
-        let items = textarea.value.split(',').map(i => i.trim()).filter(i => i);
-        if (!items.includes(value)) {
-            items.push(value);
-            textarea.value = items.join(', ');
-        }
+    // Sauvegarder les valeurs originales pour le mode édition
+    @if($method === 'PUT')
+    originalValues = {
+        adresse: document.getElementById('structure_adresse')?.value || '',
+        ville: document.getElementById('structure_ville')?.value || '',
+        code_postal: document.getElementById('structure_code_postal')?.value || '',
+        pays: document.getElementById('structure_pays')?.value || '',
+        latitude: document.getElementById('latitude')?.value || '',
+        longitude: document.getElementById('longitude')?.value || ''
+    };
+    @endif
+    
+    // Gérer l'affichage des icônes d'effacement
+    updateClearIconsVisibility();
+    
+    // Écouter les changements dans les textarea pour afficher/masquer les icônes
+    const categoriesTextarea = document.getElementById('categoriesTextarea');
+    const publicTextarea = document.getElementById('publicTextarea');
+    
+    if (categoriesTextarea) {
+        categoriesTextarea.addEventListener('input', function() {
+            const clearIcon = this.parentElement.querySelector('.btn-clear-textarea');
+            if (clearIcon) {
+                clearIcon.style.display = this.value.trim() ? 'flex' : 'none';
+            }
+        });
     }
-
-    document.getElementById('addCategoryBtn').addEventListener('click', function() {
-        addItem('categoriesSelect', 'categoriesTextarea');
-    });
-
-    document.getElementById('addPublicBtn').addEventListener('click', function() {
-        addItem('publicSelect', 'publicTextarea');
-    });
+    
+    if (publicTextarea) {
+        publicTextarea.addEventListener('input', function() {
+            const clearIcon = this.parentElement.querySelector('.btn-clear-textarea');
+            if (clearIcon) {
+                clearIcon.style.display = this.value.trim() ? 'flex' : 'none';
+            }
+        });
+    }
 });
 
+// Fonction pour mettre à jour la visibilité des icônes
+function updateClearIconsVisibility() {
+    const categoriesTextarea = document.getElementById('categoriesTextarea');
+    const publicTextarea = document.getElementById('publicTextarea');
+    
+    if (categoriesTextarea) {
+        const clearIcon = categoriesTextarea.parentElement.querySelector('.btn-clear-textarea');
+        if (clearIcon) {
+            clearIcon.style.display = categoriesTextarea.value.trim() ? 'flex' : 'none';
+        }
+    }
+    
+    if (publicTextarea) {
+        const clearIcon = publicTextarea.parentElement.querySelector('.btn-clear-textarea');
+        if (clearIcon) {
+            clearIcon.style.display = publicTextarea.value.trim() ? 'flex' : 'none';
+        }
+    }
+}
+
+// Fonction pour effacer un textarea
+function clearTextarea(textareaId) {
+    const textarea = document.getElementById(textareaId);
+    if (textarea) {
+        textarea.value = '';
+        const clearIcon = textarea.parentElement.querySelector('.btn-clear-textarea');
+        if (clearIcon) {
+            clearIcon.style.display = 'none';
+        }
+        
+        // Déclencher l'événement input pour les éventuels listeners
+        const event = new Event('input', { bubbles: true });
+        textarea.dispatchEvent(event);
+    }
+}
+
+// ==================== CATÉGORIES ====================
+function addCategory() {
+    const select = document.getElementById('categoriesSelect');
+    const textarea = document.getElementById('categoriesTextarea');
+    
+    if (!select || !textarea) {
+        alert("Erreur: éléments non trouvés");
+        return;
+    }
+    
+    const value = select.value;
+    if (!value) {
+        alert("Veuillez sélectionner une catégorie");
+        return;
+    }
+    
+    let current = textarea.value.trim();
+    let items = current ? current.split(',').map(i => i.trim()) : [];
+    
+    if (items.includes(value)) {
+        alert("Cette catégorie est déjà ajoutée");
+        return;
+    }
+    
+    items.push(value);
+    textarea.value = items.join(', ');
+    select.value = '';
+    
+    // Afficher l'icône d'effacement
+    const clearIcon = textarea.parentElement.querySelector('.btn-clear-textarea');
+    if (clearIcon) {
+        clearIcon.style.display = 'flex';
+    }
+}
+
+// ==================== PUBLICS ====================
+function addPublic() {
+    const select = document.getElementById('publicSelect');
+    const textarea = document.getElementById('publicTextarea');
+    
+    if (!select || !textarea) {
+        alert("Erreur: éléments non trouvés");
+        return;
+    }
+    
+    const value = select.value;
+    if (!value) {
+        alert("Veuillez sélectionner un public");
+        return;
+    }
+    
+    let current = textarea.value.trim();
+    let items = current ? current.split(',').map(i => i.trim()) : [];
+    
+    if (items.includes(value)) {
+        alert("Ce public est déjà ajouté");
+        return;
+    }
+    
+    items.push(value);
+    textarea.value = items.join(', ');
+    select.value = '';
+    
+    // Afficher l'icône d'effacement
+    const clearIcon = textarea.parentElement.querySelector('.btn-clear-textarea');
+    if (clearIcon) {
+        clearIcon.style.display = 'flex';
+    }
+}
+
+// ==================== LOGO ====================
+function previewLogo(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    // Vérifications
+    const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+        alert('Format non supporté. Utilisez PNG, JPG ou SVG.');
+        input.value = '';
+        return;
+    }
+    
+    if (file.size > 2 * 1024 * 1024) {
+        alert('Fichier trop volumineux (max 2Mo)');
+        input.value = '';
+        return;
+    }
+    
+    // Afficher le spinner
+    document.getElementById('logoLoadingSpinner').classList.remove('d-none');
+    document.getElementById('logoHelp').classList.remove('d-none');
+    document.getElementById('logoHelp').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Chargement...';
+    
+    // Prévisualisation
+    setTimeout(function() {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('logoPreviewContainer').innerHTML = 
+                `<img src="${e.target.result}" alt="Logo" style="width:100%; height:100%; object-fit:contain;">`;
+            document.getElementById('logoLoadingSpinner').classList.add('d-none');
+            document.getElementById('logoHelp').innerHTML = '<i class="fas fa-check-circle text-success"></i> Logo chargé';
+            document.getElementById('removeLogoBtn').classList.remove('d-none');
+        };
+        reader.readAsDataURL(file);
+    }, 500);
+}
+
+function removeLogo() {
+    if (confirm('Voulez-vous retirer le logo ?')) {
+        document.getElementById('logoPreviewContainer').innerHTML = 
+            '<i class="fas fa-building" style="font-size:2rem;color:#cbd5e0;"></i>';
+        document.getElementById('logoUpload').value = '';
+        document.getElementById('logoHelp').classList.add('d-none');
+        document.getElementById('removeLogoBtn').classList.add('d-none');
+        
+        // Ajouter un champ caché pour indiquer la suppression
+        let hiddenInput = document.querySelector('input[name="remove_logo"]');
+        if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'remove_logo';
+            hiddenInput.value = '1';
+            document.querySelector('form').appendChild(hiddenInput);
+        } else {
+            hiddenInput.value = '1';
+        }
+    }
+}
+
+// ==================== GÉOCODAGE ====================
+async function geocodeAddress(query, callback) {
+    if (!query || query.length < 5) {
+        alert("Adresse trop courte (minimum 5 caractères)");
+        return;
+    }
+    
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(query)}`
+        );
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            callback(data[0]);
+        } else {
+            alert("Adresse non trouvée");
+        }
+    } catch (error) {
+        console.error('Erreur géocodage:', error);
+        alert("Erreur lors du géocodage");
+    }
+}
+
+function updateLocationFields(place, isStructure = true) {
+    const lat = document.getElementById('latitude');
+    const lon = document.getElementById('longitude');
+    const display = document.getElementById('coordinates-display');
+    
+    if (lat) lat.value = place.lat;
+    if (lon) lon.value = place.lon;
+    
+    if (isStructure) {
+        // Mettre à jour les champs de la structure
+        const address = document.getElementById('structure_adresse');
+        const city = document.getElementById('structure_ville');
+        const postal = document.getElementById('structure_code_postal');
+        const pays = document.getElementById('structure_pays');
+        
+        if (address) address.value = place.display_name;
+        if (city) city.value = place.address?.city || place.address?.town || place.address?.village || '';
+        if (postal) postal.value = place.address?.postcode || '';
+        if (pays) pays.value = place.address?.country || 'France';
+    } else {
+        // Mettre à jour les champs du siège social
+        const address = document.getElementById('siege_adresse');
+        const city = document.getElementById('siege_ville');
+        const postal = document.getElementById('siege_code_postal');
+        const pays = document.getElementById('pays');
+        
+        if (address) address.value = place.display_name;
+        if (city) city.value = place.address?.city || place.address?.town || place.address?.village || '';
+        if (postal) postal.value = place.address?.postcode || '';
+        if (pays) pays.value = place.address?.country || 'France';
+    }
+    
+    if (display) {
+        display.textContent = place.lat + ', ' + place.lon;
+    }
+    
+    // Afficher la confirmation pour le mode PUT
+    @if($method === 'PUT')
+    const saveConfirmation = document.getElementById('saveConfirmation');
+    if (saveConfirmation) {
+        saveConfirmation.style.display = 'block';
+        setTimeout(() => saveConfirmation.style.display = 'none', 3000);
+    }
+    @endif
+}
+
+function geocodeStructure() {
+    const adresse = document.getElementById('structure_adresse')?.value || '';
+    const ville = document.getElementById('structure_ville')?.value || '';
+    const cp = document.getElementById('structure_code_postal')?.value || '';
+    const pays = document.getElementById('structure_pays')?.value || 'France';
+    
+    const fullAddress = `${adresse}, ${ville}, ${cp}, ${pays}`.replace(/, ,/g, ',');
+    geocodeAddress(fullAddress, (place) => updateLocationFields(place, true));
+}
+
+function geocodeSiege() {
+    const adresse = document.getElementById('siege_adresse')?.value || '';
+    const ville = document.getElementById('siege_ville')?.value || '';
+    const cp = document.getElementById('siege_code_postal')?.value || '';
+    const pays = document.getElementById('pays')?.value || 'France';
+    
+    const fullAddress = `${adresse}, ${ville}, ${cp}, ${pays}`.replace(/, ,/g, ',');
+    geocodeAddress(fullAddress, (place) => updateLocationFields(place, false));
+}
+
+// ==================== MODE ÉDITION (PUT) ====================
+@if($method === 'PUT')
+function toggleEditMode() {
+    const isLocked = document.getElementById('structure_adresse').readOnly;
+    if (isLocked) {
+        enableEditMode();
+    } else {
+        disableEditMode();
+    }
+}
+
+function enableEditMode() {
+    // Activer les champs de la structure
+    document.getElementById('structure_adresse').readOnly = false;
+    document.getElementById('structure_ville').readOnly = false;
+    document.getElementById('structure_code_postal').readOnly = false;
+    document.getElementById('structure_pays').readOnly = false;
+    document.getElementById('geocodeStructureBtn').disabled = false;
+    
+    // Gérer les boutons
+    document.getElementById('enableEditBtn').classList.add('d-none');
+    document.getElementById('disableEditBtn').classList.remove('d-none');
+    document.getElementById('resetLocationBtn').classList.remove('d-none');
+    document.getElementById('clearLocationBtn').classList.remove('d-none');
+    document.getElementById('saveLocationBtn').classList.remove('d-none');
+    
+    // Mettre à jour les messages
+    document.getElementById('editModeStatus').textContent = 'Mode édition activé';
+    document.getElementById('toggleEditMode').innerHTML = '<i class="fas fa-unlock me-1"></i> Mode édition activé';
+    document.getElementById('toggleEditMode').classList.remove('bg-warning');
+    document.getElementById('toggleEditMode').classList.add('bg-success', 'text-white');
+}
+
+function disableEditMode() {
+    // Désactiver les champs de la structure
+    document.getElementById('structure_adresse').readOnly = true;
+    document.getElementById('structure_ville').readOnly = true;
+    document.getElementById('structure_code_postal').readOnly = true;
+    document.getElementById('structure_pays').readOnly = true;
+    document.getElementById('geocodeStructureBtn').disabled = true;
+    
+    // Gérer les boutons
+    document.getElementById('enableEditBtn').classList.remove('d-none');
+    document.getElementById('disableEditBtn').classList.add('d-none');
+    document.getElementById('resetLocationBtn').classList.add('d-none');
+    document.getElementById('clearLocationBtn').classList.add('d-none');
+    document.getElementById('saveLocationBtn').classList.add('d-none');
+    
+    // Mettre à jour les messages
+    document.getElementById('editModeStatus').textContent = 'Les champs d\'adresse sont verrouillés';
+    document.getElementById('toggleEditMode').innerHTML = '<i class="fas fa-lock me-1"></i> Mode édition désactivé';
+    document.getElementById('toggleEditMode').classList.remove('bg-success', 'text-white');
+    document.getElementById('toggleEditMode').classList.add('bg-warning', 'text-dark');
+}
+
+function resetLocation() {
+    document.getElementById('structure_adresse').value = originalValues.adresse;
+    document.getElementById('structure_ville').value = originalValues.ville;
+    document.getElementById('structure_code_postal').value = originalValues.code_postal;
+    document.getElementById('structure_pays').value = originalValues.pays;
+    document.getElementById('latitude').value = originalValues.latitude;
+    document.getElementById('longitude').value = originalValues.longitude;
+    
+    const display = document.getElementById('coordinates-display');
+    if (originalValues.latitude && originalValues.longitude) {
+        display.textContent = originalValues.latitude + ', ' + originalValues.longitude;
+    } else {
+        display.textContent = 'Non géocodé';
+    }
+    
+    disableEditMode();
+}
+
+function saveLocation() {
+    originalValues = {
+        adresse: document.getElementById('structure_adresse').value,
+        ville: document.getElementById('structure_ville').value,
+        code_postal: document.getElementById('structure_code_postal').value,
+        pays: document.getElementById('structure_pays').value,
+        latitude: document.getElementById('latitude').value,
+        longitude: document.getElementById('longitude').value
+    };
+    
+    alert('Modifications enregistrées ! Pensez à soumettre le formulaire.');
+    disableEditMode();
+}
+
+function clearLocation() {
+    if (confirm('Supprimer les coordonnées GPS ?')) {
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+        document.getElementById('coordinates-display').textContent = 'Non géocodé';
+    }
+}
+@endif
 </script>

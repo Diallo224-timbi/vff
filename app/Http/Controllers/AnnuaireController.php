@@ -63,11 +63,11 @@ class AnnuaireController extends Controller
         
         return view('annuaire.list', compact('groupes', 'totalStructures'));
     }
-
+    /*
     public function exportCsv()
     {
         return Excel::download(new StructuresExport, 'annuaire_structures.csv');
-    }
+    }*/
    public function exportPdf()
     {
         // Récupération de toutes les structures, triées

@@ -45,6 +45,17 @@
                 <i class="fas fa-chart-line mr-1"></i>
                 Statistiques
             </button>
+            <!-- supprimer tous les logs (admin seulement) -->
+            @if(auth()->user()->role === 'admin')
+                <form action="{{ route('activity_logs.destroyAll') }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer tous les logs ? Cette action est irréversible.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                        <i class="fas fa-trash-alt mr-1"></i>
+                        Supprimer tous les logs
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 
