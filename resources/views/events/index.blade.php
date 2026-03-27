@@ -86,7 +86,7 @@
             <a href="{{ route('events.calendrier') }}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200">
                 <i class="fas fa-calendar-week mr-2"></i>Vue calendrier
             </a>
-            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
+            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'user')
             <a href="{{ route('events.create') }}" class="bg-[#255156] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#1a3a3f]">
                 <i class="fas fa-plus mr-2"></i>Nouvel événement
             </a>
@@ -127,7 +127,7 @@
                 <!-- Date -->
                 <div class="flex items-center gap-2 md:w-48">
                     <div class="w-10 h-10 bg-[#255156] rounded-lg flex items-center justify-center text-white">
-                        <i class="fas fa-calendar-day"></i>
+                        <i class="bx bx-calendar-day"></i>
                     </div>
                     <div>
                         <div class="font-semibold">{{ $event->date_debut->format('d/m/Y') }}</div>
@@ -146,17 +146,13 @@
                             @endif">
                             {{ ucfirst($event->type) }}
                         </span>
-                        @if($event->date_debut > now()->addHour(1) )
+                        @if($event->date_debut >= now())
                             <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">
-                                À venir . {{ $event->date_debut->diffForHumans() }} 
+                                À venir
                             </span>
-                        @elseif($event->date_fin < now()->addHour(1))
+                        @elseif($event->date_fin < now())
                             <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs">
                                 Passé
-                            </span>
-                        @elseif($event->date_debut <= now()->addHour(1))
-                             <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs">
-                                En cours . {{ $event->date_debut->diffForHumans() }}
                             </span>
                         @endif
                     </div>

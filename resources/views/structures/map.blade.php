@@ -324,12 +324,8 @@
                         <i class="fas fa-times"></i>
                         Fermer
                     </button>
-                    <button type="button" 
-                            id="modal-itineraire-btn"
-                            class="px-5 py-2 bg-blue-400 text-white rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2">
-                        <i class="fas fa-directions"></i>
-                        Itinéraire
-                    </button>
+                    
+                    
                     
                 </div>
             </div>
@@ -544,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dateElement.textContent = '-';
         }
         
-        // Bouton itinéraire
+        /* Bouton itinéraire
         const itineraireBtn = document.getElementById('modal-itineraire-btn');
         if (structure.latitude && structure.longitude) {
             itineraireBtn.onclick = () => {
@@ -558,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             itineraireBtn.disabled = true;
             itineraireBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }
+        }*/
     }
 
     // Fonctions check/uncheck

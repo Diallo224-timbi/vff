@@ -4,23 +4,20 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 py-6">
-
     <!-- Retour au forum -->
     <div class="mb-6">
         <a href="{{ route('forum.index') }}" class="text-blue-600 hover:underline">&larr; Retour au forum</a>
     </div>
-
     <!-- Sujet -->
     <div class="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-6 animate-fade-in">
         <h1 class="text-2xl sm:text-3xl font-bold font-montserrat text-[#2D2926]">{{ $thread->title }}</h1>
         <p class="text-gray-500 text-sm mt-1">
             Par <span class="font-medium">{{ $thread->user->name }}</span> 
             @if($thread->category) dans <span class="font-medium">{{ $thread->category->name }}</span> @endif
-            • {{ $thread->created_at->diffForHumans() }}
+                {{ $thread->created_at->diffForHumans() }}
         </p>
         <p class="text-gray-700 mt-4">{{ $thread->body }}</p>
     </div>
-
     <!-- Commentaires -->
     <h2 class="text-xl font-semibold mb-4">Commentaires</h2>
 
@@ -84,7 +81,7 @@
 <!-- Confirmation attractive -->
 <script>
 function confirmDelete(form) {
-    return confirm("⚠️ Voulez-vous vraiment supprimer ce commentaire ?");
+    return confirm(" Voulez-vous vraiment supprimer ce commentaire ?");
 }
 
 // Resize automatique du textarea selon le contenu

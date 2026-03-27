@@ -17,7 +17,6 @@ class ThreadController extends Controller
         $reaction = ThreadReaction::where('thread_id', $thread->id)
                                   ->where('user_id', $user->id)
                                   ->first();
-
         if ($reaction) {
             $reaction->update(['type' => $type]);
         } else {
@@ -27,7 +26,7 @@ class ThreadController extends Controller
                 'type' => $type,
             ]);
         }
-
         return back();
     }
 }
+?>

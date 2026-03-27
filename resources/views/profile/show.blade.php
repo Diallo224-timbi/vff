@@ -9,17 +9,17 @@
         <div class="flex items-center justify-between p-4">
             <div class="flex items-center space-x-4">
                 <!-- Avatar avec initiales -->
-                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#255156] to-[#375d61] flex items-center justify-center text-white font-bold text-xl shadow-md">
                     {{ strtoupper(substr($user->prenom ?? $user->name, 0, 1)) }}{{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">
-                        Profil de <span class="text-blue-600">{{ $user->prenom }} {{ $user->name }}</span>
+                        Profil de <span class="text-[#0acde2]">{{ $user->prenom }} {{ $user->name }}</span>
                     </h1>
                     <p class="text-sm text-gray-500 flex items-center mt-1">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
-                            @if($user->role === 'admin') bg-purple-100 text-purple-800
-                            @elseif($user->role === 'gestionnaire') bg-blue-100 text-blue-800
+                            @if($user->role === 'admin') bg-[#255156] text-white
+                            @elseif($user->role === 'moderateur') bg-blue-100 text-blue-800
                             @else bg-green-100 text-green-800
                             @endif">
                             <i class="fas fa-user-tag mr-1"></i> {{ ucfirst($user->role ?? 'utilisateur') }}
@@ -76,7 +76,7 @@
             <div class="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-100">
                 <!-- En-tête de carte -->
                 <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200 flex items-center">
-                    <i class="fas fa-user-edit text-blue-500 text-xl mr-3"></i>
+                    <i class="fas fa-user-edit text-[#0d727e] text-xl mr-3"></i>
                     <h2 class="text-lg font-semibold text-gray-800">Informations personnelles</h2>
                     <span class="ml-auto text-xs text-gray-500">
                         <i class="fas fa-lock-open text-green-500 mr-1"></i> Modifiable
@@ -89,11 +89,8 @@
 
                     <!-- Section identité -->
                     <div class="mb-8">
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4 flex items-center">
-                            <i class="fas fa-id-card mr-2 text-blue-400"></i> Identité
-                        </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <!-- Prénom (nouveau champ) -->
+                            <!-- Prénom -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     <i class="fas fa-user mr-1 text-gray-400"></i> Prénom
@@ -117,9 +114,6 @@
 
                     <!-- Section contact -->
                     <div class="mb-8">
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4 flex items-center">
-                            <i class="fas fa-address-card mr-2 text-blue-400"></i> Contact
-                        </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <!-- Email -->
                             <div>
@@ -145,13 +139,10 @@
 
                     <!-- Section adresse -->
                     <div class="mb-8">
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4 flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i> Adresse
-                        </h3>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <!-- Adresse -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-address-card mr-1""></i>Adresse</label>
                         <input type="text" name="adresse" value="{{ old('adresse', $user->adresse) }}"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
                             placeholder="123 Rue Exemple">
@@ -159,7 +150,7 @@
 
                     <!-- Code postal -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-map-signs mr-1"></i>Code postal</label>
                         <input type="text" name="code_postal" value="{{ old('code_postal', $user->code_postal) }}"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
                             placeholder="75001">
@@ -167,7 +158,7 @@
 
                     <!-- Ville -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-city mr-1"></i>Ville</label>
                         <input type="text" name="ville" value="{{ old('ville', $user->ville) }}"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
                             placeholder="Paris">
@@ -183,7 +174,7 @@
                                 <i class="fas fa-undo mr-2"></i> Réinitialiser
                             </button>
                             <button type="submit" 
-                                class="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 font-medium text-sm flex items-center">
+                                class="px-6 py-2.5 bg-gradient-to-r from-[#255156] to-[#54a7b1] hover:from-[#039bac] hover:to-[#068492] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 font-medium text-sm flex items-center">
                                 <i class="fas fa-save mr-2"></i> Mettre à jour
                             </button>
                         </div>
@@ -196,13 +187,13 @@
         <div class="lg:col-span-1">
             <!-- Carte sécurité -->
             <div class="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-100 mb-6">
-                <div class="bg-gradient-to-r from-orange-50 to-yellow-50 px-6 py-4 border-b border-gray-200">
+                <div class="bg-gradient-to-r from-[#18555c] to-[#2fb0be] px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center">
-                        <i class="fas fa-shield-alt text-orange-500 text-xl mr-3"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Sécurité</h3>
+                        <i class="fas fa-shield-alt text-white text-xl mr-3"></i>
+                        <h3 class="text-lg font-semibold text-white">Sécurité</h3>
                     </div>
                 </div>
-                <div class="p-5">
+                <div class="p-2">
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-sm text-gray-600">Dernière connexion</span>
                         <span class="text-sm font-semibold text-gray-800">
@@ -219,19 +210,19 @@
 
             <!-- Carte rôle et permissions -->
             <div class="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-100">
-                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 px-3 py-3 border-b border-gray-200">
+                <div class="bg-gradient-to-r  from-[#18555c] to-[#2fb0be] px-3 py-3 border-b border-gray-200">
                     <div class="flex items-center">
-                        <i class="fas fa-user-tag text-purple-500 text-xl mr-3"></i>
-                        <h3 class="text-lg font-semibold text-gray-800">Rôle & Permissions</h3>
+                        <i class="fas fa-user-tag text-white text-xl mr-3"></i>
+                        <h3 class="text-lg font-semibold text-white">Rôle & Permissions</h3>
                     </div>
                 </div>
                 <div class="p-5">
                     <div class="flex items-center mb-4">
                         <span class="text-sm text-gray-600 w-24">Rôle actuel</span>
                         <span class="px-3 py-1.5 rounded-lg text-xs font-medium 
-                            @if($user->role === 'admin') bg-purple-100 text-purple-800
-                            @elseif($user->role === 'gestionnaire') bg-blue-100 text-blue-800
-                            @else bg-green-100 text-green-800
+                            @if($user->role === 'admin') bg-[#18555c] text-white
+                            @elseif($user->role === 'moderateur')
+                            @else text-green-800
                             @endif">
                             <i class="fas fa-user-circle mr-1"></i> {{ ucfirst($user->role ?? 'utilisateur') }}
                         </span>
@@ -250,10 +241,10 @@
                         </div>
                     </div>
                     @else
-                    <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="bg-[#057581] p-4 rounded-lg">
                         <div class="flex items-center">
-                            <i class="fas fa-crown text-purple-500 mr-2"></i>
-                            <span class="text-xs text-purple-700 font-medium">Accès administrateur complet</span>
+                            <i class="fas fa-crown text-white mr-2"></i>
+                            <span class="text-xs text-white font-medium">Accès administrateur complet</span>
                         </div>
                     </div>
                     @endif

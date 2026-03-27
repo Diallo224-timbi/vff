@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Plateforme Multi Acteurs')</title>
-
+  <link rel="apple-touch-icon" type="image/x-icon" href="{{ asset('logo.png') }}">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4V4lF7+v1wZz0+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -428,14 +428,13 @@
     <!-- Profil avec dropdown responsive -->
     <div class="profile-dropdown ">
       <button id="profileBtn" class="profile-btn">
-        <div class="w-8 h-8 rounded-full bg-linear-to-r from-gray-900 to-gray-500 flex items-center justify-center text-white font-semibold">
-          {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+        <div class="w-8 h-8 rounded-full bg-linear-to-r from-gray-900 to-gray-800 flex items-center justify-center text-white font-semibold">
+          {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}{{ strtoupper(substr(Auth::user()->prenom,0,1)) }}
         </div>
         <span class="hidden md:inline">{{ Auth::user()->name }}</span>
         <i class='bx bx-chevron-down'></i>
       </button>
-      
-      <div id="profileMenu" class="dropdown-menu-custom ">
+      <div id="profileMenu" class="dropdown-menu-custom text-[#076a75]">
         <a href="/profile" class="dropdown-item">
           <i class='bx bx-user'></i>
           Profil
@@ -482,7 +481,7 @@
 
         <a href="/ressources" class="sidebar-link">
           <i class='bx bx-book-open'></i>
-          <span>Ressources</span>
+          <span title="Explorer et partager des ressources">Ressources</span>
         </a>
 <!--
         <a href="/projets" class="sidebar-link">
@@ -492,11 +491,11 @@
 -->
         <a href="{{ route('forum.index') }}" class="sidebar-link">
           <i class='bx bx-chat'></i>
-          <span>Forum</span>
+          <span title="Acceder au forum d'échange">Forum</span>
         </a>
         <a href="/events" class="sidebar-link">
           <i class='bx bx-calendar'></i>
-          <span>Agenda</span>
+          <span title="Consulter l'agenda des évenements">Agenda</span>
         </a>
         <!--
         <a href="{{ route('structures.index') }}" class="sidebar-link">
@@ -507,7 +506,7 @@
         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
         <a href="{{ route('admin.users') }}" class="sidebar-link">
           <i class='bx bx-shield'></i>
-          <span>Administration</span>
+          <span title="Gestion administrative">Administration</span>
         </a>
         <!-- logs d'activité accessible uniquement aux admins -->
         
@@ -515,7 +514,7 @@
           @if(Auth::user()->role === 'admin')
           <a href="{{ route('activity_logs.index') }}" class="sidebar-link">
             <i class='bx bx-list-ul'></i>
-            <span>Logs d'activité</span>
+            <span title="visualiser les logs">Logs d'activités</span>
           </a>
           @endif
       </nav>

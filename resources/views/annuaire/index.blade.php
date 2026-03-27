@@ -2,9 +2,9 @@
 @section('title', 'Annuaire des structures')
 
 @section('content')
-<div class="container mx-auto px-4 py-4">
+<div class="container mx-auto px-0 py-0">
     <!-- Messages de succès - Style espace documentaire -->
-    <div class="container mx-auto px-5 py-5">
+    <div class="container mx-auto px-1 py-1">
     <!-- Messages de succès  -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
@@ -167,16 +167,16 @@
                 
                 <!-- Filtre par catégorie -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Structures</label>
                     <div class="relative">
                         <i class="fas fa-tags absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <select id="filterCategory" class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
-                            <option value="">Toutes les catégories</option>
+                            <option value="">Toutes les structures</option>
                             @php
-                                $categories = $structures->pluck('categories')->unique()->filter()->sort();
+                                $organismes = $structures->pluck('organisme')->unique()->filter()->sort();
                             @endphp
-                            @foreach($categories as $category)
-                                <option value="{{ $category }}">{{ $category }}</option>
+                            @foreach($organismes as $organisme)
+                                <option value="{{ $organisme }}">{{ $organisme }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -201,6 +201,7 @@
             </div>
             
             <!-- Filtres avancés -->
+            <!--
             <div class="mb-2">
                 <button id="toggleAdvancedFilters" 
                         class="text-[#255156] hover:text-[#8bbdc3] font-semibold text-sm flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 hover:border-[#8bbdc3] transition-all w-full">
@@ -211,7 +212,7 @@
                 
                 <div id="advancedFilters" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Filtre par type de structure -->
+                      Filtre par type de structure
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Type de structure</label>
                             <div class="relative">
@@ -228,7 +229,7 @@
                             </div>
                         </div>
                         
-                        <!-- Filtre par zone -->
+                     Filtre par zone
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Zone géographique</label>
                             <div class="relative">
@@ -245,7 +246,7 @@
                             </div>
                         </div>
                         
-                        <!-- Filtre par public cible -->
+                       Filtre par public cible 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Public cible</label>
                             <div class="relative">
@@ -262,7 +263,7 @@
                             </div>
                         </div>
                     </div>
-                    
+                -->  
                     <!-- Boutons de réinitialisation -->
                     <div class="mt-4 flex justify-end">
                         <button id="resetFilters" 
@@ -296,7 +297,7 @@
                     @forelse($structures as $structure)
                         <tr class="structure-row hover:bg-gray-50 transition-colors duration-150" 
                             data-id="{{ $structure->id }}"
-                            data-category="{{ $structure->categories ?? '' }}"
+                            data-category="{{ $structure->organisme ?? '' }}"
                             data-city="{{ $structure->ville ?? '' }}"
                             data-type="{{ $structure->type_structure ?? '' }}"
                             data-zone="{{ $structure->zone ?? '' }}"
