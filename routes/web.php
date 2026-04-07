@@ -143,6 +143,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
      
         Route::get('/annuaire', [AnnuaireController::class, 'index'])->name('annuaire.index');
+        // route pour afficher les membres d'une structure spécifique
+        Route::get('/annuaire/structure', [AnnuaireController::class, 'showByStructure'])->name('annuaire.membre');
         Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
         Route::get('/annuaire/export/pdf', [AnnuaireController::class, 'exportPdf'])->name('annuaire.export.pdf');
     });

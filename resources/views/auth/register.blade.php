@@ -9,7 +9,7 @@
     <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row border border-[#59BEC9]/20 mt-3 md:mt-6">
 
         <!-- Section image - taille augmentée -->
-        <div class="md:w-1/5 bg-gradient-to-br from-[#008C95] to-[#173235] relative hidden md:flex flex-col items-center justify-start p-4 overflow-hidden">
+        <div class="md:w-1/5 bg-gradient-to-br from-[#255156] to-[#173235] relative hidden md:flex flex-col items-center justify-start p-4 overflow-hidden">
             <div class="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-[#59BEC9] opacity-20"></div>
             <div class="relative z-10 text-center text-white w-full">
                 <span class="text-lg font-bold tracking-tight block">PLATEFORME</span>
@@ -25,7 +25,7 @@
         <div class="md:w-4/5 p-4 md:p-3 bg-white">
             
             <!-- Mobile header - plus grand -->
-            <div class="md:hidden mb-3 bg-gradient-to-r from-[#008C95] to-[#2D6268] p-3 rounded-lg text-white text-center">
+            <div class="md:hidden mb-3 bg-gradient-to-r from-[#255156] to-[#2D6268] p-3 rounded-lg text-white text-center">
                 <span class="text-base font-bold">PLATEFORME MULTI-ACTEURS</span>
             </div>
 
@@ -44,7 +44,7 @@
             @if (session('success') || session('error'))
                 <div class="mb-3">
                     @if (session('success'))
-                        <div class="bg-[#B3D2D4]/30 border-l-4 border-[#008C95] text-[#173235] px-3 py-1.5 text-sm">
+                        <div class="bg-[#B3D2D4]/30 border-l-4 border-[#255156] text-[#173235] px-3 py-1.5 text-sm">
                             ✓{{ session('success') }}
                         </div>   
                     @endif
@@ -63,11 +63,11 @@
                     <div class="flex items-end gap-3">
                         <div class="flex-1">
                             <input type="email" name="email" required
-                                class="w-full border border-[#B3D2D4] rounded-lg py-2 px-3 text-sm focus:ring-1 focus:ring-[#008C95] focus:border-[#008C95]"
+                                class="w-full border border-[#B3D2D4] rounded-lg py-2 px-3 text-sm focus:ring-1 focus:ring-[#255156] focus:border-[#255156]"
                                 placeholder="votre@email.fr">
                             @error('email')<p class="text-[#41797F] text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
-                        <button type="submit" class="bg-[#008C95] hover:bg-[#2D6268] text-white text-sm font-semibold py-2 px-4 rounded-lg whitespace-nowrap">
+                        <button type="submit" class="bg-[#255156] hover:bg-[#2D6268] text-white text-sm font-semibold py-2 px-4 rounded-lg whitespace-nowrap">
                             <i class='bx bx-send'></i> Envoyer code  
                         </button>
                     </div>
@@ -86,7 +86,7 @@
                     <div class="flex items-end gap-3">
                         <div class="flex-1">
                             <input type="text" name="code" required
-                                class="w-full border border-[#B3D2D4] rounded-lg py-2 px-3 text-sm focus:ring-1 focus:ring-[#008C95]"
+                                class="w-full border border-[#B3D2D4] rounded-lg py-2 px-3 text-sm focus:ring-1 focus:ring-[#255156]"
                                 placeholder="Code 6 chiffres"
                                 maxlength="6">
                         </div>
@@ -134,17 +134,17 @@
         <div class="grid grid-cols-3 gap-2 mb-2">
             <div>
                 <input type="text" name="name" placeholder="Nom" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('name')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <input type="text" name="prenom" placeholder="Prénom" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('prenom')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <input type="text" name="phone" placeholder="Téléphone" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('phone')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
@@ -157,7 +157,7 @@
             </div>
             <div>
                 <input type="email" name="confirmEmail" placeholder="Confirmer email" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('confirmEmail')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
@@ -166,7 +166,7 @@
         <div class="grid grid-cols-2 gap-2 mb-2">
             <div>
                 <input type="password" name="password" id="password" placeholder="Mot de passe" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]"
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]"
                     oninput="checkPasswordStrength()">
                 @error('password')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
 
@@ -177,7 +177,7 @@
             </div>
             <div>
                 <input type="text" name="adresse" placeholder="Adresse" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('adresse')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
@@ -186,12 +186,12 @@
         <div class="grid grid-cols-2 gap-2 mb-2">
             <div>
                 <input type="text" name="ville" placeholder="Ville" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('ville')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <input type="text" name="code_postal" placeholder="Code postal" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#008C95]">
+                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
                 @error('code_postal')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
         </div>
@@ -202,11 +202,11 @@
                 <span class="text-sm font-bold text-[#173235]">Responsable structure ?</span>
                 <div class="flex items-center space-x-4">
                     <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="radio" name="is_responsable" value="1" class="responsable-radio w-4 h-4 text-[#008C95]">
+                        <input type="radio" name="is_responsable" value="1" class="responsable-radio w-4 h-4 text-[#255156]">
                         <span class="text-sm text-[#173235]">Oui</span>
                     </label>
                     <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="radio" name="is_responsable" value="0" class="responsable-radio w-4 h-4 text-[#008C95]" checked>
+                        <input type="radio" name="is_responsable" value="0" class="responsable-radio w-4 h-4 text-[#255156]" checked>
                         <span class="text-sm text-[#173235]">Non</span>
                     </label>
                 </div>
@@ -215,7 +215,7 @@
 
         <!-- Sélection structure -->
         <div id="structureField" class="mb-2">
-            <select name="id_structure" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#008C95]">
+            <select name="id_structure" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
                 <option value="">-- Sélectionnez votre structure --</option>
                 @foreach($structures as $structure)
                     <option value="{{ $structure->id }}">{{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})</option>
@@ -227,20 +227,20 @@
         <!-- Charte -->
         <div class="flex items-center justify-between gap-3 mb-4">
             <div class="flex items-center space-x-2">
-                <input type="checkbox" name="chart" id="charte_accepted" class="w-4 h-4 text-[#008C95] border-[#B3D2D4] rounded focus:ring-[#008C95]" required value="1">
+                <input type="checkbox" name="chart" id="charte_accepted" class="w-4 h-4 text-[#255156] border-[#B3D2D4] rounded focus:ring-[#255156]" required value="1">
                 <label for="charte_accepted" class="text-sm text-[#173235]">
-                    J'accepte la <a href="{{ route('charte') }}" class="text-[#008C95] font-semibold hover:underline">charte</a>
+                    J'accepte la <a href="{{ route('charte') }}" class="text-[#255156] font-semibold hover:underline">charte</a>
                 </label>
                 @error('chart')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
-            <button type="submit" class="bg-[#008C95] hover:bg-[#2D6268] text-white font-semibold py-2 px-6 rounded-lg text-sm shadow">
+            <button type="submit" class="bg-[#255156] hover:bg-[#2D6268] text-white font-semibold py-2 px-6 rounded-lg text-sm shadow">
                 <i class='bx bx-check-circle'></i> Finaliser
             </button>
         </div>
 
         <!-- Lien login -->
         <p class="text-center text-xs text-[#2D6268] mt-3 pt-2 border-t border-[#B3D2D4]/30">
-            Déjà membre ? <a href="{{ route('login') }}" class="text-[#008C95] font-semibold hover:underline">Se connecter</a>
+            Déjà membre ? <a href="{{ route('login') }}" class="text-[#255156] font-semibold hover:underline">Se connecter</a>
         </p>
     </form>
     @endif
@@ -264,7 +264,7 @@
             0: { w: '25%', c: 'bg-[#41797F]', t: 'Très faible' },
             1: { w: '25%', c: 'bg-[#41797F]', t: 'Très faible' },
             2: { w: '50%', c: 'bg-[#59BEC9]', t: 'Faible' },
-            3: { w: '75%', c: 'bg-[#008C95]', t: 'Bon' },
+            3: { w: '75%', c: 'bg-[#255156]', t: 'Bon' },
             4: { w: '100%', c: 'bg-[#173235]', t: 'Très bon' }
         };
         const cfg = config[strength] || config[0];
@@ -295,6 +295,20 @@
             });
         }
     });
+
+    // rendre le mot de passe à 8 caractères et exiger au moins une majuscule, un chiffre et un caractère spécial
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        const pwd = document.getElementById('password').value;
+        const errors = [];
+        if (pwd.length < 8) errors.push('Le mot de passe doit contenir au moins 8 caractères.');
+        if (!/[A-Z]/.test(pwd)) errors.push('Le mot de passe doit contenir au moins une lettre majuscule.');
+        if (!/[0-9]/.test(pwd)) errors.push('Le mot de passe doit contenir au moins un chiffre.');
+        if (!/[\W_]/.test(pwd)) errors.push('Le mot de passe doit contenir au moins un caractère spécial.');
+        if (errors.length > 0) {
+            e.preventDefault();
+            alert(errors.join('\n'));
+        }
+        });
 </script>
 @endif
 

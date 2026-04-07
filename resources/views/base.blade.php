@@ -541,8 +541,12 @@
       </div>
       <div class="offcanvas-body">
         <a href="{{ route('annuaire.index') }}" class="drawer-link">
-          <i class='bx bx-book-reader'></i>
-          Liste
+          <i class='bx bx-building'></i>
+          Structures
+        </a>
+         <a href="{{ route('annuaire.membre') }}" class="drawer-link">
+          <i class='bx bx-group'></i>
+          Membres
         </a>
         <a href="/structures/map" class="drawer-link">
           <i class='bx bx-map-alt'></i>

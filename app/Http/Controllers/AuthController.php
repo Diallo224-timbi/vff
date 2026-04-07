@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,16 +37,16 @@ class AuthController extends Controller
     // fonction pour gérer la soumission du formulaire d'inscription
     public function login(Request $request)
 {
-    // 1️⃣ Validation du formulaire
+    //  Validation du formulaire
     $request->validate([
         'email' => 'required|email',
         'password' => 'required|string',
     ]);
 
-    // 2️⃣ Récupérer l'utilisateur par email
+    //  Récupérer l'utilisateur par email
     $user = User::where('email', $request->email)->first();
 
-    // 3️⃣ Vérifier si l'utilisateur existe
+    //  Vérifier si l'utilisateur existe
     if (!$user) {
         return back()
             ->withErrors(['email' => 'Identifiants invalides'])
@@ -61,9 +60,9 @@ class AuthController extends Controller
             ->withInput();
     }
 
-    // 4️⃣ Tentative de connexion
+    //  Tentative de connexion
     if (Auth::attempt($request->only('email', 'password'))) {
-        // ✅ Utilisateur connecté avec succès
+        // Utilisateur connecté avec succès
         $user = Auth::user(); // IMPORTANT : récupérer après Auth::attempt
 
         // Mettre à jour la date de dernière connexion
@@ -75,7 +74,7 @@ class AuthController extends Controller
         return redirect()->route('dashboard');
     }
 
-    // 5️⃣ Mot de passe incorrect
+    //  Mot de passe incorrect
     return back()
         ->withErrors(['email' => 'Identifiants invalides'])
         ->withInput();
@@ -174,10 +173,10 @@ class AuthController extends Controller
     if ($request->code == $codeSession) {
         // Code correct → étape 3
         session(['code_verified' => true]);
-        return redirect()->back()->with('success', 'Email validé ✅');
+        return redirect()->back()->with('success', 'Email validé ');
     } else {
         // Code incorrect → rester à l'étape 2
-        return redirect()->back()->with('code_error', 'Code incorrect ❌');
+        return redirect()->back()->with('code_error', 'Code incorrect ');
     }
 }
 

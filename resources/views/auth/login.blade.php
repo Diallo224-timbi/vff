@@ -8,13 +8,13 @@
     <!-- PARTIE HAUTE : FORMULAIRE (mobile) / GAUCHE (desktop) -->
     <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-6 lg:py-0">
         
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-[#59BEC9]/20 my-4 lg:my-0">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-[#255156]/20 my-4 lg:my-0">
             
             <!-- Logo / Titre charté -->
             <div class="text-center mb-4 sm:mb-6">
                 <span class="text-xl sm:text-2xl font-bold tracking-tight text-[#173235] block">PLATEFORME</span>
                 <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block">MULTI-ACTEURS</span>
-                <div class="w-12 h-0.5 bg-[#59BEC9] mx-auto mt-2 sm:mt-3"></div>
+                <div class="w-12 h-0.5 bg-[#255156] mx-auto mt-2 sm:mt-3"></div>
             </div>
 
             <h2 class="text-lg sm:text-xl font-semibold text-center text-[#173235] mb-4 sm:mb-6">
@@ -38,13 +38,13 @@
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-[#59BEC9] text-sm"><i class='bx bx-envelope'></i></span>
+                            <span class="text-[#255156] text-sm"><i class='bx bx-envelope'></i></span>
                         </div>
                         <input type="email"
                                name="email"
                                required
                                value="{{ old('email') }}"
-                               class="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#008C95] focus:ring-2 focus:ring-[#008C95]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
+                               class="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#255156] focus:ring-2 focus:ring-[#255156]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
                                placeholder="votre@email.fr">
                     </div>
                 </div>
@@ -56,24 +56,24 @@
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-[#59BEC9] text-sm"><i class='bx bx-lock'></i></span>
+                            <span class="text-[#255156] text-sm"><i class='bx bx-lock'></i></span>
                         </div>
                         <input type="password"
                                name="password"
                                id="password"
                                required
-                               class="w-full pl-10 pr-12 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#008C95] focus:ring-2 focus:ring-[#008C95]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
+                               class="w-full pl-10 pr-12 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#255156] focus:ring-2 focus:ring-[#255156]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
                                placeholder="••••••••">
                         <button type="button"
                                 onclick="togglePassword()"
-                                class="absolute right-3 top-2 sm:top-2.5 text-[#59BEC9] hover:text-[#008C95] transition">
+                                class="absolute right-3 top-2 sm:top-2.5 text-[#255156] hover:text-[#255156] transition">
                             <span class="text-sm">👁️</span>
                         </button>
                     </div>
 
                     <div class="mt-1 sm:mt-2 text-right">
                         <a href="{{ route('password.request') }}"
-                           class="text-xs text-[#41797F] hover:text-[#008C95] hover:underline font-medium">
+                           class="text-xs text-[#41797F] hover:text-[#255156] hover:underline font-medium">
                             Mot de passe oublié ?
                         </a>
                     </div>
@@ -84,7 +84,7 @@
                     <input type="checkbox" 
                            name="remember" 
                            id="remember"
-                           class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#008C95] border-2 border-[#B3D2D4] rounded focus:ring-[#008C95] focus:ring-2">
+                           class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#255156] border-2 border-[#B3D2D4] rounded focus:ring-[#255156] focus:ring-2">
                     <label for="remember" class="ml-2 text-xs text-[#2D6268] font-medium">
                         Rester connecté
                     </label>
@@ -92,7 +92,7 @@
 
                 <!-- Bouton de connexion -->
                 <button type="submit"
-                        class="w-full py-2 sm:py-2.5 rounded-lg bg-[#008C95] hover:bg-[#2D6268] text-white font-semibold text-xs sm:text-sm transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-xl flex items-center justify-center space-x-2 mt-2">
+                        class="w-full py-2 sm:py-2.5 rounded-lg bg-[#255156] hover:bg-[#2D6268] text-white font-semibold text-xs sm:text-sm transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-xl flex items-center justify-center space-x-2 mt-2">
                     <span><i class='bx bx-log-in'></i></span>
                     <span>Se connecter</span>
                 </button>
@@ -101,7 +101,7 @@
                 <div class="text-center text-xs text-[#2D6268] pt-3 sm:pt-4 border-t border-[#B3D2D4] mt-3 sm:mt-4">
                     Vous découvrez la Plateforme ?
                     <a href="{{ route('register') }}"
-                       class="text-[#008C95] font-bold hover:underline ml-1">
+                       class="text-[#255156] font-bold hover:underline ml-1">
                         Créer un compte
                     </a>
                 </div>
@@ -110,10 +110,10 @@
     </div>
 
     <!-- PARTIE BASSE : IMAGE (mobile) / DROITE (desktop) -->
-    <div class="w-full lg:w-1/2 relative bg-gradient-to-br from-[#008C95] to-[#173235] overflow-hidden min-h-[250px] sm:min-h-[300px] lg:min-h-0 flex items-center justify-center">
+    <div class="w-full lg:w-1/2 relative bg-gradient-to-br from-[#255156] to-[#173235] overflow-hidden min-h-[250px] sm:min-h-[300px] lg:min-h-0 flex items-center justify-center">
         
         <!-- Éléments graphiques charte (cercles) -->
-        <div class="absolute -top-20 -right-20 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-[#59BEC9] opacity-20"></div>
+        <div class="absolute -top-20 -right-20 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-[#255156] opacity-20"></div>
         <div class="absolute -bottom-20 -left-20 w-64 sm:w-80 h-64 sm:h-80 rounded-full bg-[#2D6268] opacity-20"></div>
         <div class="absolute inset-0 opacity-10" 
              style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 12px 12px sm:15px 15px;">
@@ -180,18 +180,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
     /* Couleurs charte PMAVFF */
-    .bg-charte-1 { background-color: #59BEC9; }
-    .bg-charte-2 { background-color: #008C95; }
+    .bg-charte-1 { background-color: #255156; }
+    .bg-charte-2 { background-color: #255156; }
     .bg-charte-3 { background-color: #173235; }
     .bg-charte-4 { background-color: #2D6268; }
     .bg-charte-5 { background-color: #41797F; }
     .bg-charte-6 { background-color: #8EC0C6; }
     .bg-charte-7 { background-color: #B3D2D4; }
     .bg-charte-8 { background-color: #E3FCFF; }
-    .text-charte-1 { color: #59BEC9; }
-    .text-charte-2 { color: #008C95; }
+    .text-charte-1 { color: #255156; }
+    .text-charte-2 { color: #255156; }
     .text-charte-3 { color: #173235; }
-    .border-charte-2 { border-color: #008C95; }
+    .border-charte-2 { border-color: #255156; }
     .border-charte-7 { border-color: #B3D2D4; }
     
     /* Reset et responsive */

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\structures;
+use App\Models\User;
 use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\StructuresExport;
@@ -63,6 +64,15 @@ class AnnuaireController extends Controller
         
         return view('annuaire.list', compact('groupes', 'totalStructures'));
     }
+
+    // Affichage des users d'une structure spécifique
+        public function showByStructure()
+        {
+            $membres = User::all(); // Récupère la première structure (vous pouvez adapter pour récupérer une structure spécifique)
+            //recuperer les structure qui ont des users
+            $structures = structures::has('users')->get(); // Récupère les structures qui ont des utilisateurs associés
+            return view('annuaire.membre', compact( 'membres', 'structures'));
+        }
     /*
     public function exportCsv()
     {

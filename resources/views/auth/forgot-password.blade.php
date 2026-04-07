@@ -9,6 +9,8 @@
 
     @if(session('success'))
         <p class="text-green-600">{{ session('success') }}</p>
+    @elseif(session('error'))
+        <p class="text-red-600">{{ session('error') }}</p>
     @endif
 
     <form method="POST" action="{{ route('password.email') }}">
@@ -21,7 +23,7 @@
             <p class="text-red-600">{{ $message }}</p>
         @enderror
 
-        <button class="w-full bg-blue-600 text-white py-2 mt-4 rounded">
+        <button class="w-full bg-[#255156] text-white py-2 mt-4 rounded">
             Envoyer le lien
         </button>
     </form>
