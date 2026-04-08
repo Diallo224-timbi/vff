@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
+
     public function __construct()
     {
        //$this->middleware("auth");
     }
-
+// Récupère les structures d'un organisme spécifique avec groupeby
+    
     // Liste des utilisateurs (tous ou filtrés selon rôle)
     public function indexx()
     {

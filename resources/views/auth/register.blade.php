@@ -215,13 +215,30 @@
 
         <!-- Sélection structure -->
         <div id="structureField" class="mb-2">
+                    <!-- Sélection de l’organisme -->
+        <select name="id_structure_parent" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
+            <option value="">-- Sélectionnez votre structure --</option>
+            @foreach($structuresG as $structure)
+                <option value="{{ $structure->organisme }}" 
+                    {{ old('id_structure_parent') == $structure->organisme ? 'selected' : '' }}>
+                    {{ $structure->organisme }}
+                </option>
+            @endforeach
+        </select>
+
+            <!-- Sélection de l’antenne -->
             <select name="id_structure" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
-                <option value="">-- Sélectionnez votre structure --</option>
-                @foreach($structures as $structure)
-                    <option value="{{ $structure->id }}">{{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})</option>
+                <option value="">-- Sélectionnez votre antenne --</option>
+                @foreach($structuresS as $structure)
+                    <option value="{{ $structure->id }}" {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
+                        {{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})
+                    </option>
                 @endforeach
             </select>
-            @error('id_structure')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+
+            @error('id_structure')
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Charte -->
