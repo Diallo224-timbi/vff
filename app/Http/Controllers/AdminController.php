@@ -68,7 +68,22 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Utilisateur validé avec succès.');
     }
+// supprimer un utilisateur
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+        $userName = $user->name;
+        $user->delete();
 
+        $currentUser = auth()->user();
+        ActivityLog::log(
+            'Suppression utilisateur',
+            "Utilisateur supprimé: {$userName} par {$currentUser->name}",
+            $currentUser->id
+        );
+
+        return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
+    }
     // Blocage d'un utilisateur
     public function blockUser(Request $request, $id)
     {

@@ -23,7 +23,6 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
-
 // Routes pour l'authentification pour l'inscription et la connexion
 Route::get('/register',[AuthController::class, 'showSignUp'])->name('register');
 // route pour afficher le formulaire d'inscription
@@ -58,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
     Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    //route pours supprimer un utilisateur
+    Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+    //route pour filtrer les utilisateurs par structure
     
 });
 
@@ -124,7 +126,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 // Route pour réagir à un fil de discussion
-Route::post('/forum/{thread}/react', [ThreadController::class, 'react'])->name('forum.react');
+//Route::post('/forum/{thread}/react', [ThreadController::class, 'react'])->name('forum.react');
 
 // Routes pour la gestion des structures
 Route::middleware('auth')->group(function () {
@@ -167,7 +169,6 @@ Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->gr
 Route::middleware(['auth'])->group(function () {
     
     // ===== ROUTES RESSOURCES =====
-    
     // Liste des ressources (page principale)
     Route::get('/ressources', [ResourceController::class, 'index'])->name('resources.index');
     

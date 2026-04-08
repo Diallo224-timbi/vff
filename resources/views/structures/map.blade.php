@@ -293,7 +293,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
-                                    <i class="fas fa-user text-purple-500 w-5"></i>
+                                    <i class="fas fa-user text-[#255160] w-5"></i>
                                     <div>
                                         <div class="text-xs text-gray-500">Personne de contact</div>
                                         <div id="modal-contact" class="font-medium">-</div>
@@ -954,7 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
     height: 50px;
     margin-left: -25px;
     margin-top: -25px;
-    border: 3px solid rgba(220, 38, 38, 0.3);
+    border: 3px solid rgba(9, 82, 76, 0.747);
 }
 
 @keyframes pulse {
