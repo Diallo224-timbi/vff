@@ -33,15 +33,13 @@
             </div>
         </div>
     </div>
-
     <!-- RECHERCHE -->
     <div class="mb-4">
         <input
             id="searchInput"
             type="text"
             placeholder="Rechercher par nom, email, structure..."
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-[#255156] focus:outline-none"
-        >
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-[#255156] focus:outline-none">
     </div>
 
     <!-- LISTE DES UTILISATEURS -->
@@ -80,7 +78,7 @@
                 <i class="fas fa-building text-[#255156] mr-1"></i>
                 {{ $user->structure->organisme ?? 'Aucune structure' }}
                 @if($user->structure)
-                    <span class="text-gray-400">({{ $user->structure->ville ?? '' }})</span>
+                    <span class="text-gray-400">{{ $user->structure->ville ?? '' }} ({{ $user->structure->code_postal }})</span>
                 @endif
             </div>
 

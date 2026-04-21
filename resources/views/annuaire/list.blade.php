@@ -109,7 +109,11 @@
                                 <h2 class="text-lg font-bold">{{ $siege ?: 'Siège non spécifié' }}</h2>
                                 <p class="text-xs text-white/80">
                                     <i class="fas fa-building mr-1"></i>
-                                    <span class="structures-count">{{ $structures->count() }}</span> structure(s)
+                                    @if($structures->count() > 1)
+                                        <span class="structures-count">{{ $structures->count() }}</span> antennes
+                                    @else
+                                        aucunne antenne
+                                    @endif
                                 </p>
                             </div>
                         </div>

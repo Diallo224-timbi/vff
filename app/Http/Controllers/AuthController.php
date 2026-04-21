@@ -81,26 +81,28 @@ class AuthController extends Controller
 }
     // fonction pour gérer la soumission du formulaire d'inscription
 
-    public function showRegistrationForm(Request $request)
+   public function showRegistrationForm(Request $request)
     {
-        $organismes =Structures::all();
+        $organismes = Structures::all();
         $structuresByOrganisme = Structures::all()->groupBy('id_organisme');
-         $structuresG = Structures::select('organisme')
-        ->groupBy('organisme')
-        ->get();
-
-    // Si un organisme est sélectionné, récupérer ses antennes
-        $structuresS = collect();
-        if ($request->has('id_structure_parent')) {
-             $structuresS = Structures::select('id', 'organisme', 'ville', 'code_postal')
-                ->where('organisme', $request->input('id_structure_parent'))    
-                ->get();
-        }
-    
-
-        return view('auth.register', compact( 'structuresG', 'structuresS', 'organismes', 'structuresByOrganisme'));
-
         
+        // Récupérer tous les organismes distincts (structures parents)
+        $structuresG = Structures::select('organisme')
+            ->groupBy('organisme')
+            ->get();
+
+        //
+        // Récupérer la structure sélectionnée par l'utilisateur
+            $selectedStructure = request()->old('id_structure_parent') ?? request()->input('id_structure_parent');
+
+            // Filtrer les antennes en fonction de la structure choisie
+            $structuresS = Structures::select('id', 'organisme', 'ville', 'code_postal')
+                ->when($selectedStructure, function($query, $selectedStructure) {
+                    // On ne récupère que les antennes dont le nom de l'organisme correspond
+            $query->where('organisme', $selectedStructure);
+            })
+            ->get();
+        return view('auth.register', compact('structuresG', 'structuresS', 'organismes', 'structuresByOrganisme'));
     }
     public function signUp(Request $request)
     {

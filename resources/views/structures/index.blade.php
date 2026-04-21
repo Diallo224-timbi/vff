@@ -142,7 +142,6 @@
 @endif
 @endsection
 
-
 @section('scripts')
 <script>
     // Edit modal

@@ -19,7 +19,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <label class="form-label mb-1">
-                            <i class="fas fa-image me-1"></i>Logo de la structure
+                            <i class="fas fa-image me-1"></i>Logo
                             <span class="text-muted ms-1" style="font-size: 0.65rem;">(PNG, JPG, SVG - max 2Mo)</span>
                         </label>
                         <div class="d-flex gap-2">
@@ -51,7 +51,7 @@
         <!-- LIGNE 1: INFOS PRINCIPALES -->
         <div class="row mb-2">
             <div class="col-md-4">
-                <label class="form-label">Nom <span class="text-danger">*</span></label>
+                <label class="form-label">Organisme <span class="text-danger">*</span></label>
                 <input type="text" name="organisme" class="form-control" value="{{ old('organisme', $structure->organisme ?? '') }}" required>
             </div>
             <div class="col-md-4">

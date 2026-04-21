@@ -103,164 +103,207 @@
             @endif
 
             <!-- ÉTAPE 3 : Finalisation inscription -->
-@if(session('code_verified'))
+            @if(session('code_verified'))
 
-    <!-- Bloc global pour toutes les erreurs de validation -->
-    @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <ul class="list-disc list-inside">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+                <!-- Bloc global pour toutes les erreurs de validation -->
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Messages success/code_error -->
+                @if(session('code_error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {{ session('code_error') }}
+                    </div>
+                @elseif(session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('registration.register') }}" method="POST" id="registrationForm">
+                    @csrf
+
+                    <!-- Grille 3 colonnes -->
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <div>
+                            <input type="text" name="name" placeholder="Nom" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('name')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                        <div>
+                            <input type="text" name="prenom" placeholder="Prénom" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('prenom')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                        <div>
+                            <input type="text" name="phone" placeholder="Téléphone" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('phone')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                    </div>
+
+                    <!-- Email et confirmation -->
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <input type="email" name="email" value="{{ session('email_to_verify') }}" readonly
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-[#E3FCFF]/30">
+                        </div>
+                        <div>
+                            <input type="email" name="confirmEmail" placeholder="Confirmer email" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('confirmEmail')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                    </div>
+
+                    <!-- Mot de passe et adresse -->
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <input type="password" name="password" id="password" placeholder="Mot de passe" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]"
+                                oninput="checkPasswordStrength()">
+                            @error('password')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+
+                            <div class="h-1.5 mt-1 rounded-full bg-[#E3FCFF] overflow-hidden">
+                                <div id="password-strength" class="h-1.5 w-0 transition-all"></div>
+                            </div>
+                            <p id="password-text" class="text-xs mt-1"></p>
+                        </div>
+                        <div>
+                            <input type="text" name="adresse" placeholder="Adresse" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('adresse')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                    </div>
+
+                    <!-- Ville et code postal -->
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <input type="text" name="ville" placeholder="Ville" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('ville')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                        <div>
+                            <input type="text" name="code_postal" placeholder="Code postal" required
+                                class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
+                            @error('code_postal')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                    </div>
+
+                    <!-- Responsable structure -->
+                    <div class="bg-[#E3FCFF] p-3 rounded-lg border border-[#8EC0C6] mb-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-bold text-[#173235]">Responsable structure ?</span>
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="is_responsable" value="1" class="responsable-radio w-4 h-4 text-[#255156]">
+                                    <span class="text-sm text-[#173235]">Oui</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="is_responsable" value="0" class="responsable-radio w-4 h-4 text-[#255156]" checked>
+                                    <span class="text-sm text-[#173235]">Non</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sélection structure CORRIGÉE -->
+                    <div id="structureField" class="mb-2">
+                        <!-- Sélection de l'organisme parent -->
+                        <select id="structureParent" name="id_structure_parent" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156] mb-2">
+                            <option value="">-- Sélectionnez votre structure --</option>
+                            @foreach($structuresG as $structure)
+                                <option value="{{ $structure->organisme }}" 
+                                    {{ old('id_structure_parent') == $structure->organisme ? 'selected' : '' }}>
+                                    {{ $structure->organisme }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <!-- Sélection de l'antenne -->
+                        <select id="antenneSelect" name="id_structure" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
+                            <option value="">-- Sélectionnez votre antenne --</option>
+                            @foreach($structuresS as $structure)
+                                <option value="{{ $structure->id }}" data-parent="{{ $structure->organisme }}"
+                                    {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
+                                    {{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('id_structure')
+                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const structureParent = document.getElementById('structureParent');
+                            const antenneSelect = document.getElementById('antenneSelect');
+                            
+                            function filterAntennes() {
+                                const selectedParent = structureParent.value;
+                                const options = antenneSelect.querySelectorAll('option');
+                                
+                                // Parcourir toutes les options du select antenne
+                                options.forEach(option => {
+                                    // Toujours garder l'option vide (première option)
+                                    if(option.value === "") {
+                                        option.style.display = 'block';
+                                        return;
+                                    }
+                                    
+                                    // Récupérer le parent de cette antenne
+                                    const parentName = option.getAttribute('data-parent');
+                                    
+                                    // Afficher uniquement si le parent correspond OU si aucun parent sélectionné (option par défaut)
+                                    if(!selectedParent || parentName === selectedParent) {
+                                        option.style.display = 'block';
+                                    } else {
+                                        option.style.display = 'none';
+                                    }
+                                });
+                                
+                                // Réinitialiser la sélection si l'option actuellement sélectionnée est cachée
+                                if(antenneSelect.selectedOptions.length > 0) {
+                                    const selectedOption = antenneSelect.selectedOptions[0];
+                                    if(selectedOption.style.display === 'none') {
+                                        antenneSelect.value = "";
+                                    }
+                                }
+                            }
+                            
+                            // Appliquer le filtre au chargement
+                            filterAntennes();
+                            
+                            // Appliquer le filtre à chaque changement du select parent
+                            structureParent.addEventListener('change', filterAntennes);
+                        });
+                    </script>
+
+                    <!-- Charte -->
+                    <div class="flex items-center justify-between gap-3 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" name="chart" id="charte_accepted" class="w-4 h-4 text-[#255156] border-[#B3D2D4] rounded focus:ring-[#255156]" required value="1">
+                            <label for="charte_accepted" class="text-sm text-[#173235]">
+                                J'accepte la <a href="{{ route('charte') }}" class="text-[#255156] font-semibold hover:underline">charte</a>
+                            </label>
+                            @error('chart')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+                        </div>
+                        <button type="submit" class="bg-[#255156] hover:bg-[#2D6268] text-white font-semibold py-2 px-6 rounded-lg text-sm shadow">
+                            <i class='bx bx-check-circle'></i> Finaliser
+                        </button>
+                    </div>
+
+                    <!-- Lien login -->
+                    <p class="text-center text-xs text-[#2D6268] mt-3 pt-2 border-t border-[#B3D2D4]/30">
+                        Déjà membre ? <a href="{{ route('login') }}" class="text-[#255156] font-semibold hover:underline">Se connecter</a>
+                    </p>
+                </form>
+            @endif
         </div>
-    @endif
-
-    <!-- Messages success/code_error -->
-    @if(session('code_error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('code_error') }}
-        </div>
-    @elseif(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <form action="{{ route('registration.register') }}" method="POST" id="registrationForm">
-        @csrf
-
-        <!-- Grille 3 colonnes -->
-        <div class="grid grid-cols-3 gap-2 mb-2">
-            <div>
-                <input type="text" name="name" placeholder="Nom" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('name')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <input type="text" name="prenom" placeholder="Prénom" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('prenom')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <input type="text" name="phone" placeholder="Téléphone" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('phone')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-        </div>
-
-        <!-- Email et confirmation -->
-        <div class="grid grid-cols-2 gap-2 mb-2">
-            <div>
-                <input type="email" name="email" value="{{ session('email_to_verify') }}" readonly
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-[#E3FCFF]/30">
-            </div>
-            <div>
-                <input type="email" name="confirmEmail" placeholder="Confirmer email" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('confirmEmail')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-        </div>
-
-        <!-- Mot de passe et adresse -->
-        <div class="grid grid-cols-2 gap-2 mb-2">
-            <div>
-                <input type="password" name="password" id="password" placeholder="Mot de passe" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]"
-                    oninput="checkPasswordStrength()">
-                @error('password')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-
-                <div class="h-1.5 mt-1 rounded-full bg-[#E3FCFF] overflow-hidden">
-                    <div id="password-strength" class="h-1.5 w-0 transition-all"></div>
-                </div>
-                <p id="password-text" class="text-xs mt-1"></p>
-            </div>
-            <div>
-                <input type="text" name="adresse" placeholder="Adresse" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('adresse')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-        </div>
-
-        <!-- Ville et code postal -->
-        <div class="grid grid-cols-2 gap-2 mb-2">
-            <div>
-                <input type="text" name="ville" placeholder="Ville" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('ville')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <input type="text" name="code_postal" placeholder="Code postal" required
-                    class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]">
-                @error('code_postal')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-        </div>
-
-        <!-- Responsable structure -->
-        <div class="bg-[#E3FCFF] p-3 rounded-lg border border-[#8EC0C6] mb-2">
-            <div class="flex items-center justify-between">
-                <span class="text-sm font-bold text-[#173235]">Responsable structure ?</span>
-                <div class="flex items-center space-x-4">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="radio" name="is_responsable" value="1" class="responsable-radio w-4 h-4 text-[#255156]">
-                        <span class="text-sm text-[#173235]">Oui</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="radio" name="is_responsable" value="0" class="responsable-radio w-4 h-4 text-[#255156]" checked>
-                        <span class="text-sm text-[#173235]">Non</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sélection structure -->
-        <div id="structureField" class="mb-2">
-                    <!-- Sélection de l’organisme -->
-        <select name="id_structure_parent" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
-            <option value="">-- Sélectionnez votre structure --</option>
-            @foreach($structuresG as $structure)
-                <option value="{{ $structure->organisme }}" 
-                    {{ old('id_structure_parent') == $structure->organisme ? 'selected' : '' }}>
-                    {{ $structure->organisme }}
-                </option>
-            @endforeach
-        </select>
-
-            <!-- Sélection de l’antenne -->
-            <select name="id_structure" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
-                <option value="">-- Sélectionnez votre antenne --</option>
-                @foreach($structuresS as $structure)
-                    <option value="{{ $structure->id }}" {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
-                        {{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})
-                    </option>
-                @endforeach
-            </select>
-
-            @error('id_structure')
-            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <!-- Charte -->
-        <div class="flex items-center justify-between gap-3 mb-4">
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" name="chart" id="charte_accepted" class="w-4 h-4 text-[#255156] border-[#B3D2D4] rounded focus:ring-[#255156]" required value="1">
-                <label for="charte_accepted" class="text-sm text-[#173235]">
-                    J'accepte la <a href="{{ route('charte') }}" class="text-[#255156] font-semibold hover:underline">charte</a>
-                </label>
-                @error('chart')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-            <button type="submit" class="bg-[#255156] hover:bg-[#2D6268] text-white font-semibold py-2 px-6 rounded-lg text-sm shadow">
-                <i class='bx bx-check-circle'></i> Finaliser
-            </button>
-        </div>
-
-        <!-- Lien login -->
-        <p class="text-center text-xs text-[#2D6268] mt-3 pt-2 border-t border-[#B3D2D4]/30">
-            Déjà membre ? <a href="{{ route('login') }}" class="text-[#255156] font-semibold hover:underline">Se connecter</a>
-        </p>
-    </form>
-    @endif
     </div>
 </div>
 
@@ -313,7 +356,7 @@
         }
     });
 
-    // rendre le mot de passe à 8 caractères et exiger au moins une majuscule, un chiffre et un caractère spécial
+    // Validation du mot de passe avant soumission
     document.getElementById('registrationForm').addEventListener('submit', function(e) {
         const pwd = document.getElementById('password').value;
         const errors = [];
@@ -325,7 +368,7 @@
             e.preventDefault();
             alert(errors.join('\n'));
         }
-        });
+    });
 </script>
 @endif
 
