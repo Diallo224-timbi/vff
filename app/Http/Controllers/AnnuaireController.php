@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\structures;
+use App\Models\Structures;
 use App\Models\User;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\StructuresExport;
 use Barryvdh\DomPDF\Facade\Pdf;
-use function _PHPStan_781aefaf6\React\Promise\all;
 class AnnuaireController extends Controller
 {
     public function index(Request $request)
     {
-        $query = structures::query();
+        $query = Structures::query();
 
         // Recherche côté serveur
         if ($request->filled('search')) {
@@ -70,7 +67,7 @@ class AnnuaireController extends Controller
         {
             $membres = User::all(); // Récupère la première structure (vous pouvez adapter pour récupérer une structure spécifique)
             //recuperer les structure qui ont des users
-            $structures = structures::has('users')->get(); // Récupère les structures qui ont des utilisateurs associés
+            $structures = Structures::has('users')->get(); // Récupère les structures qui ont des utilisateurs associés
             return view('annuaire.membre', compact( 'membres', 'structures'));
         }
     /*
@@ -81,7 +78,7 @@ class AnnuaireController extends Controller
    public function exportPdf()
     {
         // Récupération de toutes les structures, triées
-        $structures = structures::orderBy('organisme')->get();
+        $structures = Structures::orderBy('organisme')->get();
 
         // Génération du PDF avec orientation paysage
         $pdf = Pdf::loadView('annuaire.pdf', compact('structures'))
