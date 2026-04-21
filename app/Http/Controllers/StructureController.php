@@ -64,6 +64,7 @@ class StructureController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'id_organisme' => 'required|exists:organisme,id',
             'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
             'siege_ville' => 'required|string|max:100',
@@ -85,7 +86,6 @@ class StructureController extends Controller
             'email' => 'nullable|email|max:50',
             'telephone' => 'nullable|string|max:25',
             'horaires' => 'nullable|string|max:255',
-            // ✅ NOUVEAU : Validation du logo
             'logo' => 'nullable|file|mimes:jpg,jpeg,png,svg|max:2048', // 2Mo max
         ]);
 
@@ -138,6 +138,7 @@ class StructureController extends Controller
     public function update(Request $request, structures $structure)
     {
         $validated = $request->validate([
+            'id_organisme' => 'required|exists:organisme,id',
             'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
             'siege_ville' => 'required|string|max:100',

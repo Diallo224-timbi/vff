@@ -31,6 +31,7 @@ class Structures extends Model
         'horaires',
         'pays',
         'logo',
+        'id_organisme',
     ];
     
     public function users()

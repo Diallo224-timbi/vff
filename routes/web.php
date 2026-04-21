@@ -8,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\OrganismeController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\AnnuaireController;
 use App\Http\Controllers\ActivityLogController;
@@ -71,12 +71,16 @@ Route::middleware(['auth'])->group(function () {
     // Autres routes qui nécessitent une connexion...
 });
 
-/* route pour le tableau de bord admin
-Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.users');
-Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
-Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
-*/
-// route pour modifier les utilisateurs
+// Route pour les organismes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/organismes', [OrganismeController::class, 'index'])->name('organismes.index');
+    Route::get('/organismes/create', [OrganismeController::class, 'create'])->name('organismes.create');
+    Route::post('/organismes', [OrganismeController::class, 'store'])->name('organismes.store');
+    Route::get('/organismes/{id}/edit', [OrganismeController::class, 'edit'])->name('organismes.edit');
+    Route::put('/organismes/{id}', [OrganismeController::class, 'update'])->name('organismes.update');
+    Route::delete('/organismes/{id}', [OrganismeController::class, 'destroy'])->name('organismes.destroy');
+    Route::get('/organismes/{id}', [OrganismeController::class, 'show'])->name('organismes.show');
+});
 
 
 // Route pour le profil utilisateur

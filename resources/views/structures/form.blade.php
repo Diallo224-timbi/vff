@@ -4,50 +4,6 @@
         @if($method === 'PUT')
             @method('PUT')
         @endif  
-        
-        <!-- LIGNE 0: LOGO STRUCTURE -->
-        <div class="row mb-3 align-items-end">
-            <div class="col-md-12">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="logo-preview-container" id="logoPreviewContainer" 
-                         style="width: 80px; height: 80px; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
-                        @if(isset($structure) && $structure->logo)
-                            <img src="{{ Storage::url($structure->logo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                        @else
-                            <i class="fas fa-building" style="font-size: 2rem; color: #cbd5e0;"></i>
-                        @endif
-                    </div>
-                    <div class="flex-grow-1">
-                        <label class="form-label mb-1">
-                            <i class="fas fa-image me-1"></i>Logo
-                            <span class="text-muted ms-1" style="font-size: 0.65rem;">(PNG, JPG, SVG - max 2Mo)</span>
-                        </label>
-                        <div class="d-flex gap-2">
-                            <div class="position-relative">
-                                <input type="file" name="logo" id="logoUpload" class="form-control" 
-                                       accept="image/png,image/jpeg,image/svg+xml,image/jpg"
-                                       style="width: 250px; padding: 4px 8px; height: 32px;"
-                                       onchange="previewLogo(this)">
-                                <div id="logoLoadingSpinner" class="position-absolute top-0 end-0 mt-1 me-1 d-none">
-                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                        <span class="visually-hidden">Chargement...</span>
-                                    </div>
-                                </div>
-                            </div>
-                            @if (@$method == 'POST' )
-                                 <button type="button" id="removeLogoBtn" class="btn btn-sm btn-outline-danger {{ !isset($structure) || !$structure->logo ? 'd-none' : '' }}" onclick="removeLogo()">
-                                <i class="bx bx-x" title="retirer le logo"></i> Retirer
-                            </button>
-                            @endif
-                            <small id="logoHelp" class="text-muted align-self-center d-none">
-                                <i class="bx bx-check-circle text-success"></i> Logo chargé avec succès
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- LIGNE 1: INFOS PRINCIPALES -->
         <div class="row mb-2">
             <div class="col-md-4">

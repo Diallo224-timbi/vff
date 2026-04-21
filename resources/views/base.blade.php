@@ -498,6 +498,13 @@
           <i class='bx bx-calendar'></i>
           <span title="Consulter l'agenda des évenements">Agenda</span>
         </a>
+        <!--accès aux organismes et structures pour les admins et modérateurs-->
+         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
+        <a href="{{ route('organismes.index') }}" class="sidebar-link">
+          <i class='bx bx-building'></i>
+          <span title="Gérer les organismes et structures">Organismes</span>
+        </a>
+        @endif
         <!--
         <a href="{{ route('structures.index') }}" class="sidebar-link">
           <i class='bx bx-building'></i>
