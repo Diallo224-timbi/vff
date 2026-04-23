@@ -20,6 +20,7 @@ class Organisme extends Model
     // relation one to many avec la table structures
     public function structures()
     {
-        return $this->hasMany(Structures::class);
+        return $this->hasMany(Structures::class, 'id_organisme');
     }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\structures;
+use App\Models\Organisme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -11,25 +12,30 @@ use App\Models\ActivityLog;
 
 class StructureController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = structures::query();
+public function index(Request $request)
+{
+    $query = Structures::with('organisme');
+    $organismes = Organisme::all();
 
-        // Recherche côté serveur
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('organisme', 'like', "%{$search}%")
-                ->orWhere('siege_adresse', 'like', "%{$search}%")
-                ->orWhere('siege_ville', 'like', "%{$search}%")
-                ->orWhere('ville', 'like', "%{$search}%")
-                ->orWhere('code_postal', 'like', "%{$search}%")
-                ->orWhere('categories', 'like', "%{$search}%");
-        }
+    if ($request->filled('search')) {
+        $search = $request->input('search');
 
-        $structures = $query->orderBy('organisme')->paginate(20)->withQueryString();
-
-        return view('annuaire.index', compact('structures'));
+        $query->where(function ($q) use ($search) {
+            $q->where('nom_organisme', 'like', "%{$search}%")
+              ->orWhere('siege_adresse', 'like', "%{$search}%")
+              ->orWhere('siege_ville', 'like', "%{$search}%")
+              ->orWhere('ville', 'like', "%{$search}%")
+              ->orWhere('code_postal', 'like', "%{$search}%")
+              ->orWhere('categories', 'like', "%{$search}%");
+        });
     }
+    $structures = $query
+        ->orderBy('id', 'desc') // ou autre champ valide
+        ->paginate(20)
+        ->withQueryString();
+
+    return view('annuaire.index', compact('structures', 'organismes'));
+}
 
     public function createPDF()
     {
@@ -54,10 +60,12 @@ class StructureController extends Controller
 
     public function create()
     {
+        $organismes = Organisme::orderBy('nom_organisme')->get();
         return view('structures.create', [
             'structure' => new structures(),
             'action' => route('structures.store'),
             'method' => 'POST',
+            'organismes' => $organismes,
         ]);
     }
 
@@ -65,11 +73,11 @@ class StructureController extends Controller
     {
         $validated = $request->validate([
             'id_organisme' => 'required|exists:organisme,id',
-            'organisme' => 'required|string|max:255',
+            //'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'siege_ville' => 'required|string|max:100',
+            /*'siege_ville' => 'required|string|max:100',
             'siege_adresse' => 'required|string|max:255',
-            'siege_code_postal' => 'required|string|max:10',
+            'siege_code_postal' => 'required|string|max:10',*/
             'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:10',
             'pays' => 'nullable|string|max:100',
@@ -82,11 +90,11 @@ class StructureController extends Controller
             'type_structure' => 'nullable|string|max:100',
             'details' => 'nullable|string',
             'hebergement' => 'nullable|string',
-            'site' => 'nullable|string|max:500',
+            //'site' => 'nullable|string|max:500',
             'email' => 'nullable|email|max:50',
             'telephone' => 'nullable|string|max:25',
             'horaires' => 'nullable|string|max:255',
-            'logo' => 'nullable|file|mimes:jpg,jpeg,png,svg|max:2048', // 2Mo max
+            //'logo' => 'nullable|file|mimes:jpg,jpeg,png,svg|max:2048', // 2Mo max
         ]);
 
         // ✅ NOUVEAU : Gestion de l'upload du logo
@@ -120,36 +128,33 @@ class StructureController extends Controller
             $validated['code_postal'] = $validated['siege_code_postal'];
         }
 
-        structures::create($validated);
+        Structures::create($validated);
 
         return redirect()->route('annuaire.index')
             ->with('success', 'Structure créée avec succès !');
     }
 
-    public function edit(structures $structure)
+    public function edit(Structures $structure)
     {
+        $organismes = Organisme::orderBy('nom_organisme')->get();
         return view('structures.edit', [
             'structure' => $structure,
             'action' => route('structures.update', $structure),
             'method' => 'PUT',
-        ]);
+        ], compact('organismes'));
     }
 
-    public function update(Request $request, structures $structure)
+    public function update(Request $request, Structures $structure)
     {
         $validated = $request->validate([
             'id_organisme' => 'required|exists:organisme,id',
-            'organisme' => 'required|string|max:255',
+            //'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'siege_ville' => 'required|string|max:100',
-            'siege_adresse' => 'required|string|max:255',
-            'siege_code_postal' => 'required|string|max:10',
             'type_structure' => 'nullable|string|max:100',
             'hebergement' => 'nullable|string',
             'details' => 'nullable|string',
             'telephone' => 'nullable|string|max:25',
             'email' => 'nullable|email|max:50',
-            'site' => 'nullable|string|max:500',
             'horaires' => 'nullable|string|max:255',
             'categories' => 'nullable|string',
             'public_cible' => 'nullable|string',
@@ -160,10 +165,7 @@ class StructureController extends Controller
             'pays' => 'nullable|string|max:100',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            //  NOUVEAU : Validation du logo en modification
-            'logo' => 'sometimes|file|mimes:jpg,jpeg,png,svg|max:2048',
-            //  NOUVEAU : Détection suppression logo
-            'remove_logo' => 'nullable|in:1',
+
         ]);
 
         //  NOUVEAU : Gestion de la SUPPRESSION du logo
@@ -222,11 +224,20 @@ class StructureController extends Controller
 
     public function map()
     {
-        $structures = structures::all();
+        $structures = Structures::with('organisme')->get();
+
+        $structures->transform(function ($structure) {
+            $structure->logo = $structure->logo
+                ? base64_encode($structure->logo)
+                : null;
+
+            return $structure;
+        });
+
         return view('structures.map', compact('structures'));
     }
     // afficher les détails d'une structure dans la carte
-    public function details(structures $structure)
+    public function details(Structures $structure)
     {       
         return view('annuaire.details', compact('structure'));
     }

@@ -17,7 +17,6 @@
             </div>
         </div>
     </div>
-
     <!-- STATISTIQUES SIMPLES -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
@@ -148,12 +147,12 @@
 
 <!-- MODAL DÉTAILS COMPLET -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered custom-modal-width">
         <div class="modal-content border-0 shadow-2xl overflow-hidden rounded-2xl">
             <!-- Header avec gradient et logo -->
-            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-2">
+            <div class="bg-gradient-to-r from-[#255156] to-[#255156] text-white p-1">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
                         <!-- Logo container -->
                         <div class="relative">
                             <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
@@ -161,8 +160,7 @@
                                     <i class="fas fa-building text-white text-4xl"></i>
                                 </div>
                                 <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-cover hidden">
-                            </div>
-                            <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                            </div> 
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold" id="modal-organisme">-</h3>
@@ -177,13 +175,12 @@
                     </button>
                 </div>
             </div>
-
             <!-- Body avec toutes les informations -->
-            <div class="modal-body bg-gray-50 p-6 max-h-[70vh] overflow-y-auto">
+            <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
                 <!-- Grille d'informations principale -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                     <!-- Colonne gauche -->
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <!-- Informations générales -->
                         <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
                             <h4 class="text-[#255156] font-semibold mb-4 flex items-center gap-2">
@@ -197,7 +194,7 @@
                                 </div>
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
                                     <span class="text-gray-500 text-sm">Type</span>
-                                    <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium" id="modal-type_structure">-</span>
+                                    <span class="inline-block px-2 py-1  rounded-lg text-xs font-medium" id="modal-type_structure">-</span>
                                 </div>
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
                                     <span class="text-gray-500 text-sm">Catégories</span>
@@ -249,8 +246,8 @@
                             <!-- Siège social -->
                             <div class="mb-4 p-3 bg-blue-50 rounded-lg">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <i class="fas fa-landmark text-blue-600"></i>
-                                    <span class="font-semibold text-blue-700 text-sm">SIÈGE SOCIAL</span>
+                                    <i class="fas fa-landmark text-[#59BEC9]"></i>
+                                    <span class="font-semibold text-[#59BEC9] text-sm">SIÈGE SOCIAL</span>
                                 </div>
                                 <div class="space-y-1 text-sm">
                                     <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-siege_ville">-</span></p>
@@ -301,7 +298,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Horaires -->
                         <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100" id="horaires-container" style="display: none;">
                             <h4 class="text-[#255156] font-semibold mb-3 flex items-center gap-2">
@@ -323,10 +319,7 @@
                             data-bs-dismiss="modal">
                         <i class="fas fa-times"></i>
                         Fermer
-                    </button>
-                    
-                    
-                    
+                    </button>   
                 </div>
             </div>
         </div>
@@ -362,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialisation carte
     map = L.map('map', {
         center: [43.6, 7.0],
-        zoom: 9,
+        zoom: 10,
         maxBounds: coteAzurBounds,
         maxBoundsViscosity: 1.0
     });
@@ -425,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour afficher les détails complets dans le modal
     function showFullDetailsModal(structure) {
         currentStructure = structure;
-        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
+        const logoUrl = structure.logo ? `data:image/jpeg;base64,${structure.logo}` : null;
         
         // Logo
         const modalLogoImg = document.getElementById('modal-logo-img');
@@ -441,12 +434,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // En-tête
-        document.getElementById('modal-organisme').textContent = structure.organisme || 'Structure sans nom';
+        document.getElementById('modal-organisme').textContent = structure.organisme_struct || 'Structure sans nom';
         document.getElementById('modal-type-badge').textContent = structure.type_structure || 'Type non spécifié';
         document.getElementById('modal-hebergement-badge').textContent = structure.hebergement === 'oui' ? '🏠 Avec hébergement' : (structure.hebergement === 'non' ? '❌ Sans hébergement' : 'Hébergement non spécifié');
         
         // Informations générales
-        document.getElementById('modal-organisme-text').textContent = structure.organisme || '-';
+        document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme || '-';
         document.getElementById('modal-type_structure').innerHTML = `<span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs" style="background-color: ${getColorByType(structure.type_structure)}20; color: ${getColorByType(structure.type_structure)}">${escapeHtml(structure.type_structure || 'Non spécifié')}</span>`;
         document.getElementById('modal-categories-list').innerHTML = formatCategoriesBadges(structure.categories);
         document.getElementById('modal-public-list').innerHTML = formatPublicBadges(structure.public_cible);
@@ -481,8 +474,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Localisation - Siège social
-        document.getElementById('modal-siege_ville').textContent = structure.siege_ville || 'Non spécifié';
-        document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || 'Non spécifiée';
+        document.getElementById('modal-siege_ville').textContent = structure.organisme?.ville || 'Non spécifié';
+        document.getElementById('modal-siege_adresse').textContent = structure.organisme?.adresse || 'Non spécifiée';
         
         // Localisation - Antenne locale
         document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
@@ -619,8 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         `}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-sm text-[#255156] truncate" title="${escapeHtml(structure.organisme || 'Structure')}">
-                            ${escapeHtml(structure.organisme || 'Structure')}
+                        <h4 class="font-bold text-sm text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
+                            ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
                         <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white mt-1" 
                               style="background-color: ${color};">
@@ -690,8 +683,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         `}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-[#255156] truncate" title="${escapeHtml(structure.organisme || 'Structure')}">
-                            ${escapeHtml(structure.organisme || 'Structure')}
+                        <h4 class="font-bold text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
+                            ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
                         <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white mt-1" 
                               style="background-color: ${color}">
@@ -825,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         markers.forEach(({ marker, structure }) => {
             const matchSearch = !search || 
-                (structure.organisme && structure.organisme.toLowerCase().includes(search)) ||
+                (structure.organisme?.nom_organisme && structure.organisme?.nom_organisme.toLowerCase().includes(search)) ||
                 (structure.ville && structure.ville.toLowerCase().includes(search)) ||
                 (structure.responsable && structure.responsable.toLowerCase().includes(search));
 
@@ -1022,6 +1015,13 @@ input[type="checkbox"] {
 
 .btn-close-white {
     filter: brightness(0) invert(1);
+}
+.custom-popup .view-details-btn {
+    background-color: #255156;
+    color: white;
+}
+.custom-modal-width {
+    max-width: 900px;
 }
 </style>
 @endsection

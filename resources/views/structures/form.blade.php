@@ -7,8 +7,17 @@
         <!-- LIGNE 1: INFOS PRINCIPALES -->
         <div class="row mb-2">
             <div class="col-md-4">
-                <label class="form-label">Organisme <span class="text-danger">*</span></label>
-                <input type="text" name="organisme" class="form-control" value="{{ old('organisme', $structure->organisme ?? '') }}" required>
+                <label class="form-label">Nom de la structure <span class="text-danger">*</span></label>
+               
+                 <select name="id_organisme" class="form-select" required>
+                    <option value="">-- Choisir --</option>
+                    @foreach($organismes as $organisme)
+                        <option value="{{ $organisme->id }}" {{ old('id_organisme', $structure->id_organisme ?? '') == $organisme->id ? 'selected' : '' }}>
+                            {{ $organisme->nom_organisme.'-'.$organisme->ville }}
+                        </option>
+                    @endforeach
+                </select>
+                
             </div>
             <div class="col-md-4">
                 <label class="form-label">Type</label>
@@ -24,8 +33,7 @@
                     <option value="non" {{ old('hebergement', $structure->hebergement ?? '') == 'non' ? 'selected' : '' }}>Non</option>
                 </select>
             </div>
-        </div>
-        
+        </div>   
         <!-- LIGNE 2: DESCRIPTION + DÉTAILS -->
         <div class="row mb-2">
             <div class="col-md-6">
@@ -38,7 +46,6 @@
                 <div class="form-text">Ex: permanences...</div>
             </div>
         </div>
-
         <!-- LIGNE 3: COORDONNÉES -->
         <div class="row mb-2">
             <div class="col-md-4">
@@ -116,42 +123,14 @@
                     </button>
                     
                 </div>
-            </div>
-            
+            </div>   
             <!-- ZONE D'INTERVENTION -->
             <div class="col-md-3">
                 <label class="form-label">Zone d'intervention</label>
                 <input type="text" name="zone" class="form-control" value="{{ old('zone', $structure->zone ?? '') }}">
             </div>
         </div>
-
-        <!-- BLOC SIÈGE SOCIAL -->
-        <fieldset>
-            <legend class="h6 fw-bold"><i class="fas fa-building me-2"></i> SIÈGE SOCIAL</legend>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label class="form-label">Adresse <span class="text-danger">*</span></label>
-                    <input type="text" name="siege_adresse" id="siege_adresse" class="form-control" value="{{ old('siege_adresse', $structure->siege_adresse ?? '') }}" required>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Ville <span class="text-danger">*</span></label>
-                    <input type="text" name="siege_ville" id="siege_ville" class="form-control" value="{{ old('siege_ville', $structure->siege_ville ?? '') }}" required>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Code postal <span class="text-danger">*</span></label>
-                    <input type="text" name="siege_code_postal" id="siege_code_postal" class="form-control" value="{{ old('siege_code_postal', $structure->siege_code_postal ?? '') }}" required>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Pays</label>
-                    <input type="text" name="pays" id="pays" class="form-control" value="{{ old('pays', $structure->pays ?? 'France') }}">
-                </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" id="geocodeSiegeBtn" class="btn btn-outline-primary w-100" style="height: 32px; padding: 0;" onclick="geocodeSiege()">
-                        <i class="bx bx-map" title="géocoder"></i>
-                    </button>
-                </div>
-            </div>
-        </fieldset>
+       
 
         <!-- BLOC LOCALISATION STRUCTURE (REFONDU) -->
         <fieldset>

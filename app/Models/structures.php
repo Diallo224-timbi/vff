@@ -43,4 +43,8 @@ class Structures extends Model
     {
         return $this->hasMany(User::class, 'id_structure')->count();
     }
+    public function organisme()
+    {
+        return $this->belongsTo(Organisme::class, 'id_organisme');
+    }
 }

@@ -35,7 +35,7 @@ class AdminController extends Controller
         }
 
         $users = $query->get();
-        $structures = Structures::orderBy('organisme')->get();
+        $structures = Structures::orderBy('id_organisme')->get();
 
         return view('admin.users', compact('users', 'structures'));
     }

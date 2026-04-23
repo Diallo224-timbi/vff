@@ -199,7 +199,7 @@
         <div class="overflow-y-auto max-h-[calc(100vh-320px)] sm:max-h-[calc(100vh-250px)]">
             <div id="accordionContainer" class="divide-y divide-gray-200">
                 @php
-                    // Regroupement des structures par organisme
+                    // Regroupement des structures par organisme (en utilisant la relation)
                     $groupedStructures = $structures->groupBy(function($item) {
                         return $item->organisme->nom_organisme ?? 'Sans organisme';
                     });
@@ -207,7 +207,7 @@
                 
                 @forelse($groupedStructures as $organismeNom => $structuresByOrganisme)
                     <div class="organisme-group" data-organisme="{{ $organismeNom }}">
-                        <!-- En-tête de l'organisme -->
+                        <!-- En-tête de l'organisme (dépliable) -->
                         <div class="organisme-header bg-gradient-to-r from-gray-50 to-gray-100 hover:bg-gray-100 cursor-pointer transition-colors duration-200">
                             <div class="px-4 py-3 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
@@ -245,20 +245,19 @@
                             </div>
                         </div>
                         
-                        <!-- Corps de l'organisme -->
+                        <!-- Corps de l'organisme (contenu dépliable) -->
                         <div class="organisme-body hidden">
                             <div class="overflow-x-auto">
                                 <table class="w-full">
                                     <thead class="bg-gray-100">
                                         <tr>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Structure</th>
                                             <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Ville</th>
                                             <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Code Postal</th>
                                             <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Adresse</th>
                                             <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Description</th>
                                             <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Site Web</th>
                                             <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Catégories</th>
-                                            <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Public cible</th>
-                                            <td class="px-3 py-2 text-left text-xs font-semibold text-gray-600">Zone d'intervention</td>
                                             <th class="px-3 py-2 text-center text-xs font-semibold text-gray-600">Actions</th>
                                         </tr>
                                     </thead>
@@ -271,20 +270,26 @@
                                                 data-category="{{ $structure->categories ?? '' }}">
                                                 
                                                 <td class="px-3 py-2">
-                                                    <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->ville ?? '' }}">
-                                                        {{ $structure->ville ?? '-' }}
+                                                    <div class="text-gray-700 text-sm font-medium truncate max-w-[150px]" title="Structure #{{ $structure->id }}">
+                                                        Structure #{{ $structure->id }}
                                                     </div>
                                                 </td>
                                                 
                                                 <td class="px-3 py-2">
-                                                    <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->code_postal ?? '' }}">
-                                                        {{ $structure->code_postal ?? '-' }}
+                                                    <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->organisme->ville ?? '' }}">
+                                                        {{ $structure->organisme->ville ?? '-' }}
                                                     </div>
                                                 </td>
                                                 
                                                 <td class="px-3 py-2">
-                                                    <div class="text-gray-700 text-sm truncate max-w-[150px]" title="{{ $structure->adresse ?? '' }}">
-                                                        {{ $structure->adresse ?? '-' }}
+                                                    <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->organisme->code_postal ?? '' }}">
+                                                        {{ $structure->organisme->code_postal ?? '-' }}
+                                                    </div>
+                                                </td>
+                                                
+                                                <td class="px-3 py-2">
+                                                    <div class="text-gray-700 text-sm truncate max-w-[150px]" title="{{ $structure->organisme->adresse ?? '' }}">
+                                                        {{ $structure->organisme->adresse ?? '-' }}
                                                     </div>
                                                 </td>
                                                 
@@ -311,16 +316,7 @@
                                                         {{ $structure->categories ?? '-' }}
                                                     </div>
                                                 </td>
-                                                <td class="px-3 py-2">
-                                                    <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->public_cible ?? '' }}">
-                                                        {{ $structure->public_cible ?? '-' }}
-                                                    </div>
-                                                </td>
-                                                <td class="px-3 py-2">
-                                                    <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->zone ?? '' }}">
-                                                        {{ $structure->zone ?? '-' }}
-                                                    </div>
-                                                </td>
+                                                
                                                 <td class="px-3 py-2">
                                                     <div class="flex items-center justify-center gap-1">
                                                         <button class="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors view-details-btn" 
@@ -393,7 +389,7 @@
 <!-- MODAL AJOUT -->
 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered custom-modal-width">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content border-0 shadow-2xl">
             <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4 rounded-t-xl d-flex justify-content-between align-items-center">
                 <h5 class="text-xl font-bold flex items-center gap-3">
@@ -416,7 +412,7 @@
 
 <!-- MODAL DETAILS -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered custom-modal-width">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-2xl overflow-hidden">
             <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-3 rounded-t-xl d-flex justify-content-between align-items-center">
                 <div class="flex items-center gap-3">
@@ -512,7 +508,7 @@
 
                 <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4">
                     <h6 class="text-[#255156] font-semibold mb-2 text-sm">Contact</h6>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                         <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
                             <i class="fas fa-phone text-green-500"></i>
                             <div>
@@ -561,9 +557,6 @@
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8bbdc3, #255156); border-radius: 4px; }
     .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .custom-modal-width {
-        max-width: 500px;
-    }
 </style>
 @endsection
 
@@ -649,15 +642,13 @@
             btn.addEventListener('click', function() {
                 try {
                     const structure = JSON.parse(this.getAttribute('data-structure'));
-                    const org = structure.organisme || {};
-                    document.getElementById('modal-organisme').textContent = org.nom_organisme || '-';
-                    document.getElementById('modal-organisme-text').textContent = org.nom_organisme || '-';
+                    document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme || '-';
+                    document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme || '-';
                     document.getElementById('modal-description').textContent = structure.description || 'Aucune description';
                     document.getElementById('modal-categories').textContent = structure.categories || '-';
                     document.getElementById('modal-type_structure').textContent = structure.type_structure || '-';
                     document.getElementById('modal-public_cible').textContent = structure.public_cible || '-';
                     document.getElementById('modal-zone').textContent = structure.zone || '-';
-                    document.getElementById('modal-site').innerHTML = org.site_web ? `<a href="${org.site_web}" target="_blank" class="text-[#255156] hover:underline">${org.site_web}</a>` : '-';
                     document.getElementById('modal-siege_ville').textContent = structure.siege_ville || '-';
                     document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || '-';
                     document.getElementById('modal-ville').textContent = structure.ville || '-';

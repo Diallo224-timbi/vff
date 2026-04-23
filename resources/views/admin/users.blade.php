@@ -46,7 +46,7 @@
     <div id="usersContainer" class="space-y-2">
         @forelse($users as $user)
         <div class="user-card bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow"
-             data-search="{{ strtolower($user->prenom.' '.$user->name.' '.$user->email.' '.($user->structure->organisme ?? '')) }}">
+             data-search="{{ strtolower($user->prenom.' '.$user->name.' '.$user->email.' '.($user->structure->organisme->nom_organisme ?? '')) }}">
 
             <!-- Infos principales -->
             <div class="flex items-center justify-between">
@@ -76,7 +76,7 @@
             <!-- Structure de rattachement -->
             <div class="mt-1 text-xs text-gray-600">
                 <i class="fas fa-building text-[#255156] mr-1"></i>
-                {{ $user->structure->organisme ?? 'Aucune structure' }}
+                {{ $user->structure->organisme->nom_organisme ?? 'Aucune structure' }}
                 @if($user->structure)
                     <span class="text-gray-400">{{ $user->structure->ville ?? '' }} ({{ $user->structure->code_postal }})</span>
                 @endif

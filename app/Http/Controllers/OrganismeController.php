@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Organisme;
+use App\Models\ActivityLog;
 class OrganismeController extends Controller
 {
     //fonction pour afficher la liste des organismes
@@ -30,6 +31,7 @@ class OrganismeController extends Controller
             'site_web' => 'required',
         ]);
         Organisme::create($request->all());
+        ActivityLog::log('Création d\'un organisme', 'organisme', null, $request->all());
         return redirect()->route('organismes.index')->with('success', 'Organisme créé avec succès.');
     } 
     //fonction pour afficher le formulaire de modification d'un organisme
@@ -53,13 +55,25 @@ class OrganismeController extends Controller
         $organisme->update($request->all());
         return redirect()->route('organismes.index')->with('success', 'Organisme mis à jour avec succès.');
     } 
-    //fonction pour supprimer un organisme
-    public function destroy($id)
+    //fonction pour supprimer un organisme et ses structures associées
+   public function destroy($id)
     {
         $organisme = Organisme::find($id);
+
+        if (!$organisme) {
+            return redirect()->route('organismes.index')
+                ->with('error', 'Organisme introuvable.');
+        }
+        // Supprimer les structures associées
+        $organisme->structures()->delete();
+
+        // Supprimer l’organisme
         $organisme->delete();
-        return redirect()->route('organismes.index')->with('success', 'Organisme supprimé avec succès.');
+        return redirect()->route('organismes.index')
+            ->with('success', 'Organisme et structures associées supprimés avec succès.');
     }
+
+  
     //fonction pour afficher les détails d'un organisme
     public function show($id)
     {
