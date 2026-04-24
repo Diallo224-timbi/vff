@@ -212,77 +212,31 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Sélection structure CORRIGÉE -->
+                    <!-- Sélection structure  -->
                     <div id="structureField" class="mb-2">
                         <!-- Sélection de l'organisme parent -->
-                        <select id="structureParent" name="id_structure_parent" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156] mb-2">
-                            <option value="">-- Sélectionnez votre structure --</option>
-                            @foreach($structuresG as $structure)
-                                <option value="{{ $structure->organisme }}" 
-                                    {{ old('id_structure_parent') == $structure->organisme ? 'selected' : '' }}>
-                                    {{ $structure->organisme }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <!-- Sélection de l'antenne -->
-                        <select id="antenneSelect" name="id_structure" class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm bg-white focus:ring-1 focus:ring-[#255156]">
-                            <option value="">-- Sélectionnez votre antenne --</option>
-                            @foreach($structuresS as $structure)
-                                <option value="{{ $structure->id }}" data-parent="{{ $structure->organisme }}"
-                                    {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
-                                    {{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})
-                                </option>
-                            @endforeach
-                        </select>
+                        <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
+                        <option value="">Aucun organisme</option>
+                        @foreach($organismes as $organisme)
+                            <option value="{{ $organisme->id }}" >
+                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <option value="">Aucune structure</option>
+                        @foreach($structures as $structure)
+                            <option value="{{ $structure->id}}" 
+                                data-organisme-id="{{ $structure->id_organisme }}">
+                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }})
+                            </option>
+                        @endforeach
+                    </select>
                         @error('id_structure')
                             <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const structureParent = document.getElementById('structureParent');
-                            const antenneSelect = document.getElementById('antenneSelect');
-                            
-                            function filterAntennes() {
-                                const selectedParent = structureParent.value;
-                                const options = antenneSelect.querySelectorAll('option');
-                                
-                                // Parcourir toutes les options du select antenne
-                                options.forEach(option => {
-                                    // Toujours garder l'option vide (première option)
-                                    if(option.value === "") {
-                                        option.style.display = 'block';
-                                        return;
-                                    }
-                                    
-                                    // Récupérer le parent de cette antenne
-                                    const parentName = option.getAttribute('data-parent');
-                                    
-                                    // Afficher uniquement si le parent correspond OU si aucun parent sélectionné (option par défaut)
-                                    if(!selectedParent || parentName === selectedParent) {
-                                        option.style.display = 'block';
-                                    } else {
-                                        option.style.display = 'none';
-                                    }
-                                });
-                                
-                                // Réinitialiser la sélection si l'option actuellement sélectionnée est cachée
-                                if(antenneSelect.selectedOptions.length > 0) {
-                                    const selectedOption = antenneSelect.selectedOptions[0];
-                                    if(selectedOption.style.display === 'none') {
-                                        antenneSelect.value = "";
-                                    }
-                                }
-                            }
-                            
-                            // Appliquer le filtre au chargement
-                            filterAntennes();
-                            
-                            // Appliquer le filtre à chaque changement du select parent
-                            structureParent.addEventListener('change', filterAntennes);
-                        });
-                    </script>
-
+                    
                     <!-- Charte -->
                     <div class="flex items-center justify-between gap-3 mb-4">
                         <div class="flex items-center space-x-2">
@@ -306,8 +260,7 @@
         </div>
     </div>
 </div>
-
-<!-- Script adapté -->
+<!-- Script -->
 @if(session('code_verified'))
 <script>
     function checkPasswordStrength() {
@@ -369,6 +322,21 @@
             alert(errors.join('\n'));
         }
     });
+// Filtrage dynamique des structure rataché en fonction de leur organisme parent
+    document.getElementById('editOrganisme').addEventListener('change', function() {
+        const selectedOrganisme = this.value;
+        const structureSelect = document.getElementById('editStructure');
+        const options = structureSelect.querySelectorAll('option');
+        options.forEach(option => {
+            const orgId = option.getAttribute('data-organisme-id');
+            if (!selectedOrganisme || orgId === selectedOrganisme) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+        structureSelect.value = '';
+    });       
 </script>
 @endif
 

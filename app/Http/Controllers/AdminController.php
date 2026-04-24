@@ -10,7 +10,7 @@ use App\Models\Structures;
 use App\Models\ActivityLog;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
-
+use App\Models\Organisme;
 class AdminController extends Controller
 {
 
@@ -29,15 +29,16 @@ class AdminController extends Controller
             ->whereIn('role', ['user', 'moderateur', 'admin'])
             ->orderBy('created_at', 'desc');
 
-        // Si modérateur, limiter à sa structure
+        // Si modérateur, limiter à sa structure 
         if ($authUser->role === 'moderateur') {
             $query->where('id_structure', $authUser->id_structure);
         }
+    
 
         $users = $query->get();
         $structures = Structures::orderBy('id_organisme')->get();
-
-        return view('admin.users', compact('users', 'structures'));
+        $organismes = Organisme::orderBy('nom_organisme')->get();
+        return view('admin.users', compact('users', 'structures', 'organismes'));
     }
 
     // Filtrer les utilisateurs par structure

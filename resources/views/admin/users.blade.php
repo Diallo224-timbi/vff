@@ -78,7 +78,7 @@
                 <i class="fas fa-building text-[#255156] mr-1"></i>
                 {{ $user->structure->organisme->nom_organisme ?? 'Aucune structure' }}
                 @if($user->structure)
-                    <span class="text-gray-400">{{ $user->structure->ville ?? '' }} ({{ $user->structure->code_postal }})</span>
+                    <span class="text-gray-400">{{ $user->structure->ville ?? '' }} ({{ $user->structure->code_postal }}) {{ $user->structure->adresse }}</span>
                 @endif
             </div>
 
@@ -283,11 +283,22 @@
                 <!-- Structure de rattachement -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Structure de rattachement</label>
+                    <!-- liste deroulante des organismes -->
+                    <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
+                        <option value="">Aucun organisme</option>
+                        @foreach($organismes as $organisme)
+                            <option value="{{ $organisme->id }}" {{ old('id_organisme') == $organisme->id ? 'selected' : '' }}>
+                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }}
+                            </option>
+                        @endforeach
+                    </select>
                     <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                         <option value="">Aucune structure</option>
                         @foreach($structures as $structure)
-                            <option value="{{ $structure->id }}" {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
-                                {{ $structure->organisme }} - {{ $structure->ville }} ({{ $structure->code_postal }})
+                            <option value="{{ $structure->id}}" 
+                                data-organisme-id="{{ $structure->id_organisme }}"
+                                {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
+                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }} {{ $structure->adresse }})
                             </option>
                         @endforeach
                     </select>
@@ -446,6 +457,32 @@
     
     document.getElementById('blockModal').addEventListener('click', function(e) {
         if(e.target === this) closeBlockModal();
+    });
+
+
+    // Filtrage dynamique des structure rataché en fonction de l'organisme
+    document.getElementById('editOrganisme').addEventListener('change', function() {
+        const organismeId = this.value;
+        const structureSelect = document.getElementById('editStructure');
+        
+        // Afficher toutes les options si aucun organisme sélectionné
+        if(!organismeId) {
+            Array.from(structureSelect.options).forEach(option => option.style.display = '');
+            return;
+        }
+        
+        // Filtrer les options de structure
+        Array.from(structureSelect.options).forEach(option => {
+            if(option.value === '') {
+                option.style.display = '';
+            } else {
+                const optionOrganismeId = option.getAttribute('data-organisme-id');
+                option.style.display = (optionOrganismeId === organismeId) ? '' : 'none';
+            }
+        });
+        
+        // Réinitialiser la sélection de structure
+        structureSelect.value = '';
     });
 </script>
 @endsection

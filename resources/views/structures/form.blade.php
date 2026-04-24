@@ -16,8 +16,7 @@
                             {{ $organisme->nom_organisme.'-'.$organisme->ville }}
                         </option>
                     @endforeach
-                </select>
-                
+                </select>   
             </div>
             <div class="col-md-4">
                 <label class="form-label">Type</label>
@@ -99,7 +98,6 @@
                     </button>
                 </div>
             </div>
-
             <!-- PUBLICS CIBLES AVEC ICÔNE POUR EFFACER -->
             <div class="col-md-3">
                 <label class="form-label">Publics cibles</label>
@@ -121,7 +119,6 @@
                             style="background: none; border: none; color: #dc3545; cursor: pointer; z-index: 10; display: {{ old('public_cible', $structure->public_cible ?? '') ? 'block' : 'none' }};">
                         <i class="bx bx-x" title="vider le contenu"></i>
                     </button>
-                    
                 </div>
             </div>   
             <!-- ZONE D'INTERVENTION -->
@@ -130,8 +127,6 @@
                 <input type="text" name="zone" class="form-control" value="{{ old('zone', $structure->zone ?? '') }}">
             </div>
         </div>
-       
-
         <!-- BLOC LOCALISATION STRUCTURE (REFONDU) -->
         <fieldset>
             <legend class="h6 fw-bold d-flex align-items-center">
@@ -141,8 +136,7 @@
                         <i class="fas fa-lock me-1"></i> Mode édition désactivé
                     </span>
                 @endif
-            </legend>
-            
+            </legend> 
             <div id="locationFieldsContainer">
                 <!-- Lignes d'adresse comme pour le siège social -->
                 <div class="row mb-2">
@@ -179,8 +173,7 @@
                             <i class="bx bx-map" title="géocoder"></i>
                         </button>
                     </div>
-                </div>
-                
+                </div> 
                 @if($method === 'PUT')
                 <div class="mb-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
                     <div>
@@ -203,7 +196,6 @@
                 </div>
                 @endif
             </div>
-
             <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $structure->latitude ?? '') }}">
             <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $structure->longitude ?? '') }}">
             
@@ -251,7 +243,7 @@
                     Enregistrer
                 @endif
             </button>
-            <a href="{{ route('structures.index') }}" class="btn btn-secondary">
+            <a href="{{ route('annuaire.index') }}" class="btn btn-secondary">
                 Annuler
             </a>
         </div>
@@ -266,10 +258,10 @@
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         padding: 15px;
-        max-width: 1300px;
+        max-width: none;
         width: 100%;
         max-height: 98vh;
-        overflow-y: auto;
+        overflow-y: auto;#20939d
     }
     
     .row { margin-left: -5px; margin-right: -5px; }

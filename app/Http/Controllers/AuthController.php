@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Models\Organisme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -83,26 +84,10 @@ class AuthController extends Controller
 
    public function showRegistrationForm(Request $request)
     {
-        $organismes = Structures::all();
-        $structuresByOrganisme = Structures::all()->groupBy('id_organisme');
-        
+        $structures = Structures::all()->sortBy('id_organisme');
         // Récupérer tous les organismes distincts (structures parents)
-        $structuresG = Structures::select('organisme')
-            ->groupBy('organisme')
-            ->get();
-
-        //
-        // Récupérer la structure sélectionnée par l'utilisateur
-            $selectedStructure = request()->old('id_structure_parent') ?? request()->input('id_structure_parent');
-
-            // Filtrer les antennes en fonction de la structure choisie
-            $structuresS = Structures::select('id', 'organisme', 'ville', 'code_postal')
-                ->when($selectedStructure, function($query, $selectedStructure) {
-                    // On ne récupère que les antennes dont le nom de l'organisme correspond
-            $query->where('organisme', $selectedStructure);
-            })
-            ->get();
-        return view('auth.register', compact('structuresG', 'structuresS', 'organismes', 'structuresByOrganisme'));
+        $organismes = Organisme::all()->sortBy('nom_organisme');
+        return view('auth.register', compact('organismes', 'structures', ));
     }
     public function signUp(Request $request)
     {

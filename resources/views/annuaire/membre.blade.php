@@ -12,15 +12,8 @@
             <div class="flex p-1 bg-white rounded-xl shadow-lg">
                 <input type="text" id="search" name="search" value="{{ request('search') }}" 
                        placeholder="Rechercher un membre..." 
-                       class="flex-1 px-4 py-3 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                <select name="structure" id="structure-filter" class="border-l rounded-r-xl px-4 py-3 text-sm bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Toutes les structures</option>
-                    @foreach($structures as $structure)
-                        <option value="{{ $structure->id }}" {{ request('structure') == $structure->id ? 'selected' : '' }}>
-                            {{ $structure->organisme .' '. $structure->ville }}
-                        </option>
-                    @endforeach
-                </select>
+                       class="flex-1 px-4 py-3 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                    >
             </div>
         </div>
         
@@ -41,7 +34,7 @@
                                 <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                 </svg>
-                                <span><strong class="text-gray-700">Structure:</strong> <span class="member-structure">{{ $membre->structure->organisme ?? 'N/A' }} {{ $membre->structure->ville ?? 'N/A' }}</span></span>
+                                <span><strong class="text-gray-700">Structure:</strong> <span class="member-structure">{{ $membre->structure->organisme->nom_organisme ?? 'N/A' }} {{ $membre->structure->ville ?? 'N/A' }}</span></span>
                             </p>
                             <p class="text-gray-600 flex items-start">
                                 <svg class="w-5 h-5 mr-2 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
