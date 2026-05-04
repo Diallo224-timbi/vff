@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Plateforme Multi Acteurs')</title>
   <link rel="apple-touch-icon" type="image/x-icon" href="{{ asset('logo.png') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -498,13 +499,7 @@
           <i class='bx bx-calendar'></i>
           <span title="Consulter l'agenda des évenements">Agenda</span>
         </a>
-        <!--accès aux organismes et structures pour les admins et modérateurs-->
-         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
-        <a href="{{ route('organismes.index') }}" class="sidebar-link">
-          <i class='bx bx-building'></i>
-          <span title="Gérer les organismes et structures">Organismes</span>
-        </a>
-        @endif
+      
         <!--
         <a href="{{ route('structures.index') }}" class="sidebar-link">
           <i class='bx bx-building'></i>
@@ -548,6 +543,13 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
       </div>
       <div class="offcanvas-body">
+          <!--accès aux organismes et structures pour les admins et modérateurs-->
+         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
+        <a href="{{ route('organismes.index') }}" class="sidebar-link">
+          <i class='bx bx-building'></i>
+          <span title="Gérer les organismes et structures">Organismes</span>
+        </a>
+        @endif
         <a href="{{ route('annuaire.index') }}" class="drawer-link">
           <i class='bx bx-building'></i>
           Structures

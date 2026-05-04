@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Structures;
 use App\Models\Organisme;
 use Illuminate\Http\Request;
@@ -91,7 +89,7 @@ public function index(Request $request)
             'horaires' => 'nullable|string|max:255',
         ]);
 
-        // ✅ NOUVEAU : Gestion de l'upload du logo
+        // NOUVEAU : Gestion de l'upload du logo
         if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('logos', 'public');
             $validated['logo'] = $path;

@@ -3,372 +3,354 @@
 @section('title', 'Espace documentaire')
 
 @section('content')
-<div class="container mx-auto px-4 py-4">  
-    <!-- En-tête fixe -->
-    <div class="sticky top-0 z-40 bg-gray-50 pt-2 pb-2 shadow-sm" style="margin-top: -1px;">
-        <!-- En-tête et légende des actions -->
-        <div class="mb-3 flex flex-col md:flex-row justify-between items-start md:items-center bg-white rounded-lg shadow p-3">
-            <div class="mb-2 md:mb-0">
-                <h1 class="text-2xl font-bold text-[#255156]"><i class="bx bx-folder-open mr-2"></i>Espace documentaire</h1>
-                <p class="text-xs text-gray-600"><i class=""></i> des ressources professionnelles</p>
-            </div>
-            
-            <!-- BOUTON STATISTIQUES -->
-            <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1b5b61] text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 transition-colors">
-                <i class="fas fa-chart-pie text-xs"></i>
-                Statistiques
-            </button>
-        </div>
-        <!-- Barre de recherche et filtres -->
-        <div class="bg-white rounded-lg shadow p-3">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Rechercher</label>
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="text" id="searchInput" 
-                               placeholder="Titre, description..."
-                               class="w-full pl-8 pr-3 py-1.5 text-sm border rounded-lg focus:ring-1 focus:ring-[#8bbdc3]">
-                    </div>
-                </div>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <!-- Carte principale -->
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
                 
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Type</label>
-                    <select id="filterType" class="w-full px-2 py-1.5 text-sm border rounded-lg focus:ring-1 focus:ring-[#8bbdc3]">
-                        <option value="">Tous</option>
-                        <option value="image">Images</option>
-                        <option value="video">Vidéos</option>
-                        <option value="document">Documents</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Catégorie</label>
-                    <select id="filterCategory" class="w-full px-2 py-1.5 text-sm border rounded-lg focus:ring-1 focus:ring-[#8bbdc3]">
-                        <option value="">Toutes</option>
-                        <option value="procedure">Procédures</option>
-                        <option value="outil">Outils</option>
-                        <option value="fiche_reflexe">Fiches réflexes</option>
-                        <option value="ressource">Ressources</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                <div class="flex items-center gap-3">
-                    <select id="sortBy" class="text-xs border rounded-lg px-2 py-1.5">
-                        <option value="newest">Plus récents</option>
-                        <option value="oldest">Plus anciens</option>
-                        <option value="popular">Plus téléchargés</option>
-                    </select>
-                </div>
-                
-                <button onclick="openCreateModal()" 
-                        class="bg-[#255156] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#1d4144] transition-colors flex items-center gap-2">
-                    <i class="fas fa-upload text-xs"></i>
-                    Ajouter une ressource
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- GRILLE DES RESSOURCES (CARTES COMPACTES) -->
-    <div class="mt-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" id="resourcesGrid">
-            @forelse($resources as $resource)
-            <div class="resource-card bg-white rounded-lg shadow hover:shadow-md transition-all duration-200 border border-gray-100"
-                 data-id="{{ $resource->id }}"
-                 data-type="{{ $resource->is_image ? 'image' : ($resource->is_video ? 'video' : 'document') }}"
-                 data-category="{{ $resource->category }}"
-                 data-service="{{ $resource->service }}"
-                 data-date="{{ $resource->created_at->timestamp }}"
-                 data-downloads="{{ $resource->download_count }}"
-                 data-title="{{ strtolower($resource->title) }}">
-                
-                <!-- En-tête compact -->
-                <div class="p-2 border-b border-gray-100 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                        @if($resource->is_image)
-                            <span class="flex items-center gap-1 text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full text-xs">
-                                <i class="fas fa-image text-xs"></i>
-                                <span>Image</span>
-                            </span>
-                        @elseif($resource->is_video)
-                            <span class="flex items-center gap-1 text-red-600 bg-red-50 px-2 py-0.5 rounded-full text-xs">
-                                <i class="fas fa-video text-xs"></i>
-                                <span>Vidéo</span>
-                            </span>
-                        @else
-                            <span class="flex items-center gap-1 text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-xs">
-                                <i class="fas {{ $resource->file_icon }} text-xs"></i>
-                                <span>{{ strtoupper($resource->file_type) }}</span>
-                            </span>
-                        @endif
-                    </div>
-                    
-                    <span class="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded-full text-[10px]">
-                        {{ ucfirst($resource->category) }}
-                    </span>
-                </div>  
-                <!-- Miniature compacte -->
-                <div class="px-2 pt-1 pb-0 flex justify-center">
-                    @if($resource->is_image)
-                        <div class="w-full h-20 rounded overflow-hidden bg-gray-100 cursor-pointer" onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')">
-                            <img src="{{ $resource->url }}" alt="{{ $resource->title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-200">
+                <!-- En-tête -->
+                <div class="card-header text-white py-3" style="background: #255156; border: none;">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <i class="fas fa-folder-open me-2"></i>
+                            <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire</h4>
+                            <p class="mt-1 mb-0 opacity-75 small">Toutes les ressources professionnelles</p>
                         </div>
-                    @elseif($resource->is_video)
-                        <div class="w-full h-20 rounded overflow-hidden bg-gray-900 relative cursor-pointer group" onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')">
-                            <video class="w-full h-full object-cover opacity-75">
-                                <source src="{{ $resource->url }}" type="video/mp4">
-                            </video>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <i class="fas fa-play text-white text-xs"></i>
+                        <div>
+                            <button onclick="openStatsModal()" class="btn btn-sm btn-light text-[#255156]">
+                                <i class="fas fa-chart-pie me-1"></i> Statistiques
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-3">
+                    <!-- CARTES DE FILTRES PAR CATÉGORIE -->
+                    <div class="mb-3">
+                        <label class="small fw-semibold text-secondary mb-2">Filtrer par catégorie</label>
+                        <div class="row g-2">
+                            <div class="col-6 col-md-2">
+                                <div class="cursor-pointer rounded-lg p-2 text-center border" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" onclick="openCategoryModal('all', 'Toutes les ressources')">
+                                    <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <i class="fas fa-folder-open text-secondary fa-lg mb-1"></i>
+                                        <p class="fw-semibold text-secondary mb-0 small">Toutes</p>
+                                        <small class="text-secondary" id="countAll">0</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="cursor-pointer rounded-lg p-2 text-center border" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" onclick="openCategoryModal('procedure', 'Procédures')">
+                                    <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <i class="fas fa-tasks text-primary fa-lg mb-1"></i>
+                                        <p class="fw-semibold text-primary mb-0 small">Procédures</p>
+                                        <small class="text-primary" id="countProcedure">0</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="cursor-pointer rounded-lg p-2 text-center border" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" onclick="openCategoryModal('outil', 'Outils')">
+                                    <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <i class="fas fa-tools text-success fa-lg mb-1"></i>
+                                        <p class="fw-semibold text-success mb-0 small">Outils</p>
+                                        <small class="text-success" id="countOutil">0</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="cursor-pointer rounded-lg p-2 text-center border" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" onclick="openCategoryModal('fiche_reflexe', 'Fiches réflexes')">
+                                    <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <i class="fas fa-lightbulb text-warning fa-lg mb-1"></i>
+                                        <p class="fw-semibold text-warning mb-0 small">Fiches réflexes</p>
+                                        <small class="text-warning" id="countFiche">0</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="cursor-pointer rounded-lg p-2 text-center border" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" onclick="openCategoryModal('ressource', 'Ressources')">
+                                    <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <i class="fas fa-database text-info fa-lg mb-1"></i>
+                                        <p class="fw-semibold text-info mb-0 small">Ressources</p>
+                                        <small class="text-info" id="countRessource">0</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="rounded-lg p-2 text-center">
+                                    <button onclick="openCreateModal()" class="btn w-100 py-2" style="background: #255156; color: white; border-radius: 10px;">
+                                        <i class="fas fa-upload me-1"></i> Ajouter
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    @else
-                        <div class="w-full h-20 rounded bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center cursor-pointer" onclick="window.open('{{ $resource->url }}', '_blank')">
-                            <div class="text-center">
-                                <i class="fas fa-file-pdf text-3xl text-blue-500"></i>
+                    </div>
+                    <!-- Barre de recherche -->
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-md-8">
+                                <div class="input-group" style="border-radius: 10px; overflow: hidden;">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" id="searchInput" class="form-control border-start-0" 
+                                           placeholder="Rechercher par titre ou description...">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="filterType" class="form-select">
+                                    <option value="">Tous les types</option>
+                                    <option value="image">Images</option>
+                                    <option value="video">Vidéos</option>
+                                    <option value="document">Documents</option>
+                                </select>
                             </div>
                         </div>
-                    @endif
-                </div>   
-                <!-- Contenu compact -->
-                <div class="p-2">
-                    <h3 class="font-semibold text-gray-800 text-sm mb-0.5 line-clamp-1" title="{{ $resource->title }}">
-                        {{ $resource->title }}
-                    </h3>
-                    
-                    @if($resource->description)
-                        <p class="text-xs text-gray-500 mb-1 line-clamp-1" title="{{ $resource->description }}">
-                            {{ $resource->description }}
-                        </p>
-                    @endif
-                    <!-- Métadonnées compactes -->
-                    <div class="grid grid-cols-2 gap-1 mb-1 text-[10px]">
-                        <div class="bg-gray-50 p-1 rounded">
-                            <span class="text-gray-400 block">Service</span>
-                            <span class="font-medium text-gray-700 truncate block">{{ $resource->service ?? 'Non spécifié' }}</span>
-                        </div>
-                        <div class="bg-gray-50 p-1 rounded">
-                            <span class="text-gray-400 block">Ajouté par</span>
-                            <span class="font-medium text-gray-700 truncate block">{{ $resource->user->name ?? 'Inconnu' }}</span>
-                        </div>
-                        <div class="bg-gray-50 p-1 rounded">
-                            <span class="text-gray-400 block flex items-center gap-0.5">
-                                <i class="fas fa-download text-[8px]"></i> Téléch.
-                            </span>
-                            <span class="font-medium text-gray-700">{{ $resource->download_count }}</span>
-                        </div>
-                        <div class="bg-gray-50 p-1 rounded">
-                            <span class="text-gray-400 block">Date</span>
-                            <span class="font-medium text-gray-700">{{ $resource->created_at->format('d/m/y') }}</span>
+                    </div>
+                    <!-- GRILLE DES RESSOURCES -->
+                    <div class="mt-3">
+                        <div class="row g-3" id="resourcesGrid">
+                            @forelse($resources as $resource)
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 resource-card"
+                                 data-id="{{ $resource->id }}"
+                                 data-type="{{ $resource->is_image ? 'image' : ($resource->is_video ? 'video' : 'document') }}"
+                                 data-category="{{ $resource->category }}"
+                                 data-date="{{ $resource->created_at->timestamp }}"
+                                 data-downloads="{{ $resource->download_count }}"
+                                 data-title="{{ strtolower($resource->title) }}">
+                                <div class="card h-100 border-0 shadow-sm" style="border-radius: 12px;">
+                                    <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center py-2 px-3">
+                                        <div>
+                                            @if($resource->is_image)
+                                                <span class="badge" style="background: #f3e8ff; color: #9333ea;">
+                                                    <i class="fas fa-image me-1"></i>Image
+                                                </span>
+                                            @elseif($resource->is_video)
+                                                <span class="badge" style="background: #fee2e2; color: #dc2626;">
+                                                    <i class="fas fa-video me-1"></i>Vidéo
+                                                </span>
+                                            @else
+                                                <span class="badge" style="background: #dbeafe; color: #2563eb;">
+                                                    <i class="fas fa-file me-1"></i>{{ strtoupper($resource->file_type) }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            @if($resource->category == 'procedure')
+                                                <span class="badge" style="background: #dbeafe; color: #2563eb;">Procédure</span>
+                                            @elseif($resource->category == 'outil')
+                                                <span class="badge" style="background: #dcfce7; color: #16a34a;">Outil</span>
+                                            @elseif($resource->category == 'fiche_reflexe')
+                                                <span class="badge" style="background: #fef3c7; color: #d97706;">Fiche réflexe</span>
+                                            @else
+                                                <span class="badge" style="background: #f3e8ff; color: #9333ea;">Ressource</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body p-2 text-center">
+                                        @if($resource->is_image)
+                                            <div class="bg-light rounded overflow-hidden" style="height: 120px; cursor: pointer;" onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')">
+                                                <img src="{{ $resource->url }}" alt="{{ $resource->title }}" class="w-100 h-100" style="object-fit: cover;">
+                                            </div>
+                                        @elseif($resource->is_video)
+                                            <div class="bg-dark rounded overflow-hidden position-relative" style="height: 120px; cursor: pointer;" onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')">
+                                                <video class="w-100 h-100" style="object-fit: cover; opacity: 0.5;">
+                                                    <source src="{{ $resource->url }}" type="video/mp4">
+                                                </video>
+                                                <div class="position-absolute top-50 start-50 translate-middle">
+                                                    <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-play text-white"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @elseif($resource->file_type === 'pdf')
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
+                                                <i class="fas fa-file-pdf text-danger fa-4x"></i>
+                                            </div>
+                                        @elseif(in_array($resource->file_type, ['doc', 'docx']))
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
+                                                <i class="fas fa-file-word text-primary fa-4x"></i>
+                                            </div>
+                                        @elseif(in_array($resource->file_type, ['xls', 'xlsx']))
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
+                                                <i class="fas fa-file-excel text-success fa-4x"></i>
+                                            </div>
+                                        @else
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
+                                                <i class="fas fa-file text-secondary fa-4x"></
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="card-body pt-0 pb-2 px-3">
+                                        <h6 class="fw-semibold mb-1 text-truncate" title="{{ $resource->title }}">{{ $resource->title }}</h6>
+                                        @if($resource->description)
+                                            <p class="small text-muted mb-2 text-truncate">{{ $resource->description }}</p>
+                                        @endif
+                                        <div class="d-flex justify-content-between small text-muted mb-2">
+                                            <span><i class="fas fa-download me-1"></i> {{ $resource->download_count }}</span>
+                                            <span><i class="fas fa-calendar me-1"></i> {{ $resource->created_at->format('d/m/Y') }}</span>
+                                        </div>
+                                        <div class="d-flex gap-1 justify-content-center pt-2 border-top">
+                                            @if($resource->is_video)
+                                                <button onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #fee2e2; color: #dc2626;">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                            @endif
+                                            @if($resource->is_image)
+                                                <button onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea;">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            @endif
+                                            <a href="{{ $resource->url }}" target="_blank" class="btn btn-sm" style="background: #e5e7eb; color: #4b5563;">
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                            <a href="{{ route('resources.download', $resource) }}" class="btn btn-sm" style="background: #dbeafe; color: #2563eb;">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                            @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
+                                                <button onclick="openEditModal({{ $resource->id }})" class="btn btn-sm" style="background: #fef3c7; color: #d97706;">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626;">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="col-12">
+                                <div class="text-center py-5">
+                                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Aucune ressource disponible</p>
+                                    <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white;">
+                                        <i class="fas fa-upload me-1"></i>Ajouter la première ressource
+                                    </button>
+                                </div>
+                            </div>
+                            @endforelse
                         </div>
                     </div>
-                    
-                    <!-- Nom du fichier compact -->
-                    <div class="text-[9px] text-gray-400 truncate mb-1" title="{{ $resource->file_name }}">
-                        <i class="fas fa-paperclip mr-0.5"></i>
-                        {{ $resource->file_name }}
-                    </div>
-                    
-                    <!-- Actions compactes -->
-                    <div class="flex items-center justify-center gap-1 pt-1 border-t border-gray-100">
-                        @if($resource->is_video)
-                            <button onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')"
-                                    class="p-1 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors"
-                                    title="Voir la vidéo">
-                                <i class="bx bx-play-circle text-sm"></i>
-                            </button>
-                        @endif
-                        
-                        @if($resource->is_image)
-                            <button onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')"
-                                    class="p-1 bg-purple-100 text-purple-600 rounded hover:bg-purple-200 transition-colors"
-                                    title="Voir l'image">
-                                <i class="bx bx-image text-sm"></i>
-                            </button>
-                        @endif
-                        
-                        <a href="{{ $resource->url }}" 
-                           target="_blank"
-                           class="p-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
-                           title="Ouvrir">
-                            <i class="bx bx-link text-sm"></i>
-                        </a>
-                        
-                        <a href="{{ route('resources.download', $resource) }}" 
-                           class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors"
-                           title="Télécharger">
-                            <i class="bx bx-download text-sm"></i>
-                        </a>
-                        
-                        @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
-                        <button onclick="openEditModal({{ $resource->id }})"
-                                class="p-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 transition-colors"
-                                title="Modifier">
-                            <i class="bx bx-edit text-sm"></i>
-                        </button>
-                        
-                        <button onclick="deleteResource({{ $resource->id }}, this)"
-                                class="p-1 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors"
-                                title="Supprimer">
-                            <i class="bx bx-trash text-sm"></i>
-                        </button>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @empty
-            <div class="col-span-full">
-                <div class="text-center py-8">
-                    <i class="fas fa-folder-open text-4xl text-gray-300 mb-2"></i>
-                    <p class="text-gray-500 text-sm">Aucune ressource disponible</p>
-                </div>
-            </div>
-            @endforelse
-        </div>
-    </div>
 
-    <!-- Pagination compacte -->
-    <div class="mt-4 text-sm">
-        {{ $resources->links() }}
+                    <div class="mt-4">
+                        {{ $resources->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<!-- MODAL VIDÉO -->
-<div id="videoModal" class="fixed inset-0 bg-[#255156] bg-opacity-95 hidden items-center justify-center z-50" onclick="closeVideoModal()">
-    <div class="relative w-full max-w-5xl mx-4" onclick="event.stopPropagation()">
-        <button onclick="closeVideoModal()" 
-                class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors flex items-center gap-2">
-            <i class="fas fa-times text-xl"></i>
-            <span>Fermer</span>
-        </button>
-        
-        <div class="bg-black rounded-lg overflow-hidden">
-            <video id="modalVideo" controls class="w-full" style="max-height: 80vh;">
-                <source src="" type="video/mp4">
-                Votre navigateur ne supporte pas la lecture de vidéos.
-            </video>
+
+<!-- MODALE DES RESSOURCES PAR CATÉGORIE -->
+<div id="categoryModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+            <div class="modal-header" style="background: #255156; color: white; border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title" id="categoryModalTitle">
+                    <i class="fas fa-folder-open me-2"></i>Catégorie
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="modalSearchInput" class="form-control border-start-0" 
+                               placeholder="Rechercher dans cette catégorie...">
+                    </div>
+                </div>
+                <div class="row g-3" id="modalResourcesGrid"></div>
+                <div id="modalNoResults" class="text-center py-5 d-none">
+                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Aucune ressource dans cette catégorie</p>
+                </div>
+            </div>
         </div>
-        
-        <p id="modalVideoTitle" class="text-white text-center mt-4 text-lg font-medium"></p>
-        <p class="text-gray-400 text-center text-sm mt-2">
-            <i class="fas fa-info-circle mr-1"></i> Échap pour fermer
-        </p>
+    </div>
+</div>
+
+<!-- MODAL VIDÉO -->
+<div id="videoModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="modal-body p-0">
+                <video id="modalVideo" controls class="w-100" style="max-height: 80vh;">
+                    <source src="" type="video/mp4">
+                </video>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- MODAL IMAGE -->
-<div id="imageModal" class="fixed inset-0 bg-[#255156] bg-opacity-95 hidden items-center justify-center z-50" onclick="closeImageModal()">
-    <div class="relative max-w-6xl mx-4" onclick="event.stopPropagation()">
-        <button onclick="closeImageModal()" 
-                class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors flex items-center gap-2">
-            <i class="fas fa-times text-xl"></i>
-            <span>Fermer</span>
-        </button>
-        
-        <img id="modalImage" src="" alt="" class="max-w-full max-h-[80vh] object-contain rounded-lg">
-        <p id="modalImageTitle" class="text-white text-center mt-4 text-lg font-medium"></p>
+<div id="imageModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="modal-body p-0 text-center">
+                <img id="modalImage" src="" alt="" class="img-fluid">
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- MODAL DE CRÉATION/MODIFICATION -->
-<div id="resourceModal" class="fixed inset-0 bg-[#255156] bg-opacity-70 hidden items-center justify-center z-50 " onclick="closeResourceModal()">
-    <div class="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-        <div class="bg-white rounded-xl shadow-2xl">
-            <!-- En-tête -->
-            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-8 rounded-t-xl flex justify-between items-center">
-                <h3 id="modalTitle" class="text-xl font-bold">Ajouter une ressource</h3>
-                <button onclick="closeResourceModal()" class="text-white hover:text-gray-200 transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+<!-- MODAL CRÉATION/MODIFICATION -->
+<div id="resourceModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+            <div class="modal-header" style="background: #255156; color: white; border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title" id="modalTitle">Ajouter une ressource</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <form id="resourceForm" enctype="multipart/form-data" class="p-6">
-                @csrf
-                <input type="hidden" id="resourceId" name="id">
-                <input type="hidden" id="formMethod" name="_method" value="POST">
-                
-                <div class="space-y-4">
-                    <!-- Titre -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Titre <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="title" name="title" required
-                               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
+            <form id="resourceForm" enctype="multipart/form-data" action="{{ route('resources.store') }}" method="POST">
+                <div class="modal-body">
+                    @csrf
+                    <input type="hidden" id="resourceId" name="id">
+                    <input type="hidden" id="formMethod" name="_method" value="POST">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
+                        <input type="text" id="title" name="title" required class="form-control">
                     </div>
                     
-                    <!-- Description -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                        <textarea id="description" name="description" rows="3"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
-                        </textarea>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea id="description" name="description" rows="3" class="form-control"></textarea>
                     </div>
                     
-                    <!-- Fichier -->
-                    <div id="fileUploadSection">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Fichier <span class="text-red-500" id="fileRequired">*</span>
-                        </label>
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-1 text-center hover:border-[#8bbdc3] transition-colors">
-                            <input type="file" id="file" name="file" 
-                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.svg,.webp,.mp4,.webm,.avi,.mov,.mkv,.txt"
-                                   class="hidden" onchange="updateFileName(this)">
-                            <button type="button" onclick="document.getElementById('file').click()"
-                                    class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
-                                <i class="fas fa-upload mr-2"></i>
-                                Choisir un fichier
-                            </button>
-                            <p id="file-name" class="text-sm text-gray-500 mt-2">Aucun fichier sélectionné</p>
-                        </div>
-                        <p class="text-xs text-gray-500 mt-1">Images, Vidéos, Documents. Max 20 Mo</p>
-                    </div>   
-                    <!-- Fichier actuel -->
-                    <div id="currentFileSection" class="hidden bg-gray-50 p-3 rounded-lg">
-                        <p class="text-sm font-semibold text-gray-700 mb-2">Fichier actuel :</p>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-file text-gray-400"></i>
-                            <span id="currentFileName" class="text-sm text-gray-600"></span>
-                        </div>
-                    </div>   
-                    <!-- Catégorie -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Catégorie *</label>
-                        <select id="category" name="category" required
-                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
+                    <div id="fileUploadSection" class="mb-3">
+                        <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
+                        <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.mp4,.webm,.avi">
+                        <small class="text-muted">Formats acceptés: PDF, DOC, DOCX, JPG, PNG, GIF, MP4. Max 20Mo</small>
+                    </div>
+                    
+                    <div id="currentFileSection" class="mb-3 d-none">
+                        <label class="form-label fw-semibold">Fichier actuel</label>
+                        <p class="form-control-plaintext" id="currentFileName"></p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
+                        <select id="category" name="category" required class="form-select">
+                            <option value="">Sélectionner une catégorie</option>
                             <option value="procedure">Procédure</option>
                             <option value="outil">Outil</option>
                             <option value="fiche_reflexe">Fiche réflexe</option>
                             <option value="ressource">Ressource</option>
                         </select>
-                    </div> 
-                    <!-- Thème -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Thème</label>
-                        <input type="text" id="theme" name="theme" 
-                               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
                     </div>
                     
-                    <!-- Service -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Service</label>
-                        <input type="text" id="service" name="service" 
-                               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Service</label>
+                        <input type="text" id="service" name="service" class="form-control">
                     </div>
                 </div>
-                
-                <!-- Boutons -->
-                <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
-                    <button type="button" onclick="closeResourceModal()" 
-                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        Annuler
-                    </button>
-                    <button type="submit" 
-                            class="px-4 py-2 bg-[#255156] text-white rounded-lg hover:bg-[#1d4144] transition-colors">
-                        Enregistrer
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn" style="background: #255156; color: white;">
+                        <i class="fas fa-save me-1"></i> Enregistrer
                     </button>
                 </div>
             </form>
@@ -376,200 +358,146 @@
     </div>
 </div>
 
-<!-- MODAL STATISTIQUES (identique) -->
-<div id="statsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" onclick="closeStatsModal()">
-    <div class="relative w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-        <div class="bg-white rounded-xl shadow-2xl">
-            <!-- En-tête -->
-            <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4 rounded-t-xl flex justify-between items-center">
-                <h3 class="text-xl font-bold flex items-center gap-2">
-                    <i class="fas fa-chart-pie"></i>
-                    Statistiques des documents
-                </h3>
-                <button onclick="closeStatsModal()" class="text-white hover:text-gray-200 transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+<!-- MODAL STATISTIQUES -->
+<div id="statsModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+            <div class="modal-header" style="background: #255156; color: white; border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title"><i class="fas fa-chart-pie me-2"></i>Statistiques</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            
-            <!-- Contenu -->
-            <div class="p-6 bg-gray-50">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
-                        <div class="text-xs text-gray-500 mb-1">Total documents</div>
-                        <div class="text-2xl font-bold text-[#255156]">{{ $resources->total() }}</div>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
-                        <div class="text-xs text-gray-500 mb-1">Images</div>
-                        <div class="text-2xl font-bold text-purple-600">{{ $stats['images'] }}</div>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
-                        <div class="text-xs text-gray-500 mb-1">Vidéos</div>
-                        <div class="text-2xl font-bold text-red-600">{{ $stats['videos'] }}</div>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 text-center">
-                        <div class="text-xs text-gray-500 mb-1">Documents</div>
-                        <div class="text-2xl font-bold text-blue-600">{{ $stats['documents'] }}</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                        <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
-                            <i class="fas fa-chart-pie text-[#255156] mr-2"></i>
-                            Répartition par type
-                        </h4>
-                        <div style="height: 250px;">
-                            <canvas id="typeChart"></canvas>
+            <div class="modal-body">
+                <div class="row text-center">
+                    <div class="col-3">
+                        <div class="p-2 border rounded">
+                            <small class="text-muted">Total</small>
+                            <h5 class="mb-0 text-[#255156]">{{ $resources->total() }}</h5>
                         </div>
                     </div>
-
-                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                        <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
-                            <i class="fas fa-chart-bar text-[#255156] mr-2"></i>
-                            Répartition par catégorie
-                        </h4>
-                        <div style="height: 250px;">
-                            <canvas id="categoryChart"></canvas>
+                    <div class="col-3">
+                        <div class="p-2 border rounded">
+                            <small class="text-muted">Images</small>
+                            <h5 class="mb-0 text-purple-600">{{ $stats['images'] }}</h5>
                         </div>
                     </div>
-                </div>
-
-                <div class="mt-4 text-xs text-gray-500 text-center">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    Données mises à jour en temps réel
+                    <div class="col-3">
+                        <div class="p-2 border rounded">
+                            <small class="text-muted">Vidéos</small>
+                            <h5 class="mb-0 text-red-600">{{ $stats['videos'] }}</h5>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="p-2 border rounded">
+                            <small class="text-muted">Docs</small>
+                            <h5 class="mb-0 text-blue-600">{{ $stats['documents'] }}</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection
 
 @section('scripts')
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-// ==================== STATISTIQUES ====================
-const statsData = {
-    types: {
-        images: {{ $stats['images'] }},
-        videos: {{ $stats['videos'] }},
-        documents: {{ $stats['documents'] }}
-    },
-    categories: {
-        procedure: {{ $stats['categories']['procedure'] ?? 0 }},
-        outil: {{ $stats['categories']['outil'] ?? 0 }},
-        fiche_reflexe: {{ $stats['categories']['fiche_reflexe'] ?? 0 }},
-        ressource: {{ $stats['categories']['ressource'] ?? 0 }}
+// Données des ressources
+const allResources = @json($resources->items());
+
+// Comptage par catégorie
+function updateCategoryCounts() {
+    let counts = { all: allResources.length, procedure: 0, outil: 0, fiche_reflexe: 0, ressource: 0 };
+    allResources.forEach(r => {
+        if (r.category === 'procedure') counts.procedure++;
+        else if (r.category === 'outil') counts.outil++;
+        else if (r.category === 'fiche_reflexe') counts.fiche_reflexe++;
+        else if (r.category === 'ressource') counts.ressource++;
+    });
+    document.getElementById('countAll').textContent = counts.all;
+    document.getElementById('countProcedure').textContent = counts.procedure;
+    document.getElementById('countOutil').textContent = counts.outil;
+    document.getElementById('countFiche').textContent = counts.fiche_reflexe;
+    document.getElementById('countRessource').textContent = counts.ressource;
+}
+
+// Initialisation des modales
+let categoryModal, videoModal, imageModal, resourceModal, statsModal;
+
+document.addEventListener('DOMContentLoaded', function() {
+    categoryModal = new bootstrap.Modal(document.getElementById('categoryModal'));
+    videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
+    imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+    resourceModal = new bootstrap.Modal(document.getElementById('resourceModal'));
+    statsModal = new bootstrap.Modal(document.getElementById('statsModal'));
+    updateCategoryCounts();
+});
+
+window.openCategoryModal = function(category, title) {
+    let filtered = category === 'all' ? [...allResources] : allResources.filter(r => r.category === category);
+    document.getElementById('categoryModalTitle').innerHTML = `<i class="fas fa-folder-open me-2"></i>${title} (${filtered.length})`;
+    
+    const grid = document.getElementById('modalResourcesGrid');
+    const noResults = document.getElementById('modalNoResults');
+    
+    function renderResources(resources) {
+        if (resources.length === 0) {
+            grid.innerHTML = '';
+            noResults.classList.remove('d-none');
+            return;
+        }
+        noResults.classList.add('d-none');
+        grid.innerHTML = resources.map(r => `
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border shadow-sm" style="border-radius: 12px;">
+                    <div class="card-header bg-transparent d-flex justify-content-between">
+                        <small class="badge bg-secondary">${r.is_image ? 'Image' : (r.is_video ? 'Vidéo' : 'Document')}</small>
+                        <small class="badge" style="background: #25515620; color: #255156;">${r.category === 'procedure' ? 'Procédure' : (r.category === 'outil' ? 'Outil' : (r.category === 'fiche_reflexe' ? 'Fiche réflexe' : 'Ressource'))}</small>
+                    </div>
+                    <div class="card-body text-center">
+                        ${r.is_image ? `<img src="${r.url}" class="img-fluid rounded" style="height: 100px; object-fit: cover; cursor: pointer;" onclick="openImageModal('${r.url}', '${r.title}')">` : 
+                          (r.is_video ? `<div class="bg-dark rounded d-flex align-items-center justify-content-center" style="height: 100px; cursor: pointer;" onclick="openVideoModal('${r.url}', '${r.title}')">
+                              <i class="fas fa-play-circle text-white fa-3x"></i>
+                          </div>` :
+                          `<i class="fas fa-file-pdf text-danger fa-4x"></i>`)}
+                        <h6 class="mt-2 fw-semibold">${escapeHtml(r.title)}</h6>
+                        <small class="text-muted">${r.created_at?.split('T')[0] || ''}</small>
+                    </div>
+                    <div class="card-footer bg-transparent d-flex justify-content-center gap-1">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="window.open('${r.url}', '_blank')"><i class="fas fa-eye"></i></button>
+                        <a href="/resources/${r.id}/download" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
+    
+    renderResources(filtered);
+    
+    const searchInput = document.getElementById('modalSearchInput');
+    searchInput.value = '';
+    searchInput.oninput = function() {
+        const term = this.value.toLowerCase();
+        const filtered2 = filtered.filter(r => r.title.toLowerCase().includes(term) || (r.description && r.description.toLowerCase().includes(term)));
+        renderResources(filtered2);
+    };
+    
+    categoryModal.show();
 };
 
-function openStatsModal() {
-    document.getElementById('statsModal').classList.remove('hidden');
-    document.getElementById('statsModal').classList.add('flex');
-    document.body.style.overflow = 'hidden';
-    
-    setTimeout(() => {
-        initCharts();
-    }, 100);
-}
-
-function closeStatsModal() {
-    document.getElementById('statsModal').classList.add('hidden');
-    document.getElementById('statsModal').classList.remove('flex');
-    document.body.style.overflow = '';
-}
-
-function initCharts() {
-    const typeCtx = document.getElementById('typeChart')?.getContext('2d');
-    if(typeCtx) {
-        new Chart(typeCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Images', 'Vidéos', 'Documents'],
-                datasets: [{
-                    data: [statsData.types.images, statsData.types.videos, statsData.types.documents],
-                    backgroundColor: ['#8b5cf6', '#ef4444', '#3b82f6'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => `${context.raw} document${context.raw > 1 ? 's' : ''}`
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    const categoryCtx = document.getElementById('categoryChart')?.getContext('2d');
-    if(categoryCtx) {
-        new Chart(categoryCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Procédures', 'Outils', 'Fiches réflexes', 'Ressources'],
-                datasets: [{
-                    label: 'Nombre de documents',
-                    data: [
-                        statsData.categories.procedure,
-                        statsData.categories.outil,
-                        statsData.categories.fiche_reflexe,
-                        statsData.categories.ressource
-                    ],
-                    backgroundColor: ['#255156', '#8bbdc3', '#f59e0b', '#10b981'],
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, precision: 0 }
-                    }
-                }
-            }
-        });
-    }
-}
-
-// ==================== GESTION DES MODALES ====================
-let currentEditId = null;
-
-function openCreateModal() {
+window.openCreateModal = function() {
     document.getElementById('modalTitle').textContent = 'Ajouter une ressource';
     document.getElementById('resourceForm').reset();
     document.getElementById('resourceId').value = '';
     document.getElementById('formMethod').value = 'POST';
-    document.getElementById('fileUploadSection').classList.remove('hidden');
-    document.getElementById('currentFileSection').classList.add('hidden');
-    document.getElementById('file').required = true;
-    document.getElementById('fileRequired').classList.remove('hidden');
-    document.getElementById('resourceModal').classList.remove('hidden');
-    document.getElementById('resourceModal').classList.add('flex');
-    document.body.style.overflow = 'hidden';
-    clearValidationErrors();
-}
+    document.getElementById('fileUploadSection').classList.remove('d-none');
+    document.getElementById('currentFileSection').classList.add('d-none');
+    resourceModal.show();
+};
 
-function openEditModal(id) {
-    currentEditId = id;
-    showNotification('info', 'Chargement...');
-    
+window.openEditModal = function(id) {
     fetch(`/ressources/${id}/edit`)
-        .then(response => {
-            if (!response.ok) throw new Error('Erreur réseau');
-            return response.json();
-        })
+        .then(r => r.json())
         .then(data => {
             document.getElementById('modalTitle').textContent = 'Modifier la ressource';
             document.getElementById('resourceId').value = data.id;
@@ -577,400 +505,76 @@ function openEditModal(id) {
             document.getElementById('title').value = data.title || '';
             document.getElementById('description').value = data.description || '';
             document.getElementById('category').value = data.category || 'procedure';
-            document.getElementById('theme').value = data.theme || '';
             document.getElementById('service').value = data.service || '';
-            
             document.getElementById('currentFileName').textContent = data.file_name || 'Aucun fichier';
-            document.getElementById('fileUploadSection').classList.add('hidden');
-            document.getElementById('currentFileSection').classList.remove('hidden');
-            document.getElementById('file').required = false;
-            document.getElementById('fileRequired').classList.add('hidden');
-            
-            document.getElementById('resourceModal').classList.remove('hidden');
-            document.getElementById('resourceModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
-            clearValidationErrors();
+            document.getElementById('fileUploadSection').classList.add('d-none');
+            document.getElementById('currentFileSection').classList.remove('d-none');
+            resourceModal.show();
         })
         .catch(error => {
             console.error('Erreur:', error);
-            showNotification('error', 'Erreur lors du chargement');
+            alert('Erreur lors du chargement des données');
         });
-}
+};
 
-function closeResourceModal() {
-    document.getElementById('resourceModal').classList.add('hidden');
-    document.getElementById('resourceModal').classList.remove('flex');
-    document.body.style.overflow = '';
-    currentEditId = null;
-    clearValidationErrors();
-}
-
-function clearValidationErrors() {
-    const errorMessages = document.querySelectorAll('.text-red-500.text-xs');
-    errorMessages.forEach(el => el.remove());
-}
-
-function updateFileName(input) {
-    const fileName = input.files[0] ? input.files[0].name : 'Aucun fichier sélectionné';
-    document.getElementById('file-name').textContent = fileName;
-}
-
-// Soumission du formulaire
-document.getElementById('resourceForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(this);
-    const id = document.getElementById('resourceId').value;
-    const method = document.getElementById('formMethod').value;
-    
-    let url = '/ressources';
-    if (method === 'PUT' && id) {
-        url = `/ressources/${id}`;
-        formData.append('_method', 'PUT');
-    }
-    
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enregistrement...';
-    
-    clearValidationErrors();
-    
-    fetch(url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            closeResourceModal();
-            showNotification('success', method === 'PUT' ? 'Ressource modifiée' : 'Ressource ajoutée');
-            setTimeout(() => window.location.reload(), 1000);
-        } else {
-            if (data.errors) {
-                Object.keys(data.errors).forEach(key => {
-                    const input = document.getElementById(key);
-                    if (input) {
-                        const errorDiv = document.createElement('p');
-                        errorDiv.className = 'text-red-500 text-xs mt-1';
-                        errorDiv.textContent = data.errors[key][0];
-                        input.parentNode.appendChild(errorDiv);
-                    }
-                });
-                showNotification('error', 'Veuillez corriger les erreurs');
-            } else {
-                showNotification('error', data.message || 'Erreur');
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
-        showNotification('error', 'Erreur de connexion');
-    })
-    .finally(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-    });
-});
-
-// ==================== VIDÉO ====================
-function openVideoModal(url, title) {
-    const modal = document.getElementById('videoModal');
+window.openVideoModal = function(url, title) {
     const video = document.getElementById('modalVideo');
     const source = video.querySelector('source');
-    
     source.src = url;
     video.load();
-    document.getElementById('modalVideoTitle').textContent = title;
-    
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-    
-    video.play().catch(e => console.log('Lecture auto bloquée:', e));
-}
+    videoModal.show();
+};
 
-function closeVideoModal() {
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('modalVideo');
-    
-    video.pause();
-    video.currentTime = 0;
-    
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    document.body.style.overflow = '';
-}
+window.openImageModal = function(url, title) {
+    document.getElementById('modalImage').src = url;
+    imageModal.show();
+};
 
-// ==================== IMAGE ====================
-function openImageModal(url, title) {
-    const modal = document.getElementById('imageModal');
-    const img = document.getElementById('modalImage');
-    
-    img.src = url;
-    document.getElementById('modalImageTitle').textContent = title;
-    
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeImageModal() {
-    const modal = document.getElementById('imageModal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    document.body.style.overflow = '';
-}
-
-// ==================== SUPPRESSION ====================
-function deleteResource(id, button) {
+window.deleteResource = function(id, btn) {
     if (!confirm('Supprimer cette ressource ?')) return;
-    
-    const card = button.closest('.resource-card');
-    card.style.opacity = '0.5';
-    card.style.backgroundColor = '#fee2e2';
-    
     fetch(`/ressources/${id}`, {
         method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        headers: { 
+            'X-CSRF-TOKEN': '{{ csrf_token() }}', 
             'Accept': 'application/json'
         }
-    })
-    .then(response => response.json())
-    .then(data => {
+    }).then(r => r.json()).then(data => {
         if (data.success) {
-            showNotification('success', 'Ressource supprimée');
-            setTimeout(() => window.location.reload(), 1000);
+            location.reload();
         } else {
-            card.style.opacity = '1';
-            card.style.backgroundColor = '';
-            showNotification('error', 'Erreur lors de la suppression');
+            alert(data.message || 'Erreur lors de la suppression');
         }
-    })
-    .catch(error => {
+    }).catch(error => {
         console.error('Erreur:', error);
-        card.style.opacity = '1';
-        card.style.backgroundColor = '';
-        showNotification('error', 'Erreur de connexion');
+        alert('Erreur de connexion');
+    });
+};
+
+window.openStatsModal = function() { 
+    statsModal.show(); 
+};
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
     });
 }
 
-// ==================== NOTIFICATIONS ====================
-function showNotification(type, message) {
-    const oldNotifications = document.querySelectorAll('.notification-toast');
-    oldNotifications.forEach(n => n.remove());
-    
-    const notification = document.createElement('div');
-    notification.className = `notification-toast fixed top-20 right-4 z-50 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-500 ${
-        type === 'success' ? 'bg-green-600' : 
-        type === 'error' ? 'bg-red-600' : 
-        'bg-blue-600'
-    } text-white text-sm`;
-    
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateX(100%)';
-    
-    notification.innerHTML = `
-        <div class="flex items-center gap-2">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateX(0)';
-    }, 10);
-    
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 500);
-    }, 3000);
-}
-
-// ==================== FILTRAGE ====================
-function filterTable() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const typeFilter = document.getElementById('filterType').value;
-    const categoryFilter = document.getElementById('filterCategory').value;
-    const sortBy = document.getElementById('sortBy').value;
-    
-    const cards = Array.from(document.querySelectorAll('.resource-card'));
-    const grid = document.getElementById('resourcesGrid');
-    
-    const visibleCards = cards.filter(card => {
-        const title = card.dataset.title;
-        const type = card.dataset.type;
-        const category = card.dataset.category;
-        
-        const matchesSearch = searchTerm === '' || title.includes(searchTerm);
-        const matchesType = typeFilter === '' || type === typeFilter;
-        const matchesCategory = categoryFilter === '' || category === categoryFilter;
-        
-        return matchesSearch && matchesType && matchesCategory;
-    });
-    
-    visibleCards.sort((a, b) => {
-        switch(sortBy) {
-            case 'newest': return b.dataset.date - a.dataset.date;
-            case 'oldest': return a.dataset.date - b.dataset.date;
-            case 'popular': return b.dataset.downloads - a.dataset.downloads;
-            default: return 0;
-        }
-    });
-    
-    cards.forEach(card => card.style.display = 'none');
-    visibleCards.forEach(card => {
-        card.style.display = '';
-        grid.appendChild(card);
-    });
-    
-    const noResults = document.getElementById('noResultsMessage');
-    if (visibleCards.length === 0) {
-        if (!noResults) {
-            const messageDiv = document.createElement('div');
-            messageDiv.id = 'noResultsMessage';
-            messageDiv.className = 'col-span-full text-center py-8';
-            messageDiv.innerHTML = `
-                <i class="fas fa-folder-open text-4xl text-gray-300 mb-2"></i>
-                <p class="text-gray-500 text-sm">Aucune ressource trouvée</p>
-            `;
-            grid.appendChild(messageDiv);
-        }
-    } else if (noResults) {
-        noResults.remove();
-    }
-}
-
-// ==================== INITIALISATION ====================
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('searchInput')?.addEventListener('input', filterTable);
-    document.getElementById('filterType')?.addEventListener('change', filterTable);
-    document.getElementById('filterCategory')?.addEventListener('change', filterTable);
-    document.getElementById('sortBy')?.addEventListener('change', filterTable);
-    
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeVideoModal();
-            closeImageModal();
-            closeResourceModal();
-            closeStatsModal();
-        }
-    });
+// Soumission du formulaire avec soumission normale (pas fetch)
+document.getElementById('resourceForm').addEventListener('submit', function(e) {
+    // On laisse le formulaire s'envoyer normalement
+    // Pas de e.preventDefault() pour que le formulaire s'envoie normalement
+    // Le serveur doit rediriger vers la page actuelle avec un message de succès
 });
 </script>
-
 <style>
-/* Styles compacts */
-.resource-card {
-    transition: all 0.2s ease;
-    border: 1px solid #e5e7eb;
-}
-
-.resource-card:hover {
-    border-color: #8bbdc3;
-    transform: translateY(-1px);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.resource-card {
-    animation: fadeIn 0.3s ease-out;
-}
-
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-#videoModal, #imageModal, #resourceModal, #statsModal {
-    animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes scaleIn {
-    from {
-        transform: scale(0.98);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-#videoModal > div, #imageModal > div, #resourceModal > div, #statsModal > div {
-    animation: scaleIn 0.2s ease;
-}
-
-.notification-toast {
-    box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.2);
-    border-left: 3px solid rgba(255, 255, 255, 0.5);
-    z-index: 9999;
-}
-
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
-}
-
-.sticky {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    background-color: #f9fafb;
-}
-
-.sticky.shadow-sm {
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-
-.text-red-500.text-xs {
-    margin-top: 0.2rem;
-    font-size: 0.7rem;
-}
+.object-fit-cover { object-fit: cover; }
+.cursor-pointer { cursor: pointer; }
+.bg-\[#255156\] { background-color: #255156; }
+.text-\[\#255156\] { color: #255156; }
 </style>
 @endsection
