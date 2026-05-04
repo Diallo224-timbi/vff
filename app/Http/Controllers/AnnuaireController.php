@@ -37,14 +37,10 @@ class AnnuaireController extends Controller
               ->orWhere('site', 'like', "%{$search}%");
         });
     }
-
     // Pagination (toujours après la construction de la requête)
     $structures = $query->orderBy('id')->paginate(200)->withQueryString();
-
     return view('annuaire.index', compact('structures', 'organismes'));
 }
-
-
     // Affichage de la liste groupée par siège
     public function listeGroupee()
     {
@@ -64,13 +60,10 @@ class AnnuaireController extends Controller
                 $adresse_complete .= trim($structure->code_postal . ' ' . $structure->ville);
             }
             $structure->adresse_complete = $adresse_complete ?: null;
-        }
-        
-        $totalStructures = $structures->count();
-        
+        }   
+        $totalStructures = $structures->count();   
         return view('annuaire.list', compact('groupes', 'totalStructures', 'structures', 'organismes'));
     }
-
     // Affichage des users d'une structure spécifique
     public function showByStructure()
     {
@@ -80,7 +73,6 @@ class AnnuaireController extends Controller
         
         return view('annuaire.membre', compact('membres', 'structures'));
     }
-
     public function exportPdf()
     {
         // Récupération de toutes les structures avec leur organisme, triées
