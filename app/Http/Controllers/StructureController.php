@@ -73,11 +73,7 @@ public function index(Request $request)
     {
         $validated = $request->validate([
             'id_organisme' => 'required|exists:organisme,id',
-            //'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
-            /*'siege_ville' => 'required|string|max:100',
-            'siege_adresse' => 'required|string|max:255',
-            'siege_code_postal' => 'required|string|max:10',*/
             'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:10',
             'pays' => 'nullable|string|max:100',
@@ -90,11 +86,9 @@ public function index(Request $request)
             'type_structure' => 'nullable|string|max:100',
             'details' => 'nullable|string',
             'hebergement' => 'nullable|string',
-            //'site' => 'nullable|string|max:500',
             'email' => 'nullable|email|max:50',
             'telephone' => 'nullable|string|max:25',
             'horaires' => 'nullable|string|max:255',
-            //'logo' => 'nullable|file|mimes:jpg,jpeg,png,svg|max:2048', // 2Mo max
         ]);
 
         // ✅ NOUVEAU : Gestion de l'upload du logo
@@ -148,7 +142,6 @@ public function index(Request $request)
     {
         $validated = $request->validate([
             'id_organisme' => 'required|exists:organisme,id',
-            //'organisme' => 'required|string|max:255',
             'description' => 'nullable|string',
             'type_structure' => 'nullable|string|max:100',
             'hebergement' => 'nullable|string',
@@ -210,18 +203,13 @@ public function index(Request $request)
             return redirect()->route('structures.index')
                 ->with('error', 'Impossible de supprimer cette structure : des utilisateurs y sont rattachés.');
         }
-
         $structure->delete();
         //log de l'activité
         ActivityLog::log('Suppression structure', 'Structure supprimée: ' . $structure->organisme);
 
         return redirect()->route('annuaire.index')
-            ->with('success', 'Structure supprimée avec succès !');
-
-        
-        
+            ->with('success', 'Structure supprimée avec succès !');    
     }
-
     public function map()
     {
         $structures = Structures::with('organisme')->get();
