@@ -48,7 +48,8 @@ class AnnuaireController extends Controller
     // Affichage de la liste groupée par siège
     public function listeGroupee()
     {
-        $structures = Structures::with('organisme')->orderBy('siege_ville')->get();
+        $structures = Structures::with('organisme')->get();
+        $organismes = Organisme::orderBy('nom_organisme')->get();
         
         // Regroupement par siège (ville du siège)
         $groupes = $structures->groupBy(function($item) {
@@ -67,7 +68,7 @@ class AnnuaireController extends Controller
         
         $totalStructures = $structures->count();
         
-        return view('annuaire.list', compact('groupes', 'totalStructures'));
+        return view('annuaire.list', compact('groupes', 'totalStructures', 'structures', 'organismes'));
     }
 
     // Affichage des users d'une structure spécifique

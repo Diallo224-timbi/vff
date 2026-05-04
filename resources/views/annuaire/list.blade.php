@@ -58,19 +58,8 @@
                     <select id="filterOrganisme" 
                             class="w-full pl-8 pr-8 py-1.5 text-xs border border-gray-200 rounded-lg focus:border-[#8bbdc3] focus:ring-1 focus:ring-[#8bbdc3]/30 outline-none appearance-none bg-white">
                         <option value="">Tous les organismes</option>
-                        @php
-                            $organismes = collect();
-                            foreach($groupes as $structures) {
-                                foreach($structures as $structure) {
-                                    if($structure->organisme) {
-                                        $organismes->push($structure->organisme);
-                                    }
-                                }
-                            }
-                            $organismes = $organismes->unique()->sort();
-                        @endphp
                         @foreach($organismes as $organisme)
-                            <option value="{{ $organisme }}">{{ Str::limit($organisme, 30) }}</option>
+                            <option value="{{ $organisme->nom_organisme }}">{{ $organisme->nom_organisme }}</option>
                         @endforeach
                     </select>
                     <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-[10px]"></i>
@@ -151,7 +140,7 @@
                          id="siege-{{ $loop->index }}-grid">
                         @foreach($structures as $structure)
                             <div class="structure-card bg-white rounded-lg border border-gray-200 p-3 hover:border-[#8bbdc3] hover:shadow-sm transition-all duration-200 antenne-card"
-                                 data-organisme="{{ strtolower($structure->organisme ?? '') }}"
+                                 data-organisme="{{ strtolower($structure->organisme->nom_organisme ?? '') }}"
                                  data-categorie="{{ strtolower($structure->categories ?? '') }}"
                                  data-ville="{{ strtolower($structure->ville ?? '') }}"
                                  data-search="{{ strtolower($structure->organisme . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '')) }}"
@@ -165,7 +154,7 @@
                                         </div>
                                         <div>
                                             <h3 class="font-bold text-gray-800 text-sm line-clamp-2 organisme-nom" title="{{ $structure->organisme }}">
-                                                {{ $structure->organisme }}
+                                                {{ $structure->organisme->nom_organisme ?? 'Organisme non spécifié' }}
                                             </h3>
                                             <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-[#8bbdc3]/20 text-[#255156] text-xs rounded-full categorie-badge">
                                                 {{ Str::limit($structure->categories ?? 'Non catégorisé', 20) }}
