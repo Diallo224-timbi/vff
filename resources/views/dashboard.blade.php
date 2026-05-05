@@ -17,7 +17,6 @@
             </div>
         </div>
     </div>
-
     <!-- STATISTIQUES RAPIDES -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
@@ -32,7 +31,6 @@
             </div>
             <div class="text-[10px] text-gray-500 mt-1">{{ $validatedUsers ?? 0 }} validés • {{ $pendingUsers ?? 0 }} en attente</div>
         </div>
-
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
             <div class="flex justify-between items-start">
                 <div>
@@ -45,7 +43,6 @@
             </div>
             <div class="text-[10px] text-gray-500 mt-1">{{ $typesCount ?? 0 }} types • {{ $villesCount ?? 0 }} villes</div>
         </div>
-
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
             <div class="flex justify-between items-start">
                 <div>
@@ -62,7 +59,6 @@
                 <span class="text-blue-600">{{ $stats['documents'] ?? 0 }} docs</span>
             </div>
         </div>
-
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
             <div class="flex justify-between items-start">
                 <div>
@@ -88,7 +84,6 @@
             </div>
         </div>
     </div>
-
     <!-- GRAPHIQUES PRINCIPAUX -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <!-- Graphique utilisateurs par rôle -->

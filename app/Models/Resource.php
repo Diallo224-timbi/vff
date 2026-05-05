@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Facades\Storage;
 class Resource extends Model
 {
     use HasFactory, SoftDeletes;
@@ -144,5 +144,10 @@ class Resource extends Model
     public function incrementDownloadCount()
     {
         $this->increment('download_count');
+    }
+    protected $appends = ['file_url'];
+    public function getFileUrlAttribute()
+    {
+        return Storage::url($this->file_path);
     }
 }

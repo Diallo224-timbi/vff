@@ -51,7 +51,7 @@
                                    id="file" 
                                    name="file" 
                                    required
-                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.svg,.webp,.mp4,.webm,.avi,.mov,.mkv,.txt"
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.svg,.webp,.webm,.avi,.mov,.mkv,.txt"
                                    class="hidden"
                                    onchange="updateFileName(this)">
                             <button type="button" 
@@ -63,7 +63,7 @@
                             <p id="file-name" class="text-sm text-gray-500 mt-2">Aucun fichier sélectionné</p>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">
-                            Types acceptés : Images, Vidéos, Documents PDF/Word/Excel. Max 20 Mo
+                            Types acceptés : Images, Documents PDF/Word. Max 20 Mo
                         </p>
                         @error('file')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

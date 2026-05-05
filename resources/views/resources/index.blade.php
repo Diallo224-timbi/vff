@@ -7,8 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <!-- Carte principale -->
-            <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
-                
+            <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">  
                 <!-- En-tête -->
                 <div class="card-header text-white py-3" style="background: #255156; border: none;">
                     <div class="d-flex align-items-center justify-content-between">
@@ -24,7 +23,20 @@
                         </div>
                     </div>
                 </div>
-
+                <!--modal message de succes et d'erreur-->
+                <div class="card-body p-3">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                 <div class="card-body p-3">
                     <!-- CARTES DE FILTRES PAR CATÉGORIE -->
                     <div class="mb-3">
@@ -145,40 +157,91 @@
                                                 <span class="badge" style="background: #f3e8ff; color: #9333ea;">Ressource</span>
                                             @endif
                                         </div>
-                                    </div>
-                                    
+                                    </div>  
+                      
                                     <div class="card-body p-2 text-center">
                                         @if($resource->is_image)
-                                            <div class="bg-light rounded overflow-hidden" style="height: 120px; cursor: pointer;" onclick="openImageModal('{{ $resource->url }}', '{{ $resource->title }}')">
-                                                <img src="{{ $resource->url }}" alt="{{ $resource->title }}" class="w-100 h-100" style="object-fit: cover;">
-                                            </div>
+                                            <div class="bg-light rounded overflow-hidden" style="height: 120px; cursor: pointer;" onclick="openImageModal('{{ $resource->file_url }}', '{{ $resource->file_title }}')">
+                                                    <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" class="w-100 h-100" style="object-fit: cover;">
+                                                </div>
                                         @elseif($resource->is_video)
-                                            <div class="bg-dark rounded overflow-hidden position-relative" style="height: 120px; cursor: pointer;" onclick="openVideoModal('{{ $resource->url }}', '{{ $resource->title }}')">
+                                            <div class="bg-dark rounded overflow-hidden position-relative" style="height: 120px; cursor: pointer;" onclick="openVideoModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->file_title }}')">
                                                 <video class="w-100 h-100" style="object-fit: cover; opacity: 0.5;">
-                                                    <source src="{{ $resource->url }}" type="video/mp4">
+                                                    <source src="{{ asset($resource->file_path) }}" type="video/mp4">
                                                 </video>
                                                 <div class="position-absolute top-50 start-50 translate-middle">
                                                     <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                                         <i class="fas fa-play text-white"></i>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @elseif($resource->file_type === 'pdf')
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
-                                                <i class="fas fa-file-pdf text-danger fa-4x"></i>
-                                            </div>
-                                        @elseif(in_array($resource->file_type, ['doc', 'docx']))
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
-                                                <i class="fas fa-file-word text-primary fa-4x"></i>
-                                            </div>
-                                        @elseif(in_array($resource->file_type, ['xls', 'xlsx']))
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
-                                                <i class="fas fa-file-excel text-success fa-4x"></i>
-                                            </div>
-                                        @else
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px; cursor: pointer;" onclick="window.open('{{ $resource->url }}', '_blank')">
-                                                <i class="fas fa-file text-secondary fa-4x"></
-                                        @endif
+                                                </div>
+                                           @elseif($resource->file_type === 'pdf')
+<div class="bg-light rounded d-flex align-items-center justify-content-center"
+     style="height: 120px; cursor: pointer;"
+     onclick="window.open('{{ Storage::url($resource->file_path) }}', '_blank')">
+
+    <canvas id="pdf-thumb-{{ $resource->id }}" style="width:50%; height:150px;"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script>
+        const url = "{{ Storage::url($resource->file_path) }}";
+
+        const loadingTask = pdfjsLib.getDocument(url);
+        loadingTask.promise.then(function(pdf) {
+
+            pdf.getPage(1).then(function(page) {
+                const canvas = document.getElementById("pdf-thumb-{{ $resource->id }}");
+                const context = canvas.getContext('2d');
+
+                const viewport = page.getViewport({ scale: 0.3 });
+
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                });
+            });
+
+        });
+    </script>
+</div>
+
+
+    @elseif(in_array($resource->file_type, ['doc', 'docx', 'odt']))
+        <div class="bg-light rounded d-flex align-items-center justify-content-center"
+            style="height: 120px; cursor: pointer;"
+            onclick="window.open('{{ Storage::url($resource->file_path) }}', '_blank')">
+
+            <i class="fas fa-file-word text-primary fa-4x"></i>
+        </div>
+
+                        @elseif(in_array($resource->file_type, ['xls', 'xlsx', 'csv']))
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                style="height: 120px; cursor: pointer;"
+                                onclick="window.open('{{ Storage::url($resource->file_path) }}', '_blank')">
+
+                                <i class="fas fa-file-excel text-success fa-4x"></i>
+                            </div>
+
+                        @elseif(in_array($resource->file_type, ['ppt', 'pptx']))
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                style="height: 120px; cursor: pointer;"
+                                onclick="window.open('{{ Storage::url($resource->file_path) }}', '_blank')">
+
+                                <i class="fas fa-file-powerpoint text-warning fa-4x"></i>
+                            </div>
+
+                        @elseif($resource->file_type === 'txt')
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                style="height: 120px; cursor: pointer;"
+                                onclick="window.open('{{ Storage::url($resource->file_path) }}', '_blank')">
+
+                                <i class="fas fa-file-alt text-secondary fa-4x"></i>
+                            </div>
+                        @endif
                                     </div>
                                     
                                     <div class="card-body pt-0 pb-2 px-3">
@@ -322,8 +385,8 @@
                     
                     <div id="fileUploadSection" class="mb-3">
                         <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.mp4,.webm,.avi">
-                        <small class="text-muted">Formats acceptés: PDF, DOC, DOCX, JPG, PNG, GIF, MP4. Max 20Mo</small>
+                        <input required type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
+                        <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
                     </div>
                     
                     <div id="currentFileSection" class="mb-3 d-none">
@@ -403,173 +466,205 @@
 @section('scripts')
 <script>
 // Données des ressources
-const allResources = @json($resources->items());
+    const allResources = @json($resources->items());
 
-// Comptage par catégorie
-function updateCategoryCounts() {
-    let counts = { all: allResources.length, procedure: 0, outil: 0, fiche_reflexe: 0, ressource: 0 };
-    allResources.forEach(r => {
-        if (r.category === 'procedure') counts.procedure++;
-        else if (r.category === 'outil') counts.outil++;
-        else if (r.category === 'fiche_reflexe') counts.fiche_reflexe++;
-        else if (r.category === 'ressource') counts.ressource++;
+    // Comptage par catégorie
+    function updateCategoryCounts() {
+        let counts = { all: allResources.length, procedure: 0, outil: 0, fiche_reflexe: 0, ressource: 0 };
+        allResources.forEach(r => {
+            if (r.category === 'procedure') counts.procedure++;
+            else if (r.category === 'outil') counts.outil++;
+            else if (r.category === 'fiche_reflexe') counts.fiche_reflexe++;
+            else if (r.category === 'ressource') counts.ressource++;
+        });
+        document.getElementById('countAll').textContent = counts.all;
+        document.getElementById('countProcedure').textContent = counts.procedure;
+        document.getElementById('countOutil').textContent = counts.outil;
+        document.getElementById('countFiche').textContent = counts.fiche_reflexe;
+        document.getElementById('countRessource').textContent = counts.ressource;
+    }
+
+    // Initialisation des modales
+    let categoryModal, videoModal, imageModal, resourceModal, statsModal;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        categoryModal = new bootstrap.Modal(document.getElementById('categoryModal'));
+        videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
+        imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        resourceModal = new bootstrap.Modal(document.getElementById('resourceModal'));
+        statsModal = new bootstrap.Modal(document.getElementById('statsModal'));
+        updateCategoryCounts();
     });
-    document.getElementById('countAll').textContent = counts.all;
-    document.getElementById('countProcedure').textContent = counts.procedure;
-    document.getElementById('countOutil').textContent = counts.outil;
-    document.getElementById('countFiche').textContent = counts.fiche_reflexe;
-    document.getElementById('countRessource').textContent = counts.ressource;
-}
 
-// Initialisation des modales
-let categoryModal, videoModal, imageModal, resourceModal, statsModal;
-
-document.addEventListener('DOMContentLoaded', function() {
-    categoryModal = new bootstrap.Modal(document.getElementById('categoryModal'));
-    videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
-    imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
-    resourceModal = new bootstrap.Modal(document.getElementById('resourceModal'));
-    statsModal = new bootstrap.Modal(document.getElementById('statsModal'));
-    updateCategoryCounts();
-});
-
-window.openCategoryModal = function(category, title) {
-    let filtered = category === 'all' ? [...allResources] : allResources.filter(r => r.category === category);
-    document.getElementById('categoryModalTitle').innerHTML = `<i class="fas fa-folder-open me-2"></i>${title} (${filtered.length})`;
-    
-    const grid = document.getElementById('modalResourcesGrid');
-    const noResults = document.getElementById('modalNoResults');
-    
-    function renderResources(resources) {
-        if (resources.length === 0) {
-            grid.innerHTML = '';
-            noResults.classList.remove('d-none');
-            return;
-        }
-        noResults.classList.add('d-none');
-        grid.innerHTML = resources.map(r => `
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 border shadow-sm" style="border-radius: 12px;">
-                    <div class="card-header bg-transparent d-flex justify-content-between">
-                        <small class="badge bg-secondary">${r.is_image ? 'Image' : (r.is_video ? 'Vidéo' : 'Document')}</small>
-                        <small class="badge" style="background: #25515620; color: #255156;">${r.category === 'procedure' ? 'Procédure' : (r.category === 'outil' ? 'Outil' : (r.category === 'fiche_reflexe' ? 'Fiche réflexe' : 'Ressource'))}</small>
-                    </div>
-                    <div class="card-body text-center">
-                        ${r.is_image ? `<img src="${r.url}" class="img-fluid rounded" style="height: 100px; object-fit: cover; cursor: pointer;" onclick="openImageModal('${r.url}', '${r.title}')">` : 
-                          (r.is_video ? `<div class="bg-dark rounded d-flex align-items-center justify-content-center" style="height: 100px; cursor: pointer;" onclick="openVideoModal('${r.url}', '${r.title}')">
-                              <i class="fas fa-play-circle text-white fa-3x"></i>
-                          </div>` :
-                          `<i class="fas fa-file-pdf text-danger fa-4x"></i>`)}
-                        <h6 class="mt-2 fw-semibold">${escapeHtml(r.title)}</h6>
-                        <small class="text-muted">${r.created_at?.split('T')[0] || ''}</small>
-                    </div>
-                    <div class="card-footer bg-transparent d-flex justify-content-center gap-1">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="window.open('${r.url}', '_blank')"><i class="fas fa-eye"></i></button>
-                        <a href="/resources/${r.id}/download" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i></a>
+    window.openCategoryModal = function(category, title) {
+        let filtered = category === 'all' ? [...allResources] : allResources.filter(r => r.category === category);
+        document.getElementById('categoryModalTitle').innerHTML = `<i class="fas fa-folder-open me-2"></i>${title} (${filtered.length})`;
+        
+        const grid = document.getElementById('modalResourcesGrid');
+        const noResults = document.getElementById('modalNoResults');
+        
+        function renderResources(resources) {
+            if (resources.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('d-none');
+                return;
+            }
+            noResults.classList.add('d-none');
+            grid.innerHTML = resources.map(r => `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border shadow-sm" style="border-radius: 12px;">
+                        <div class="card-header bg-transparent d-flex justify-content-between">
+                            <small class="badge bg-secondary">${r.is_image ? 'Image' : (r.is_video ? 'Vidéo' : 'Document')}</small>
+                            <small class="badge" style="background: #25515620; color: #255156;">${r.category === 'procedure' ? 'Procédure' : (r.category === 'outil' ? 'Outil' : (r.category === 'fiche_reflexe' ? 'Fiche réflexe' : 'Ressource'))}</small>
+                        </div>
+                        <div class="card-body text-center">
+                            ${r.is_image ? `<img src="${r.url}" class="img-fluid rounded" style="height: 100px; object-fit: cover; cursor: pointer;" onclick="openImageModal('${r.url}', '${r.title}')">` : 
+                            (r.is_video ? `<div class="bg-dark rounded d-flex align-items-center justify-content-center" style="height: 100px; cursor: pointer;" onclick="openVideoModal('${r.url}', '${r.title}')">
+                                <i class="fas fa-play-circle text-white fa-3x"></i>
+                            </div>` :
+                            `<i class="bx bxs-file text-danger fa-4x"></i>`)}
+                            <h6 class="mt-2 fw-semibold">${escapeHtml(r.title)}</h6>
+                            <small class="text-muted">${r.created_at?.split('T')[0] || ''}</small>
+                        </div>
+                        <div class="card-footer bg-transparent d-flex justify-content-center gap-1">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="window.open('${r.url}', '_blank')"><i class="fas fa-eye"></i></button>
+                            <a href="/resources/${r.id}/download" class="btn btn-sm btn-outline-primary"><i class="fas fa-download"></i></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
-    }
-    
-    renderResources(filtered);
-    
-    const searchInput = document.getElementById('modalSearchInput');
-    searchInput.value = '';
-    searchInput.oninput = function() {
-        const term = this.value.toLowerCase();
-        const filtered2 = filtered.filter(r => r.title.toLowerCase().includes(term) || (r.description && r.description.toLowerCase().includes(term)));
-        renderResources(filtered2);
+            `).join('');
+        }
+        
+        renderResources(filtered);
+        
+        const searchInput = document.getElementById('modalSearchInput');
+        searchInput.value = '';
+        searchInput.oninput = function() {
+            const term = this.value.toLowerCase();
+            const filtered2 = filtered.filter(r => r.title.toLowerCase().includes(term) || (r.description && r.description.toLowerCase().includes(term)));
+            renderResources(filtered2);
+        };
+        
+        categoryModal.show();
     };
-    
-    categoryModal.show();
-};
 
-window.openCreateModal = function() {
-    document.getElementById('modalTitle').textContent = 'Ajouter une ressource';
-    document.getElementById('resourceForm').reset();
-    document.getElementById('resourceId').value = '';
-    document.getElementById('formMethod').value = 'POST';
-    document.getElementById('fileUploadSection').classList.remove('d-none');
-    document.getElementById('currentFileSection').classList.add('d-none');
-    resourceModal.show();
-};
+    window.openCreateModal = function() {
+        document.getElementById('modalTitle').textContent = 'Ajouter une ressource';
+        document.getElementById('resourceForm').reset();
+        document.getElementById('resourceId').value = '';
+        document.getElementById('formMethod').value = 'POST';
+        document.getElementById('fileUploadSection').classList.remove('d-none');
+        document.getElementById('currentFileSection').classList.add('d-none');
+        resourceModal.show();
+    };
 
-window.openEditModal = function(id) {
-    fetch(`/ressources/${id}/edit`)
-        .then(r => r.json())
-        .then(data => {
-            document.getElementById('modalTitle').textContent = 'Modifier la ressource';
-            document.getElementById('resourceId').value = data.id;
-            document.getElementById('formMethod').value = 'PUT';
-            document.getElementById('title').value = data.title || '';
-            document.getElementById('description').value = data.description || '';
-            document.getElementById('category').value = data.category || 'procedure';
-            document.getElementById('service').value = data.service || '';
-            document.getElementById('currentFileName').textContent = data.file_name || 'Aucun fichier';
-            document.getElementById('fileUploadSection').classList.add('d-none');
-            document.getElementById('currentFileSection').classList.remove('d-none');
-            resourceModal.show();
-        })
-        .catch(error => {
+    window.openEditModal = function(id) {
+        fetch(`/ressources/${id}/edit`)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('resourceForm').action = `/resources/${data.id}`;
+                document.getElementById('modalTitle').textContent = 'Modifier la ressource';
+                document.getElementById('resourceId').value = data.id;
+                document.getElementById('formMethod').value = 'PUT';
+                document.getElementById('title').value = data.title || '';
+                document.getElementById('description').value = data.description || '';
+                document.getElementById('category').value = data.category || 'procedure';
+                document.getElementById('service').value = data.service || '';
+                document.getElementById('currentFileName').textContent = data.file_name || 'Aucun fichier';
+                document.getElementById('fileUploadSection').classList.add('d-none');
+                document.getElementById('currentFileSection').classList.remove('d-none');
+                resourceModal.show();
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors du chargement des données');
+            });
+    };
+
+    window.openVideoModal = function(url, title) {
+        const video = document.getElementById('modalVideo');
+        const source = video.querySelector('source');
+        source.src = url;
+        video.load();
+        videoModal.show();
+    };
+
+    window.openImageModal = function(url, title) {
+        document.getElementById('modalImage').src = url;
+        imageModal.show();
+    };
+
+    window.deleteResource = function(id, btn) {
+        if (!confirm('Supprimer cette ressource ?')) return;
+        fetch(`/ressources/${id}`, {
+            method: 'DELETE',
+            headers: { 
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', 
+                'Accept': 'application/json'
+            }
+        }).then(r => r.json()).then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Erreur lors de la suppression');
+            }
+        }).catch(error => {
             console.error('Erreur:', error);
-            alert('Erreur lors du chargement des données');
+            alert('Erreur de connexion');
         });
-};
+    };
 
-window.openVideoModal = function(url, title) {
-    const video = document.getElementById('modalVideo');
-    const source = video.querySelector('source');
-    source.src = url;
-    video.load();
-    videoModal.show();
-};
+    window.openStatsModal = function() { 
+        statsModal.show(); 
+    };
 
-window.openImageModal = function(url, title) {
-    document.getElementById('modalImage').src = url;
-    imageModal.show();
-};
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 
-window.deleteResource = function(id, btn) {
-    if (!confirm('Supprimer cette ressource ?')) return;
-    fetch(`/ressources/${id}`, {
-        method: 'DELETE',
-        headers: { 
-            'X-CSRF-TOKEN': '{{ csrf_token() }}', 
-            'Accept': 'application/json'
-        }
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert(data.message || 'Erreur lors de la suppression');
-        }
-    }).catch(error => {
-        console.error('Erreur:', error);
-        alert('Erreur de connexion');
+    // Soumission du formulaire avec soumission normale (pas fetch)
+    document.getElementById('resourceForm').addEventListener('submit', function(e) {
+        // On laisse le formulaire s'envoyer normalement
+        // Pas de e.preventDefault() pour que le formulaire s'envoie normalement
+        // Le serveur doit rediriger vers la page actuelle avec un message de succès
     });
-};
+    //notification pour les messages flash
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            Swal.fire({
+                title: 'Succès !',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonColor: '#255156',
+                timer: 5000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
 
-window.openStatsModal = function() { 
-    statsModal.show(); 
-};
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
+        @if(session('error'))
+            Swal.fire({
+                title: 'Erreur !',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonColor: '#255156',
+                timer: 5000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
+        
     });
-}
-
-// Soumission du formulaire avec soumission normale (pas fetch)
-document.getElementById('resourceForm').addEventListener('submit', function(e) {
-    // On laisse le formulaire s'envoyer normalement
-    // Pas de e.preventDefault() pour que le formulaire s'envoie normalement
-    // Le serveur doit rediriger vers la page actuelle avec un message de succès
-});
 </script>
 <style>
 .object-fit-cover { object-fit: cover; }

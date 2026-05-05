@@ -81,7 +81,7 @@
                                         <i class="fas fa-hashtag text-muted"></i>
                                     </span>
                                     <input type="text" class="form-control border-start-0 ps-0" id="code_postal" name="code_postal" 
-                                           placeholder="75001" maxlength="5" required>
+                                           placeholder="06000" maxlength="5" required>
                                 </div>
                             </div>
 
@@ -95,7 +95,7 @@
                                         <i class="fas fa-map-pin text-muted"></i>
                                     </span>
                                     <input type="text" class="form-control border-start-0 ps-0" id="ville" name="ville" 
-                                           placeholder="Paris" required>
+                                           placeholder="Nice" required>
                                 </div>
                             </div>
                         </div>

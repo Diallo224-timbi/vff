@@ -219,7 +219,7 @@
                         <option value="">Aucun organisme</option>
                         @foreach($organismes as $organisme)
                             <option value="{{ $organisme->id }}" >
-                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }}
+                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }} -({{ $organisme->code_postal }})
                             </option>
                         @endforeach
                     </select>
@@ -228,7 +228,7 @@
                         @foreach($structures as $structure)
                             <option value="{{ $structure->id}}" 
                                 data-organisme-id="{{ $structure->id_organisme }}">
-                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }})
+                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }}) - {{ $structure->adresse }}
                             </option>
                         @endforeach
                     </select>

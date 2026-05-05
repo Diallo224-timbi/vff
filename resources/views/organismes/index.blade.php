@@ -158,7 +158,7 @@
     </div>
 </div>
 
-<!-- Modal de notification personnalisé -->
+<!-- Modal de notification -->
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -346,14 +346,14 @@
         });
     });
     
-    // Notification moderne pour les messages flash
+    // Notification pour les messages flash
     @if(session('success'))
         Swal.fire({
             title: 'Succès !',
             text: "{{ session('success') }}",
             icon: 'success',
             confirmButtonColor: '#255156',
-            timer: 3000,
+            timer: 5000,
             timerProgressBar: true,
             showConfirmButton: false,
             toast: true,
@@ -367,7 +367,7 @@
             text: "{{ session('error') }}",
             icon: 'error',
             confirmButtonColor: '#255156',
-            timer: 3000,
+            timer: 5000,
             timerProgressBar: true,
             showConfirmButton: false,
             toast: true,

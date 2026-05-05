@@ -24,6 +24,7 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  
   <!-- changement de vite pour O2switch -->
   <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
   <script src="{{ asset('build/assets/app.css') }}" defer></script>

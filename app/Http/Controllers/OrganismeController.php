@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Organisme;
+use App\Models\Resource;
 use App\Models\ActivityLog;
 class OrganismeController extends Controller
 {
@@ -12,7 +13,8 @@ class OrganismeController extends Controller
     public function index()
     {
         $organismes = Organisme::all();
-        return view('organismes.index', compact('organismes'));
+        $ressources = Resource::all();
+        return view('organismes.index', compact('organismes', 'ressources'));
     }
     //fonction pour afficher le formulaire de création d'un organisme
     public function create()
