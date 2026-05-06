@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Organisme;
 use App\Models\Resource;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 use App\Models\ActivityLog;
 class OrganismeController extends Controller
 {
@@ -22,20 +24,37 @@ class OrganismeController extends Controller
         return view('organismes.create');
     }
     //fonction pour enregistrer un nouvel organisme
-    public function store(Request $request)
+ public function store(Request $request)
     {
-        $request->validate([
-            'nom_organisme' => 'required',
-            'signification' => 'required',
-            'adresse' => 'required',
-            'code_postal' => 'required',
-            'ville' => 'required',
-            'site_web' => 'required',
-        ]);
+    $validator = Validator::make($request->all(), [
+        'nom_organisme' => [
+            'required',
+            Rule::unique('organisme')->where(function ($query) use ($request) {
+                return $query->where('ville', $request->ville);
+            }),
+        ],
+        'signification' => 'required',
+        'adresse' => 'required',
+        'code_postal' => 'required',
+        'ville' => 'required',
+        'site_web' => 'required',
+    ], [
+        'nom_organisme.unique' => 'Cet organisme existe déjà dans cette ville.'
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->route('organismes.index')
+            ->with('error', $validator->errors()->first()) //
+            ->withInput();
+    }
+
         Organisme::create($request->all());
+
         ActivityLog::log('Création d\'un organisme', 'organisme', null, $request->all());
-        return redirect()->route('organismes.index')->with('success', 'Organisme créé avec succès.');
-    } 
+
+        return redirect()->route('organismes.index')
+            ->with('success', 'Organisme créé avec succès.');
+    }
     //fonction pour afficher le formulaire de modification d'un organisme
     public function edit($id)
     {
@@ -44,19 +63,31 @@ class OrganismeController extends Controller
     }
     //fonction pour mettre à jour un organisme
     public function update(Request $request, $id)
-    {
+        {
         $request->validate([
-            'nom_organisme' => 'required',
+            'nom_organisme' => [
+                'required',
+                Rule::unique('organisme')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('ville', $request->ville);
+                    })
+                    ->ignore($id),
+            ],
             'signification' => 'required',
             'adresse' => 'required',
             'code_postal' => 'required',
             'ville' => 'required',
             'site_web' => 'required',
+        ], [
+            'nom_organisme.unique' => 'Cet organisme existe déjà dans cette ville.'
         ]);
+
         $organisme = Organisme::find($id);
         $organisme->update($request->all());
-        return redirect()->route('organismes.index')->with('success', 'Organisme mis à jour avec succès.');
-    } 
+
+        return redirect()->route('organismes.index')
+            ->with('success', 'Organisme mis à jour avec succès.');
+        }
     //fonction pour supprimer un organisme et ses structures associées
    public function destroy($id)
     {

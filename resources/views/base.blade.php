@@ -426,7 +426,6 @@
         <span>Plateforme</span><span class="hidden sm:inline"><br></span><span>Multi Acteurs</span>
       </div>
     </div>
-
     @auth
     <!-- Profil avec dropdown responsive -->
     <div class="profile-dropdown ">
@@ -457,24 +456,29 @@
       </div>
     </div>
     @endauth
-
     @guest
     <a href="{{ route('login') }}" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition backdrop-blur-sm">
       Se connecter
     </a>
     @endguest
   </header>
-
   <div class="app-wrapper">
     @auth
     <!-- SIDEBAR PRINCIPAL RESPONSIVE -->
     <aside id="sidebar" class="sidebar">
       <nav class="sidebar-nav">
-        <a href="{{ route('dashboard') }}" class="sidebar-link">
+        @if (auth()->user()->role === 'admin')
+         <a href="{{ route('dashboard') }}" class="sidebar-link">
           <i class='bx bx-home'></i>
           <span>Accueil</span>
         </a>
-        
+        @else
+        <a href="{{ route('dashboardUser') }}" class="sidebar-link">
+          <i class='bx bx-home'></i>
+          <span>Accueil</span>
+        </a>  
+        @endif
+       
         <div>
           <a href="#" id="openSecondarySidebar" class="sidebar-link">
             <i class='bx bx-book-reader'></i>

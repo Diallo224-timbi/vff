@@ -393,10 +393,20 @@ body {
 <body>
 
 <header class="header">
-  <div class="logo">
-    PLATEFORME<br>
-    <strong>MULTI ACTEURS</strong>
+  <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+    <img src="{{ asset('img/logo_prefet.png') }}" 
+         alt="Logo" 
+         style="width: 40px; height: auto;">
+    <div style="line-height: 1.1;">
+        PRÉFET DE LA<br>
+        <strong>LOIRE-ATLANTIQUE</strong>
+    </div>
   </div>
+    <div style="line-height: 1.1;">
+        PLATEFORME<br>
+        <strong>MULTI ACTEURS</strong>
+    </div>
+</div>
 
   <!-- Solution temporaire - utilisez le chemin direct -->
   <div>
@@ -425,7 +435,6 @@ body {
     <span></span>
   </div>
 </main>
-
 <script>
 // Animation des particules
 function createParticles() {

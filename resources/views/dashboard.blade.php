@@ -55,7 +55,6 @@
             </div>
             <div class="text-[10px] text-gray-500 mt-1">
                 <span class="text-purple-600">{{ $stats['images'] ?? 0 }} images</span> • 
-                <span class="text-red-600">{{ $stats['videos'] ?? 0 }} vidéos</span> • 
                 <span class="text-blue-600">{{ $stats['documents'] ?? 0 }} docs</span>
             </div>
         </div>
@@ -308,10 +307,10 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(docTypeCtx, {
             type: 'pie',
             data: {
-                labels: ['Images', 'Vidéos', 'Documents'],
+                labels: ['Images', 'Documents'],
                 datasets: [{
-                    data: [{{ $stats['images'] ?? 0 }}, {{ $stats['videos'] ?? 0 }}, {{ $stats['documents'] ?? 0 }}],
-                    backgroundColor: ['#8b5cf6', '#ef4444', '#3b82f6'],
+                    data: [{{ $stats['images'] ?? 0 }},  {{ $stats['documents'] ?? 0 }}],
+                    backgroundColor: ['#E5E5E8','#255160'],
                     borderWidth: 0
                 }]
             },

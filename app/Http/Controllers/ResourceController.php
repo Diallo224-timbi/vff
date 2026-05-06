@@ -30,8 +30,7 @@ class ResourceController extends Controller
                 'fiche_reflexe' => $allResources->where('category', 'fiche_reflexe')->count(),
                 'ressource' => $allResources->where('category', 'ressource')->count(),
             ]
-        ];
-        
+        ];  
         return view('resources.index', compact('resources', 'stats'));
     }
 
@@ -46,7 +45,6 @@ class ResourceController extends Controller
         'title' => 'required|string|max:255',
         'file' => 'required|file|max:' . $maxSize . '|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
         'category' => 'required|string',
-        'service' => 'nullable|string|max:255',
         'description' => 'nullable|string',
     ], [
         'file.max' => 'Le fichier dépasse la taille autorisée (50 Mo maximum).',
@@ -106,8 +104,8 @@ class ResourceController extends Controller
             'is_image' => $isImage,
             'is_video' => $isVideo,
             'category' => $request->category,
-            'service' => $request->service,
             'user_id' => auth()->id(),
+            'link_url' => null,
             'download_count' => 0,
         ]);
 

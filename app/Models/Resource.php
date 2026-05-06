@@ -24,6 +24,7 @@ class Resource extends Model
         'service',
         'download_count',
         'user_id',
+        'link_url'
     ];
 
     protected $casts = [
@@ -150,4 +151,14 @@ class Resource extends Model
     {
         return Storage::url($this->file_path);
     }
+    //methode pour lien hypertexte
+    public function getHyperlinkAttribute()
+    {
+        if ($this->file_type === 'lien') {
+            return $this->description;
+        }
+        return null;
+    }
+    
+
 }

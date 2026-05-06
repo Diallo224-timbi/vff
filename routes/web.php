@@ -15,11 +15,15 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\DashboardUserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
+// Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
+Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('dashboardUser');
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
