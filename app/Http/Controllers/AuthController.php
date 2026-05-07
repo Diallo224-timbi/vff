@@ -21,7 +21,11 @@ class AuthController extends Controller
     public function showSignUp(){
         //Vérifier si l'utilisateur est déjà authentifié
         if(Auth::check()){
-            return redirect()->route('dashboard');
+            if(auth()->user()->role === 'admin'){
+                return redirect()->route('dashboard');
+            }
+            else 
+            return redirect()->route('dashboardUser');
         }
         //si non, afficher la vue de connexion
         return view('auth.register');
@@ -30,56 +34,60 @@ class AuthController extends Controller
     public function showFormLogin(){
         // verifier si l'utilisateur est déjà authentifié
         if(Auth::check()){
-            return redirect()->route('dashboard');
+           if(auth()->user()->role === 'admin'){
+                return redirect()->route('dashboard');
+            }
+            else 
+            return redirect()->route('dashboardUser');
         }
         //si non, afficher la vue d'inscription
         return view('auth.login');
     }
     // fonction pour gérer la soumission du formulaire d'inscription
     public function login(Request $request)
-{
+    {
     //  Validation du formulaire
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    //  Récupérer l'utilisateur par email
-    $user = User::where('email', $request->email)->first();
+        //  Récupérer l'utilisateur par email
+        $user = User::where('email', $request->email)->first();
 
-    //  Vérifier si l'utilisateur existe
-    if (!$user) {
+        //  Vérifier si l'utilisateur existe
+        if (!$user) {
+            return back()
+                ->withErrors(['email' => 'Identifiants invalides'])
+                ->withInput();
+        }
+
+        // Vérifier si le compte est validé
+        if (!$user->isValidated()) {
+            return back()
+                ->withErrors(['email' => 'Votre compte n’est pas encore validé.'])
+                ->withInput();
+        }
+
+        //  Tentative de connexion
+        if (Auth::attempt($request->only('email', 'password'))) {
+            // Utilisateur connecté avec succès
+            $user = Auth::user(); // IMPORTANT : récupérer après Auth::attempt
+
+            // Mettre à jour la date de dernière connexion
+            $user->update(['last_login_at' => now()]);
+
+            // Créer le log de connexion
+            ActivityLog::log('Connexion', 'Utilisateur connecté: ' . $user->name, $user->id);
+
+                return redirect()->route('dashboardUser');  
+        }
+
+        //  Mot de passe incorrect
         return back()
             ->withErrors(['email' => 'Identifiants invalides'])
             ->withInput();
     }
-
-    // Vérifier si le compte est validé
-    if (!$user->isValidated()) {
-        return back()
-            ->withErrors(['email' => 'Votre compte n’est pas encore validé.'])
-            ->withInput();
-    }
-
-    //  Tentative de connexion
-    if (Auth::attempt($request->only('email', 'password'))) {
-        // Utilisateur connecté avec succès
-        $user = Auth::user(); // IMPORTANT : récupérer après Auth::attempt
-
-        // Mettre à jour la date de dernière connexion
-        $user->update(['last_login_at' => now()]);
-
-        // Créer le log de connexion
-        ActivityLog::log('Connexion', 'Utilisateur connecté: ' . $user->name, $user->id);
-
-        return redirect()->route('dashboard');
-    }
-
-    //  Mot de passe incorrect
-    return back()
-        ->withErrors(['email' => 'Identifiants invalides'])
-        ->withInput();
-}
     // fonction pour gérer la soumission du formulaire d'inscription
 
    public function showRegistrationForm(Request $request)
@@ -125,7 +133,7 @@ class AuthController extends Controller
             ]);
                 // Créer le log de l'inscription
 
-             ActivityLog::logUserCreation($user);
+            ActivityLog::logUserCreation($user);
             // Nettoyer les sessions liées à la vérification email
             session()->forget(['email_verification_code', 'email_to_verify', 'email_sent', 'code_verified']);   
             Mail::to($user->email)->send(new welcomEmail($user));
@@ -136,7 +144,7 @@ class AuthController extends Controller
             // Redirige avec les erreurs de validation
             return back()->withErrors($e->errors());
         } 
-}
+    }
    
     // fonction pour déconnecter l'utilisateur
     public function logout(){
@@ -150,38 +158,36 @@ class AuthController extends Controller
 
     // fonction pour envoyer le code de vérification par email
     public function sendVerificationCode(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email|unique:users,email',
-    ]);
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+        ]);
 
-    $code = rand(100000, 999999);
-    session(['email_verification_code' => $code, 'email_to_verify' => $request->email, 'email_sent' => true]);
+        $code = rand(100000, 999999);
+        session(['email_verification_code' => $code, 'email_to_verify' => $request->email, 'email_sent' => true]);
 
-    Mail::to($request->email)->send(new EmailVerificationMail($code));
+        Mail::to($request->email)->send(new EmailVerificationMail($code));
 
-    return redirect()->back()->with('success', 'Code envoyé par email !');
-}
-
-   
+        return redirect()->back()->with('success', 'Code envoyé par email !');
+    } 
     // fonction pour vérifier le code de vérification
     public function verifyCode(Request $request)
-{
-    $request->validate([
-        'code' => 'required|numeric',
-    ]);
+    {
+        $request->validate([
+            'code' => 'required|numeric',
+        ]);
 
-    $codeSession = session('email_verification_code');
+        $codeSession = session('email_verification_code');
 
-    if ($request->code == $codeSession) {
-        // Code correct → étape 3
-        session(['code_verified' => true]);
-        return redirect()->back()->with('success', 'Email validé ');
-    } else {
-        // Code incorrect → rester à l'étape 2
-        return redirect()->back()->with('code_error', 'Code incorrect ');
+        if ($request->code == $codeSession) {
+            // Code correct → étape 3
+            session(['code_verified' => true]);
+            return redirect()->back()->with('success', 'Email validé ');
+        } else {
+            // Code incorrect → rester à l'étape 2
+            return redirect()->back()->with('code_error', 'Code incorrect ');
+        }
     }
-}
 
 
 }

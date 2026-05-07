@@ -467,17 +467,11 @@
     <!-- SIDEBAR PRINCIPAL RESPONSIVE -->
     <aside id="sidebar" class="sidebar">
       <nav class="sidebar-nav">
-        @if (auth()->user()->role === 'admin')
-         <a href="{{ route('dashboard') }}" class="sidebar-link">
+    
+         <a href="{{ route('accueil') }}" class="sidebar-link">
           <i class='bx bx-home'></i>
           <span>Accueil</span>
         </a>
-        @else
-        <a href="{{ route('dashboardUser') }}" class="sidebar-link">
-          <i class='bx bx-home'></i>
-          <span>Accueil</span>
-        </a>  
-        @endif
        
         <div>
           <a href="#" id="openSecondarySidebar" class="sidebar-link">

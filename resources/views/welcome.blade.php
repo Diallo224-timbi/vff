@@ -398,8 +398,8 @@ body {
          alt="Logo" 
          style="width: 40px; height: auto;">
     <div style="line-height: 1.1;">
-        PRÉFET DE LA<br>
-        <strong>LOIRE-ATLANTIQUE</strong>
+        PRÉFECTURE DES<br>
+        <strong>ALPES MARITIMES</strong>
     </div>
   </div>
     <div style="line-height: 1.1;">

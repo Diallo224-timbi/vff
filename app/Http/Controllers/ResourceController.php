@@ -6,13 +6,18 @@ use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ActivityLog;
 
 class ResourceController extends Controller
 {
+    /**
+     * Afficher la liste des ressources (hors corbeille)
+     */
     public function index()
     {
-        $resources = Resource::latest()->paginate(8);   
-        // Récupérer toutes les ressources pour les statistiques
+        $resources = Resource::latest()->paginate(8);
+        
+        // Récupérer toutes les ressources non supprimées pour les statistiques
         $allResources = Resource::all();
         
         // Types de fichiers
@@ -31,83 +36,135 @@ class ResourceController extends Controller
                 'ressource' => $allResources->where('category', 'ressource')->count(),
             ]
         ];  
+        
         return view('resources.index', compact('resources', 'stats'));
     }
 
+    /**
+     * Afficher la corbeille
+     */
+    public function trash()
+    {
+        $resources = Resource::onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(10);
+        return view('resources.trash', compact('resources'));
+    }
+
+    /**
+     * Ajouter une nouvelle ressource
+     */
     public function store(Request $request)
 {
     $isAjax = $request->ajax() || $request->wantsJson();
 
-    // 50 Mo max (Laravel attend KB => 50 * 1024 = 51200 KB)
-    $maxSize = 51200;
+    $maxSize = 51200; // 50 Mo en KB
 
+    // 🔥 Validation corrigée
     $validator = Validator::make($request->all(), [
         'title' => 'required|string|max:255',
-        'file' => 'required|file|max:' . $maxSize . '|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
+
+        'file' => 'nullable|file|max:' . $maxSize . '|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
+
+        'link_url' => 'nullable|url',
+
         'category' => 'required|string',
         'description' => 'nullable|string',
     ], [
         'file.max' => 'Le fichier dépasse la taille autorisée (50 Mo maximum).',
         'file.mimes' => 'Format de fichier non autorisé.',
         'title.required' => 'Le titre est obligatoire.',
-        'file.required' => 'Veuillez sélectionner un fichier.',
         'category.required' => 'La catégorie est obligatoire.',
     ]);
 
     if ($validator->fails()) {
-        if ($isAjax) {
-            return response()->json([
+        return $isAjax
+            ? response()->json([
                 'success' => false,
                 'message' => 'Erreur de validation',
                 'errors' => $validator->errors()
-            ], 422);
-        }
-
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('error', 'Veuillez corriger les erreurs du formulaire.');
+            ], 422)
+            : redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Veuillez corriger les erreurs du formulaire.');
     }
 
     try {
-        if (!$request->hasFile('file')) {
+
+        // 🔥 obligation : fichier OU lien
+        if (!$request->hasFile('file') && !$request->filled('link_url')) {
             return $isAjax
-                ? response()->json(['success' => false, 'message' => 'Aucun fichier envoyé'], 400)
-                : redirect()->back()->with('error', 'Aucun fichier envoyé')->withInput();
+                ? response()->json([
+                    'success' => false,
+                    'message' => 'Ajoutez un fichier ou un lien'
+                ], 422)
+                : redirect()->back()
+                    ->with('error', 'Ajoutez un fichier ou un lien')
+                    ->withInput();
         }
 
+        // =========================
+        // 🔥 GESTION FICHIER
+        // =========================
         $file = $request->file('file');
 
-        // sécurité supplémentaire (taille réelle en bytes)
-        if ($file->getSize() > ($maxSize * 1024)) {
-            return $isAjax
-                ? response()->json(['success' => false, 'message' => 'Fichier trop volumineux'], 413)
-                : redirect()->back()->with('error', 'Fichier trop volumineux (max 50 Mo)')->withInput();
+        $path = null;
+        $fileName = null;
+        $fileSize = null;
+        $extension = null;
+        $isImage = false;
+        $isVideo = false;
+
+        if ($file) {
+
+            $fileSize = $file->getSize();
+
+            if ($fileSize > ($maxSize * 1024)) {
+                return $isAjax
+                    ? response()->json(['success' => false, 'message' => 'Fichier trop volumineux'], 413)
+                    : redirect()->back()
+                        ->with('error', 'Fichier trop volumineux (max 50 Mo)')
+                        ->withInput();
+            }
+
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            $isImage = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
+            $isVideo = in_array($extension, ['mp4','webm','avi','mov','mkv']);
+
+            $fileName = time() . '_' . uniqid() . '.' . $extension;
+
+            $path = $file->storeAs('resources', $fileName, 'public');
         }
 
-        $extension = strtolower($file->getClientOriginalExtension());
-
-        $isImage = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
-        $isVideo = in_array($extension, ['mp4','webm','avi','mov','mkv']);
-
-        $fileName = time() . '_' . uniqid() . '.' . $extension;
-        $path = $file->storeAs('resources', $fileName, 'public');
-
+        // =========================
+        // 🔥 CREATION RESOURCE
+        // =========================
         $resource = Resource::create([
             'title' => $request->title,
             'description' => $request->description,
-            'file_name' => $file->getClientOriginalName(),
+
+            'file_name' => $fileName,
             'file_path' => $path,
-            'file_size' => $file->getSize(),
+            'file_size' => $fileSize,
             'file_type' => $extension,
-            'file_icon' => $this->getFileIcon($extension),
+
+            'file_icon' => $extension ? $this->getFileIcon($extension) : 'fas fa-link',
             'is_image' => $isImage,
             'is_video' => $isVideo,
+
             'category' => $request->category,
             'user_id' => auth()->id(),
-            'link_url' => null,
+
+            'link_url' => $request->link_url,
+
             'download_count' => 0,
         ]);
+
+        ActivityLog::log(
+            'Création de ressource',
+            'Ressource créée: ' . $resource->title,
+            auth()->id()
+        );
 
         return $isAjax
             ? response()->json([
@@ -119,6 +176,7 @@ class ResourceController extends Controller
                 ->with('success', 'Ressource ajoutée avec succès');
 
     } catch (\Exception $e) {
+
         return $isAjax
             ? response()->json([
                 'success' => false,
@@ -130,87 +188,86 @@ class ResourceController extends Controller
     }
 }
 
+    /**
+     * Afficher le formulaire d'édition
+     */
+    public function edit($id)
+    {
+        try {
+            $resource = Resource::findOrFail($id);
+            return view('resources.edit', compact('resource'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Ressource non trouvée');
+        }
+    }
+
+    /**
+     * Mettre à jour une ressource
+     */
     public function update(Request $request, $id)
     {
-        $isAjax = $request->ajax() || $request->wantsJson();
+        $resource = Resource::findOrFail($id);
         
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'category' => 'required|string',
-            'theme' => 'nullable|string|max:255',
-            'service' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'nullable|file|max:20480|mimes:jpg,jpeg,png,gif,webp,mp4,webm,pdf,doc,odt,docx,xls,xlsx,ppt,pptx,txt'
+            'category' => 'required|string',
+            'file' => 'nullable|file|max:51200|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
+            'link_url' => 'nullable|url'
         ]);
-
+        
         if ($validator->fails()) {
-            if ($isAjax) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Veuillez corriger les erreurs du formulaire.');
         }
-
+        
         try {
-            $resource = Resource::findOrFail($id);
-            
-            // Mise à jour des champs
             $resource->title = $request->title;
             $resource->description = $request->description;
             $resource->category = $request->category;
-            $resource->theme = $request->theme;
-            $resource->service = $request->service;
-
-            // Si nouveau fichier uploadé
+            
+            // Gestion du fichier ou lien
             if ($request->hasFile('file')) {
                 // Supprimer l'ancien fichier
-                if ($resource->file_path) {
+                if ($resource->file_path && Storage::disk('public')->exists($resource->file_path)) {
                     Storage::disk('public')->delete($resource->file_path);
                 }
                 
                 $file = $request->file('file');
                 $extension = strtolower($file->getClientOriginalExtension());
-                $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg']);
-                $isVideo = in_array($extension, ['mp4', 'webm', 'avi', 'mov', 'mkv']);
-                
                 $fileName = time() . '_' . uniqid() . '.' . $extension;
                 $path = $file->storeAs('resources', $fileName, 'public');
                 
-                $resource->file_name = $file->getClientOriginalName();
                 $resource->file_path = $path;
+                $resource->file_name = $file->getClientOriginalName();
                 $resource->file_size = $file->getSize();
                 $resource->file_type = $extension;
                 $resource->file_icon = $this->getFileIcon($extension);
-                $resource->is_image = $isImage;
-                $resource->is_video = $isVideo;
+                $resource->is_image = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
+                $resource->is_video = in_array($extension, ['mp4','webm','avi','mov','mkv']);
+                $resource->is_link = $request->filled('link_url');
+                $resource->link_url = null;
             }
-
+            
+            if ($request->filled('link_url')) {
+                $resource->link_url = $request->link_url;
+                $resource->is_link = true;
+                $resource->is_image = false;
+                $resource->is_video = false;
+            }
+            
             $resource->save();
-
-            if ($isAjax) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Ressource modifiée avec succès',
-                    'resource' => $resource
-                ]);
-            }
-
+            
+            ActivityLog::log('Modification de ressource', 'Ressource modifiée: ' . $resource->title, auth()->id());
+            
             return redirect()->route('resources.index')
                 ->with('success', 'Ressource modifiée avec succès');
-
+                
         } catch (\Exception $e) {
-            if ($isAjax) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Erreur lors de la modification: ' . $e->getMessage()
-                ], 500);
-            }
-
             return redirect()->back()
-                ->with('error', 'Erreur lors de la modification: ' . $e->getMessage())
-                ->withInput();
+                ->with('error', 'Erreur lors de la modification: ' . $e->getMessage());
         }
     }
 
@@ -218,20 +275,19 @@ class ResourceController extends Controller
     {
         try {
             $resource = Resource::findOrFail($id);
-            // Supprimer le fichier
-            if ($resource->file_path) {
-                Storage::disk('public')->delete($resource->file_path);
-            }   
-            $resource->delete();
+            $resource->delete(); // Soft delete - met à la corbeille
 
+            ActivityLog::log('Suppression de ressource', 'Ressource déplacée vers la corbeille: ' . $resource->title, auth()->id());
+            
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Ressource supprimée avec succès'
+                    'message' => 'Ressource déplacée vers la corbeille'
                 ]);
             }
+            
             return redirect()->route('resources.index')
-                ->with('success', 'Ressource supprimée avec succès');
+                ->with('success', 'Ressource déplacée vers la corbeille');
 
         } catch (\Exception $e) {
             if (request()->ajax() || request()->wantsJson()) {
@@ -246,38 +302,82 @@ class ResourceController extends Controller
         }
     }
 
-    public function edit($id)
+    /**
+     * Restaurer une ressource depuis la corbeille
+     */
+    public function restore($id)
     {
         try {
-            $resource = Resource::findOrFail($id);
+            $resource = Resource::onlyTrashed()->findOrFail($id);
+            $resource->restore();
             
-            // Vérification des permissions
-            if (auth()->user()->role !== 'admin' && auth()->user()->id !== $resource->user_id) {
+            ActivityLog::log('Restauration de ressource', 'Ressource restaurée: ' . $resource->title, auth()->id());
+            
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ressource restaurée avec succès'
+                ]);
+            }
+            
+            return redirect()->route('resources.trash')->with('success', 'Ressource restaurée avec succès');
+            
+        } catch (\Exception $e) {
+            if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Vous n\'avez pas la permission de modifier cette ressource'
-                ], 403);
+                    'message' => 'Erreur lors de la restauration: ' . $e->getMessage()
+                ], 500);
             }
-
-            return response()->json([
-                'success' => true,
-                'id' => $resource->id,
-                'title' => $resource->title,
-                'description' => $resource->description,
-                'category' => $resource->category,
-                'theme' => $resource->theme,
-                'service' => $resource->service,
-                'file_name' => $resource->file_name,
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Ressource non trouvée'
-            ], 404);
+            
+            return redirect()->back()->with('error', 'Erreur lors de la restauration: ' . $e->getMessage());
         }
     }
 
+    /**
+     * Supprimer définitivement une ressource
+     */
+    public function forceDelete($id)
+    {
+        try {
+            $resource = Resource::onlyTrashed()->findOrFail($id);
+            
+            // Supprimer le fichier physique
+            if (!$resource->is_link && $resource->file_path) {
+                if (Storage::disk('public')->exists($resource->file_path)) {
+                    Storage::disk('public')->delete($resource->file_path);
+                }
+            }
+            
+            $title = $resource->title;
+            $resource->forceDelete();
+            
+            ActivityLog::log('Suppression définitive', 'Ressource supprimée définitivement: ' . $title, auth()->id());
+            
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ressource supprimée définitivement'
+                ]);
+            }
+            
+            return redirect()->route('resources.trash')->with('success', 'Ressource supprimée définitivement');
+            
+        } catch (\Exception $e) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la suppression définitive: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->back()->with('error', 'Erreur lors de la suppression définitive: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Télécharger une ressource
+     */
     public function download($id)
     {
         try {
@@ -299,6 +399,9 @@ class ResourceController extends Controller
         }
     }
 
+    /**
+     * Obtenir l'icône du fichier
+     */
     private function getFileIcon($extension)
     {
         $icons = [
@@ -315,12 +418,42 @@ class ResourceController extends Controller
             'jpeg' => 'fa-file-image',
             'png' => 'fa-file-image',
             'gif' => 'fa-file-image',
+            'webp' => 'fa-file-image',
+            'svg' => 'fa-file-image',
             'mp4' => 'fa-file-video',
             'webm' => 'fa-file-video',
+            'avi' => 'fa-file-video',
+            'mov' => 'fa-file-video',
+            'mkv' => 'fa-file-video',
             'txt' => 'fa-file-alt',
         ];
 
         return $icons[$extension] ?? 'fa-file';
     }
-    
+
+    //vider la corbeille
+    public function emptyTrash()
+    {
+        try {
+            $trashedResources = Resource::onlyTrashed()->get();
+            
+            foreach ($trashedResources as $resource) {
+                // Supprimer le fichier physique
+                if (!$resource->is_link && $resource->file_path) {
+                    if (Storage::disk('public')->exists($resource->file_path)) {
+                        Storage::disk('public')->delete($resource->file_path);
+                    }
+                }
+                $title = $resource->title;
+                $resource->forceDelete();
+                
+                ActivityLog::log('Suppression définitive', 'Ressource supprimée définitivement: ' . $title, auth()->id());
+            }
+            
+            return redirect()->route('resources.trash')->with('success', 'Corbeille vidée avec succès');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erreur lors de la vidange de la corbeille: ' . $e->getMessage());
+        }
+    }
 }

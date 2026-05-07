@@ -3,17 +3,6 @@
 @section('title', 'Plateforme – Schéma Départemental')
 
 @section('content')
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Plateforme – Schéma Départemental | Alpes-Maritimes</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Marianne:wght@400;700;800&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
             --primary: #255156;
@@ -35,12 +24,7 @@
             padding: 0; 
         }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Marianne', 'Arial', sans-serif;
-            min-height: 100vh;
-        }
+        
 
         /* HEADER */
         header {
@@ -637,8 +621,6 @@
             .hero-contact { flex-direction: column; }
         }
     </style>
-</head>
-<body>
 
 {{-- HEADER --}}
 <header>
@@ -650,15 +632,8 @@
                 <p>Alpes-Maritimes · DDETS 06</p>
             </div>
         </a>
-        <div class="header-nav">
-            @guest
-                <a href="{{ route('login') }}" class="btn-nav btn-nav-outline">Se connecter</a>
-                <a href="{{ route('register') }}" class="btn-nav btn-nav-solid">Créer un compte</a>
-            @endguest
-        </div>
     </div>
 </header>
-
 {{-- URGENCE BANNER --}}
 <div class="urgence-banner">
     <div class="urgence-inner">
@@ -671,7 +646,6 @@
         </div>
     </div>
 </div>
-
 {{-- HERO --}}
 <section class="hero">
     <div class="hero-inner">
@@ -686,7 +660,7 @@
             <div class="hero-contact-card">
                 <strong>Patricia Mendoza Cerisuelo</strong>
                 Déléguée départementale aux droits des femmes<br>
-                📞 04 93 72 27 26 &nbsp;·&nbsp; 📱 07 89 29 36 97
+                <i class="bx bx-phone"></i> 04 93 72 27 26 &nbsp;·&nbsp; <i class="bx bx-mobile"></i> 07 89 29 36 97
             </div>
             <div class="hero-contact-card">
                 <strong>DDETS 06</strong>
@@ -703,15 +677,21 @@
     {{-- Accès rapides --}}
     <div class="quick-actions">
         <a href="{{ route('annuaire.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-blue">🏢</div>
+            <div class="qa-icon qa-icon-blue"><i class="bx bx-folder"></i></div>
             <div>
                 <strong>Annuaire</strong>
                 <p>Structures, membres, carte interactive</p>
             </div>
         </a>
-
+        <a href="{{ route('structures.map') }}" class="qa-card">
+            <div class="qa-icon qa-icon-green"><i class="bx bx-map"></i></div>
+            <div>
+                <strong>Cartographie</strong>
+                <p>Visualisation géographique des acteurs</p>
+            </div>
+        </a>
         <a href="{{ route('events.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-gold">📅</div>
+            <div class="qa-icon qa-icon-gold"><i class="bx bx-calendar"></i></div>
             <div>
                 <strong>Agenda</strong>
                 <p>Événements, 8 mars, 25 novembre</p>
@@ -719,25 +699,23 @@
         </a>
 
         <a href="{{ route('forum.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-info">💬</div>
+            <div class="qa-icon qa-icon-info"><i class="bx bx-message"></i></div>
             <div>
                 <strong>Forum</strong>
                 <p>Échanges entre partenaires</p>
             </div>
-        </a>
-        
+        </a>  
         <a href="{{ route('resources.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-green">📚</div>
+            <div class="qa-icon qa-icon-green"><i class="bx bx-book"></i></div>
             <div>
                 <strong>Ressources</strong>
                 <p>Espace documentaire</p>
             </div>
         </a>
-        
         @auth
             @if(auth()->user()->role === 'admin')
             <a href="{{ route('dashboard') }}" class="qa-card">
-                <div class="qa-icon qa-icon-blue">📊</div>
+                <div class="qa-icon qa-icon-blue"><i class="bx bx-bar-chart"></i></div>
                 <div>
                     <strong>Tableau de bord</strong>
                     <p>Statistiques et administration</p>
@@ -752,7 +730,7 @@
 
         {{-- Affiche avec image --}}
         <div class="affiche-widget">
-            <h3>📌 Affiche à diffuser</h3>
+            <h3><i class="bx bx-note"></i> Document à diffuser</h3>
             <div class="affiche-image">
                 <img src="{{ asset('img/affiche-violences-femmes.jpg') }}" 
                      alt="Affiche violences faites aux femmes - Alpes-Maritimes"
@@ -760,8 +738,34 @@
             </div>
             <a href="{{ asset('img/Affiche-ALPES-MARITIMES.pdf') }}"
                download class="btn-dl">
-                ⬇ Télécharger l'affiche (PDF)
+                <i class="bx bx-download"></i> Télécharger l'affiche (PDF)
             </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('img/SDLVFF 2024-27_VO.odt') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le schéma (ODT)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/Programmation_GT_Schéma_Avril_2026.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger la Programmation GT Schéma Avril 2026 (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/Ville_Nice_VO_2026 _GUIDE_VICTIMES_CONJUGALES_SEXISTES_SEXUELLE.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le guide de la Ville de Nice pour les victimes de violences conjugales, sexistes et sexuelles (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/CARF_RESEAU_RIVIERA_FRANCAISE_guide_victimes.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le guide du CARF Réseau Riviera Française pour les victimes de violences conjugales (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/Flyer_Parcours _de _Femmes _2026.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le flyer de parcours de femmes 2026 (PDF)
+            </a>
+
         </div>
 
         {{-- Contacts locaux --}}
@@ -802,12 +806,10 @@
     <div class="footer-inner">
         <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet des Alpes-Maritimes">
         <div class="footer-links">
-            <a href="#">Mentions légales</a>  
+            <a href="{{ route('charte') }}">Mentions légales</a>  
             <a href="https://www.arretonslesviolences.gouv.fr" target="_blank" rel="noopener">arretonslesviolences.gouv.fr</a>
-            <a href="#">Accessibilité</a>
-            <a href="#">Contact</a>
         </div>
-        <p class="footer-copy">© {{ date('Y') }} Préfet des Alpes-Maritimes – DDETS 06</p>
+        <p class="footer-copy">© {{ date('Y') }} Préfecture des Alpes-Maritimes – DDETS 06</p>
     </div>
 </footer>
 
@@ -845,6 +847,4 @@
     });
 </script>
 
-</body>
-</html>
 @endsection

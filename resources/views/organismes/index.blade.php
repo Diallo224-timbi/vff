@@ -71,13 +71,11 @@
     <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 20px; overflow: hidden;">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0" style="min-width: 1000px;">
+                <table class="table" style="table-layout: auto; width: 100%;">
                     <thead style="background: linear-gradient(135deg, #0a9dad 0%, #1d3f43 100%);">
                         <tr>
-                            <th class="text-black py-3 px-4"><i class="fas fa-hashtag me-1"></i> ID</th>
                             <th class="text-black py-3"><i class="fas fa-building me-1"></i> Nom</th>
                             <th class="text-black py-3"><i class="fas fa-align-left me-1"></i> Description</th>
-                            <th class="text-black py-3"><i class="fas fa-building me-1"></i> Structures rattachées</th>
                             <th class="text-black py-3"><i class="fas fa-location-dot me-1"></i> Adresse</th>
                             <th class="text-black py-3"><i class="fas fa-mail-bulk me-1"></i> Code postal</th>
                             <th class="text-black py-3"><i class="fas fa-city me-1"></i> Ville</th>
@@ -88,18 +86,13 @@
                     <tbody id="tableBody">
                         @forelse($organismes as $organisme)
                         <tr class="align-middle animate-row" style="transition: all 0.3s ease;">
-                            <td class="px-4 fw-bold" style="color: #255156;">{{ $organisme->id }}</td>
-                            <td>
-                                <strong>{{ $organisme->nom_organisme }}</strong>
+                            <td style="max-width: 200px">
+                                <strong >{{ $organisme->nom_organisme }}</strong>
                             </td>
                             <td>
-                                <span class="d-inline-block text-truncate" style="max-width: 200px;" title="{{ $organisme->signification }}">
-                                    {{ Str::limit($organisme->signification, 50) }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge bg-secondary">
-                                    {{ count($organisme->structures) }} {{ Str::plural('structure', count($organisme->structures)) }}
+                                <!-- retour à la ligne -->
+                                <span class="d-inline-block" style="max-width: 500px;" title="{{ $organisme->signification }}">
+                                    {{ Str::limit($organisme->signification, 200) }}
                                 </span>
                             </td> 
                             <td>{{ $organisme->adresse }}</td>

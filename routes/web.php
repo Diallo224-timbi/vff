@@ -21,9 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
-Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
+Route::get('/accueil', [DashboardUserController::class, 'index'])
     ->middleware(['auth'])
-    ->name('dashboardUser');
+    ->name('accueil');
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
@@ -85,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/organismes/{id}', [OrganismeController::class, 'destroy'])->name('organismes.destroy');
     Route::get('/organismes/{id}', [OrganismeController::class, 'show'])->name('organismes.show');
 });
+
 
 
 // Route pour le profil utilisateur
@@ -197,9 +198,14 @@ Route::middleware(['auth'])->group(function () {
     
     // Téléchargement
     Route::get('/ressources/{resource}/telecharger', [ResourceController::class, 'download'])->name('resources.download');
-    // Route pour la mise à jour en masse (ex: via AJAX)
-    Route::post('/resources/batch-update', [ResourceController::class, 'batchUpdate'])->name('resources.batch-update');
-    Route::get('/ressources/{resource}/edit', [ResourceController::class, 'edit'])->name('resources.edit');
+  
+    // Routes pour la corbeille
+    Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
+    Route::post('/resources/{id}/restore', [ResourceController::class, 'restore'])->name('resources.restore');
+    Route::delete('/resources/{id}/force-delete', [ResourceController::class, 'forceDelete'])->name('resources.force-delete');
+
+    //route vider la corbeille
+    Route::delete('/resources/trash/empty', [ResourceController::class, 'emptyTrash'])->name('resources.trash.empty');
 });
 
 // Route de test pour vérifier (à supprimer après test)

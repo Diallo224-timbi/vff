@@ -84,9 +84,6 @@ class Resource extends Model
         return in_array($this->file_type, $documentTypes);
     }
 
-    /**
-     * Obtenir l'icône Font Awesome selon le type de fichier
-     */
     public function getFileIconAttribute()
     {
         if ($this->is_image) {
@@ -95,6 +92,9 @@ class Resource extends Model
         
         if ($this->is_video) {
             return 'fa-file-video text-red-500';
+        }
+        if ($this->is_link) {
+            return 'fa-link text-blue-500';
         }
         
         $icons = [
@@ -158,6 +158,10 @@ class Resource extends Model
             return $this->description;
         }
         return null;
+    }
+    public function getIsLinkAttribute()
+    {
+        return empty($this->file_path) && !empty($this->link_url);
     }
     
 
