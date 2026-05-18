@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <!-- Type de structure -->
+                <!-- Type de structure
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
                         <label class="text-xs font-medium text-gray-700">Type de structure</label>
@@ -64,17 +64,9 @@
                         </div>
                     </div>
                     <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1 border border-gray-100 rounded p-2">
-                        @php
-                            $types = $structures->pluck('type_structure')->unique()->filter()->sort();
-                        @endphp
-                        @foreach($types as $type)
-                            <label class="flex items-center cursor-pointer text-xs hover:bg-gray-50 p-1 rounded">
-                                <input type="checkbox" value="{{ $type }}" class="type-filter mr-2 rounded text-[#255156]" checked>
-                                <span class="truncate">{{ $type }}</span>
-                            </label>
-                        @endforeach
+                        
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Catégorie -->
                 <div class="mb-4">
@@ -85,7 +77,7 @@
                             <button onclick="uncheckAll('.category-filter')" class="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded hover:bg-gray-300">Aucun</button>
                         </div>
                     </div>
-                    <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1 border border-gray-100 rounded p-2">
+                    <div class="space-y-2 max-h-100 overflow-y-auto pr-1 border border-gray-100 rounded p-2">
                         @php
                             $categories = $structures
                                 ->pluck('categories')

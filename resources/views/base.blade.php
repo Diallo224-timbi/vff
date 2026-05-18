@@ -468,7 +468,7 @@
     <aside id="sidebar" class="sidebar">
       <nav class="sidebar-nav">
     
-         <a href="{{ route('accueil') }}" class="sidebar-link">
+         <a href="{{ route('dashboardUser') }}" class="sidebar-link">
           <i class='bx bx-home'></i>
           <span>Accueil</span>
         </a>

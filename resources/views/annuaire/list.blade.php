@@ -37,7 +37,6 @@
             <span>{{ $totalStructures }} structures - {{ count($groupes) }} sièges</span>
         </div>
     </div>
-
     <!-- SECTION RECHERCHE ET FILTRES COMPACTE -->
     <div class="bg-white p-2 rounded-lg shadow-sm mb-3 border border-gray-100">
         <div class="flex flex-wrap items-center gap-2">
@@ -49,8 +48,7 @@
                            class="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:border-[#8bbdc3] focus:ring-1 focus:ring-[#8bbdc3]/30 outline-none transition-all" 
                            placeholder="Rechercher siège ou structure...">
                 </div>
-            </div>
-            
+            </div>   
             <!-- Filtre par organisme - dropdown compact -->
             <div class="w-48">
                 <div class="relative">
@@ -65,8 +63,6 @@
                     <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-[10px]"></i>
                 </div>
             </div>
-            
-            
             <!-- Bouton réinitialiser - compact -->
             <button id="resetFilters" 
                     class="flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors whitespace-nowrap">
@@ -74,14 +70,12 @@
                 Réinitialiser
             </button>
         </div>
-        
         <!-- Indicateurs de filtres actifs (caché par défaut) -->
         <div id="activeFilters" class="hidden mt-2 flex flex-wrap gap-1">
             <span class="text-[10px] text-gray-500 mr-1">Filtres actifs:</span>
             <div id="filterBadges" class="flex flex-wrap gap-1"></div>
         </div>
     </div>
-
     <!-- Liste groupée par siège avec espacement réduit -->
     <div class="space-y-3" id="groupesContainer">
         @forelse($groupes as $siege => $structures)
@@ -99,9 +93,9 @@
                                 <p class="text-xs text-white/80">
                                     <i class="fas fa-building mr-1"></i>
                                     @if($structures->count() > 1)
-                                        <span class="structures-count">{{ $structures->count() }}</span> antennes
+                                        <span class="structures-count">{{ $structures->count() }}</span> structures
                                     @else
-                                        aucunne antenne
+                                        aucunne structure
                                     @endif
                                 </p>
                             </div>
@@ -125,8 +119,8 @@
                         <div class="relative">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
                             <input type="text" 
-                                   class="search-antenne form-control-professional pl-8 py-1.5 text-xs w-full bg-white border border-gray-200 focus:border-[#8bbdc3] rounded-lg" 
-                                   placeholder="Rechercher dans {{ $structures->count() }} antennes..."
+                                   class="search-structure form-control-professional pl-8 py-1.5 text-xs w-full bg-white border border-gray-200 focus:border-[#8bbdc3] rounded-lg" 
+                                   placeholder="Rechercher dans {{ $structures->count() }} structures..."
                                    data-siege-id="siege-{{ $loop->index }}">
                             <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
                                 {{ $structures->count() }}
@@ -139,11 +133,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" 
                          id="siege-{{ $loop->index }}-grid">
                         @foreach($structures as $structure)
-                            <div class="structure-card bg-white rounded-lg border border-gray-200 p-3 hover:border-[#8bbdc3] hover:shadow-sm transition-all duration-200 antenne-card"
+                            <div class="structure-card bg-white rounded-lg border border-gray-200 p-3 hover:border-[#8bbdc3] hover:shadow-sm transition-all duration-200 structure-card"
                                  data-organisme="{{ strtolower($structure->organisme->nom_organisme ?? '') }}"
                                  data-categorie="{{ strtolower($structure->categories ?? '') }}"
                                  data-ville="{{ strtolower($structure->ville ?? '') }}"
-                                 data-search="{{ strtolower($structure->organisme . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '')) }}"
+                                 data-search="{{ strtolower($structure->organisme->nom_organisme ?? '') . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '') }}"
                                  data-siege-id="siege-{{ $loop->parent->index }}">
                                 
                                 <!-- En-tête de la carte plus compact -->
@@ -153,7 +147,7 @@
                                             <i class="fas fa-building text-[#255156] text-xs"></i>
                                         </div>
                                         <div>
-                                            <h3 class="font-bold text-gray-800 text-sm line-clamp-2 organisme-nom" title="{{ $structure->organisme }}">
+                                            <h3 class="font-bold text-gray-800 text-sm line-clamp-2 organisme-nom" title="{{ $structure->organisme->nom_organisme ?? '' }}">
                                                 {{ $structure->organisme->nom_organisme ?? 'Organisme non spécifié' }}
                                             </h3>
                                             <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-[#8bbdc3]/20 text-[#255156] text-xs rounded-full categorie-badge">
@@ -232,10 +226,10 @@
                     </div>
 
                     <!-- Message aucun résultat compact -->
-                    <div id="no-antenne-result-{{ $loop->index }}" 
+                    <div id="no-structure-result-{{ $loop->index }}" 
                          class="hidden flex flex-col items-center justify-center py-4 text-gray-500">
                         <i class="fas fa-map-marker-alt text-2xl mb-1 opacity-30"></i>
-                        <p class="text-xs font-medium">Aucune antenne trouvée</p>
+                        <p class="text-xs font-medium">Aucune structure trouvée</p>
                     </div>
                 </div>
             </div>
@@ -377,19 +371,19 @@ document.addEventListener('DOMContentLoaded', function() {
         updateResultCount(totalVisibleStructures);
     }
 
-    // 3. RECHERCHE SPÉCIFIQUE PAR ANTENNE
-    function filterAntennes(siegeId, query) {
+    // 3. RECHERCHE SPÉCIFIQUE PAR structure
+    function filterstructures(siegeId, query) {
         const grid = document.getElementById(siegeId + '-grid');
         if (!grid) return;
         
-        const antennes = grid.querySelectorAll('.antenne-card');
-        const noResultMsg = document.getElementById('no-antenne-result-' + siegeId.split('-')[1]);
+        const structures = grid.querySelectorAll('.structure-card');
+        const noResultMsg = document.getElementById('no-structure-result-' + siegeId.split('-')[1]);
         let visibleCount = 0;
         
-        antennes.forEach(antenne => {
-            const searchData = antenne.dataset.search || '';
+        structures.forEach(structure => {
+            const searchData = structure.dataset.search || '';
             const matches = query === '' || searchData.includes(query.toLowerCase());
-            antenne.style.display = matches ? '' : 'none';
+            structure.style.display = matches ? '' : 'none';
             if (matches) visibleCount++;
         });
         
@@ -427,21 +421,21 @@ document.addEventListener('DOMContentLoaded', function() {
             if (filterCategorie) filterCategorie.value = '';
             filterStructures();
             
-            // Réinitialiser les recherches d'antennes
-            document.querySelectorAll('.search-antenne').forEach(input => {
+            // Réinitialiser les recherches d'structures
+            document.querySelectorAll('.search-structure').forEach(input => {
                 input.value = '';
                 const siegeId = input.dataset.siegeId;
-                filterAntennes(siegeId, '');
+                filterstructures(siegeId, '');
             });
         });
     }
 
-    // Recherches d'antennes
-    document.querySelectorAll('.search-antenne').forEach(input => {
+    // Recherches d'structures
+    document.querySelectorAll('.search-structure').forEach(input => {
         input.addEventListener('input', function(e) {
             const query = this.value.toLowerCase().trim();
             const siegeId = this.dataset.siegeId;
-            filterAntennes(siegeId, query);
+            filterstructures(siegeId, query);
         });
     });
 
@@ -467,8 +461,8 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             const structure = JSON.parse(this.dataset.structure);
             
-            document.getElementById('modal-organisme').textContent = structure.organisme || '-';
-            document.getElementById('modal-organisme-text').textContent = structure.organisme || '-';
+            document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme ?? '-';
+            document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme ?? '-';
             document.getElementById('modal-categories').textContent = structure.categories || 'Non spécifié';
             document.getElementById('modal-type_structure').textContent = structure.type_structure || 'Non spécifié';
             document.getElementById('modal-public_cible').textContent = structure.public_cible || 'Non spécifié';

@@ -7,7 +7,7 @@
         <!-- LIGNE 1: INFOS PRINCIPALES -->
         <div class="row mb-2">
             <div class="col-md-4">
-                <label class="form-label">Nom de la structure <span class="text-danger">*</span></label>
+                <label class="form-label">Organisme <span class="text-danger">*</span></label>
                
                  <select name="id_organisme" class="form-select" required>
                     <option value="">-- Choisir --</option>
@@ -216,10 +216,6 @@
                     </button>
                     <button type="button" id="saveLocationBtn" class="btn btn-sm btn-success d-none" onclick="saveLocation()" title="Enregistrer">
                         <i class="bx bx-save"></i>
-                    </button>
-                @else
-                    <button type="button" id="clearLocationBtn" class="btn btn-sm btn-outline-danger" onclick="clearLocation()" title="Vider">
-                        <i class="bx bx-trash"></i>
                     </button>
                 @endif
             </div>

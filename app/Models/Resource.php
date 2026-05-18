@@ -163,6 +163,28 @@ class Resource extends Model
     {
         return empty($this->file_path) && !empty($this->link_url);
     }
+
+    public static function findSimilar($title, $category, $file_name = null, $link_url = null)
+    {
+        $query = self::query();
+        
+        // Vérifier le titre (similarité)
+        $query->where('title', 'LIKE', '%' . $title . '%');
+        
+        // Même catégorie
+        $query->where('category', $category);
+        
+        // Même fichier ou même lien
+        if ($file_name) {
+            $query->where('file_name', $file_name);
+        }
+        
+        if ($link_url) {
+            $query->where('link_url', $link_url);
+        }
+        
+        return $query->first();
+    }
     
 
 }

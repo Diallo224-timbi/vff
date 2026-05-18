@@ -21,9 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
-Route::get('/accueil', [DashboardUserController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('accueil');
+Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
+    ->middleware(['auth'])->name('dashboardUser');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');

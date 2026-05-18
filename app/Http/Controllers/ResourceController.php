@@ -52,20 +52,17 @@ class ResourceController extends Controller
     /**
      * Ajouter une nouvelle ressource
      */
-    public function store(Request $request)
+   public function store(Request $request)
 {
     $isAjax = $request->ajax() || $request->wantsJson();
 
     $maxSize = 51200; // 50 Mo en KB
 
-    // 🔥 Validation corrigée
+    // Validation
     $validator = Validator::make($request->all(), [
         'title' => 'required|string|max:255',
-
         'file' => 'nullable|file|max:' . $maxSize . '|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
-
         'link_url' => 'nullable|url',
-
         'category' => 'required|string',
         'description' => 'nullable|string',
     ], [
@@ -89,8 +86,7 @@ class ResourceController extends Controller
     }
 
     try {
-
-        // 🔥 obligation : fichier OU lien
+        // Obligation : fichier OU lien
         if (!$request->hasFile('file') && !$request->filled('link_url')) {
             return $isAjax
                 ? response()->json([
@@ -103,7 +99,48 @@ class ResourceController extends Controller
         }
 
         // =========================
-        // 🔥 GESTION FICHIER
+        // 🔥 VÉRIFICATION DES DOUBLONS
+        // =========================
+        $file_name = null;
+        $link_url = null;
+        
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $file_name = $file->getClientOriginalName();
+        } elseif ($request->filled('link_url')) {
+            $link_url = $request->link_url;
+        }
+        
+        // Vérifier si un document similaire existe déjà
+        $existingResource = Resource::findSimilar(
+            $request->title,
+            $request->category,
+            $file_name,
+            $link_url
+        );
+        
+        if ($existingResource) {
+            $errorMessage = 'Un document similaire existe déjà : "' . $existingResource->title . '" dans la catégorie "' . $existingResource->category . '"';
+            
+            if ($existingResource->file_name) {
+                $errorMessage .= ' avec le fichier "' . $existingResource->file_name . '"';
+            } elseif ($existingResource->link_url) {
+                $errorMessage .= ' avec le lien "' . $existingResource->link_url . '"';
+            }
+            
+            return $isAjax
+                ? response()->json([
+                    'success' => false,
+                    'message' => $errorMessage,
+                    'existing_resource' => $existingResource
+                ], 409) // 409 Conflict
+                : redirect()->back()
+                    ->with('error', $errorMessage)
+                    ->withInput();
+        }
+
+        // =========================
+        // GESTION FICHIER
         // =========================
         $file = $request->file('file');
 
@@ -115,7 +152,6 @@ class ResourceController extends Controller
         $isVideo = false;
 
         if ($file) {
-
             $fileSize = $file->getSize();
 
             if ($fileSize > ($maxSize * 1024)) {
@@ -127,36 +163,29 @@ class ResourceController extends Controller
             }
 
             $extension = strtolower($file->getClientOriginalExtension());
-
             $isImage = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
             $isVideo = in_array($extension, ['mp4','webm','avi','mov','mkv']);
 
             $fileName = time() . '_' . uniqid() . '.' . $extension;
-
             $path = $file->storeAs('resources', $fileName, 'public');
         }
 
         // =========================
-        // 🔥 CREATION RESOURCE
+        // CREATION RESOURCE
         // =========================
         $resource = Resource::create([
             'title' => $request->title,
             'description' => $request->description,
-
-            'file_name' => $fileName,
+            'file_name' => $file ? $file->getClientOriginalName() : null,
             'file_path' => $path,
             'file_size' => $fileSize,
             'file_type' => $extension,
-
             'file_icon' => $extension ? $this->getFileIcon($extension) : 'fas fa-link',
             'is_image' => $isImage,
             'is_video' => $isVideo,
-
             'category' => $request->category,
             'user_id' => auth()->id(),
-
             'link_url' => $request->link_url,
-
             'download_count' => 0,
         ]);
 
@@ -176,7 +205,6 @@ class ResourceController extends Controller
                 ->with('success', 'Ressource ajoutée avec succès');
 
     } catch (\Exception $e) {
-
         return $isAjax
             ? response()->json([
                 'success' => false,

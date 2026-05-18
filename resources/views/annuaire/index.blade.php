@@ -108,13 +108,15 @@
                         data-bs-toggle="modal" 
                         data-bs-target="#addModal">
                     <i class="fas fa-plus-circle"></i>
-                    Ajouter une antenne locale
+                    Ajouter une structure
                 </button>
+            <!--
                 <a href="{{ route('annuaire.export.pdf') }}" 
                    class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-colors flex items-center gap-2">
                     <i class="fas fa-file-pdf"></i>
                     Exporter PDF
                 </a>
+            -->
             </div>
             @endif  
             <div class="flex flex-wrap items-center gap-3">
@@ -183,17 +185,8 @@
                     </div>
                 </div>
             </div>     
-            <!-- Boutons de réinitialisation -->
-            <div class="mt-4 flex justify-end">
-                <button id="resetFilters" 
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-undo"></i>
-                    Réinitialiser tous les filtres
-                </button>
-            </div>
         </div>
-    </div>
-    
+    </div>   
     <!-- Affichage en accordéon par organisme -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden mt-4">
         <div class="overflow-y-auto max-h-[calc(100vh-320px)] sm:max-h-[calc(100vh-250px)]">
@@ -203,8 +196,7 @@
                     $groupedStructures = $structures->groupBy(function($item) {
                         return $item->organisme->nom_organisme ?? 'Sans organisme';
                     });
-                @endphp
-                
+                @endphp    
                 @forelse($groupedStructures as $organismeNom => $structuresByOrganisme)
                     <div class="organisme-group" data-organisme="{{ $organismeNom }}">
                         <!-- En-tête de l'organisme -->
@@ -244,7 +236,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <!-- Corps de l'organisme -->
                         <div class="organisme-body hidden">
                             <div class="overflow-x-auto">
@@ -269,13 +260,11 @@
                                                 data-organisme="{{ $structure->organisme->nom_organisme ?? '' }}"
                                                 data-city="{{ $structure->organisme->ville ?? '' }}"
                                                 data-category="{{ $structure->categories ?? '' }}">
-                                                
                                                 <td class="px-3 py-2">
                                                     <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->ville ?? '' }}">
                                                         {{ $structure->ville ?? '-' }}
                                                     </div>
-                                                </td>
-                                                
+                                                </td>  
                                                 <td class="px-3 py-2">
                                                     <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->code_postal ?? '' }}">
                                                         {{ $structure->code_postal ?? '-' }}
@@ -398,7 +387,7 @@
             <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-4 rounded-t-xl d-flex justify-content-between align-items-center">
                 <h5 class="text-xl font-bold flex items-center gap-3">
                     <i class="fas fa-plus-circle"></i>
-                    Ajouter une antenne locale
+                    Ajouter une structure locale
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -490,7 +479,7 @@
                         <div class="p-2 bg-green-50/50 rounded">
                             <div class="flex items-center gap-2 mb-1">
                                 <i class="fas fa-map-pin text-green-500 text-xs"></i>
-                                <span class="font-semibold text-green-700 text-xs">ANTENNE LOCALE</span>
+                                <span class="font-semibold text-green-700 text-xs">structure LOCALE</span>
                             </div>
                             <div class="text-xs space-y-1">
                                 <div class="flex">

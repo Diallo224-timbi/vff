@@ -36,7 +36,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-
                     <!-- Indicateur de filtre actif -->
                     <div id="activeFilter" class="mb-3 d-none">
                         <div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
@@ -45,7 +44,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="clearCategoryFilter()"></button>
                         </div>
                     </div>
-
                     <!-- CARTES DE FILTRES PAR CATÉGORIE -->
                     <div class="mb-3">
                         <label class="small fw-semibold text-secondary mb-2">Filtrer par catégorie</label>
@@ -111,7 +109,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Barre de recherche -->
                     <div class="mb-3">
                         <div class="row g-2">
@@ -134,7 +131,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- LISTE HORIZONTALE DES RESSOURCES -->
                     <div class="mt-3">
                         <div class="vertical-list" id="resourcesGrid">
@@ -185,8 +181,7 @@
                                                         </div>
                                                     @endif
                                                 </div>
-                                            </div>
-                                            
+                                            </div>  
                                             <!-- Titre et Description au centre -->
                                             <div class="col">
                                                 <div class="resource-info">
@@ -222,7 +217,11 @@
                                                     @endif
                                                     
                                                     <div class="d-flex gap-3 small text-muted">
+                                                        @if(!$resource->is_link)
+                                                             <span><i class="fas fa-file-alt me-1"></i> {{ $resource->file_type }}</span>
+                                                       
                                                         <span><i class="fas fa-download me-1"></i> {{ $resource->download_count }} téléchargements</span>
+                                                        @endif
                                                         <span><i class="fas fa-calendar me-1"></i> {{ $resource->created_at->format('d/m/Y') }}</span>
                                                         <span><i class="fas fa-user me-1"></i> {{ $resource->user ? $resource->user->name : 'Utilisateur inconnu' }}</span>
                                                     </div>
@@ -287,7 +286,6 @@
     </div>
 </div>
 
-<!-- SUPPRESSION DE categoryModal -->
 
 <!-- MODAL IMAGE -->
 <div id="imageModal" class="modal fade" tabindex="-1">
@@ -321,7 +319,6 @@
                         <label class="form-label fw-semibold">Description</label>
                         <textarea id="description" name="description" rows="3" class="form-control"></textarea>
                     </div>
-                    
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
                         <div class="btn-group w-100" role="group">
@@ -333,10 +330,9 @@
                             </button>
                         </div>
                     </div>
-                    
                     <div id="fileUploadSection" class="mb-3">
                         <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.mp4,.webm,.avi">
+                        <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
                         <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, MP4, Max 50Mo</small>
                     </div>
                     

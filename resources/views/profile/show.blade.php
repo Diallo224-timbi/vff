@@ -14,8 +14,21 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">
-                        Profil de <span class="text-[#0acde2]">{{ $user->prenom }} {{ $user->name }}</span>
+                        Profil de 
+                        <span class="text-[#0acde2]">
+                            {{ $user->prenom }} {{ $user->name }}
+                        </span>
                     </h1>
+                    <span class="text-[#0d727e]">
+                        {{ optional($user->structure->organisme)->nom_organisme ?? 'N/A' }}
+                        -
+                        {{ $user->structure->ville ?? 'N/A' }}
+                        -
+                        ({{ $user->structure->code_postal ?? 'N/A' }})
+                        -
+                        {{ $user->structure->adresse ?? 'N/A' }}
+                    </span>
+
                     <p class="text-sm text-gray-500 flex items-center mt-1">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
                             @if($user->role === 'admin') bg-[#255156] text-white

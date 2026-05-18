@@ -30,7 +30,7 @@
                         <!-- Champ Nom avec icône -->
                         <div class="mb-4 form-group-animate">
                             <label for="nom" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-building me-2 text-primary"></i>Nom de l'organisme
+                                <i class="fas fa-building me-2" style="color: #255156;"></i>Nom de l'organisme
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0">
@@ -45,7 +45,7 @@
                         <!-- Champ Description avec éditeur amélioré -->
                         <div class="mb-4 form-group-animate">
                             <label for="signification" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-align-left me-2 text-primary"></i>Description
+                                <i class="fas fa-align-left me-2" style="color: #255156;"></i>Description
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light align-items-start pt-3">
@@ -59,7 +59,7 @@
                         <!-- Adresse avec autocomplétion (dynamique) -->
                         <div class="mb-4 form-group-animate">
                             <label for="adresse" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-location-dot me-2 text-primary"></i>Adresse
+                                <i class="fas fa-location-dot me-2" style="color: #255156;"></i>Adresse
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0">
@@ -74,7 +74,7 @@
                             <!-- Code Postal -->
                             <div class="col-md-4 mb-4 form-group-animate">
                                 <label for="code_postal" class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-mail-bulk me-2 text-primary"></i>Code postal
+                                    <i class="fas fa-mail-bulk me-2" style="color: #255156;"></i>Code postal
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0">
@@ -88,7 +88,7 @@
                             <!-- Ville -->
                             <div class="col-md-8 mb-4 form-group-animate">
                                 <label for="ville" class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-city me-2 text-primary"></i>Ville
+                                    <i class="fas fa-city me-2" style="color: #255156;"></i>Ville
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0">
@@ -103,7 +103,7 @@
                         <!-- Site Web avec validation en temps réel -->
                         <div class="mb-4 form-group-animate">
                             <label for="site_web" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-globe me-2 text-primary"></i>Site web
+                                <i class="fas fa-globe me-2" style="color: #255156;"></i>Site web
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0">

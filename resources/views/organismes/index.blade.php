@@ -13,12 +13,14 @@
                     </h1>
                     <p class="text-muted lead">Gérez l'ensemble des organismes partenaires</p>
                 </div>
-                <div>
-                    <a href="{{ route('organismes.create') }}" class="btn btn-primary btn-lg shadow-sm" 
-                       style="background: linear-gradient(135deg, #255156 0%, #1d3f43 100%); border: none; border-radius: 50px; padding: 12px 30px;">
-                        <i class="fas fa-plus-circle me-2"></i>Ajouter un Organisme
-                    </a>
-                </div>
+                @if(Auth::user()->role === 'admin')
+                    <div>
+                        <a href="{{ route('organismes.create') }}" class="btn btn-primary btn-lg shadow-sm" 
+                        style="background: linear-gradient(135deg, #255156 0%, #1d3f43 100%); border: none; border-radius: 50px; padding: 12px 30px;">
+                            <i class="fas fa-plus-circle me-2"></i>Ajouter un Organisme
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -74,18 +76,22 @@
                 <table class="table" style="table-layout: auto; width: 100%;">
                     <thead style="background: linear-gradient(135deg, #0a9dad 0%, #1d3f43 100%);">
                         <tr>
+                            <th class="text-black py-3"><i class="fas fill-accent me-1"></i>N°</th>
                             <th class="text-black py-3"><i class="fas fa-building me-1"></i> Nom</th>
                             <th class="text-black py-3"><i class="fas fa-align-left me-1"></i> Description</th>
                             <th class="text-black py-3"><i class="fas fa-location-dot me-1"></i> Adresse</th>
                             <th class="text-black py-3"><i class="fas fa-mail-bulk me-1"></i> Code postal</th>
                             <th class="text-black py-3"><i class="fas fa-city me-1"></i> Ville</th>
                             <th class="text-black py-3"><i class="fas fa-globe me-1"></i> Site web</th>
-                            <th class="text-black py-3 text-center"><i class="fas fa-cogs me-1"></i> Actions</th>
+                            @if(Auth::user()->role === 'admin')
+                                <th class="text-black py-3 text-center"><i class="fas fa-cogs me-1"></i> Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         @forelse($organismes as $organisme)
                         <tr class="align-middle animate-row" style="transition: all 0.3s ease;">
+                            <td>{{ $loop->iteration }}</td>
                             <td style="max-width: 200px">
                                 <strong >{{ $organisme->nom_organisme }}</strong>
                             </td>
@@ -117,6 +123,7 @@
                                        style="border-radius: 10px;" title="Voir">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    @if(Auth::user()->role === 'admin')
                                     <a href="{{ route('organismes.edit', $organisme->id) }}" class="btn btn-sm btn-warning mx-1" 
                                        style="border-radius: 10px;" title="Modifier">
                                         <i class="fas fa-edit"></i>
@@ -129,6 +136,7 @@
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
