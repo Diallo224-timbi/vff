@@ -25,22 +25,26 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'fonction' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'adresse' => 'nullable|string|max:255',
             'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:20',
             'id_structure' => 'nullable|exists:structure,id',
+            'notification' => 'nullable|boolean'
         ]);
         // Mise à jour des informations de l'utilisateur
         $user->update([
             'name' => $request->name,
             'prenom' => $request->prenom,
             'email' => $request->email,
+            'fonction' => $request->fonction,
             'phone' => $request->phone,
             'adresse' => $request->adresse,
             'ville' => $request->ville,
             'code_postal' => $request->code_postal,
             'id_structure' => $request->id_structure,
+            'notification' => $request->notification ?? false
         ]);
         return redirect()->route('profile.show')->with('success', 'Profil mis à jour avec succès.');
     }   

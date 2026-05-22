@@ -27,7 +27,15 @@
                 <i class="fas fa-chart-pie"></i>
                 Statistiques
             </button>
-            <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">{{ auth()->user()->role }}</span>
+            @if(auth()->user()->role === 'admin')
+                <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">Administrateur</span>
+            @elseif(auth()->user()->role === 'moderateur')
+                <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">Responsable organisme</span>
+            @elseif(auth()->user()->role === 'moderateur_classique')
+                <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">Responsable structure</span>
+            @else
+                <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">Membre</span>
+            @endif
             <div class="w-8 h-8 rounded-full bg-[#255156] flex items-center justify-center text-white font-bold text-sm">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
@@ -41,13 +49,11 @@
             placeholder="Rechercher par nom, email, structure..."
             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-[#255156] focus:outline-none">
     </div>
-
     <!-- LISTE DES UTILISATEURS -->
     <div id="usersContainer" class="space-y-2">
         @forelse($users as $user)
         <div class="user-card bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow"
              data-search="{{ strtolower($user->prenom.' '.$user->name.' '.$user->email.' '.($user->structure->organisme->nom_organisme ?? '')) }}">
-
             <!-- Infos principales -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -63,25 +69,34 @@
                     <!-- État -->
                     <span class="px-2 py-0.5 rounded-full text-xs font-medium
                         {{ $user->etatV === 'valider' ? 'bg-green-100 text-green-700' :
-                           ($user->etatV === 'bloqué' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                        ($user->etatV === 'bloqué' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
                         {{ ucfirst($user->etatV) }}
                     </span>
                     <!-- Rôle -->
-                    <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs">
-                        {{ $user->role }}
-                    </span>
+                    @if($user->role === 'admin')
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#255156] text-white">Administrateur</span>
+                    @elseif($user->role === 'moderateur')
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#255156] text-white">Responsable organisme</span>
+                    @elseif($user->role === 'moderateur_classique')
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#255156] text-white">Responsable structure</span>
+                    @else
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Utilisateur</span>
+                    @endif
                 </div>
-            </div>
 
+            </div>
             <!-- Structure de rattachement -->
             <div class="mt-1 text-xs text-gray-600">
                 <i class="fas fa-building text-[#255156] mr-1"></i>
+                @if($user->role === 'moderateur')
+                    {{ $user->structure->organisme->nom_organisme ?? 'Aucun organisme' }}
+                @else
                 {{ $user->structure->organisme->nom_organisme ?? 'Aucune structure' }}
+                @endif
                 @if($user->structure)
                     <span class="text-gray-400">{{ $user->structure->ville ?? '' }} ({{ $user->structure->code_postal }}) {{ $user->structure->adresse }}</span>
                 @endif
             </div>
-
             <!-- Actions -->
             <div class="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-gray-100">
                 @if($user->etatV !== 'valider')
@@ -92,19 +107,16 @@
                     </button>
                 </form>
                 @endif
-
                 @if($user->etatV === 'bloqué')
                 <button type="button" onclick="showReason('{{ addslashes($user->block_reason) }}')"
                         class="bg-yellow-500 hover:bg-yellow-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Voir motif">
                     <i class="bx bx-info-circle text-xs"></i>
                 </button>
                 @endif
-
                 <button type="button" onclick="openEditModal({{ $user->id }}, '{{ addslashes($user->prenom) }}', '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->adresse }}', '{{ $user->ville }}', '{{ $user->code_postal }}', '{{ $user->id_structure }}', '{{ $user->role }}')"
                         class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Modifier">
                     <i class="bx bx-edit text-xs"></i>
                 </button>
-
                 @if($user->etatV !== 'bloqué')
                 <button type="button" onclick="openBlockModal({{ $user->id }}, '{{ addslashes($user->prenom) }} {{ addslashes($user->name) }}')"
                         class="bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Bloquer">
@@ -141,9 +153,9 @@
                 $bloques = $users->where('etatV', 'bloqué')->count();
                 $admins = $users->where('role', 'admin')->count();
                 $moderateurs = $users->where('role', 'moderateur')->count();
+                $moderateurs_classique = $users->where('role', 'moderateur_classique')->count();
                 $utilisateurs = $users->where('role', 'user')->count();
             @endphp
-
             <!-- Cartes stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                 <div class="bg-gray-50 p-3 rounded-lg text-center">
@@ -163,7 +175,6 @@
                     <div class="text-xs text-gray-600">Bloqués</div>
                 </div>
             </div>
-
             <!-- Répartition par rôle -->
             <div class="border-t border-gray-200 pt-3">
                 <h4 class="text-sm font-medium text-gray-700 mb-2">Répartition par rôle</h4>
@@ -238,8 +249,7 @@
         <div class="p-4">
             <form id="editForm" method="POST" action="">
                 @csrf
-                @method('PUT')
-                
+                @method('PUT')    
                 <!-- Identité -->
                 <div class="grid grid-cols-2 gap-2 mb-3">
                     <div>
@@ -251,18 +261,15 @@
                         <input type="text" name="name" id="editNom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
                     </div>
                 </div>
-                
                 <!-- Contact -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Email</label>
                     <input type="email" name="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
-                </div>
-                
+                </div>  
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Téléphone</label>
                     <input type="text" name="phone" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                 </div>
-                
                 <!-- Adresse -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Adresse</label>
@@ -279,7 +286,6 @@
                         <input type="text" name="code_postal" id="editCodePostal" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                     </div>
                 </div>
-                
                 <!-- Structure de rattachement -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Structure de rattachement</label>
@@ -302,20 +308,21 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
-                
+                </div>   
                 <!-- Rôle (admin seulement) -->
-                @if(auth()->user()->role === 'admin')
+                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Rôle</label>
                     <select name="role" id="editRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <option value="user">Utilisateur</option>
-                        <option value="moderateur">Modérateur</option>
-                        <option value="admin">Administrateur</option>
+                        @if(auth()->user()->role === 'admin')
+                         <option value="admin">Administrateur</option>
+                         <option value="moderateur">Modérateur organisme</option>
+                        @endif
+                         <option value="moderateur_classique">Modérateur structure</option>
+                         <option value="user">Utilisateur</option>
                     </select>
                 </div>
-                @endif
-                
+                @endif 
                 <!-- Boutons -->
                 <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-gray-200">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
@@ -329,7 +336,6 @@
         </div>
     </div>
 </div>
-
 <!-- MODAL BLOCAGE -->
 <div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="blockModal">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
@@ -361,7 +367,6 @@
         </div>
     </div>
 </div>
-
 <script>
     // Recherche
     document.getElementById('searchInput').addEventListener('input', function(e) {
@@ -458,8 +463,6 @@
     document.getElementById('blockModal').addEventListener('click', function(e) {
         if(e.target === this) closeBlockModal();
     });
-
-
     // Filtrage dynamique des structure rataché en fonction de l'organisme
     document.getElementById('editOrganisme').addEventListener('change', function() {
         const organismeId = this.value;

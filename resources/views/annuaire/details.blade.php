@@ -12,14 +12,12 @@
                         <h5 class="modal-title text-lg font-bold" id="detailsModalLabel">
                             <span id="modal-organisme">Détails de la structure</span>
                         </h5>
-                        <p class="text-sm text-white/80 font-medium">Informations complètes</p>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white opacity-80 hover:opacity-100 transition-opacity" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- Body avec espace réduit -->
-            <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
-                
+            <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">   
                 <!-- Informations principales (2 colonnes compactes) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                     <!-- Colonne gauche -->
@@ -55,14 +53,12 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Colonne droite - Localisation -->
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
                         <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
                             <i class="fas fa-map-marker-alt text-xs"></i> 
                             <span>Localisation</span>
                         </h6>
-                        
                         <!-- Siège social -->
                         <div class="mb-3 p-2 bg-blue-50/50 rounded border border-blue-100">
                             <div class="flex items-center gap-2 mb-1">
@@ -80,7 +76,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                         <!-- Antenne locale -->
                         <div class="p-2 bg-green-50/50 rounded border border-green-100">
                             <div class="flex items-center gap-2 mb-1">
@@ -104,7 +99,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Contact (ligne unique compacte) -->
                 <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
                     <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
@@ -135,7 +129,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Description -->
                 <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
                     <div class="flex items-center justify-between mb-2">
@@ -151,7 +144,6 @@
                         -
                     </div>
                 </div>
-
                 <!-- Informations complémentaires -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
@@ -171,7 +163,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Footer -->
             <div class="modal-footer bg-white p-3 border-t border-gray-200">
                 <div class="flex justify-between items-center w-full">

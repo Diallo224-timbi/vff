@@ -11,7 +11,7 @@
         <div class="max-w-2xl mx-auto mb-8">
             <div class="flex p-1 bg-white rounded-xl shadow-lg">
                 <input type="text" id="search" name="search"
-                       placeholder="Rechercher un membre..."
+                       placeholder="Rechercher un membre par nom, email, fonction, téléphone ou structure..."
                        class="flex-1 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
         </div>
@@ -52,6 +52,13 @@
                                 </svg>
                                 <span><strong>Téléphone :</strong> <span class="member-phone">{{ $membre->phone }}</span></span>
                             </p>
+                            <!-- fonction -->
+                            <p class="text-gray-600 flex items-start">
+                                <svg class="w-5 h-5 mr-2 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span><strong>Fonction :</strong> <span class="member-function">{{ $membre->fonction ?? 'N/A' }}</span></span>  
                         </div>
                     </div>
                 </div>
@@ -91,12 +98,14 @@
             const email = card.querySelector('.member-email').textContent.toLowerCase();
             const phone = card.querySelector('.member-phone').textContent.toLowerCase();
             const structure = card.querySelector('.member-structure').textContent.toLowerCase();
+            const fonction = card.querySelector('.member-function').textContent.toLowerCase();
 
             const matchesSearch =
                 name.includes(searchTerm) ||
                 email.includes(searchTerm) ||
                 phone.includes(searchTerm) ||
-                structure.includes(searchTerm);
+                structure.includes(searchTerm) ||
+                fonction.includes(searchTerm);
 
             if (matchesSearch) {
                 card.style.display = '';
@@ -125,5 +134,4 @@
 }
 .member-card { animation: fadeIn 0.4s ease-out; }
 </style>
-
 @endsection

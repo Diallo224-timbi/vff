@@ -28,8 +28,8 @@
             <div class="text-xl font-semibold text-green-600" id="visibleCount">{{ $structures->count() }}</div>
         </div>
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-            <div class="text-xs text-gray-500 mb-1">Types différents</div>
-            <div class="text-xl font-semibold text-blue-600">{{ $structures->pluck('type_structure')->unique()->filter()->count() }}</div>
+            <div class="text-xs text-gray-500 mb-1">Total organismes</div>
+            <div class="text-xl font-semibold text-blue-600">{{ $structures->pluck('id_organisme')->unique()->filter()->count() }}</div>
         </div>
     </div>
 
@@ -42,7 +42,6 @@
                     <i class="fas fa-filter text-[#255156] mr-2"></i>
                     Filtres
                 </h3>
-                
                 <!-- Recherche -->
                 <div class="mb-4">
                     <label class="block text-xs font-medium text-gray-600 mb-1">Recherche</label>
@@ -251,7 +250,7 @@
                             <div class="p-3 bg-green-50 rounded-lg">
                                 <div class="flex items-center gap-2 mb-2">
                                     <i class="fas fa-map-pin text-green-600"></i>
-                                    <span class="font-semibold text-green-700 text-sm">ANTENNE LOCALE</span>
+                                    <span class="font-semibold text-green-700 text-sm">STRUCTURE</span>
                                 </div>
                                 <div class="space-y-1 text-sm">
                                     <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-ville">-</span> <span id="modal-code_postal" class="text-gray-500"></span></p>
@@ -401,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!type) return '#6b7280';
         const t = type.toLowerCase();
         if (t.includes('siége') || t.includes('siege')) return '#3b82f6';
-        if (t.includes('antenne')) return '#10b981';
+        if (t.includes('structure')) return '#10b981';
         if (t.includes('association')) return '#ef4444';
         if (t.includes('santé') || t.includes('droit')) return '#8b5cf6';
         return '#f59e0b';
@@ -426,8 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // En-tête
-        document.getElementById('modal-organisme').textContent = structure.organisme_struct || 'Structure sans nom';
-        document.getElementById('modal-type-badge').textContent = structure.type_structure || 'Type non spécifié';
+        document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme || 'Structure sans nom';
+        document.getElementById('modal-type-badge').textContent = structure.ville || ' ';
         document.getElementById('modal-hebergement-badge').textContent = structure.hebergement === 'oui' ? '🏠 Avec hébergement' : (structure.hebergement === 'non' ? '❌ Sans hébergement' : 'Hébergement non spécifié');
         
         // Informations générales
@@ -607,27 +606,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h4 class="font-bold text-sm text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
                             ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
-                        <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white mt-1" 
-                              style="background-color: ${color};">
-                            ${escapeHtml(structure.type_structure || 'Non spécifié')}
-                        </span>
                     </div>
                 </div>
-
                 <!-- Informations rapides -->
                 <div class="space-y-1.5 text-xs">
                     <p class="flex items-center">
                         <i class="fas fa-map-marker-alt text-red-500 w-4"></i>
-                        <span class="text-gray-700 truncate">${escapeHtml(structure.ville || 'Ville non spécifiée')}</span>
-                    </p>
-                    
+                        <span class="text-gray-700 truncate">${escapeHtml(structure.ville + ' (' + structure.code_postal + ')' || 'Ville non spécifiée')}</span>
+                    </p> 
                     ${structure.telephone ? `
                         <p class="flex items-center">
                             <i class="fas fa-phone text-[#255156] w-4"></i>
                             <span class="text-gray-700">${escapeHtml(structure.telephone)}</span>
                         </p>
-                    ` : ''}
-                    
+                    ` : ''} 
                     ${structure.categories ? `
                         <p class="flex items-start mt-1">
                             <i class="fas fa-tag text-gray-500 w-4 mt-0.5"></i>
@@ -635,7 +627,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </p>
                     ` : ''}
                 </div>
-
                 <!-- Boutons d'action -->
                 <div class="mt-3 space-y-1">
                     <button class="view-details-btn w-full text-xs bg-[#255156] hover:bg-[#1d4144] text-white px-3 py-1.5 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-1"
@@ -678,13 +669,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h4 class="font-bold text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
                             ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
-                        <span class="inline-block px-2 py-0.5 text-[10px] rounded-full text-white mt-1" 
-                              style="background-color: ${color}">
-                            ${escapeHtml(structure.type_structure || 'Non spécifié')}
-                        </span>
+                        
                     </div>
-                </div>
-                
+                </div>   
                 <!-- Localisation -->
                 <div class="bg-blue-50 p-3 rounded-lg">
                     <h5 class="text-xs font-semibold text-blue-800 mb-2 flex items-center">

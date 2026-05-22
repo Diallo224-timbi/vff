@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ActivityLog;
+use App\Models\User;
+use App\Mail\ImportantResourceMail;
+use Illuminate\Support\Facades\Mail;
 
 class ResourceController extends Controller
 {
@@ -187,12 +190,19 @@ class ResourceController extends Controller
             'user_id' => auth()->id(),
             'link_url' => $request->link_url,
             'download_count' => 0,
+            'important' => $request->has('important') ? true : false,
         ]);
+        if ($resource->important) {
+            // Envoyer une notification aux utilisateurs (ex: email)
+            $usersToNotify = User::where('notification', true)->pluck('email');
+            foreach ($usersToNotify as $email) {
+                Mail::to($email)->send(new ImportantResourceMail($resource));
+            }
 
+        }
         ActivityLog::log(
             'Création de ressource',
-            'Ressource créée: ' . $resource->title,
-            auth()->id()
+            'Ressource créée: ' . $resource->title, auth()->id()
         );
 
         return $isAjax
@@ -241,7 +251,8 @@ class ResourceController extends Controller
             'description' => 'nullable|string',
             'category' => 'required|string',
             'file' => 'nullable|file|max:51200|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
-            'link_url' => 'nullable|url'
+            'link_url' => 'nullable|url',
+            'important' => 'nullable|boolean'
         ]);
         
         if ($validator->fails()) {
@@ -255,7 +266,7 @@ class ResourceController extends Controller
             $resource->title = $request->title;
             $resource->description = $request->description;
             $resource->category = $request->category;
-            
+            $resource->important = $request->has('important') ? true : false;
             // Gestion du fichier ou lien
             if ($request->hasFile('file')) {
                 // Supprimer l'ancien fichier

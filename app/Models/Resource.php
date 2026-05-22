@@ -24,7 +24,8 @@ class Resource extends Model
         'service',
         'download_count',
         'user_id',
-        'link_url'
+        'link_url',
+        'important'
     ];
 
     protected $casts = [

@@ -39,18 +39,11 @@
                                     <i class="fas fa-id-card me-1"></i> ID: {{ $organisme->id }}
                                 </small>
                             </div>
-                            <div>
-                                <span class="badge px-2 py-1" style="background: #255156; border-radius: 50px; font-size: 11px;">
-                                    <i class="fas fa-check-circle me-1"></i> Actif
-                                </span>
-                            </div>
                         </div>
                     </div>
-
                     <!-- Informations détaillées - TAILLE RÉDUITE -->
                     <div class="p-3">
                         <div class="row g-3">
-                            
                             <!-- Description -->
                             <div class="col-12">
                                 <div class="p-2" style="background: #f8f9fa; border-radius: 10px; border-left: 3px solid #255156;">
@@ -65,7 +58,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Localisation -->
                             <div class="col-md-6">
                                 <div class="p-2 h-100" style="background: #f8f9fa; border-radius: 10px;">
@@ -87,7 +79,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Contact & Web -->
                             <div class="col-md-6">
                                 <div class="p-2 h-100" style="background: #f8f9fa; border-radius: 10px;">
@@ -112,7 +103,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Informations supplémentaires - TAILLE RÉDUITE -->
                             <div class="col-12">
                                 <div class="p-2" style="background: linear-gradient(135deg, rgba(37,81,86,0.05) 0%, rgba(29,63,67,0.02) 100%); border-radius: 10px;">
@@ -132,31 +122,17 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Actions - TAILLE RÉDUITE -->
+                    <!-- Actions - -->
                     <div class="card-footer bg-white p-3 border-top">
                         <div class="d-flex gap-2 justify-content-between align-items-center flex-wrap">
                             <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary btn-sm px-3">
                                 <i class="fas fa-arrow-left me-1"></i>Retour
                             </a>
-                            <div class="d-flex gap-2">
-                                <a href="{{ route('organismes.edit', $organisme->id) }}" class="btn btn-warning btn-sm px-3" style="border-radius: 8px;">
-                                    <i class="fas fa-edit me-1"></i>Modifier
-                                </a>
-                                <form action="{{ route('organismes.destroy', $organisme->id) }}" method="POST" class="d-inline delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm px-3 delete-btn" style="border-radius: 8px;">
-                                        <i class="fas fa-trash-alt me-1"></i>Supprimer
-                                    </button>
-                                </form>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Carte de localisation - TAILLE RÉDUITE -->
+            <!-- Carte de localisation -  -->
             <div class="card border-0 shadow-sm mt-3 animate__animated animate__fadeInUp" style="border-radius: 16px; overflow: hidden;">
                 <div class="card-body p-0">
                     <div style="height: 150px; background: linear-gradient(135deg, #255156 0%, #1d3f43 100%); position: relative; overflow: hidden;">
@@ -171,7 +147,6 @@
         </div>
     </div>
 </div>
-
 <!-- Styles CSS réduits -->
 <style>
     /* Animations simplifiées */

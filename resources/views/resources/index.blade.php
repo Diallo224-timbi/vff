@@ -161,7 +161,6 @@
                                                             @php
                                                                 $extension = strtolower($resource->file_type);
                                                             @endphp
-                                                            
                                                             @if(in_array($extension, ['pdf']))
                                                                 <i class="bx bxs-file-pdf text-danger fa-2x"></i>
                                                             @elseif(in_array($extension, ['doc', 'docx', 'odt']))
@@ -172,9 +171,8 @@
                                                                 <i class="fas fa-file-powerpoint text-warning fa-2x"></i>
                                                             @elseif(in_array($extension, ['txt']))
                                                                 <i class="fas fa-file-alt text-secondary fa-2x"></i>
-                                                            @elseif(in_array($extension, ['mp4', 'webm', 'avi', 'mov']))
+                                                            @elseif(in_array($extension, ['webm', 'avi', 'mov']))
                                                                 <i class="fas fa-file-video text-danger fa-2x"></i>
-                                                            
                                                             @else
                                                                 <i class="fas fa-file text-secondary fa-2x"></i>
                                                             @endif
@@ -227,7 +225,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
                                             <!-- Boutons à droite -->
                                             <div class="col-auto">
                                                 <div class="d-flex gap-2">
@@ -285,8 +282,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- MODAL IMAGE -->
 <div id="imageModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -298,7 +293,6 @@
         </div>
     </div>
 </div>
-
 <!-- MODAL CRÉATION -->
 <div id="resourceModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -333,7 +327,7 @@
                     <div id="fileUploadSection" class="mb-3">
                         <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
                         <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
-                        <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, MP4, Max 50Mo</small>
+                        <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
                     </div>
                     
                     <div id="linkSection" class="mb-3 d-none">
@@ -355,7 +349,7 @@
                     <!-- checkbox pour document important à l'admin -->
                     @if(auth()->user()->role === 'admin')
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="important" name="important">
+                        <input type="checkbox" class="form-check-input" id="important" name="important" value="1">
                         <label class="form-check-label fw-semibold" for="important">Marquer comme ressource importante</label>
                     </div>
                     @endif

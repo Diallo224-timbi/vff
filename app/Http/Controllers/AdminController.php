@@ -26,12 +26,18 @@ class AdminController extends Controller
         $authUser = auth()->user();
 
         $query = User::query()
-            ->whereIn('role', ['user', 'moderateur', 'admin'])
+            ->whereIn('role', ['user', 'moderateur', 'admin', 'moderateur_classique'])
             ->orderBy('created_at', 'desc');
 
         // Si modérateur, limiter à sa structure 
-        if ($authUser->role === 'moderateur') {
+        if ($authUser->role === 'moderateur_classique') {
             $query->where('id_structure', $authUser->id_structure);
+        }
+        // Si modérateur global, limiter aux structures de son organisme
+        elseif ($authUser->role === 'moderateur') {
+            $query->whereHas('structure', function ($q) use ($authUser) {
+                $q->where('id_organisme', $authUser->structure->id_organisme);
+            });
         }
     
 
@@ -45,7 +51,7 @@ class AdminController extends Controller
     public function getAllUsersByStructure($structureId)
     {
         $users = User::where('id_structure', $structureId)
-                     ->whereIn('role', ['user', 'moderateur', 'admin'])
+                     ->whereIn('role', ['user', 'moderateur', 'admin','moderateur_classique'])
                      ->orderBy('created_at', 'desc')
                      ->get();
 
@@ -53,7 +59,21 @@ class AdminController extends Controller
 
         return view('admin.users', compact('users', 'structures'));
     }
+    // Filtrer les utilisateurs par organisme
+    public function getAllUsersByOrganisme($organismeId)
+    {
+        $users = User::whereHas('structure', function ($query) use ($organismeId) {
+            $query->where('id_organisme', $organismeId);
+        })
+        ->whereIn('role', ['user', 'moderateur', 'admin','moderateur_classique'])
+        ->orderBy('created_at', 'desc')
+        ->get();
 
+        $structures = Structures::orderBy('organisme')->get();
+        $organismes = Organisme::orderBy('nom_organisme')->get();
+
+        return view('admin.users', compact('users', 'structures', 'organismes'));
+    }
     // Validation d'un utilisateur
     public function validatedUser($id)
     {
@@ -77,14 +97,12 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $userName = $user->name;
         $user->delete();
-
         $currentUser = auth()->user();
         ActivityLog::log(
             'Suppression utilisateur',
             "Utilisateur supprimé: {$userName} par {$currentUser->name}",
             $currentUser->id
         );
-
         return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
     }
     // Blocage d'un utilisateur
@@ -160,12 +178,14 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $userToUpdate->id,
+            'fonction' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'id_structure' => 'nullable|exists:structure,id',
             'adresse' => 'nullable|string|max:255',
             'ville' => 'nullable|string|max:255',
             'code_postal' => 'nullable|string|max:10',
-            'role' => 'required|string|in:user,moderateur,admin',
+            'role' => 'required|string|in:user,moderateur,admin,moderateur_classique',
+            'notification' => 'nullable|boolean'
             
         ]);
 

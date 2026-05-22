@@ -505,7 +505,7 @@
           <span>Structure</span>
         </a>
       -->
-        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
+        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur_classique' || Auth::user()->role === 'moderateur')
         <a href="{{ route('admin.users') }}" class="sidebar-link">
           <i class='bx bx-shield'></i>
           <span title="Gestion administrative">Administration</span>
@@ -527,7 +527,14 @@
         </div>
         <div class="user-info">
           <div class="user-name">{{ Auth::user()->name }}</div>
-          <div class="user-role">{{ Auth::user()->role }}</div>
+          @if(Auth::user()->role === 'admin')
+            <div class="text-xs text-gray-200">Administrateur</div>
+          @elseif(Auth::user()->role === 'moderateur_classique')
+            <div class="text-xs text-gray-200">Modérateur structure</div>
+          @elseif(Auth::user()->role === 'moderateur')
+            <div class="text-xs text-gray-200">Modérateur organisme</div>
+          @endif
+          <div class="text-xs text-gray-400">{{ Auth::user()->structure->organisme->nom_organisme ?? '-'}}</div>
         </div>
       </div>
     </aside>

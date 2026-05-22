@@ -457,37 +457,8 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                     </div>
                     @endif
                     <!-- Places -->
-                    @if($event->nombre_places)
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="flex-1">
-                            <div class="text-sm text-gray-500">Places disponibles</div>
-                            <div class="flex items-center gap-2 mt-1">
-                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-[#255156] to-[#3a7077] rounded-full" 
-                                         style="width: {{ min(100, ($event->nombre_inscrits / $event->nombre_places) * 100) }}%"></div>
-                                </div>
-                                <span class="text-sm font-medium {{ $event->places_restantes > 0 ? 'text-green-600' : 'text-red-600' }}">
-                                    {{ $event->nombre_inscrits }}/{{ $event->nombre_places }}
-                                </span>
-                            </div>
-                            @if($event->places_restantes > 0)
-                                <div class="text-sm text-green-600 mt-1">
-                                    <i class="fas fa-check-circle mr-1"></i>
-                                    {{ $event->places_restantes }} place(s) restante(s)
-                                </div>
-                            @elseif($event->places_restantes === 0)
-                                <div class="text-sm text-red-600 mt-1">
-                                    <i class="fas fa-times-circle mr-1"></i>
-                                    Complet
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                    @endif
-                </div>
+                    <!--
+                        code mis à coté dans showw.blade.php pour éviter les conflits de merge -->
                 <!-- Actions -->
                 <div class="mt-8 space-y-3">
                     <!-- Bouton Ajouter à l'agenda -->
@@ -510,33 +481,6 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                         </div>
                     </div>
                     @endif
-                    <!-- Boutons d'inscription/désinscription -->
-                    @if(!$userInscription && $event->date_debut > now())
-                        @if(!$event->est_complet)
-                            <form method="POST" action="{{ route('events.inscrire', $event) }}">
-                                @csrf
-                                <button type="submit" class="action-button action-button-primary w-full">
-                                    <i class="fas fa-check-circle"></i>
-                                    S'inscrire à l'événement
-                                </button>
-                            </form>
-                        @else
-                            <button disabled class="action-button w-full bg-gray-200 text-gray-500 cursor-not-allowed">
-                                <i class="fas fa-times-circle"></i>
-                                Événement complet
-                            </button>
-                        @endif                    
-                    @elseif($userInscription && $event->date_debut > now())
-                        <form method="POST" action="{{ route('events.desinscrire', $event) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="action-button action-button-danger w-full">
-                                <i class="fas fa-times-circle"></i>
-                                Se désinscrire
-                            </button>
-                        </form>
-                    @endif
-                    <!-- Boutons admin -->
                     @if(auth()->user()->role === 'admin' || auth()->user()->id == $event->cree_par)
                         <div class="flex gap-2 pt-4 border-t border-gray-100">
                             <a href="{{ route('events.edit', $event) }}" class="flex-1 action-button action-button-outline">

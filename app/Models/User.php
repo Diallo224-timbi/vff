@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'prenom',
         'email',
+        'fonction',
         'password',
         'phone',
         'etatV',
@@ -31,7 +32,8 @@ class User extends Authenticatable
         'created_at',
         'id_structure',
         'chart',
-        'last_login_at'
+        'last_login_at',
+        'notification'
         
     ];
 

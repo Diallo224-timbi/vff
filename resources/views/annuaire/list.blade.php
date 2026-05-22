@@ -459,8 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
     viewDetailsButtons.forEach(btn => {
         btn.addEventListener('click', function() {
-            const structure = JSON.parse(this.dataset.structure);
-            
+            const structure = JSON.parse(this.dataset.structure); 
             document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme ?? '-';
             document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme ?? '-';
             document.getElementById('modal-categories').textContent = structure.categories || 'Non spécifié';
@@ -475,8 +474,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 siteElement.innerHTML = '<span class="text-gray-400">Non disponible</span>';
             }
             
-            document.getElementById('modal-siege_ville').textContent = structure.siege_ville || 'Non spécifié';
-            document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || 'Non spécifié';
+            document.getElementById('modal-siege_ville').textContent = structure.organisme?.ville && structure.organisme?.code_postal ? `${structure.organisme.ville} (${structure.organisme.code_postal})` : 'Non spécifié';
+            document.getElementById('modal-siege_adresse').textContent = structure.organisme?.adresse || 'Non spécifié';
             document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
             document.getElementById('modal-code_postal').textContent = structure.code_postal || 'Non spécifié';
             document.getElementById('modal-adresse').textContent = structure.adresse || 'Non spécifié';

@@ -20,7 +20,7 @@
                         </span>
                     </h1>
                     <span class="text-[#0d727e]">
-                        {{ optional($user->structure->organisme)->nom_organisme ?? 'N/A' }}
+                        {{ optional(optional($user->structure)->organisme)->nom_organisme ?? 'N/A' }}
                         -
                         {{ $user->structure->ville ?? 'N/A' }}
                         -
@@ -32,10 +32,16 @@
                     <p class="text-sm text-gray-500 flex items-center mt-1">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
                             @if($user->role === 'admin') bg-[#255156] text-white
-                            @elseif($user->role === 'moderateur') bg-blue-100 text-blue-800
+                            @elseif(str_contains($user->role, 'moderateur')) bg-blue-100 text-blue-800
                             @else bg-green-100 text-green-800
                             @endif">
-                            <i class="fas fa-user-tag mr-1"></i> {{ ucfirst($user->role ?? 'utilisateur') }}
+                            @if($user->role === 'admin')
+                                Administrateur
+                            @elseif(str_contains($user->role, 'moderateur'))
+                                Modérateur {{ str_contains($user->role, 'classique') ? 'structure' : 'organisme' }}
+                            @else
+                                Utilisateur
+                            @endif
                         </span>
                         <span class="ml-3 flex items-center text-gray-400">
                             <i class="fas fa-calendar-alt mr-1"></i> Membre depuis {{ $user->created_at?->format('d/m/Y') ?? 'N/A' }}
@@ -51,7 +57,6 @@
             </div>
         </div>
     </div>
-
     @if(session('success'))
         <div class="mb-6 transform transition-all duration-500 animate-slideDown">
             <div class="bg-green-50 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-lg shadow-md flex items-center justify-between">
@@ -65,7 +70,6 @@
             </div>
         </div>
     @endif
-
     @if($errors->any())
         <div class="mb-6">
             <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg shadow-md">
@@ -81,7 +85,6 @@
             </div>
         </div>
     @endif
-
     <!-- Contenu principal avec cartes -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Colonne principale - Formulaire -->
@@ -91,9 +94,7 @@
                 <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200 flex items-center">
                     <i class="fas fa-user-edit text-[#0d727e] text-xl mr-3"></i>
                     <h2 class="text-lg font-semibold text-gray-800">Informations personnelles</h2>
-                    <span class="ml-auto text-xs text-gray-500">
-                        <i class="fas fa-lock-open text-green-500 mr-1"></i> Modifiable
-                    </span>
+                    <!-- activer les notifications des mises à jour du profil -->
                 </div>
 
                 <form action="{{ route('profile.update') }}" method="POST" class="p-6" id="profileForm">
@@ -153,32 +154,52 @@
                     <!-- Section adresse -->
                     <div class="mb-8">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <!-- Adresse -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-address-card mr-1""></i>Adresse</label>
-                        <input type="text" name="adresse" value="{{ old('adresse', $user->adresse) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
-                            placeholder="123 Rue Exemple">
-                    </div>
+                            <!-- Adresse -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-address-card mr-1""></i>Adresse</label>
+                                <input type="text" name="adresse" value="{{ old('adresse', $user->adresse) }}"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                                    placeholder="123 Rue Exemple">
+                            </div>
 
-                    <!-- Code postal -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-map-signs mr-1"></i>Code postal</label>
-                        <input type="text" name="code_postal" value="{{ old('code_postal', $user->code_postal) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
-                            placeholder="75001">
-                    </div>
+                            <!-- Code postal -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-map-signs mr-1"></i>Code postal</label>
+                                <input type="text" name="code_postal" value="{{ old('code_postal', $user->code_postal) }}"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                                    placeholder="75001">
+                            </div>
 
-                    <!-- Ville -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-city mr-1"></i>Ville</label>
-                        <input type="text" name="ville" value="{{ old('ville', $user->ville) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
-                            placeholder="Paris">
+                            <!-- Ville -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1"><i class="fas fa-city mr-1"></i>Ville</label>
+                                <input type="text" name="ville" value="{{ old('ville', $user->ville) }}"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                                    placeholder="Paris">
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <!-- section fonction professionnel, activation des notifications -->
+                    <div class="mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <!-- Fonction -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-briefcase mr-1 text-gray-400"></i> Fonction
+                                </label>
+                                <input type="text" name="fonction" value="{{ old('fonction', $user->fonction) }}" 
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white shadow-sm"
+                                    placeholder="Ex: Enseignant, Chercheur...">
+                            </div>
+                        
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" name="notification" value="1" {{ $user->notification ? 'checked' : '' }} class="w-4 h-4 text-[#255156]">
+                                    <span class="text-sm font-medium text-gray-700">Activer les notifications </span>
+                                </label>
+                            </div>
+                        </div>  
                     </div>
-
                     <!-- Barre d'actions -->
                     <div class="flex items-center justify-between pt-4 border-t border-gray-200">
                         <div class="flex space-x-3">
@@ -234,22 +255,33 @@
                         <span class="text-sm text-gray-600 w-24">Rôle actuel</span>
                         <span class="px-3 py-1.5 rounded-lg text-xs font-medium 
                             @if($user->role === 'admin') bg-[#18555c] text-white
-                            @elseif($user->role === 'moderateur')
+                            @elseif(str_contains($user->role, 'moderateur')) bg-[#18555c] text-white
                             @else text-green-800
                             @endif">
-                            <i class="fas fa-user-circle mr-1"></i> {{ ucfirst($user->role ?? 'utilisateur') }}
+                            @if($user->role === 'admin')
+                                Administrateur
+                            @elseif($user->role === 'moderateur')
+                                Modérateur organisme
+                            @elseif($user->role === 'moderateur_classique')
+                                Modérateur structure
+                            @else
+                                Utilisateur
+                            @endif
                         </span>
                     </div>
-                    
                     @if($user->role !== 'admin')
                     <div class="bg-blue-50 p-4 rounded-lg">
                         <div class="flex items-start">
                             <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
                             <div>
-                                <p class="text-xs text-blue-700 font-medium">Vous ne pouvez pas modifier votre rôle</p>
-                                <p class="text-xs text-blue-600 mt-1">
-                                    Pour demander une évolution de vos droits, contactez l'équipe administrative.
-                                </p>
+                                @if($user->role === 'moderateur')
+                                    <p class="text-sm text-blue-700 mb-1">En tant que modérateur organisme, vous avez accès à la gestion de votre organisme et de ses structures.</p>
+                                @elseif($user->role === 'moderateur_classique')
+                                    <p class="text-sm text-blue-700 mb-1">En tant que modérateur structure, vous avez accès à la gestion de votre structure et de ses membres.</p>
+                                @else
+                                    <p class="text-sm text-blue-700 mb-1">En tant qu'utilisateur, vous avez accès à votre profil et à vos informations personnelles.</p>
+                                @endif
+                                <p class="text-sm text-blue-700"><small>Pour plus d'informations sur vos permissions, veuillez contacter votre administrateur.</small></p>
                             </div>
                         </div>
                     </div>
@@ -356,19 +388,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // Confirmation avant soumission
     form.addEventListener('submit', function(e) {
         const modified = Array.from(inputs).some(input => 
             input.value !== input.defaultValue && input.value !== ''
         );
         
-        if (!modified) {
+        if (modified && !confirm('Êtes-vous sûr de vouloir enregistrer ces modifications ?')) {
             e.preventDefault();
-            alert('Aucune modification détectée.');
         }
     });
-
     // Formatage automatique du téléphone
     const phoneInput = document.querySelector('input[name="phone"]');
     if (phoneInput) {

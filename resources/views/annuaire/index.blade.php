@@ -24,7 +24,6 @@
             }, 5000);
         </script>
     @endif
-
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
              role="alert" 
@@ -45,7 +44,6 @@
             }, 5000);
         </script>
     @endif
-
     @if($errors->any())
         <div class="position-fixed top-0 end-0 m-3" style="z-index: 9999; max-width: 400px;">
             @foreach($errors->all() as $error)
@@ -67,7 +65,6 @@
             }, 8000);
         </script>
     @endif
-
     <!-- En-tête fixe -->
     <div class="sticky top-0 z-40 bg-gray-50 pt-4 pb-2 shadow-sm" style="margin-top: -1px;">
         <div class="mb-2 flex justify-between items-center">
@@ -98,8 +95,7 @@
                     </div>
                 @endif
             </div>
-        </div>   
-        
+        </div>       
         <!-- Barre d'actions -->
         <div class="flex flex-wrap items-center justify-between mb-2 p-2 bg-white rounded-xl shadow-lg">
             @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
@@ -111,7 +107,7 @@
                     Ajouter une structure
                 </button>
             <!--
-                <a href="{{ route('annuaire.export.pdf') }}" 
+                <a href="" 
                    class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-colors flex items-center gap-2">
                     <i class="fas fa-file-pdf"></i>
                     Exporter PDF
@@ -140,8 +136,7 @@
                     </span>
                 </div>
             </div>
-        </div>
-        
+        </div> 
         <!-- Section recherche et filtres -->
         <div class="bg-white rounded-xl shadow-lg p-2">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
@@ -224,6 +219,13 @@
                                             {{ $structuresByOrganisme->count() }} structure(s)
                                         </p>
                                     </div>
+                                    <!-- adresse et code postal de l'organisme -->
+                                    @if($firstStructure->organisme && $firstStructure->organisme->adresse)
+                                        <div class="text-sm text-gray-500">
+                                            <i class="fas fa-map-marker-alt mr-1"></i>
+                                            {{ $firstStructure->organisme->adresse }} - {{ $firstStructure->organisme->code_postal ?? '' }} {{ $firstStructure->organisme->ville ?? '' }}
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="flex items-center gap-2">
                                     @if(auth()->user()->role === 'admin')
@@ -269,20 +271,17 @@
                                                     <div class="text-gray-700 text-sm truncate max-w-[100px]" title="{{ $structure->code_postal ?? '' }}">
                                                         {{ $structure->code_postal ?? '-' }}
                                                     </div>
-                                                </td>
-                                                
+                                                </td> 
                                                 <td class="px-3 py-2">
                                                     <div class="text-gray-700 text-sm truncate max-w-[150px]" title="{{ $structure->adresse ?? '' }}">
                                                         {{ $structure->adresse ?? '-' }}
                                                     </div>
                                                 </td>
-                                                
                                                 <td class="px-3 py-2">
                                                     <div class="text-gray-700 text-sm truncate max-w-[200px]" title="{{ $structure->description ?? '' }}">
                                                         {{ $structure->description ?? '-' }}
                                                     </div>
                                                 </td>
-                                                
                                                 <td class="px-3 py-2">
                                                     @if($structure->organisme && $structure->organisme->site_web)
                                                         <a href="{{ $structure->organisme->site_web }}" target="_blank" 
@@ -293,8 +292,7 @@
                                                     @else
                                                         <span class="text-gray-400 text-sm">-</span>
                                                     @endif
-                                                </td>
-                                                
+                                                </td>    
                                                 <td class="px-3 py-2">
                                                     <div class="text-gray-700 text-sm truncate max-w-[120px]" title="{{ $structure->categories ?? '' }}">
                                                         {{ $structure->categories ?? '-' }}
@@ -319,7 +317,6 @@
                                                                 data-structure='@json($structure)'>
                                                             <i class="fas fa-eye text-xs"></i>
                                                         </button>
-                                                        
                                                         @if(auth()->user()->role === 'admin')
                                                             <a href="{{ route('structures.edit', $structure) }}" 
                                                                class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors inline-flex items-center justify-center"
@@ -336,7 +333,7 @@
                                                                     <i class="fas fa-trash text-xs"></i>
                                                                 </button>
                                                             </form>
-                                                        @elseif(auth()->user()->role === 'moderateur' && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
+                                                        @elseif(str_contains(auth()->user()->role, 'moderateur') && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
                                                             <a href="{{ route('structures.edit', $structure) }}" 
                                                                class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors inline-flex items-center justify-center"
                                                                title="Modifier ma structure">
@@ -345,10 +342,32 @@
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
                                                                   method="POST" 
                                                                   class="inline"
-                                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer VOTRE structure ?')">
+                                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer votre structure ?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" type="submit" title="Supprimer ma structure">
+                                                                    <i class="fas fa-trash text-xs"></i>
+                                                                </button>
+                                                            </form>
+                                                        <!-- s'il est moderateur global il peut modifier et supprimer toutes les structures rattachées à son organisme -->
+                                                            @elseif(auth()->user()->role === 'moderateur'
+                                                                    && auth()->user()->structure
+                                                                    && auth()->user()->structure->id_organisme
+                                                                    && $structure->organisme
+                                                                    && auth()->user()->structure->id_organisme === $structure->organisme->id
+                                                                )
+                                                            <a href="{{ route('structures.edit', $structure) }}" 
+                                                               class="p-2 bg-yellow-400 text-yellow-800 rounded-lg hover:bg-yellow-500 transition-colors inline-flex items-center justify-center"
+                                                               title="Modifier une structure de mon organisme">
+                                                                <i class="fas fa-edit text-xs"></i>
+                                                            </a>
+                                                            <form action="{{ route('structures.destroy', $structure) }}" 
+                                                                  method="POST" 
+                                                                  class="inline"
+                                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure de votre organisme ?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" type="submit" title="Supprimer une structure de mon organisme">
                                                                     <i class="fas fa-trash text-xs"></i>
                                                                 </button>
                                                             </form>
@@ -372,7 +391,6 @@
             </div>
         </div>
     </div>
-
     <!-- Pagination -->
     <div class="mt-8 flex justify-center">
         {{ $structures->links() }}
@@ -402,7 +420,6 @@
     </div>
 </div>
 @endif
-
 <!-- MODAL DETAILS -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered custom-modal-width">
@@ -424,7 +441,6 @@
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
@@ -455,8 +471,7 @@
                                 <span id="modal-site" class="text-gray-800">-</span>
                             </div>
                         </div>
-                    </div>
-                    
+                    </div> 
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                         <h6 class="text-[#255156] font-semibold mb-2 text-sm">Localisation</h6>      
                         <div class="mb-3 p-2 bg-blue-50/50 rounded">
@@ -474,8 +489,7 @@
                                     <span class="text-gray-700 truncate" id="modal-siege_adresse">-</span>
                                 </div>
                             </div>
-                        </div>    
-                        
+                        </div>       
                         <div class="p-2 bg-green-50/50 rounded">
                             <div class="flex items-center gap-2 mb-1">
                                 <i class="fas fa-map-pin text-green-500 text-xs"></i>
@@ -498,7 +512,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4">
                     <h6 class="text-[#255156] font-semibold mb-2 text-sm">Contact</h6>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
@@ -518,13 +531,11 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                     <h6 class="text-[#255156] font-semibold mb-2 text-sm">Description</h6>
                     <div class="text-sm text-gray-700 leading-relaxed p-2 bg-gray-50 rounded min-h-[60px]" id="modal-description">-</div>
                 </div>
             </div>
-
             <div class="modal-footer bg-white p-3 border-t border-gray-200">
                 <div class="flex justify-end gap-2 w-full">
                     <button type="button" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2" data-bs-dismiss="modal">
@@ -647,8 +658,8 @@
                     document.getElementById('modal-public_cible').textContent = structure.public_cible || '-';
                     document.getElementById('modal-zone').textContent = structure.zone || '-';
                     document.getElementById('modal-site').innerHTML = org.site_web ? `<a href="${org.site_web}" target="_blank" class="text-[#255156] hover:underline">${org.site_web}</a>` : '-';
-                    document.getElementById('modal-siege_ville').textContent = structure.siege_ville || '-';
-                    document.getElementById('modal-siege_adresse').textContent = structure.siege_adresse || '-';
+                    document.getElementById('modal-siege_ville').textContent = org.ville && org.code_postal ? `${org.ville} (${org.code_postal})` : '-';
+                    document.getElementById('modal-siege_adresse').textContent = org.adresse || '-';
                     document.getElementById('modal-ville').textContent = structure.ville || '-';
                     document.getElementById('modal-code_postal').textContent = structure.code_postal || '-';
                     document.getElementById('modal-adresse').textContent = structure.adresse || '-';

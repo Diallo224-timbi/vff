@@ -195,11 +195,10 @@
                             @error('code_postal')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
                     </div>
-
                     <!-- Responsable structure -->
                     <div class="bg-[#E3FCFF] p-3 rounded-lg border border-[#8EC0C6] mb-2">
                         <div class="flex items-center justify-between">
-                            <span class="text-sm font-bold text-[#173235]">Responsable structure ?</span>
+                            <span class="text-sm font-bold text-[#173235]">Responsable organisme ou structure ?</span>
                             <div class="flex items-center space-x-4">
                                 <label class="flex items-center space-x-2 cursor-pointer">
                                     <input type="radio" name="is_responsable" value="1" class="responsable-radio w-4 h-4 text-[#255156]">
