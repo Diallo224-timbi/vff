@@ -18,7 +18,6 @@
             </div>
         </div>
     @endif
-
     <!-- En-tête et navigation avec espacement réduit -->
     <div class="flex flex-wrap items-center justify-between mb-3">
         <div class="flex items-center gap-2">
@@ -128,7 +127,6 @@
                         </div>
                     </div>
                     @endif
-
                     <!-- Grille des cartes avec gap réduit -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" 
                          id="siege-{{ $loop->index }}-grid">
@@ -138,8 +136,7 @@
                                  data-categorie="{{ strtolower($structure->categories ?? '') }}"
                                  data-ville="{{ strtolower($structure->ville ?? '') }}"
                                  data-search="{{ strtolower($structure->organisme->nom_organisme ?? '') . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '') }}"
-                                 data-siege-id="siege-{{ $loop->parent->index }}">
-                                
+                                 data-siege-id="siege-{{ $loop->parent->index }}">                               
                                 <!-- En-tête de la carte plus compact -->
                                 <div class="flex justify-between items-start mb-2">
                                     <div class="flex items-start gap-1.5">
@@ -169,7 +166,6 @@
                                             @endif
                                         </span>
                                     </div>
-
                                     <!-- Téléphone -->
                                     <div class="flex items-center gap-1.5 text-gray-600">
                                         <i class="fas fa-phone text-gray-400 w-3 text-xs"></i>
@@ -182,7 +178,6 @@
                                             <span class="text-gray-400 italic text-xs">Non disponible</span>
                                         @endif
                                     </div>
-
                                     <!-- Email -->
                                     <div class="flex items-center gap-1.5 text-gray-600">
                                         <i class="fas fa-envelope text-gray-400 w-3 text-xs"></i>
@@ -195,7 +190,6 @@
                                             <span class="text-gray-400 italic text-xs">Non disponible</span>
                                         @endif
                                     </div>
-
                                     <!-- Badges compacts -->
                                     <div class="flex flex-wrap gap-1 mt-1 pt-1 border-t border-gray-100">
                                         @if($structure->type_structure)
@@ -224,7 +218,6 @@
                             </div>
                         @endforeach
                     </div>
-
                     <!-- Message aucun résultat compact -->
                     <div id="no-structure-result-{{ $loop->index }}" 
                          class="hidden flex flex-col items-center justify-center py-4 text-gray-500">

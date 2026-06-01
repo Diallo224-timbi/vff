@@ -76,8 +76,8 @@ public function index(Request $request)
             'code_postal' => 'nullable|string|max:10',
             'pays' => 'nullable|string|max:100',
             'adresse' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'categories' => 'nullable|string',
             'public_cible' => 'nullable|string',
             'zone' => 'nullable|string|max:100',
@@ -90,10 +90,10 @@ public function index(Request $request)
         ]);
 
         // NOUVEAU : Gestion de l'upload du logo
-        if ($request->hasFile('logo')) {
+        /*if ($request->hasFile('logo')) {
             $path = $request->file('logo')->store('logos', 'public');
             $validated['logo'] = $path;
-        }
+        }*/
 
         // Si latitude ou longitude absentes, récupérer via Nominatim
         if ((!$validated['latitude'] || !$validated['longitude']) && $validated['adresse']) {
@@ -114,11 +114,11 @@ public function index(Request $request)
             }
         }
 
-        // Si pas de localisation spécifique, utiliser le siège social
+        /* Si pas de localisation spécifique, utiliser le siège social
         if (empty($validated['ville']) && $validated['siege_ville']) {
             $validated['ville'] = $validated['siege_ville'];
             $validated['code_postal'] = $validated['siege_code_postal'];
-        }
+        }*/
 
         Structures::create($validated);
 
@@ -154,33 +154,33 @@ public function index(Request $request)
             'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:10',
             'pays' => 'nullable|string|max:100',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
 
         ]);
 
-        //  NOUVEAU : Gestion de la SUPPRESSION du logo
-        if ($request->has('remove_logo') && $request->remove_logo == '1') {
-            // Supprimer l'ancien fichier physique
-            if ($structure->logo) {
-                Storage::disk('public')->delete($structure->logo);
+        /*  NOUVEAU : Gestion de la SUPPRESSION du logo
+            if ($request->has('remove_logo') && $request->remove_logo == '1') {
+                // Supprimer l'ancien fichier physique
+                if ($structure->logo) {
+                    Storage::disk('public')->delete($structure->logo);
+                }
+                // Mettre à null en base
+                $validated['logo'] = null;
             }
-            // Mettre à null en base
-            $validated['logo'] = null;
-        }
-
-        //  NOUVEAU : Gestion du NOUVEAU logo (écrase l'ancien)
-        if ($request->hasFile('logo')) {
-            // Supprimer l'ancien logo s'il existe
-            if ($structure->logo) {
-                Storage::disk('public')->delete($structure->logo);
+        
+            //  NOUVEAU : Gestion du NOUVEAU logo (écrase l'ancien)
+            if ($request->hasFile('logo')) {
+                // Supprimer l'ancien logo s'il existe
+                if ($structure->logo) {
+                    Storage::disk('public')->delete($structure->logo);
+                }
+                
+                // Stocker le nouveau
+                $path = $request->file('logo')->store('logos', 'public');
+                $validated['logo'] = $path;
             }
-            
-            // Stocker le nouveau
-            $path = $request->file('logo')->store('logos', 'public');
-            $validated['logo'] = $path;
-        }
-
+    */
         $structure->update($validated);
     //log de l'activité
         ActivityLog::log('Modification structure', 'Structure modifiée: ' . $structure->organisme);

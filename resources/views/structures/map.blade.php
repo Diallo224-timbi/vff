@@ -180,13 +180,9 @@
                             </h4>
                             <div class="space-y-3">
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
-                                    <span class="text-gray-500 text-sm">Organisme</span>
+                                    <span class="text-gray-500 text-sm">Structure</span>
                                     <span class="text-gray-800 font-medium text-right" id="modal-organisme-text">-</span>
-                                </div>
-                                <div class="flex justify-between items-start border-b border-gray-100 pb-2">
-                                    <span class="text-gray-500 text-sm">Type</span>
-                                    <span class="inline-block px-2 py-1  rounded-lg text-xs font-medium" id="modal-type_structure">-</span>
-                                </div>
+                                </div>     
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
                                     <span class="text-gray-500 text-sm">Catégories</span>
                                     <div class="flex flex-wrap gap-1 justify-end" id="modal-categories-list"></div>
@@ -226,26 +222,24 @@
                     </div>
 
                     <!-- Colonne droite -->
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         <!-- Localisation -->
                         <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
                             <h4 class="text-[#255156] font-semibold mb-4 flex items-center gap-2">
                                 <i class="fas fa-map-marker-alt"></i>
                                 Localisation
                             </h4>
-                            
                             <!-- Siège social -->
                             <div class="mb-4 p-3 bg-blue-50 rounded-lg">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <i class="fas fa-landmark text-[#59BEC9]"></i>
-                                    <span class="font-semibold text-[#59BEC9] text-sm">SIÈGE SOCIAL</span>
+                                    <i class="fas fa-landmark text-[#206a72]"></i>
+                                    <span class="font-semibold text-[#206a72] text-sm">SIÈGE SOCIAL</span>
                                 </div>
                                 <div class="space-y-1 text-sm">
                                     <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-siege_ville">-</span></p>
                                     <p><span class="text-gray-500">Adresse :</span> <span id="modal-siege_adresse">-</span></p>
                                 </div>
-                            </div>
-                            
+                            </div>   
                             <!-- Antenne locale -->
                             <div class="p-3 bg-green-50 rounded-lg">
                                 <div class="flex items-center gap-2 mb-2">
@@ -258,7 +252,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Contact -->
                         <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
                             <h4 class="text-[#255156] font-semibold mb-4 flex items-center gap-2">
@@ -397,13 +390,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Couleur selon type
     function getColorByType(type) {
-        if (!type) return '#6b7280';
+        if (!type) return '#10b981';
         const t = type.toLowerCase();
-        if (t.includes('siége') || t.includes('siege')) return '#3b82f6';
-        if (t.includes('structure')) return '#10b981';
-        if (t.includes('association')) return '#ef4444';
-        if (t.includes('santé') || t.includes('droit')) return '#8b5cf6';
-        return '#f59e0b';
+        return '#10b981';
     }
 
     // Fonction pour afficher les détails complets dans le modal
@@ -426,12 +415,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // En-tête
         document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme || 'Structure sans nom';
-        document.getElementById('modal-type-badge').textContent = structure.ville || ' ';
-        document.getElementById('modal-hebergement-badge').textContent = structure.hebergement === 'oui' ? '🏠 Avec hébergement' : (structure.hebergement === 'non' ? '❌ Sans hébergement' : 'Hébergement non spécifié');
-        
+        document.getElementById('modal-type-badge').textContent = structure.organisme?.ville || ' ';
         // Informations générales
-        document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme || '-';
-        document.getElementById('modal-type_structure').innerHTML = `<span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs" style="background-color: ${getColorByType(structure.type_structure)}20; color: ${getColorByType(structure.type_structure)}">${escapeHtml(structure.type_structure || 'Non spécifié')}</span>`;
+        document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme + ' '+ structure.ville || '-'
         document.getElementById('modal-categories-list').innerHTML = formatCategoriesBadges(structure.categories);
         document.getElementById('modal-public-list').innerHTML = formatPublicBadges(structure.public_cible);
         document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
@@ -586,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour créer le contenu de l'infobulle (popup) - Utilisation d'une approche sécurisée
     function createPopupContent(structure) {
         const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
-        const color = getColorByType(structure.type_structure);
+        const color = getColorByType(structure.ville);
         
         // Échapper les données pour le JSON dans l'attribut data-structure
         const safeStructureJson = escapeJsonForAttribute(structure);

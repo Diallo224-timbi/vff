@@ -23,10 +23,6 @@
             Gestion des utilisateurs
         </h1>
         <div class="flex items-center gap-2">
-            <button onclick="openStatsModal()" class="bg-[#255156] hover:bg-[#1d4144] text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-1">
-                <i class="fas fa-chart-pie"></i>
-                Statistiques
-            </button>
             @if(auth()->user()->role === 'admin')
                 <span class="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">Administrateur</span>
             @elseif(auth()->user()->role === 'moderateur')
@@ -80,10 +76,9 @@
                     @elseif($user->role === 'moderateur_classique')
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#255156] text-white">Responsable structure</span>
                     @else
-                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Utilisateur</span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-[#255156] text-white">Utilisateur</span>
                     @endif
                 </div>
-
             </div>
             <!-- Structure de rattachement -->
             <div class="mt-1 text-xs text-gray-600">
@@ -113,7 +108,7 @@
                     <i class="bx bx-info-circle text-xs"></i>
                 </button>
                 @endif
-                <button type="button" onclick="openEditModal({{ $user->id }}, '{{ addslashes($user->prenom) }}', '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->adresse }}', '{{ $user->ville }}', '{{ $user->code_postal }}', '{{ $user->id_structure }}', '{{ $user->role }}')"
+                <button type="button" onclick="openEditModal({{ $user->id }}, '{{ addslashes($user->prenom) }}', '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->adresse }}', '{{ $user->ville }}', '{{ $user->code_postal }}', {{ $user->id_structure ?? 'null' }}, {{ $user->structure->id_organisme ?? 'null' }}, '{{ $user->role }}')"
                         class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Modifier">
                     <i class="bx bx-edit text-xs"></i>
                 </button>
@@ -130,84 +125,6 @@
             Aucun utilisateur trouvé
         </div>
         @endforelse
-    </div>
-</div>
-
-<!-- MODAL STATISTIQUES -->
-<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="statsModal">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
-        <div class="bg-[#255156] text-white px-4 py-3 flex justify-between items-center">
-            <h3 class="font-semibold">
-                <i class="fas fa-chart-pie mr-2"></i>
-                Statistiques des utilisateurs
-            </h3>
-            <button onclick="closeStatsModal()" class="text-white hover:text-gray-200">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="p-4">
-            @php
-                $total = $users->count();
-                $valides = $users->where('etatV', 'valider')->count();
-                $attente = $users->where('etatV', 'attente')->count();
-                $bloques = $users->where('etatV', 'bloqué')->count();
-                $admins = $users->where('role', 'admin')->count();
-                $moderateurs = $users->where('role', 'moderateur')->count();
-                $moderateurs_classique = $users->where('role', 'moderateur_classique')->count();
-                $utilisateurs = $users->where('role', 'user')->count();
-            @endphp
-            <!-- Cartes stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                <div class="bg-gray-50 p-3 rounded-lg text-center">
-                    <div class="text-2xl font-bold text-[#255156]">{{ $total }}</div>
-                    <div class="text-xs text-gray-600">Total</div>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg text-center">
-                    <div class="text-2xl font-bold text-green-600">{{ $valides }}</div>
-                    <div class="text-xs text-gray-600">Validés</div>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg text-center">
-                    <div class="text-2xl font-bold text-yellow-600">{{ $attente }}</div>
-                    <div class="text-xs text-gray-600">En attente</div>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg text-center">
-                    <div class="text-2xl font-bold text-red-600">{{ $bloques }}</div>
-                    <div class="text-xs text-gray-600">Bloqués</div>
-                </div>
-            </div>
-            <!-- Répartition par rôle -->
-            <div class="border-t border-gray-200 pt-3">
-                <h4 class="text-sm font-medium text-gray-700 mb-2">Répartition par rôle</h4>
-                <div class="space-y-2">
-                    <div class="flex items-center">
-                        <span class="text-xs w-24">Administrateurs</span>&nbsp
-                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div class="h-full bg-[#255156]" style="width: {{ $total > 0 ? ($admins/$total)*100 : 0 }}%"></div>
-                        </div>
-                        <span class="text-xs w-12 text-right">{{ $admins }}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-xs w-24">Modérateurs</span>&nbsp
-                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div class="h-full bg-[#8bbdc3]" style="width: {{ $total > 0 ? ($moderateurs/$total)*100 : 0 }}%"></div>
-                        </div>
-                        <span class="text-xs w-12 text-right">{{ $moderateurs }}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-xs w-24">Utilisateurs</span>&nbsp
-                        <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div class="h-full bg-gray-400" style="width: {{ $total > 0 ? ($utilisateurs/$total)*100 : 0 }}%"></div>
-                        </div>
-                        <span class="text-xs w-12 text-right">{{ $utilisateurs }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="px-4 py-3 border-t border-gray-200 flex justify-end">
-            <button onclick="closeStatsModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
-                Fermer
-            </button>
-        </div>
     </div>
 </div>
 
@@ -289,12 +206,12 @@
                 <!-- Structure de rattachement -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Structure de rattachement</label>
-                    <!-- liste deroulante des organismes -->
+                    <!-- liste deroulante des organismes parents -->
                     <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
                         <option value="">Aucun organisme</option>
                         @foreach($organismes as $organisme)
-                            <option value="{{ $organisme->id }}" {{ old('id_organisme') == $organisme->id ? 'selected' : '' }}>
-                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }}
+                            <option value="{{ $organisme->id }}" >
+                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }} -({{ $organisme->code_postal }})
                             </option>
                         @endforeach
                     </select>
@@ -302,9 +219,8 @@
                         <option value="">Aucune structure</option>
                         @foreach($structures as $structure)
                             <option value="{{ $structure->id}}" 
-                                data-organisme-id="{{ $structure->id_organisme }}"
-                                {{ old('id_structure') == $structure->id ? 'selected' : '' }}>
-                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }} {{ $structure->adresse }})
+                                data-organisme-id="{{ $structure->id_organisme }}">
+                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }}) - {{ $structure->adresse }}
                             </option>
                         @endforeach
                     </select>
@@ -368,6 +284,15 @@
     </div>
 </div>
 <script>
+    // Stocker toutes les structures avec leurs données pour le filtrage dynamique
+    const allStructures = @json($structures->map(function($structure) {
+        return [
+            'id' => $structure->id,
+            'id_organisme' => $structure->id_organisme,
+            'label' => ($structure->organisme->nom_organisme ?? '-') . ' - ' . $structure->ville . ' (' . $structure->code_postal . ') - ' . $structure->adresse
+        ];
+    }));
+
     // Recherche
     document.getElementById('searchInput').addEventListener('input', function(e) {
         const term = e.target.value.toLowerCase();
@@ -375,17 +300,6 @@
             card.style.display = card.dataset.search.includes(term) ? '' : 'none';
         });
     });
-
-    // MODAL STATISTIQUES
-    function openStatsModal() {
-        document.getElementById('statsModal').classList.remove('hidden');
-        document.getElementById('statsModal').classList.add('flex');
-    }
-    
-    function closeStatsModal() {
-        document.getElementById('statsModal').classList.add('hidden');
-        document.getElementById('statsModal').classList.remove('flex');
-    }
 
     // MODAL MOTIF
     function showReason(reason) {
@@ -399,8 +313,42 @@
         document.getElementById('reasonModal').classList.remove('flex');
     }
 
-    // MODAL MODIFICATION (avec tous les champs)
-    function openEditModal(id, prenom, nom, email, phone, adresse, ville, codePostal, structureId, role) {
+    // Fonction pour filtrer les structures par organisme
+    function filterStructuresByOrganisme(organismeId, selectedStructureId = null) {
+        const structureSelect = document.getElementById('editStructure');
+        
+        // Vider la liste déroulante des structures
+        structureSelect.innerHTML = '<option value="">Aucune structure</option>';
+        
+        if (!organismeId) {
+            // Si aucun organisme sélectionné, afficher toutes les structures
+            allStructures.forEach(structure => {
+                const option = document.createElement('option');
+                option.value = structure.id;
+                option.textContent = structure.label;
+                option.setAttribute('data-organisme-id', structure.id_organisme);
+                structureSelect.appendChild(option);
+            });
+        } else {
+            // Filtrer les structures par organisme
+            const filteredStructures = allStructures.filter(s => s.id_organisme == organismeId);
+            filteredStructures.forEach(structure => {
+                const option = document.createElement('option');
+                option.value = structure.id;
+                option.textContent = structure.label;
+                option.setAttribute('data-organisme-id', structure.id_organisme);
+                structureSelect.appendChild(option);
+            });
+        }
+        
+        // Restaurer la sélection si une structure est spécifiée
+        if (selectedStructureId) {
+            structureSelect.value = selectedStructureId;
+        }
+    }
+
+    // MODAL MODIFICATION (avec tous les champs et gestion dynamique des structures)
+    function openEditModal(id, prenom, nom, email, phone, adresse, ville, codePostal, structureId, organismeId, role) {
         document.getElementById('editPrenom').value = prenom;
         document.getElementById('editNom').value = nom;
         document.getElementById('editEmail').value = email;
@@ -408,7 +356,17 @@
         document.getElementById('editAdresse').value = adresse || '';
         document.getElementById('editVille').value = ville || '';
         document.getElementById('editCodePostal').value = codePostal || '';
-        document.getElementById('editStructure').value = structureId || '';
+        
+        // Sélectionner l'organisme
+        const organismeSelect = document.getElementById('editOrganisme');
+        if (organismeId) {
+            organismeSelect.value = organismeId;
+        } else {
+            organismeSelect.value = '';
+        }
+        
+        // Filtrer les structures en fonction de l'organisme sélectionné
+        filterStructuresByOrganisme(organismeId || '', structureId);
         
         if(document.getElementById('editRole')) {
             document.getElementById('editRole').value = role;
@@ -437,19 +395,19 @@
         document.getElementById('blockModal').classList.remove('flex');
     }
 
+    // Filtrage dynamique des structures rattachées en fonction de l'organisme
+    document.getElementById('editOrganisme').addEventListener('change', function() {
+        const organismeId = this.value;
+        filterStructuresByOrganisme(organismeId);
+    });
+
     // Fermeture avec Échap
     document.addEventListener('keydown', function(e) {
         if(e.key === 'Escape') {
-            closeStatsModal();
             closeReasonModal();
             closeEditModal();
             closeBlockModal();
         }
-    });
-
-    // Fermeture en cliquant sur le fond
-    document.getElementById('statsModal').addEventListener('click', function(e) {
-        if(e.target === this) closeStatsModal();
     });
     
     document.getElementById('reasonModal').addEventListener('click', function(e) {
@@ -462,30 +420,6 @@
     
     document.getElementById('blockModal').addEventListener('click', function(e) {
         if(e.target === this) closeBlockModal();
-    });
-    // Filtrage dynamique des structure rataché en fonction de l'organisme
-    document.getElementById('editOrganisme').addEventListener('change', function() {
-        const organismeId = this.value;
-        const structureSelect = document.getElementById('editStructure');
-        
-        // Afficher toutes les options si aucun organisme sélectionné
-        if(!organismeId) {
-            Array.from(structureSelect.options).forEach(option => option.style.display = '');
-            return;
-        }
-        
-        // Filtrer les options de structure
-        Array.from(structureSelect.options).forEach(option => {
-            if(option.value === '') {
-                option.style.display = '';
-            } else {
-                const optionOrganismeId = option.getAttribute('data-organisme-id');
-                option.style.display = (optionOrganismeId === organismeId) ? '' : 'none';
-            }
-        });
-        
-        // Réinitialiser la sélection de structure
-        structureSelect.value = '';
-    });
+});
 </script>
 @endsection

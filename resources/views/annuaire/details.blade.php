@@ -36,10 +36,6 @@
                                 <span class="text-gray-800" id="modal-categories">-</span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-gray-100">
-                                <span class="font-medium text-gray-600">Type:</span>
-                                <span class="text-gray-800" id="modal-type_structure">-</span>
-                            </div>
-                            <div class="flex justify-between py-1 border-b border-gray-100">
                                 <span class="font-medium text-gray-600">Public:</span>
                                 <span class="text-gray-800" id="modal-public_cible">-</span>
                             </div>
@@ -145,15 +141,7 @@
                     </div>
                 </div>
                 <!-- Informations complémentaires -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
-                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                        <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
-                            <i class="fas fa-bed text-xs"></i> 
-                            <span>Hébergement</span>
-                        </h6>
-                        <div class="text-sm text-gray-700" id="modal-hebergement">-</div>
-                    </div>
-                    
+                <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
                     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
                         <h6 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
                             <i class="fas fa-list-ul text-xs"></i> 

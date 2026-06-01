@@ -6,7 +6,7 @@
         @endif  
         <!-- LIGNE 1: INFOS PRINCIPALES -->
         <div class="row mb-2">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label class="form-label">Organisme <span class="text-danger">*</span></label>
                
                  <select name="id_organisme" class="form-select" required>
@@ -17,32 +17,15 @@
                         </option>
                     @endforeach
                 </select>   
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Type</label>
-                <select name="type_structure" class="form-select">
-                    <option value="Siège social" {{ old('type_structure', $structure->type_structure ?? '') == 'siège social' ? 'selected' : '' }}>Siège social</option>
-                    <option value="Antenne" {{ old('type_structure', $structure->type_structure ?? '') == 'antenne' ? 'selected' : '' }}>Antenne</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Hébergement</label>
-                <select name="hebergement" class="form-select">
-                    <option value="oui" {{ old('hebergement', $structure->hebergement ?? '') == 'oui' ? 'selected' : '' }}>Oui</option>
-                    <option value="non" {{ old('hebergement', $structure->hebergement ?? '') == 'non' ? 'selected' : '' }}>Non</option>
-                </select>
-            </div>
-        </div>   
-        <!-- LIGNE 2: DESCRIPTION + DÉTAILS -->
-        <div class="row mb-2">
+            </div>   
+      
             <div class="col-md-6">
                 <label class="form-label">Description</label>
                 <textarea name="description" class="form-control" rows="1">{{ old('description', $structure->description ?? '') }}</textarea>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label class="form-label">Détails spécifiques</label>
-                <textarea name="details" class="form-control" rows="1">{{ old('details', $structure->details ?? '') }}</textarea>
-                <div class="form-text">Ex: permanences...</div>
+                <textarea name="details" class="form-control" rows="1" placeholder="Ex: permanences...">{{ old('details', $structure->details ?? '') }}</textarea>
             </div>
         </div>
         <!-- LIGNE 3: COORDONNÉES -->
@@ -74,13 +57,13 @@
                 <div class="d-flex gap-1">
                     <select id="categoriesSelect" class="form-select form-select-sm grow">
                         <option value="">-- Choisir --</option>
-                        <option value="droit généraliste">Droit généraliste</option>   
-                        <option value="droit notarial">Droit notarial</option>
+                        <option value="juridique">Juridique</option>
+                        <option value="judiciaire">Judiciaire</option>
                         <option value="formation">Formation</option>
                         <option value="global">Global</option>
                         <option value="hébergement">Hébergement</option>
+                        <option value="logement">Logement</option>
                         <option value="insertion professionnelle">Insertion professionnelle</option>
-                        <option value="juridique">Juridique</option>
                         <option value="psychologique">Psychologique</option>
                         <option value="santé">Santé</option>
                         <option value="social">Social</option>
@@ -124,7 +107,7 @@
             <!-- ZONE D'INTERVENTION -->
             <div class="col-md-3">
                 <label class="form-label">Zone d'intervention</label>
-                <input type="text" name="zone" class="form-control" value="{{ old('zone', $structure->zone ?? '') }}">
+                <input placeholder="Ex: France Services ou mairie" type="text" name="zone" class="form-control" value="{{ old('zone', $structure->zone ?? '') }}">
             </div>
         </div>
         <!-- BLOC LOCALISATION STRUCTURE (REFONDU) -->

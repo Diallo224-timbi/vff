@@ -455,10 +455,6 @@
                                 <span class="text-gray-800" id="modal-categories">-</span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-gray-100">
-                                <span class="font-medium text-gray-600">Type:</span>
-                                <span class="text-gray-800" id="modal-type_structure">-</span>
-                            </div>
-                            <div class="flex justify-between py-1 border-b border-gray-100">
                                 <span class="font-medium text-gray-600">Public:</span>
                                 <span class="text-gray-800" id="modal-public_cible">-</span>
                             </div>
@@ -654,7 +650,6 @@
                     document.getElementById('modal-organisme-text').textContent = org.nom_organisme || '-';
                     document.getElementById('modal-description').textContent = structure.description || 'Aucune description';
                     document.getElementById('modal-categories').textContent = structure.categories || '-';
-                    document.getElementById('modal-type_structure').textContent = structure.type_structure || '-';
                     document.getElementById('modal-public_cible').textContent = structure.public_cible || '-';
                     document.getElementById('modal-zone').textContent = structure.zone || '-';
                     document.getElementById('modal-site').innerHTML = org.site_web ? `<a href="${org.site_web}" target="_blank" class="text-[#255156] hover:underline">${org.site_web}</a>` : '-';
