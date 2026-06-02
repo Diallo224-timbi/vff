@@ -24,37 +24,55 @@ class OrganismeController extends Controller
         return view('organismes.create');
     }
     //fonction pour enregistrer un nouvel organisme
- public function store(Request $request)
+   public function store(Request $request)
     {
-    $validator = Validator::make($request->all(), [
-        'nom_organisme' => [
-            'required',
-            Rule::unique('organisme')->where(function ($query) use ($request) {
-                return $query->where('ville', $request->ville);
-            }),
-        ],
-        'signification' => 'required',
-        'adresse' => 'required',
-        'code_postal' => 'required',
-        'ville' => 'required',
-        'site_web' => 'required',
-    ], [
-        'nom_organisme.unique' => 'Cet organisme existe déjà dans cette ville.'
-    ]);
+        $validator = Validator::make($request->all(), [
+            'nom_organisme' => [
+                'required',
+                Rule::unique('organisme')->where(function ($query) use ($request) {
+                    return $query->where('ville', $request->ville);
+                }),
+            ],
+            'signification' => 'required',
+            'adresse' => 'required',
+            'code_postal' => 'required',
+            'ville' => 'required',
+            'site_web' => 'required',
+            // Validation du logo
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'nom_organisme.unique' => 'Cet organisme existe déjà dans cette ville.'
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->route('organismes.index')
-            ->with('error', $validator->errors()->first()) //
-            ->withInput();
-    }
+        if ($validator->fails()) {
+            return redirect()->route('organismes.index')
+                ->with('error', $validator->errors()->first())
+                ->withInput();
+        }
 
-        Organisme::create($request->all());
+        // Préparation des données
+        $data = $request->except('logo');
 
-        ActivityLog::log('Création d\'un organisme', 'organisme', null, $request->all());
+        // Upload du logo si présent
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+
+            $path = $file->store('logos', 'public');
+
+            $data['logo_path'] = $path;
+            $data['logo_name'] = $file->hashName();
+            $data['logo_type'] = $file->getClientMimeType();
+            $data['logo_size'] = $file->getSize();
+        }
+
+        Organisme::create($data);
+
+        ActivityLog::log('Création d\'un organisme', 'organisme', null, $data);
 
         return redirect()->route('organismes.index')
             ->with('success', 'Organisme créé avec succès.');
     }
+
     //fonction pour afficher le formulaire de modification d'un organisme
     public function edit($id)
     {
@@ -63,7 +81,7 @@ class OrganismeController extends Controller
     }
     //fonction pour mettre à jour un organisme
     public function update(Request $request, $id)
-        {
+    {
         $request->validate([
             'nom_organisme' => [
                 'required',
@@ -78,16 +96,31 @@ class OrganismeController extends Controller
             'code_postal' => 'required',
             'ville' => 'required',
             'site_web' => 'required',
-        ], [
-            'nom_organisme.unique' => 'Cet organisme existe déjà dans cette ville.'
+
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $organisme = Organisme::find($id);
-        $organisme->update($request->all());
+
+        $data = $request->except('logo');
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+
+            $path = $file->store('logos', 'public');
+
+            $data['logo_path'] = $path;
+            $data['logo_name'] = $file->hashName();
+            $data['logo_type'] = $file->getClientMimeType();
+            $data['logo_size'] = $file->getSize();
+        }
+
+        $organisme->update($data);
 
         return redirect()->route('organismes.index')
             ->with('success', 'Organisme mis à jour avec succès.');
-        }
+    }
+
     //fonction pour supprimer un organisme et ses structures associées
    public function destroy($id)
     {

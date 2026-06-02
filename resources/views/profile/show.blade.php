@@ -96,11 +96,9 @@
                     <h2 class="text-lg font-semibold text-gray-800">Informations personnelles</h2>
                     <!-- activer les notifications des mises à jour du profil -->
                 </div>
-
                 <form action="{{ route('profile.update') }}" method="POST" class="p-6" id="profileForm">
                     @csrf
                     @method('PUT')
-
                     <!-- Section identité -->
                     <div class="mb-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

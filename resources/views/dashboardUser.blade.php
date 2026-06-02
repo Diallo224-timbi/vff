@@ -628,7 +628,7 @@
         <a href="{{ url('/') }}" class="header-brand">
             <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet des Alpes-Maritimes">
             <div class="header-title">
-                <h1>Schéma Départemental<br>Droits des Femmes</h1>
+                <h1>Schéma Départemental<br>de la lutte contre les violences faites aux femmes</h1>
                 <p>Alpes-Maritimes · DDETS 06</p>
             </div>
         </a>
@@ -639,10 +639,10 @@
     <div class="urgence-inner">
         <span class="urgence-title"><i class='bx bx-alarm-exclamation'></i> En cas d'urgence</span>
         <div class="urgence-numbers">
-            <div class="urgence-num" onclick="window.location.href='tel:17'"><span class="num">17</span> Police / Gendarmerie</div>
-            <div class="urgence-num" onclick="window.location.href='tel:15'"><span class="num">15</span> SAMU</div>
-            <div class="urgence-num" onclick="window.location.href='tel:3919'"><span class="num">3919</span> Violences Femmes Info</div>
-            <div class="urgence-num" onclick="window.location.href='tel:115'"><span class="num">115</span> Hébergement d'urgence</div>
+            <div class="urgence-num" ><span class="num">17</span> Police / Gendarmerie</div>
+            <div class="urgence-num" ><span class="num">15</span> SAMU</div>
+            <div class="urgence-num" ><span class="num">3919</span> Violences Femmes Info</div>
+            <div class="urgence-num" ><span class="num">115</span> Hébergement d'urgence</div>
         </div>
     </div>
 </div>

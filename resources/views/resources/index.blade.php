@@ -16,11 +16,6 @@
                             <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire</h4>
                             <p class="mt-1 mb-0 opacity-75 small">Toutes les ressources professionnelles</p>
                         </div>
-                        <div>
-                            <button onclick="openStatsModal()" class="btn btn-sm btn-light text-[#255156]">
-                                <i class="fas fa-chart-pie me-1"></i> Statistiques
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body p-3">
@@ -365,39 +360,7 @@
     </div>
 </div>
 
-<!-- MODAL STATISTIQUES -->
-<div id="statsModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header" style="background: #255156; color: white; border-radius: 15px 15px 0 0;">
-                <h5 class="modal-title"><i class="fas fa-chart-pie me-2"></i>Statistiques</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col-4">
-                        <div class="p-2 border rounded">
-                            <small class="text-muted">Total</small>
-                            <h5 class="mb-0" style="color: #255156;" id="statTotal">0</h5>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="p-2 border rounded">
-                            <small class="text-muted">Fichiers</small>
-                            <h5 class="mb-0" style="color: #9333ea;" id="statFiles">0</h5>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="p-2 border rounded">
-                            <small class="text-muted">Liens</small>
-                            <h5 class="mb-0" style="color: #0284c7;" id="statLinks">0</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 @endsection
 
 @section('scripts')

@@ -24,10 +24,29 @@
 
                 <!-- Corps du formulaire -->
                 <div class="card-body p-5">
-                    <form action="{{ route('organismes.update', $organisme->id) }}" method="POST" id="organismeForm">
+                    <form action="{{ route('organismes.update', $organisme->id) }}" method="POST" id="organismeForm" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         
+                        <!-- logo actuel et modification -->
+                        <div class="mb-4 form-group-animate">
+                            <label class="form-label fw-semibold mb-2">
+                                <i class="fas fa-image me-2" style="color: #255156;"></i>Logo actuel
+                            </label>
+                            <div class="mb-3">
+                                @if($organisme->logo_path)
+                                    <img src="{{ asset('storage/' . $organisme->logo_path) }}" alt="Logo de {{ $organisme->nom_organisme }}" 
+                                         class="img-fluid rounded mb-3" style="max-width: 150px; max-height: 150px;">
+                                @else
+                                    <span class="text-muted">Aucun logo disponible</span>
+                                @endif
+                            </div>
+                            <label for="logo" class="form-label fw-semibold mb-2">
+                                <i class="fas fa-upload me-2" style="color: #255156;"></i>Modifier le logo  
+                            </label>
+                            <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                            <small class="text-muted mt-1"><i class="fas fa-info-circle"></i> Formats acceptés: jpeg, png, jpg, gif, svg. Taille max: 2MB.</small>
+                        </div>
                         <!-- Champ Nom avec icône -->
                         <div class="mb-4 form-group-animate">
                             <label for="nom" class="form-label fw-semibold mb-2">

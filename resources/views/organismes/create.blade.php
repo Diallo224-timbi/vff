@@ -21,12 +21,24 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Corps du formulaire -->
                 <div class="card-body p-5">
-                    <form action="{{ route('organismes.store') }}" method="POST" id="organismeForm">
+                    <form action="{{ route('organismes.store') }}" method="POST" id="organismeForm" enctype="multipart/form-data" >
                         @csrf
-                        
+                    
+                        <!-- charger un logo ou une image de l'organisme -->
+                        <div class="mb-4 form-group-animate">
+                            <label for="logo" class="form-label fw-semibold mb-2">
+                                <i class="fas fa-image me-2" style="color: #255156;"></i>Logo de l'organisme
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fas fa-upload text-muted"></i>
+                                </span>
+                                <input type="file" class="form-control border-start-0 ps-0" id="logo" name="logo" accept="image/*">
+                            </div>
+                            <small class="text-muted mt-1"><i class="fas fa-info-circle"></i> Optionnel - Formats acceptés : JPG, PNG, GIF,JPEG</small>
+                        </div>
                         <!-- Champ Nom avec icône -->
                         <div class="mb-4 form-group-animate">
                             <label for="nom" class="form-label fw-semibold mb-2">

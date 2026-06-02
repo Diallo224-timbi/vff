@@ -203,8 +203,8 @@
                                     </div>
                                     <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-[#255156] to-[#8bbdc3] rounded-lg overflow-hidden flex items-center justify-center text-white">
                                         @php $firstStructure = $structuresByOrganisme->first(); @endphp
-                                        @if($firstStructure && $firstStructure->organisme && $firstStructure->organisme->logo)
-                                            <img src="{{ asset('storage/' . $firstStructure->organisme->logo) }}" 
+                                        @if($firstStructure && $firstStructure->organisme && $firstStructure->organisme->logo_path)
+                                            <img src="{{ asset('storage/' . $firstStructure->organisme->logo_path) }}" 
                                                  alt="Logo {{ $organismeNom }}"
                                                  class="w-full h-full object-cover"
                                                  onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-building text-white text-lg\'></i>';">
@@ -225,15 +225,6 @@
                                             <i class="fas fa-map-marker-alt mr-1"></i>
                                             {{ $firstStructure->organisme->adresse }} - {{ $firstStructure->organisme->code_postal ?? '' }} {{ $firstStructure->organisme->ville ?? '' }}
                                         </div>
-                                    @endif
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    @if(auth()->user()->role === 'admin')
-                                        <button class="text-gray-400 hover:text-gray-600 p-1 edit-organisme-btn" 
-                                                data-organisme="{{ $organismeNom }}"
-                                                title="Modifier l'organisme">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
                                     @endif
                                 </div>
                             </div>

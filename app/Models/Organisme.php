@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Models;
-
-
 use Illuminate\Database\Eloquent\Model;
 
 class Organisme extends Model
@@ -12,10 +10,16 @@ class Organisme extends Model
     protected $fillable = [
         'nom_organisme',
         'signification',
+        'email',
+        'telephone',
         'adresse',
         'code_postal',
         'ville',
         'site_web',
+        'logo_path',
+        'logo_name',
+        'logo_type',
+        'logo_size',
     ];
     // relation one to many avec la table structures
     public function structures()

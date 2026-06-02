@@ -22,10 +22,10 @@ class DashboardController extends Controller
 
         // ===== STATISTIQUES STRUCTURES =====
         $totalStructures = Structures::count();
-        $typesCount = Structures::whereNotNull('type_structure')->distinct('type_structure')->count('type_structure');
+       // $typesCount = Structures::whereNotNull('type_structure')->distinct('type_structure')->count('type_structure');
         $villesCount = Structures::whereNotNull('ville')->distinct('ville')->count('ville');
         
-        // Types de structures pour le graphique
+        /* Types de structures pour le graphique
         $typeLabels = Structures::whereNotNull('type_structure')
             ->distinct('type_structure')
             ->pluck('type_structure')
@@ -36,7 +36,7 @@ class DashboardController extends Controller
         foreach($typeLabels as $type) {
             $typeData[] = Structures::where('type_structure', $type)->count();
         }
-
+*/
         // ===== STATISTIQUES DOCUMENTS =====
         $totalDocuments = Resource::count();
         $totalDownloads = Resource::sum('download_count');
@@ -131,10 +131,10 @@ for($i = 6; $i >= 0; $i--) {
             'moderateurs',
             'usersCount',
             'totalStructures',
-            'typesCount',
+            //'typesCount',
             'villesCount',
-            'typeLabels',
-            'typeData',
+            //'typeLabels',
+            //'typeData',
             'totalDocuments',
             'totalDownloads',
             'stats',

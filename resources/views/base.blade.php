@@ -511,13 +511,12 @@
           <span title="Gestion administrative">Administration</span>
         </a>
         <!-- logs d'activité accessible uniquement aux admins -->
-        
         @endif
           @if(Auth::user()->role === 'admin')
-          <a href="{{ route('activity_logs.index') }}" class="sidebar-link">
-            <i class='bx bx-list-ul'></i>
-            <span title="visualiser les logs">Logs d'activités</span>
-          </a>
+            <a href="{{ route('activity_logs.index') }}" class="sidebar-link">
+              <i class='bx bx-list-ul'></i>
+              <span title="visualiser les logs">Logs d'activités</span>
+            </a>
           @endif
       </nav>
 

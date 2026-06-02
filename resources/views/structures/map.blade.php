@@ -150,7 +150,7 @@
                                 <div id="modal-logo-placeholder" class="flex items-center justify-center">
                                     <i class="fas fa-building text-white text-4xl"></i>
                                 </div>
-                                <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-cover hidden">
+                                <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-contain hidden">
                             </div> 
                         </div>
                         <div>
@@ -315,10 +315,8 @@
 <!-- Leaflet CSS et JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -398,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour afficher les détails complets dans le modal
     function showFullDetailsModal(structure) {
         currentStructure = structure;
-        const logoUrl = structure.logo ? `data:image/jpeg;base64,${structure.logo}` : null;
+        const logoUrl = structure.organisme?.logo_path ? `data:image/jpeg;base64,${structure.organisme?.logo_path}` : null;
         
         // Logo
         const modalLogoImg = document.getElementById('modal-logo-img');
