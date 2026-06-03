@@ -844,7 +844,7 @@
                 console.log(`Appel vers le ${phone}`);
             });
         });
-    });
+    }); 
 </script>
 
 @endsection
