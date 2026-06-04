@@ -5,80 +5,32 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- Header avec animation -->
-    <div class="rounded-2xl p-6 shadow-xl text-white transform transition-all duration-500 hover:shadow-2xl" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-                <h1 class="text-3xl font-bold font-montserrat flex items-center gap-3">
-                    <i class="fas fa-comments text-4xl"></i>
-                    Forum communautaire
-                </h1>
-                <p class="text-white/90 text-sm mt-2">Échanger, signaler et partager avec la communauté</p>
-            </div>
-            <div class="flex flex-wrap gap-3">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="search" id="search" placeholder="Rechercher un sujet..." class="pl-10 pr-4 py-2 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-white w-64">
-                </div>
-                <button onclick="openNewThreadModal()" class="px-4 py-2 bg-white text-[#255156] rounded-xl font-semibold shadow hover:scale-105 transition-all duration-300 flex items-center gap-2">
-                    <i class="fas fa-plus-circle"></i> Nouveau sujet
-                </button>
-                <a href="{{ route('categories.create') }}" class="px-4 py-2 bg-[#255156] rounded-xl font-semibold shadow text-white hover:scale-105 transition-all duration-300 flex items-center gap-2 border border-white/20">
-                    <i class="fas fa-folder-plus"></i> Catégorie
-                </a>
-            </div>
+    <!-- Header -->
+    <div class="rounded-2xl p-3 shadow-xl text-white flex items-center justify-between" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+        <div>
+            <h1 class="text-2xl font-bold font-montserrat">Forum communautaire</h1>
+            <p class="text-white/90 text-sm">Échanger, signaler et partager avec la communauté</p>
         </div>
-    </div>
-
-    <!-- Stats Dashboard -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-[#255156] hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Total sujets</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ $threads->total() }}</p>
-                </div>
-                <i class="fas fa-comments text-4xl text-[#255156]/20"></i>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-500 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Sujets résolus</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ $threads->where('is_resolved', true)->count() }}</p>
-                </div>
-                <i class="fas fa-check-circle text-4xl text-green-500/20"></i>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Messages</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ $threads->sum(function($t) { return $t->commentsCount() ?? 0; }) }}</p>
-                </div>
-                <i class="fas fa-reply-all text-4xl text-blue-500/20"></i>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-purple-500 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-gray-500 text-sm">Membres</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ \App\Models\User::count() }}</p>
-                </div>
-                <i class="fas fa-users text-4xl text-purple-500/20"></i>
-            </div>
+        <div class="flex flex-wrap gap-2">
+            <input type="search" id="search" placeholder=" Rechercher..." class="px-3 py-2 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-white">
+            <button onclick="openNewThreadModal()" class="px-3 py-1 bg-white text-[#255156] rounded-xl font-semibold shadow hover:scale-105 transition flex items-center gap-2 text-sm">
+                <i class="fas fa-plus-circle"></i> Nouveau sujet
+            </button>
+            <a href="{{ route('categories.create') }}" class="px-3 py-1 bg-[#255156] rounded-xl font-semibold shadow text-white hover:scale-105 transition flex items-center gap-2 text-sm">
+                <i class="fas fa-folder-plus"></i> Catégorie
+            </a>
         </div>
     </div>
 
     <!-- Résultat de recherche info -->
-    <div id="searchResultInfo" class="bg-blue-50 border-l-4 border-[#255156] p-4 rounded-r-lg hidden animate-slideDown">
+    <div id="searchResultInfo" class="bg-blue-50 border-l-4 border-[#255156] p-4 rounded-r-lg hidden">
         <div class="flex items-center justify-between">
             <div>
                 <i class="fas fa-search text-[#255156] mr-2"></i>
                 <span class="text-gray-700">Résultats pour : <strong id="searchQuery"></strong></span>
                 <span class="text-gray-500 text-sm ml-2">(<span id="resultCount">0</span> résultats)</span>
             </div>
-            <button onclick="clearSearch()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <button onclick="clearSearch()" class="text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -87,70 +39,139 @@
     <!-- Main content -->
     <div class="flex flex-col lg:flex-row gap-6">
 
-        <!-- Sidebar gauche - Catégories -->
-        <div class="lg:w-64 space-y-4">
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <i class="fas fa-tags text-[#255156]"></i>
-                    Catégories
-                </h3>
-                <div class="space-y-2" id="categoryFilter">
-                    <button class="category-filter-btn w-full text-left px-3 py-2 rounded-lg text-sm transition-all active-filter" data-category="all">
-                        <i class="fas fa-th-large mr-2"></i> Tous les sujets
-                        <span class="float-right text-gray-400">{{ $threads->total() }}</span>
-                    </button>
-                    @foreach($categories as $category)
-                        <button class="category-filter-btn w-full text-left px-3 py-2 rounded-lg text-sm transition-all hover:bg-gray-100" data-category="{{ strtolower($category->name) }}">
-                            <i class="fas fa-folder mr-2"></i> {{ $category->name }}
-                            <span class="float-right text-gray-400">{{ $threads->where('category_id', $category->id)->count() }}</span>
+        <!-- Sidebar gauche - Liste des catégories avec recherche -->
+        <div class="lg:w-80 space-y-4">
+            <!-- Carte des catégories -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                <div class="p-4" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+                    <h3 class="font-bold text-white flex items-center gap-2">
+                        <i class="fas fa-folder-tree"></i>
+                        Catégories
+                    </h3>
+                    <p class="text-white/80 text-xs mt-1">Filtrer les sujets par catégorie</p>
+                </div>
+                
+                <!-- Barre de recherche des catégories -->
+                <div class="p-3 border-b border-gray-200 bg-gray-50">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="categorySearch" placeholder="Rechercher une catégorie..." 
+                               class="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent">
+                        <button id="clearCategorySearch" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
+                            <i class="fas fa-times-circle text-sm"></i>
                         </button>
+                    </div>
+                </div>
+                
+                <!-- Liste des catégories -->
+                <div class="max-h-96 overflow-y-auto" id="categoriesList">
+                    <!-- Toutes les catégories -->
+                    <div class="category-item border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer" data-category-name="all" data-category-id="all">
+                        <div class="p-3 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center">
+                                    <i class="fas fa-th-large text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Tous les sujets</p>
+                                    <p class="text-xs text-gray-500">{{ $threads->total() }} sujets</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    @foreach($categories as $category)
+                        @php
+                            $categoryThreadCount = $threads->where('category_id', $category->id)->count();
+                        @endphp
+                        <div class="category-item border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer" 
+                             data-category-name="{{ strtolower($category->name) }}" 
+                             data-category-id="{{ $category->id }}"
+                             data-category-display="{{ $category->name }}">
+                            <div class="p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                                        <i class="fas fa-folder text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">{{ $category->name }}</p>
+                                        <p class="text-xs text-gray-500">{{ $categoryThreadCount }} sujet(s)</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    @if($category->description)
+                                        <div class="group relative">
+                                            <i class="fas fa-info-circle text-gray-400 text-xs cursor-help"></i>
+                                            <div class="absolute right-0 bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
+                                                {{ $category->description }}
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
+                
+                <!-- Message aucun résultat -->
+                <div id="noCategoryResult" class="hidden p-4 text-center text-gray-500">
+                    <i class="fas fa-search text-3xl mb-2 text-gray-300"></i>
+                    <p class="text-sm">Aucune catégorie trouvée</p>
+                </div>
+                
+                <!-- Stats des catégories -->
+                <div class="p-3 bg-gray-50 border-t border-gray-200">
+                    <div class="flex justify-between text-xs text-gray-600">
+                        <span>Total catégories</span>
+                        <span class="font-semibold">{{ $categories->count() }}</span>
+                    </div>
+                </div>
             </div>
-
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-sm p-4">
+            
+            <!-- Suggestions / Catégories populaires -->
+            <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl shadow-sm p-4">
                 <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <i class="fas fa-chart-line text-[#255156]"></i>
-                    Tendances
+                    <i class="fas fa-fire text-orange-500"></i>
+                    Catégories actives
                 </h3>
-                <div class="space-y-3" id="trendingThreads">
-                    @php
-                        $trending = $threads->sortByDesc(function($t) {
-                            return ($t->likes() ?? 0) + ($t->commentsCount() ?? 0);
-                        })->take(5);
-                    @endphp
-                    @foreach($trending as $trend)
-                        <a href="{{ route('forum.show', $trend) }}" class="block hover:bg-white/50 rounded-lg p-2 transition">
-                            <p class="text-sm font-medium text-gray-800 line-clamp-1">{{ $trend->title }}</p>
-                            <p class="text-xs text-gray-500 mt-1">
-                                ❤️ {{ $trend->likes() ?? 0 }} 💬 {{ $trend->commentsCount() ?? 0 }}
-                            </p>
-                        </a>
+                <div class="flex flex-wrap gap-2" id="popularCategories">
+                    @foreach($categories->take(5) as $category)
+                        @php
+                            $categoryThreadCount = $threads->where('category_id', $category->id)->count();
+                        @endphp
+                        @if($categoryThreadCount > 0)
+                            <button class="quick-category-btn px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 hover:bg-[#255156] hover:text-white transition shadow-sm" data-category-id="{{ $category->id }}">
+                                {{ $category->name }}
+                                <span class="ml-1 text-xs">({{ $categoryThreadCount }})</span>
+                            </button>
+                        @endif
                     @endforeach
                 </div>
             </div>
         </div>
 
-        <!-- Colonne droite - Contenu principal -->
+        <!-- Colonne droite - Liste des sujets -->
         <div class="flex-1 space-y-6">
-
             <div>
                 <!-- Header + filtre -->
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
                     <h2 class="text-xl font-bold text-[#2D2926] flex items-center gap-2">
                         <i class="fas fa-stream text-[#255156]"></i> Sujets
                         <span id="visibleCount" class="text-sm font-normal text-gray-500"></span>
+                        <span id="selectedCategoryBadge" class="hidden ml-2 text-xs bg-[#255156] text-white px-2 py-1 rounded-full"></span>
                     </h2>
 
                     <div class="flex gap-2 text-sm">
-                        <button class="filter-btn px-4 py-2 rounded-xl font-medium transition-all duration-300" data-sort="recent">
-                            <i class="fas fa-clock mr-1"></i> Récents
+                        <button class="filter-btn px-3 py-1 rounded-xl bg-[#255156] text-white font-medium transition" data-sort="recent">
+                            <i class="fas fa-clock"></i> Récents
                         </button>
-                        <button class="filter-btn px-4 py-2 rounded-xl font-medium transition-all duration-300" data-sort="oldest">
-                            <i class="fas fa-history mr-1"></i> Anciens
+                        <button class="filter-btn px-3 py-1 rounded-xl bg-gray-200 text-gray-700 font-medium transition" data-sort="oldest">
+                            <i class="fas fa-history"></i> Anciens
                         </button>
-                        <button class="filter-btn px-4 py-2 rounded-xl font-medium transition-all duration-300" data-sort="popular">
-                            <i class="fas fa-fire mr-1"></i> Populaires
+                        <button class="filter-btn px-3 py-1 rounded-xl bg-gray-200 text-gray-700 font-medium transition" data-sort="popular">
+                            <i class="fas fa-fire"></i> Populaires
                         </button>
                     </div>
                 </div>
@@ -158,92 +179,65 @@
                 <!-- Threads container -->
                 <div class="grid grid-cols-1 gap-4" id="threadsContainer">
                     @forelse($threads as $thread)
-                        <div class="thread-item rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 border transform hover:-translate-y-1 
-                            @if($thread->is_resolved) bg-gradient-to-r from-green-50 to-white border-green-200 
+                        <div class="thread-item rounded-xl shadow-sm hover:shadow-md transition p-4 border 
+                            @if($thread->is_resolved) bg-green-100 border-green-400 
                             @else bg-white border-gray-200 @endif" 
                              data-created="{{ $thread->created_at }}" 
                              data-likes="{{ $thread->likes() ?? 0 }}"
                              data-thread-id="{{ $thread->id }}"
                              data-title="{{ strtolower($thread->title) }}"
                              data-body="{{ strtolower(strip_tags($thread->body)) }}"
-                             data-category="{{ strtolower($thread->category->name) }}">
-                            
-                            <!-- Badge épinglé si populaire -->
-                            @if(($thread->likes() ?? 0) > 10)
-                                <div class="absolute -top-2 -left-2">
-                                    <span class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                                        <i class="fas fa-star"></i> Populaire
-                                    </span>
-                                </div>
-                            @endif
-
-                            <div class="flex justify-between items-start mb-3">
+                             data-category="{{ strtolower($thread->category->name) }}"
+                             data-category-id="{{ $thread->category_id }}">
+                            <div class="flex justify-between items-start mb-2">
                                 <div class="flex-1">
-                                    <a href="{{ route('forum.show', $thread) }}" class="hover:no-underline">
-                                        <h3 class="thread-title font-bold text-gray-800 text-xl mb-2 hover:text-[#255156] transition-colors">
+                                    <a href="{{ route('forum.show', $thread) }}">
+                                        <h3 class="thread-title font-bold text-gray-800 text-lg">
                                             {{ $thread->title }}
                                             @if($thread->is_resolved)
-                                                <span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">✓ Résolu</span>
+                                                <span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">Résolu</span>
                                             @endif
                                         </h3>
-                                        <p class="thread-body text-gray-600 text-sm line-clamp-2">
-                                            {{ \Illuminate\Support\Str::limit(strip_tags($thread->body), 150) }}
-                                        </p>
                                     </a>
+                                    <p class="mt-2 text-xs text-gray-400">
+                                        Catégorie : 
+                                        <span class="thread-category font-medium text-[#255156]">{{ $thread->category->name }}</span>
+                                    </p>
+                                    <p class="thread-body text-gray-600 text-sm line-clamp-2 mt-1">
+                                        {{ \Illuminate\Support\Str::limit(strip_tags($thread->body), 100) }}
+                                    </p>
                                 </div>
-
-                                <div class="text-right">
-                                    <span class="text-xs text-gray-400 whitespace-nowrap">{{ $thread->created_at->diffForHumans() }}</span>
-                                </div>
+                                <span class="text-xs text-gray-400 whitespace-nowrap ml-2">{{ $thread->created_at->diffForHumans() }}</span>
                             </div>
 
-                            <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full text-white flex items-center justify-center font-bold text-sm shadow-md" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+                            <div class="flex items-center justify-between mt-2 text-gray-500">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background: linear-gradient(135deg, #255156, #1e7c86);">
                                         {{ strtoupper(substr($thread->user->name, 0, 1)) }}
                                     </div>
-                                    <div>
-                                        <span class="text-sm font-medium text-gray-700">{{ $thread->user->name }}</span>
-                                        <span class="text-xs text-gray-400 block">Créateur</span>
-                                    </div>
+                                    <span class="text-sm">{{ $thread->user->name }}</span>
                                 </div>
 
-                                <div class="flex items-center gap-5">
-                                    <div class="flex gap-3">
-                                        <form action="{{ route('forum.react', $thread) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button name="reaction" value="like" class="hover:scale-110 transition-transform">
-                                                <span class="text-red-500">❤️</span> <span class="text-sm text-gray-600">{{ $thread->likes() ?? 0 }}</span>
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('forum.react', $thread) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button name="reaction" value="dislike" class="hover:scale-110 transition-transform">
-                                                <span class="text-gray-500">👎</span> <span class="text-sm text-gray-600">{{ $thread->dislikes() ?? 0 }}</span>
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    <span class="flex items-center gap-1 text-gray-500">
-                                        <i class="far fa-comment"></i>
-                                        <span class="text-sm">{{ $thread->commentsCount() ?? 0 }}</span>
+                                <div class="flex items-center gap-4">
+                                    <span class="flex items-center gap-1">
+                                        <i class="far fa-comment"></i> {{ $thread->commentsCount() ?? 0 }}
                                     </span>
 
-                                    @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === "admin" )
+                                    @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === "admin")
                                         <label class="flex items-center gap-2 text-sm cursor-pointer">
-                                            <input type="checkbox" class="resolve-checkbox w-4 h-4 cursor-pointer rounded" data-thread-id="{{ $thread->id }}" @if($thread->is_resolved) checked @endif>
-                                            <span class="text-xs text-gray-500">Résolu</span>
+                                            <input type="checkbox" class="resolve-checkbox w-4 h-4 cursor-pointer" data-thread-id="{{ $thread->id }}" @if($thread->is_resolved) checked @endif>
+                                            <span class="text-gray-600">Résolu</span>
                                         </label>
                                     @endif
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <div class="text-center py-16 bg-gray-50 rounded-xl" id="emptyState">
-                            <i class="fas fa-comments text-gray-300 text-7xl mb-4"></i>
-                            <h3 class="text-2xl font-bold text-gray-700 mb-2">Aucun sujet pour le moment</h3>
-                            <p class="text-gray-500 mb-6">Soyez le premier à créer un sujet dans le forum !</p>
-                            <button onclick="openNewThreadModal()" class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition-all font-semibold flex items-center gap-2 justify-center mx-auto transform hover:scale-105">
+                        <div class="text-center py-12" id="emptyState">
+                            <i class="fas fa-comments text-gray-300 text-6xl mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-700 mb-2">Aucun sujet pour le moment</h3>
+                            <p class="text-gray-500 mb-6">Soyez le premier à créer un sujet !</p>
+                            <button onclick="openNewThreadModal()" class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition font-semibold flex items-center gap-2 justify-center mx-auto">
                                 <i class="fas fa-plus"></i> Créer un sujet
                             </button>
                         </div>
@@ -251,53 +245,41 @@
                 </div>
 
                 @if($threads->hasPages())
-                    <div class="mt-6">
+                    <div class="mt-4">
                         {{ $threads->links('vendor.pagination.tailwind') }}
                     </div>
                 @endif
-
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal création améliorée -->
-<div class="modal fade" id="newThreadModal" tabindex="-1">
+<!-- Modal création -->
+<div class="modal fade" id="newThreadModal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content rounded-xl overflow-hidden">
-      <div class="modal-header p-4" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-        <h5 class="modal-title text-white text-xl">
-            <i class="fas fa-pen-alt mr-2"></i>Créer un nouveau sujet
-        </h5>
+    <div class="modal-content">
+      <div class="modal-header" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+        <h5 class="modal-title text-white">Nouveau sujet</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <form action="{{ route('forum.store') }}" method="POST">
         @csrf
-        <div class="modal-body p-6 space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Titre du sujet</label>
-                <input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#255156] focus:border-transparent" placeholder="Ex: Problème avec l'application..." required>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                <textarea name="body" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#255156] focus:border-transparent" rows="6" placeholder="Décrivez votre sujet..." required></textarea>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
-                <select name="category_id" id="category_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#255156] focus:border-transparent" required>
-                    <option value="">Sélectionnez une catégorie</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="modal-body">
+            <input type="text" name="title" class="form-control mb-3" placeholder="Titre" required>
+            <textarea name="body" class="form-control mb-3" placeholder="Message" required></textarea>
+            <label for="category_id" class="form-label">Catégorie</label>
+            <select name="category_id" id="category_id" class="form-select" required>
+              <option value="">Sélectionnez une catégorie</option>
+              @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                  {{ $category->name }}
+                </option>
+              @endforeach
+            </select>
         </div>
-        <div class="modal-footer p-4 bg-gray-50">
-          <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition" data-bs-dismiss="modal">Annuler</button>
-          <button type="submit" class="px-6 py-2 rounded-lg transition-all transform hover:scale-105 shadow-md" style="background: linear-gradient(135deg, #255156, #1e7c86); color: white;">
-            <i class="fas fa-paper-plane mr-2"></i>Publier
+        <div class="modal-footer">
+          <button type="submit" class="btn px-4 py-2 rounded-lg transition hover:scale-105" style="background: linear-gradient(135deg, #255156, #1e7c86); color: white;">
+            Publier
           </button>
         </div>
       </form>
@@ -307,8 +289,8 @@
 
 <script>
 let currentSearch = '';
-let currentCategory = 'all';
-let currentSort = 'recent';
+let currentCategoryId = 'all';
+let currentCategoryName = '';
 
 function openNewThreadModal() {
     new bootstrap.Modal(document.getElementById('newThreadModal')).show();
@@ -319,11 +301,11 @@ function clearSearch() {
     if (searchInput) {
         searchInput.value = '';
         currentSearch = '';
-        filterAndSortAndCategorize();
+        filterThreads();
     }
 }
 
-function filterAndSortAndCategorize() {
+function filterThreads() {
     const searchTerm = currentSearch.toLowerCase();
     const threads = document.querySelectorAll('#threadsContainer .thread-item');
     let visibleCount = 0;
@@ -332,13 +314,14 @@ function filterAndSortAndCategorize() {
         const title = thread.dataset.title || '';
         const body = thread.dataset.body || '';
         const category = thread.dataset.category || '';
+        const categoryId = thread.dataset.categoryId || '';
         
         const matchesSearch = searchTerm === '' || 
                               title.includes(searchTerm) || 
                               body.includes(searchTerm) || 
                               category.includes(searchTerm);
         
-        const matchesCategory = currentCategory === 'all' || category === currentCategory;
+        const matchesCategory = currentCategoryId === 'all' || categoryId === currentCategoryId;
         
         if (matchesSearch && matchesCategory) {
             thread.style.display = '';
@@ -351,7 +334,17 @@ function filterAndSortAndCategorize() {
     updateSearchResultInfo(visibleCount);
     showNoResultsMessage(visibleCount);
     updateVisibleCount(visibleCount);
-    sortThreads(currentSort);
+    updateSelectedCategoryBadge();
+}
+
+function updateSelectedCategoryBadge() {
+    const badge = document.getElementById('selectedCategoryBadge');
+    if (currentCategoryId !== 'all') {
+        badge.classList.remove('hidden');
+        badge.innerHTML = `<i class="fas fa-filter"></i> ${currentCategoryName}`;
+    } else {
+        badge.classList.add('hidden');
+    }
 }
 
 function updateSearchResultInfo(visibleCount) {
@@ -373,7 +366,7 @@ function updateVisibleCount(visibleCount) {
     const totalThreads = document.querySelectorAll('#threadsContainer .thread-item').length;
     
     if (visibleCountSpan && totalThreads > 0) {
-        if (currentSearch !== '' || currentCategory !== 'all') {
+        if (currentSearch !== '' || currentCategoryId !== 'all') {
             visibleCountSpan.textContent = `(${visibleCount}/${totalThreads} affichés)`;
         } else {
             visibleCountSpan.textContent = `(${totalThreads} total)`;
@@ -394,12 +387,12 @@ function showNoResultsMessage(visibleCount) {
         
         const noResultsDiv = document.createElement('div');
         noResultsDiv.id = 'noResultsMessage';
-        noResultsDiv.className = 'text-center py-16 col-span-full bg-gray-50 rounded-xl';
+        noResultsDiv.className = 'text-center py-12 col-span-full';
         noResultsDiv.innerHTML = `
             <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
             <h3 class="text-xl font-bold text-gray-700 mb-2">Aucun résultat trouvé</h3>
             <p class="text-gray-500 mb-6">Aucun sujet ne correspond à vos critères</p>
-            <button onclick="resetAllFilters()" class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition-all font-semibold flex items-center gap-2 justify-center mx-auto">
+            <button onclick="resetAllFilters()" class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition font-semibold flex items-center gap-2 justify-center mx-auto">
                 <i class="fas fa-arrow-left"></i> Voir tous les sujets
             </button>
         `;
@@ -411,34 +404,138 @@ function showNoResultsMessage(visibleCount) {
 
 function resetAllFilters() {
     currentSearch = '';
-    currentCategory = 'all';
-    currentSort = 'recent';
+    currentCategoryId = 'all';
+    currentCategoryName = '';
     document.getElementById('search').value = '';
-    filterAndSortAndCategorize();
+    filterThreads();
     
-    // Reset category buttons
-    document.querySelectorAll('.category-filter-btn').forEach(btn => {
-        btn.classList.remove('active-filter', 'bg-[#255156]', 'text-white');
-        btn.classList.add('hover:bg-gray-100');
-        if(btn.dataset.category === 'all') {
-            btn.classList.add('active-filter', 'bg-[#255156]', 'text-white');
+    // Reset category active style
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active-category', 'bg-[#255156]/10');
+        const iconDiv = item.querySelector('.w-8.h-8');
+        if (iconDiv && item.dataset.categoryId !== 'all') {
+            iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
         }
     });
     
-    // Reset sort buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('bg-[#255156]', 'text-white');
-        btn.classList.add('bg-gray-200', 'text-gray-700');
-        if(btn.dataset.sort === 'recent') {
-            btn.classList.add('bg-[#255156]', 'text-white');
-            btn.classList.remove('bg-gray-200', 'text-gray-700');
+    const allCategoryItem = document.querySelector('.category-item[data-category-id="all"]');
+    if (allCategoryItem) {
+        allCategoryItem.classList.add('active-category', 'bg-[#255156]/10');
+        const iconDiv = allCategoryItem.querySelector('.w-8.h-8');
+        if (iconDiv) {
+            iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
         }
-    });
+    }
 }
 
+// 🔍 Recherche dynamique des sujets
+let searchTimeout;
+document.getElementById('search').addEventListener('input', function () {
+    clearTimeout(searchTimeout);
+    currentSearch = this.value;
+    searchTimeout = setTimeout(() => {
+        filterThreads();
+    }, 300);
+});
+
+// 🔍 Recherche dynamique des catégories
+const categorySearchInput = document.getElementById('categorySearch');
+const clearCategoryBtn = document.getElementById('clearCategorySearch');
+
+function filterCategories() {
+    const searchTerm = categorySearchInput.value.toLowerCase();
+    const categories = document.querySelectorAll('#categoriesList .category-item');
+    let visibleCount = 0;
+    
+    categories.forEach(category => {
+        const categoryName = category.dataset.categoryName || '';
+        const categoryDisplay = (category.dataset.categoryDisplay || '').toLowerCase();
+        
+        const matches = searchTerm === '' || 
+                       categoryName.includes(searchTerm) || 
+                       categoryDisplay.includes(searchTerm);
+        
+        if (matches) {
+            category.style.display = '';
+            visibleCount++;
+        } else {
+            category.style.display = 'none';
+        }
+    });
+    
+    const noResultDiv = document.getElementById('noCategoryResult');
+    if (visibleCount === 0) {
+        noResultDiv.classList.remove('hidden');
+    } else {
+        noResultDiv.classList.add('hidden');
+    }
+    
+    // Afficher/masquer le bouton clear
+    if (searchTerm !== '') {
+        clearCategoryBtn.classList.remove('hidden');
+    } else {
+        clearCategoryBtn.classList.add('hidden');
+    }
+}
+
+categorySearchInput.addEventListener('input', filterCategories);
+
+clearCategoryBtn.addEventListener('click', function() {
+    categorySearchInput.value = '';
+    filterCategories();
+});
+
+// 📁 Filtre par catégorie
+document.querySelectorAll('.category-item').forEach(categoryItem => {
+    categoryItem.addEventListener('click', function() {
+        const categoryId = this.dataset.categoryId;
+        const categoryName = this.dataset.categoryDisplay || (categoryId === 'all' ? 'Tous les sujets' : this.querySelector('p.font-semibold')?.textContent || '');
+        
+        // Mettre à jour l'état actif
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.classList.remove('active-category', 'bg-[#255156]/10');
+            const iconDiv = item.querySelector('.w-8.h-8');
+            if (iconDiv && item.dataset.categoryId !== 'all') {
+                iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
+            }
+        });
+        
+        this.classList.add('active-category', 'bg-[#255156]/10');
+        const activeIconDiv = this.querySelector('.w-8.h-8');
+        if (activeIconDiv) {
+            if (categoryId === 'all') {
+                activeIconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
+            } else {
+                activeIconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
+            }
+        }
+        
+        currentCategoryId = categoryId;
+        currentCategoryName = categoryName;
+        filterThreads();
+        
+        // Scroll vers le haut de la liste des sujets
+        document.querySelector('.flex-1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+
+// 🏷️ Filtre rapide par catégories populaires
+document.querySelectorAll('.quick-category-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const categoryId = this.dataset.categoryId;
+        const categoryItem = document.querySelector(`.category-item[data-category-id="${categoryId}"]`);
+        if (categoryItem) {
+            categoryItem.click();
+        }
+    });
+});
+
+// 🔄 Filtre de tri
+const filterButtons = document.querySelectorAll('.filter-btn');
+const threadsContainer = document.getElementById('threadsContainer');
+
 function sortThreads(sortType) {
-    const container = document.getElementById('threadsContainer');
-    const threads = Array.from(container.querySelectorAll('.thread-item:not([style*="display: none"])'));
+    const threads = Array.from(threadsContainer.querySelectorAll('.thread-item:not([style*="display: none"])'));
     if (threads.length <= 1) return;
     
     let sortedThreads;
@@ -450,36 +547,8 @@ function sortThreads(sortType) {
         sortedThreads = threads.sort((a,b) => parseInt(b.dataset.likes) - parseInt(a.dataset.likes));
     }
     
-    sortedThreads.forEach(t => container.appendChild(t));
+    sortedThreads.forEach(t => threadsContainer.appendChild(t));
 }
-
-// 🔍 Recherche dynamique
-let searchTimeout;
-document.getElementById('search').addEventListener('input', function () {
-    clearTimeout(searchTimeout);
-    currentSearch = this.value;
-    searchTimeout = setTimeout(() => {
-        filterAndSortAndCategorize();
-    }, 300);
-});
-
-// 🏷️ Filtre par catégorie
-document.querySelectorAll('.category-filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.category-filter-btn').forEach(b => {
-            b.classList.remove('active-filter', 'bg-[#255156]', 'text-white');
-            b.classList.add('hover:bg-gray-100');
-        });
-        this.classList.add('active-filter', 'bg-[#255156]', 'text-white');
-        this.classList.remove('hover:bg-gray-100');
-        
-        currentCategory = this.dataset.category;
-        filterAndSortAndCategorize();
-    });
-});
-
-// 🔄 Filtre de tri
-const filterButtons = document.querySelectorAll('.filter-btn');
 
 filterButtons.forEach(btn => {
     btn.addEventListener('click', function () {
@@ -490,15 +559,12 @@ filterButtons.forEach(btn => {
         this.classList.add('bg-[#255156]', 'text-white');
         this.classList.remove('bg-gray-200', 'text-gray-700');
 
-        currentSort = this.getAttribute('data-sort');
-        sortThreads(currentSort);
+        const sortType = this.getAttribute('data-sort');
+        sortThreads(sortType);
     });
 });
 
-// Active le tri par défaut
-document.querySelector('.filter-btn[data-sort="recent"]').click();
-
-// ✅ Marquer comme résolu avec animation
+// ✅ Marquer comme résolu via checkbox
 document.querySelectorAll('.resolve-checkbox').forEach(cb => {
     cb.addEventListener('change', function() {
         const threadId = this.dataset.threadId;
@@ -507,16 +573,16 @@ document.querySelectorAll('.resolve-checkbox').forEach(cb => {
         
         if (resolved) {
             card.classList.remove('bg-white', 'border-gray-200');
-            card.classList.add('bg-gradient-to-r', 'from-green-50', 'to-white', 'border-green-200');
+            card.classList.add('bg-green-100', 'border-green-400');
             const titleDiv = card.querySelector('.thread-title');
             if (titleDiv && !titleDiv.querySelector('.resolved-badge')) {
                 const badge = document.createElement('span');
                 badge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
-                badge.innerHTML = '✓ Résolu';
+                badge.textContent = 'Résolu';
                 titleDiv.appendChild(badge);
             }
         } else {
-            card.classList.remove('bg-gradient-to-r', 'from-green-50', 'to-white', 'border-green-200');
+            card.classList.remove('bg-green-100', 'border-green-400');
             card.classList.add('bg-white', 'border-gray-200');
             const badge = card.querySelector('.resolved-badge');
             if (badge) badge.remove();
@@ -534,18 +600,18 @@ document.querySelectorAll('.resolve-checkbox').forEach(cb => {
         .then(data => {
             if(!data.success) {
                 if (resolved) {
-                    card.classList.remove('bg-gradient-to-r', 'from-green-50', 'to-white', 'border-green-200');
+                    card.classList.remove('bg-green-100', 'border-green-400');
                     card.classList.add('bg-white', 'border-gray-200');
                     const badge = card.querySelector('.resolved-badge');
                     if (badge) badge.remove();
                 } else {
                     card.classList.remove('bg-white', 'border-gray-200');
-                    card.classList.add('bg-gradient-to-r', 'from-green-50', 'to-white', 'border-green-200');
+                    card.classList.add('bg-green-100', 'border-green-400');
                     const titleDiv = card.querySelector('.thread-title');
                     if (titleDiv && !titleDiv.querySelector('.resolved-badge')) {
                         const badge = document.createElement('span');
                         badge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
-                        badge.innerHTML = '✓ Résolu';
+                        badge.textContent = 'Résolu';
                         titleDiv.appendChild(badge);
                     }
                 }
@@ -556,18 +622,18 @@ document.querySelectorAll('.resolve-checkbox').forEach(cb => {
         .catch(err => {
             console.error(err);
             if (resolved) {
-                card.classList.remove('bg-gradient-to-r', 'from-green-50', 'to-white', 'border-green-200');
+                card.classList.remove('bg-green-100', 'border-green-400');
                 card.classList.add('bg-white', 'border-gray-200');
                 const badge = card.querySelector('.resolved-badge');
                 if (badge) badge.remove();
             } else {
                 card.classList.remove('bg-white', 'border-gray-200');
-                card.classList.add('bg-gradient-to-r', 'from-green-50', 'to-white', 'border-green-200');
+                card.classList.add('bg-green-100', 'border-green-400');
                 const titleDiv = card.querySelector('.thread-title');
                 if (titleDiv && !titleDiv.querySelector('.resolved-badge')) {
                     const badge = document.createElement('span');
                     badge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
-                    badge.innerHTML = '✓ Résolu';
+                    badge.textContent = 'Résolu';
                     titleDiv.appendChild(badge);
                 }
             }
@@ -577,40 +643,32 @@ document.querySelectorAll('.resolve-checkbox').forEach(cb => {
     });
 });
 
-// Initialisation
+// Initialiser la catégorie active par défaut
 document.addEventListener('DOMContentLoaded', function() {
     const totalThreads = document.querySelectorAll('#threadsContainer .thread-item').length;
-    if(totalThreads > 0) {
-        updateVisibleCount(totalThreads);
+    updateVisibleCount(totalThreads);
+    
+    // Activer "Tous les sujets" par défaut
+    const allCategory = document.querySelector('.category-item[data-category-id="all"]');
+    if (allCategory) {
+        allCategory.classList.add('active-category', 'bg-[#255156]/10');
     }
 });
 </script>
 
 <style>
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-slideDown {
-    animation: slideDown 0.3s ease-out;
-}
-
+/* Animation pour les cartes */
 .thread-item {
     transition: all 0.3s ease;
-    position: relative;
 }
 
-.thread-item:hover {
-    transform: translateY(-2px);
+/* Style pour le champ de recherche */
+#search:focus, #categorySearch:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 81, 86, 0.3);
 }
 
+/* Line clamp */
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -618,15 +676,17 @@ document.addEventListener('DOMContentLoaded', function() {
     overflow: hidden;
 }
 
-.filter-btn, .category-filter-btn {
+/* Style pour les filtres */
+.filter-btn {
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.filter-btn:hover, .category-filter-btn:hover {
+.filter-btn:hover {
     transform: translateY(-1px);
 }
 
+/* Style pour la modale */
 .modal-header {
     border-bottom: none;
 }
@@ -635,6 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
     border-top: none;
 }
 
+/* Checkbox stylée */
 .resolve-checkbox {
     accent-color: #255156;
     width: 18px;
@@ -642,29 +703,41 @@ document.addEventListener('DOMContentLoaded', function() {
     cursor: pointer;
 }
 
-.active-filter {
-    background: linear-gradient(135deg, #255156, #1e7c86);
-    color: white;
+/* Style pour les catégories */
+.category-item {
+    transition: all 0.2s ease;
 }
 
-/* Scrollbar personnalisée */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+.category-item.active-category {
+    background: rgba(37, 81, 86, 0.1);
+    border-left: 3px solid #255156;
 }
 
-::-webkit-scrollbar-track {
+.category-item.active-category .font-semibold {
+    color: #255156;
+}
+
+/* Scrollbar personnalisée pour la liste des catégories */
+#categoriesList::-webkit-scrollbar {
+    width: 5px;
+}
+
+#categoriesList::-webkit-scrollbar-track {
     background: #f1f1f1;
-    border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb {
+#categoriesList::-webkit-scrollbar-thumb {
     background: #255156;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #1e7c86;
+/* Animation pour les cartes de catégories */
+.quick-category-btn {
+    transition: all 0.2s ease;
+}
+
+.quick-category-btn:hover {
+    transform: translateY(-2px);
 }
 </style>
 @endsection
