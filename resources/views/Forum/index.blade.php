@@ -220,6 +220,7 @@
                                     <span class="flex items-center gap-1">
                                         <i class="far fa-comment"></i> {{ $thread->commentsCount() ?? 0 }}
                                     </span>
+
                                     @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === "admin")
                                         <label class="flex items-center gap-2 text-sm cursor-pointer">
                                             <input type="checkbox" class="resolve-checkbox w-4 h-4 cursor-pointer" data-thread-id="{{ $thread->id }}" @if($thread->is_resolved) checked @endif>
