@@ -467,29 +467,20 @@
     <!-- SIDEBAR PRINCIPAL RESPONSIVE -->
     <aside id="sidebar" class="sidebar">
       <nav class="sidebar-nav">
-    
          <a href="{{ route('dashboardUser') }}" class="sidebar-link">
           <i class='bx bx-home'></i>
           <span>Accueil</span>
         </a>
-       
         <div>
           <a href="#" id="openSecondarySidebar" class="sidebar-link">
             <i class='bx bx-book-reader'></i>
             <span title="Acceder à la liste et à la carte interactive de l'annuaire">Annuaire</span>
           </a>
         </div>
-
         <a href="/ressources" class="sidebar-link">
           <i class='bx bx-book-open'></i>
           <span title="Explorer et partager des ressources">Ressources</span>
         </a>
-<!--
-        <a href="/projets" class="sidebar-link">
-          <i class='bx bx-briefcase'></i>
-          <span>Projets</span>
-        </a>
--->
         <a href="{{ route('forum.index') }}" class="sidebar-link">
           <i class='bx bx-chat'></i>
           <span title="Acceder au forum d'échange">Forum</span>
@@ -498,13 +489,12 @@
           <i class='bx bx-calendar'></i>
           <span title="Consulter l'agenda des évenements">Agenda</span>
         </a>
-      
         <!--
         <a href="{{ route('structures.index') }}" class="sidebar-link">
           <i class='bx bx-building'></i>
           <span>Structure</span>
         </a>
-      -->
+        -->
         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur_classique' || Auth::user()->role === 'moderateur')
         <a href="{{ route('admin.users') }}" class="sidebar-link">
           <i class='bx bx-shield'></i>

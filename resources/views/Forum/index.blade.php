@@ -221,7 +221,7 @@
                                         <i class="far fa-comment"></i> {{ $thread->commentsCount() ?? 0 }}
                                     </span>
 
-                                    @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === "admin")
+                                    @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === 'admin')
                                         <label class="flex items-center gap-2 text-sm cursor-pointer">
                                             <input type="checkbox" class="resolve-checkbox w-4 h-4 cursor-pointer" data-thread-id="{{ $thread->id }}" @if($thread->is_resolved) checked @endif>
                                             <span class="text-gray-600">Résolu</span>
@@ -339,7 +339,7 @@ function updateSelectedCategoryBadge() {
     const badge = document.getElementById('selectedCategoryBadge');
     if (currentCategoryId !== 'all') {
         badge.classList.remove('hidden');
-        badge.innerHTML = `<i class="fas fa-filter"></i> ${currentCategoryName}`;
+        badge.innerHTML = '<i class="fas fa-filter"></i> ' + currentCategoryName;
     } else {
         badge.classList.add('hidden');
     }
@@ -352,7 +352,7 @@ function updateSearchResultInfo(visibleCount) {
     
     if (currentSearch !== '') {
         searchResultInfo.classList.remove('hidden');
-        searchQuerySpan.textContent = `"${currentSearch}"`;
+        searchQuerySpan.textContent = '"' + currentSearch + '"';
         resultCountSpan.textContent = visibleCount;
     } else {
         searchResultInfo.classList.add('hidden');
@@ -365,9 +365,9 @@ function updateVisibleCount(visibleCount) {
     
     if (visibleCountSpan && totalThreads > 0) {
         if (currentSearch !== '' || currentCategoryId !== 'all') {
-            visibleCountSpan.textContent = `(${visibleCount}/${totalThreads} affichés)`;
+            visibleCountSpan.textContent = '(' + visibleCount + '/' + totalThreads + ' affichés)';
         } else {
-            visibleCountSpan.textContent = `(${totalThreads} total)`;
+            visibleCountSpan.textContent = '(' + totalThreads + ' total)';
         }
     }
 }
@@ -426,30 +426,33 @@ function resetAllFilters() {
     }
 }
 
-// 🔍 Recherche dynamique des sujets
+// Recherche dynamique des sujets
 let searchTimeout;
-document.getElementById('search').addEventListener('input', function () {
-    clearTimeout(searchTimeout);
-    currentSearch = this.value;
-    searchTimeout = setTimeout(() => {
-        filterThreads();
-    }, 300);
-});
+var searchInput = document.getElementById('search');
+if (searchInput) {
+    searchInput.addEventListener('input', function () {
+        clearTimeout(searchTimeout);
+        currentSearch = this.value;
+        searchTimeout = setTimeout(function() {
+            filterThreads();
+        }, 300);
+    });
+}
 
-// 🔍 Recherche dynamique des catégories
-const categorySearchInput = document.getElementById('categorySearch');
-const clearCategoryBtn = document.getElementById('clearCategorySearch');
+// Recherche dynamique des catégories
+var categorySearchInput = document.getElementById('categorySearch');
+var clearCategoryBtn = document.getElementById('clearCategorySearch');
 
 function filterCategories() {
-    const searchTerm = categorySearchInput.value.toLowerCase();
-    const categories = document.querySelectorAll('#categoriesList .category-item');
-    let visibleCount = 0;
+    var searchTerm = categorySearchInput.value.toLowerCase();
+    var categories = document.querySelectorAll('#categoriesList .category-item');
+    var visibleCount = 0;
     
-    categories.forEach(category => {
-        const categoryName = category.dataset.categoryName || '';
-        const categoryDisplay = (category.dataset.categoryDisplay || '').toLowerCase();
+    categories.forEach(function(category) {
+        var categoryName = category.dataset.categoryName || '';
+        var categoryDisplay = (category.dataset.categoryDisplay || '').toLowerCase();
         
-        const matches = searchTerm === '' || 
+        var matches = searchTerm === '' || 
                        categoryName.includes(searchTerm) || 
                        categoryDisplay.includes(searchTerm);
         
@@ -461,7 +464,7 @@ function filterCategories() {
         }
     });
     
-    const noResultDiv = document.getElementById('noCategoryResult');
+    var noResultDiv = document.getElementById('noCategoryResult');
     if (visibleCount === 0) {
         noResultDiv.classList.remove('hidden');
     } else {
@@ -476,36 +479,36 @@ function filterCategories() {
     }
 }
 
-categorySearchInput.addEventListener('input', filterCategories);
+if (categorySearchInput) {
+    categorySearchInput.addEventListener('input', filterCategories);
+}
 
-clearCategoryBtn.addEventListener('click', function() {
-    categorySearchInput.value = '';
-    filterCategories();
-});
+if (clearCategoryBtn) {
+    clearCategoryBtn.addEventListener('click', function() {
+        categorySearchInput.value = '';
+        filterCategories();
+    });
+}
 
-// 📁 Filtre par catégorie
-document.querySelectorAll('.category-item').forEach(categoryItem => {
+// Filtre par catégorie
+document.querySelectorAll('.category-item').forEach(function(categoryItem) {
     categoryItem.addEventListener('click', function() {
-        const categoryId = this.dataset.categoryId;
-        const categoryName = this.dataset.categoryDisplay || (categoryId === 'all' ? 'Tous les sujets' : this.querySelector('p.font-semibold')?.textContent || '');
+        var categoryId = this.dataset.categoryId;
+        var categoryName = this.dataset.categoryDisplay || (categoryId === 'all' ? 'Tous les sujets' : (this.querySelector('p.font-semibold') ? this.querySelector('p.font-semibold').textContent : ''));
         
         // Mettre à jour l'état actif
-        document.querySelectorAll('.category-item').forEach(item => {
+        document.querySelectorAll('.category-item').forEach(function(item) {
             item.classList.remove('active-category', 'bg-[#255156]/10');
-            const iconDiv = item.querySelector('.w-8.h-8');
+            var iconDiv = item.querySelector('.w-8.h-8');
             if (iconDiv && item.dataset.categoryId !== 'all') {
                 iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
             }
         });
         
         this.classList.add('active-category', 'bg-[#255156]/10');
-        const activeIconDiv = this.querySelector('.w-8.h-8');
+        var activeIconDiv = this.querySelector('.w-8.h-8');
         if (activeIconDiv) {
-            if (categoryId === 'all') {
-                activeIconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
-            } else {
-                activeIconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
-            }
+            activeIconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
         }
         
         currentCategoryId = categoryId;
@@ -513,68 +516,79 @@ document.querySelectorAll('.category-item').forEach(categoryItem => {
         filterThreads();
         
         // Scroll vers le haut de la liste des sujets
-        document.querySelector('.flex-1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var flexContainer = document.querySelector('.flex-1');
+        if (flexContainer) {
+            flexContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
 });
 
-// 🏷️ Filtre rapide par catégories populaires
-document.querySelectorAll('.quick-category-btn').forEach(btn => {
+// Filtre rapide par catégories populaires
+document.querySelectorAll('.quick-category-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
-        const categoryId = this.dataset.categoryId;
-        const categoryItem = document.querySelector(`.category-item[data-category-id="${categoryId}"]`);
+        var categoryId = this.dataset.categoryId;
+        var categoryItem = document.querySelector('.category-item[data-category-id="' + categoryId + '"]');
         if (categoryItem) {
             categoryItem.click();
         }
     });
 });
 
-// 🔄 Filtre de tri
-const filterButtons = document.querySelectorAll('.filter-btn');
-const threadsContainer = document.getElementById('threadsContainer');
+// Filtre de tri
+var filterButtons = document.querySelectorAll('.filter-btn');
+var threadsContainer = document.getElementById('threadsContainer');
 
 function sortThreads(sortType) {
-    const threads = Array.from(threadsContainer.querySelectorAll('.thread-item:not([style*="display: none"])'));
+    var threads = Array.from(threadsContainer.querySelectorAll('.thread-item:not([style*="display: none"])'));
     if (threads.length <= 1) return;
     
-    let sortedThreads;
+    var sortedThreads;
     if(sortType === 'recent') {
-        sortedThreads = threads.sort((a,b) => new Date(b.dataset.created) - new Date(a.dataset.created));
+        sortedThreads = threads.sort(function(a,b) {
+            return new Date(b.dataset.created) - new Date(a.dataset.created);
+        });
     } else if(sortType === 'oldest') {
-        sortedThreads = threads.sort((a,b) => new Date(a.dataset.created) - new Date(b.dataset.created));
+        sortedThreads = threads.sort(function(a,b) {
+            return new Date(a.dataset.created) - new Date(b.dataset.created);
+        });
     } else if(sortType === 'popular') {
-        sortedThreads = threads.sort((a,b) => parseInt(b.dataset.likes) - parseInt(a.dataset.likes));
+        sortedThreads = threads.sort(function(a,b) {
+            return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
+        });
     }
     
-    sortedThreads.forEach(t => threadsContainer.appendChild(t));
+    sortedThreads.forEach(function(t) {
+        threadsContainer.appendChild(t);
+    });
 }
 
-filterButtons.forEach(btn => {
-    btn.addEventListener('click', function () {
-        filterButtons.forEach(b => {
+filterButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        filterButtons.forEach(function(b) {
             b.classList.remove('bg-[#255156]', 'text-white');
             b.classList.add('bg-gray-200', 'text-gray-700');
         });
         this.classList.add('bg-[#255156]', 'text-white');
         this.classList.remove('bg-gray-200', 'text-gray-700');
 
-        const sortType = this.getAttribute('data-sort');
+        var sortType = this.getAttribute('data-sort');
         sortThreads(sortType);
     });
 });
 
-// ✅ Marquer comme résolu via checkbox
-document.querySelectorAll('.resolve-checkbox').forEach(cb => {
+// Marquer comme résolu via checkbox
+document.querySelectorAll('.resolve-checkbox').forEach(function(cb) {
     cb.addEventListener('change', function() {
-        const threadId = this.dataset.threadId;
-        const resolved = this.checked;
-        const card = this.closest('.thread-item');
+        var threadId = this.dataset.threadId;
+        var resolved = this.checked;
+        var card = this.closest('.thread-item');
         
         if (resolved) {
             card.classList.remove('bg-white', 'border-gray-200');
             card.classList.add('bg-green-100', 'border-green-400');
-            const titleDiv = card.querySelector('.thread-title');
+            var titleDiv = card.querySelector('.thread-title');
             if (titleDiv && !titleDiv.querySelector('.resolved-badge')) {
-                const badge = document.createElement('span');
+                var badge = document.createElement('span');
                 badge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
                 badge.textContent = 'Résolu';
                 titleDiv.appendChild(badge);
@@ -582,72 +596,72 @@ document.querySelectorAll('.resolve-checkbox').forEach(cb => {
         } else {
             card.classList.remove('bg-green-100', 'border-green-400');
             card.classList.add('bg-white', 'border-gray-200');
-            const badge = card.querySelector('.resolved-badge');
-            if (badge) badge.remove();
+            var badgeEl = card.querySelector('.resolved-badge');
+            if (badgeEl) badgeEl.remove();
         }
         
-        fetch(`/forum/${threadId}/resolve`, {
+        fetch('/forum/' + threadId + '/resolve', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ resolved })
+            body: JSON.stringify({ resolved: resolved })
         })
-        .then(res => res.json())
-        .then(data => {
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
             if(!data.success) {
                 if (resolved) {
                     card.classList.remove('bg-green-100', 'border-green-400');
                     card.classList.add('bg-white', 'border-gray-200');
-                    const badge = card.querySelector('.resolved-badge');
-                    if (badge) badge.remove();
+                    var badgeToRemove = card.querySelector('.resolved-badge');
+                    if (badgeToRemove) badgeToRemove.remove();
                 } else {
                     card.classList.remove('bg-white', 'border-gray-200');
                     card.classList.add('bg-green-100', 'border-green-400');
-                    const titleDiv = card.querySelector('.thread-title');
-                    if (titleDiv && !titleDiv.querySelector('.resolved-badge')) {
-                        const badge = document.createElement('span');
-                        badge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
-                        badge.textContent = 'Résolu';
-                        titleDiv.appendChild(badge);
+                    var titleDivEl = card.querySelector('.thread-title');
+                    if (titleDivEl && !titleDivEl.querySelector('.resolved-badge')) {
+                        var newBadge = document.createElement('span');
+                        newBadge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
+                        newBadge.textContent = 'Résolu';
+                        titleDivEl.appendChild(newBadge);
                     }
                 }
                 this.checked = !resolved;
                 alert('Erreur lors de la mise à jour');
             }
-        })
-        .catch(err => {
+        }.bind(this))
+        .catch(function(err) {
             console.error(err);
             if (resolved) {
                 card.classList.remove('bg-green-100', 'border-green-400');
                 card.classList.add('bg-white', 'border-gray-200');
-                const badge = card.querySelector('.resolved-badge');
-                if (badge) badge.remove();
+                var badgeToDel = card.querySelector('.resolved-badge');
+                if (badgeToDel) badgeToDel.remove();
             } else {
                 card.classList.remove('bg-white', 'border-gray-200');
                 card.classList.add('bg-green-100', 'border-green-400');
-                const titleDiv = card.querySelector('.thread-title');
-                if (titleDiv && !titleDiv.querySelector('.resolved-badge')) {
-                    const badge = document.createElement('span');
-                    badge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
-                    badge.textContent = 'Résolu';
-                    titleDiv.appendChild(badge);
+                var titleDivElement = card.querySelector('.thread-title');
+                if (titleDivElement && !titleDivElement.querySelector('.resolved-badge')) {
+                    var addBadge = document.createElement('span');
+                    addBadge.className = 'ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full resolved-badge';
+                    addBadge.textContent = 'Résolu';
+                    titleDivElement.appendChild(addBadge);
                 }
             }
             this.checked = !resolved;
             alert('Erreur de connexion');
-        });
+        }.bind(this));
     });
 });
 
 // Initialiser la catégorie active par défaut
 document.addEventListener('DOMContentLoaded', function() {
-    const totalThreads = document.querySelectorAll('#threadsContainer .thread-item').length;
+    var totalThreads = document.querySelectorAll('#threadsContainer .thread-item').length;
     updateVisibleCount(totalThreads);
     
     // Activer "Tous les sujets" par défaut
-    const allCategory = document.querySelector('.category-item[data-category-id="all"]');
+    var allCategory = document.querySelector('.category-item[data-category-id="all"]');
     if (allCategory) {
         allCategory.classList.add('active-category', 'bg-[#255156]/10');
     }
