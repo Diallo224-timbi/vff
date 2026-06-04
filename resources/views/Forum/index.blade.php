@@ -209,7 +209,6 @@
                                 </div>
                                 <span class="text-xs text-gray-400 whitespace-nowrap ml-2">{{ $thread->created_at->diffForHumans() }}</span>
                             </div>
-
                             <div class="flex items-center justify-between mt-2 text-gray-500">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background: linear-gradient(135deg, #255156, #1e7c86);">
