@@ -39,7 +39,28 @@ class ForumController extends Controller
 
         return redirect()->route('forum.show', $thread)->with('success', 'Sujet créé !');
     }
+    public function toggleResolve(Request $request, Thread $thread)
+    {
+        // Vérifier les permissions
+        if (auth()->id() !== $thread->user_id && !in_array(auth()->user()->role, ['admin', 'moderateur','moderateur_classique','user'])) {
+            return response()->json(['success' => false, 'message' => 'Non autorisé'], 403);
+        }
 
+        // Valider la requête
+        $request->validate([
+            'resolved' => 'required|boolean'
+        ]);
+
+        // Mettre à jour le statut
+        $thread->is_resolved = $request->resolved;
+        $thread->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $request->resolved ? 'Sujet marqué comme résolu' : 'Sujet marqué comme non résolu',
+            'is_resolved' => $thread->is_resolved
+        ]);
+    }
     public function react(Request $request, Thread $thread)
     {
         $request->validate([

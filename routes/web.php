@@ -107,7 +107,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/forum/{thread}', [ForumController::class, 'show'])->name('forum.show');
     Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
     Route::post('/forum/{thread}/comment', [CommentController::class, 'store'])->name('comment.store');
-
+    // Route pour marquer un fil de discussion comme résolu ou non résolu
+    Route::post('/forum/{thread}/resolve', [ForumController::class, 'toggleResolve'])->name('forum.resolve');
     Route::prefix('forum')->name('forum.')->group(function () {
         Route::get('/{thread}/edit', [ForumController::class, 'edit'])->name('edit');      // <--- EDIT
         Route::put('/{thread}', [ForumController::class, 'update'])->name('update');       // <--- UPDATE
@@ -149,6 +150,7 @@ Route::middleware('auth')->group(function () {
     // Route pour afficher le details d'une structure dans la carte
     Route::get('/structures/{structure}/details', [StructureController::class, 'details'])->name('annuaire.details');
 });
+
 
 // Routes pour l'annuaire
 Route::middleware('auth')->group(function () {

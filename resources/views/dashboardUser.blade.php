@@ -3,7 +3,188 @@
 @section('title', 'Plateforme – Schéma Départemental')
 
 @section('content')
-    <style>
+  
+{{-- HEADER --}}
+<header>
+    <div class="header-inner">
+        <a href="{{ url('/') }}" class="header-brand">
+            <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet des Alpes-Maritimes">
+            <div class="header-title">
+                <h1>Schéma Départemental<br>de la lutte contre les violences faites aux femmes</h1>
+                <p>Alpes-Maritimes · DDETS 06</p>
+            </div>
+        </a>
+    </div>
+</header>
+{{-- URGENCE BANNER --}}
+<div class="urgence-banner">
+    <div class="urgence-inner">
+        <span class="urgence-title"><i class='bx bx-alarm-exclamation'></i> En cas d'urgence</span>
+        <div class="urgence-numbers">
+            <div class="urgence-num" ><span class="num">17</span> Police / Gendarmerie</div>
+            <div class="urgence-num" ><span class="num">15</span> SAMU</div>
+            <div class="urgence-num" ><span class="num">3919</span> Violences Femmes Info</div>
+            <div class="urgence-num" ><span class="num">115</span> Hébergement d'urgence</div>
+        </div>
+    </div>
+</div>
+{{-- HERO --}}
+<section class="hero">
+    <div class="hero-inner">
+        <span class="hero-badge">Plateforme officielle</span>
+        <h2>Bienvenue sur la plateforme<br>du Schéma Départemental</h2>
+        <p>
+            Espace numérique dédié aux acteurs et partenaires du schéma départemental
+            pour les droits des femmes et l'égalité dans les Alpes-Maritimes.
+            Accédez aux ressources, à l'annuaire et à la cartographie.
+        </p>
+        <div class="hero-contact">
+            <div class="hero-contact-card">
+                <strong>Patricia Mendoza Cerisuelo</strong>
+                Déléguée départementale aux droits des femmes<br>
+                <i class="bx bx-phone"></i> 04 93 72 27 26 &nbsp;·&nbsp; <i class="bx bx-mobile"></i> 07 89 29 36 97
+            </div>
+            <div class="hero-contact-card">
+                <strong>DDETS 06</strong>
+                147, Bd du Mercantour · CADAM<br>
+                06286 Nice Cedex 3
+            </div>
+        </div>
+    </div>
+</section>
+{{-- MAIN --}}
+<main class="main">
+    {{-- Accès rapides --}}
+    <div class="quick-actions">
+        <a href="{{ route('annuaire.index') }}" class="qa-card">
+            <div class="qa-icon qa-icon-blue"><i class="bx bx-folder"></i></div>
+            <div>
+                <strong>Annuaire</strong>
+                <p>Structures, membres, carte interactive</p>
+            </div>
+        </a>
+        <a href="{{ route('structures.map') }}" class="qa-card">
+            <div class="qa-icon qa-icon-green"><i class="bx bx-map"></i></div>
+            <div>
+                <strong>Cartographie</strong>
+                <p>Visualisation géographique des acteurs</p>
+            </div>
+        </a>
+        <a href="{{ route('events.index') }}" class="qa-card">
+            <div class="qa-icon qa-icon-gold"><i class="bx bx-calendar"></i></div>
+            <div>
+                <strong>Agenda</strong>
+                <p>Événements, 8 mars, 25 novembre</p>
+            </div>
+        </a>
+        <a href="{{ route('forum.index') }}" class="qa-card">
+            <div class="qa-icon qa-icon-info"><i class="bx bx-message"></i></div>
+            <div>
+                <strong>Forum</strong>
+                <p>Échanges entre partenaires</p>
+            </div>
+        </a>  
+        <a href="{{ route('resources.index') }}" class="qa-card">
+            <div class="qa-icon qa-icon-green"><i class="bx bx-book"></i></div>
+            <div>
+                <strong>Ressources</strong>
+                <p>Espace documentaire</p>
+            </div>
+        </a>
+        @auth
+            @if(auth()->user()->role === 'admin')
+            <a href="{{ route('dashboard') }}" class="qa-card">
+                <div class="qa-icon qa-icon-blue"><i class="bx bx-bar-chart"></i></div>
+                <div>
+                    <strong>Tableau de bord</strong>
+                    <p>Statistiques et administration</p>
+                </div>
+            </a>
+            @endif
+        @endauth
+    </div>
+    {{-- Section dynamique: Affiche + Contacts --}}
+    <div class="dynamic-section">
+        {{-- Affiche avec image --}}
+        <div class="affiche-widget">
+            <h3><i class="bx bx-note"></i> Document à diffuser</h3>
+            <div class="affiche-image">
+                <img src="{{ asset('img/affiche-violences-femmes.jpg') }}" 
+                     alt="Affiche violences faites aux femmes - Alpes-Maritimes"
+                     onerror="this.src='https://via.placeholder.com/400x500?text=AFFICHE+VIOLENCES+FEMMES'; this.style.objectFit='cover'">
+            </div>
+            <a href="{{ asset('img/Affiche-ALPES-MARITIMES.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger l'affiche (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('img/SDLVFF 2024-27_VO.odt') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le schéma (ODT)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/Programmation_GT_Schéma_Avril_2026.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger la Programmation GT Schéma Avril 2026 (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/Ville_Nice_VO_2026 _GUIDE_VICTIMES_CONJUGALES_SEXISTES_SEXUELLE.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le guide de la Ville de Nice pour les victimes de violences conjugales, sexistes et sexuelles (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/CARF_RESEAU_RIVIERA_FRANCAISE_guide_victimes.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le guide du CARF Réseau Riviera Française pour les victimes de violences conjugales (PDF)
+            </a>
+            <div style="height: 0.75rem;"></div>
+            <a href="{{ asset('doc/Flyer_Parcours _de _Femmes _2026.pdf') }}"
+               download class="btn-dl">
+                <i class="bx bx-download"></i> Télécharger le flyer de parcours de femmes 2026 (PDF)
+            </a>
+        </div>
+        {{-- Contacts locaux --}}
+        <div class="contacts-widget">
+            <h3>📞 Contacts locaux</h3>
+            <div class="contact-list">
+                <div class="contact-item">
+                    <strong>CIDFF 06</strong>
+                    <a href="tel:0493715569">📞 04 93 71 55 69</a>
+                </div>
+                <div class="contact-item">
+                    <strong>ALC – Violences conjugales</strong>
+                    <a href="tel:0492075500">📞 04 92 07 55 00</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Pass'R'elles (Nice)</strong>
+                    <a href="tel:0497133946">📞 04 97 13 39 46</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Parcours de femmes (Cannes)</strong>
+                    <a href="tel:0493480356">📞 04 93 48 03 56</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Parenthèse (Sophia Antipolis)</strong>
+                    <a href="tel:0492197560">📞 04 92 19 75 60</a>
+                </div>
+            </div>
+            <a href="{{ route('annuaire.index') }}" class="voir-annuaire">
+                Voir l'annuaire complet →
+            </a>
+        </div>
+    </div>
+</main>
+{{-- FOOTER --}}
+<footer>
+    <div class="footer-inner">
+        <div class="footer-links">
+            <a href="{{ route('charte') }}">Mentions légales</a>  
+            <a href="https://www.arretonslesviolences.gouv.fr" target="_blank" rel="noopener">arretonslesviolences.gouv.fr</a>
+        </div>
+        <p class="footer-copy">© {{ date('Y') }} Préfecture des Alpes-Maritimes – DDETS 06</p>
+    </div>
+</footer>
+<style>
         :root {
             --primary: #255156;
             --primary-dark: #1e4144;
@@ -17,15 +198,11 @@
             --shadow: 0 4px 18px rgba(0,0,0,0.08);
             --shadow-card: 0 2px 16px rgba(37,81,86,0.12);
         }
-
-        * { 
+        *{ 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
         }
-
-        
-
         /* HEADER */
         header {
             background: var(--card);
@@ -36,7 +213,6 @@
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -46,7 +222,6 @@
             gap: 1.5rem;
             padding: 1rem 0;
         }
-
         .header-brand {
             display: flex;
             align-items: center;
@@ -54,19 +229,16 @@
             text-decoration: none;
             transition: transform 0.2s;
         }
-
         .header-brand:hover { transform: scale(1.02); }
 
         .header-brand img {
             height: 72px;
             width: auto;
         }
-
         .header-title {
             border-left: 2px solid #ECEAE3;
             padding-left: 1.25rem;
         }
-
         .header-title h1 {
             font-size: 1rem;
             font-weight: 800;
@@ -75,20 +247,17 @@
             text-transform: uppercase;
             margin: 0;
         }
-
         .header-title p {
             font-size: 0.75rem;
             color: var(--muted);
             margin-top: 0.2rem;
             font-style: italic;
         }
-
         .header-nav {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-
         .btn-nav {
             display: inline-flex;
             align-items: center;
@@ -100,13 +269,11 @@
             text-decoration: none;
             transition: all 0.15s;
         }
-
         .btn-nav-outline {
             border: 2px solid var(--primary);
             color: var(--primary);
             background: transparent;
         }
-
         .btn-nav-outline:hover { background: var(--primary); color: var(--card); }
 
         .btn-nav-solid {
@@ -114,7 +281,6 @@
             color: var(--card);
             border: 2px solid var(--primary);
         }
-
         .btn-nav-solid:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
 
         /* HERO */
@@ -125,7 +291,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .hero::before {
             content: '👩‍⚖️';
             position: absolute;
@@ -135,7 +300,6 @@
             opacity: 0.08;
             pointer-events: none;
         }
-
         .hero::after {
             content: '⚖️';
             position: absolute;
@@ -145,7 +309,6 @@
             opacity: 0.08;
             pointer-events: none;
         }
-
         .hero-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -153,7 +316,6 @@
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -164,7 +326,6 @@
                 transform: translateY(0);
             }
         }
-
         .hero-badge {
             display: inline-block;
             background: var(--accent);
@@ -178,12 +339,10 @@
             margin-bottom: 1rem;
             animation: pulse 2s infinite;
         }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.8; transform: scale(1.05); }
         }
-
         .hero h2 {
             font-size: clamp(1.6rem, 3.5vw, 2.5rem);
             font-weight: 800;
@@ -191,7 +350,6 @@
             max-width: 680px;
             margin-bottom: 1rem;
         }
-
         .hero p {
             font-family: 'Spectral', Georgia, serif;
             font-size: 1.05rem;
@@ -199,7 +357,6 @@
             max-width: 560px;
             line-height: 1.65;
         }
-
         .hero-contact {
             margin-top: 2rem;
             display: flex;
@@ -207,7 +364,6 @@
             gap: 1.5rem;
             flex-wrap: wrap;
         }
-
         .hero-contact-card {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
@@ -217,12 +373,10 @@
             font-size: 0.82rem;
             transition: all 0.3s;
         }
-
         .hero-contact-card:hover {
             background: rgba(255,255,255,0.2);
             transform: translateY(-2px);
         }
-
         .hero-contact-card strong { display: block; font-size: 0.9rem; margin-bottom: 0.15rem; }
 
         /* URGENCE BANNER */
@@ -234,7 +388,6 @@
             top: 90px;
             z-index: 999;
         }
-
         .urgence-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -244,7 +397,6 @@
             gap: 1rem;
             flex-wrap: wrap;
         }
-
         .urgence-title {
             font-size: 0.8rem;
             font-weight: 800;
@@ -255,14 +407,12 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .urgence-numbers {
             display: flex;
             align-items: center;
             gap: 1.25rem;
             flex-wrap: wrap;
         }
-
         .urgence-num {
             display: flex;
             align-items: center;
@@ -271,11 +421,9 @@
             transition: transform 0.2s;
             cursor: pointer;
         }
-
         .urgence-num:hover {
             transform: scale(1.05);
         }
-
         .urgence-num .num {
             background: rgba(255,255,255,0.25);
             border-radius: 3px;
@@ -283,14 +431,12 @@
             font-weight: 800;
             font-size: 1rem;
         }
-
         /* MAIN CONTENT */
         .main {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2.5rem 2rem 4rem;
         }
-
         /* QUICK ACTIONS - Version animée */
         .quick-actions {
             display: grid;
@@ -298,7 +444,6 @@
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
-
         .qa-card {
             background: var(--card);
             border: 1.5px solid #ECEAE3;
@@ -315,7 +460,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .qa-card::before {
             content: '';
             position: absolute;
@@ -326,17 +470,14 @@
             background: linear-gradient(90deg, transparent, rgba(37,81,86,0.1), transparent);
             transition: left 0.5s;
         }
-
         .qa-card:hover::before {
             left: 100%;
         }
-
         .qa-card:hover {
             transform: translateY(-8px) scale(1.02);
             border-color: var(--primary);
             box-shadow: 0 12px 28px rgba(37,81,86,0.2);
         }
-
         .qa-icon {
             width: 55px;
             height: 55px;
@@ -347,16 +488,13 @@
             font-size: 1.8rem;
             transition: transform 0.3s;
         }
-
         .qa-card:hover .qa-icon {
             transform: scale(1.1) rotate(5deg);
         }
-
         .qa-icon-blue  { background: #dce8ff; color: var(--primary); }
         .qa-icon-green { background: #d4edda; color: #16a34a; }
         .qa-icon-gold  { background: var(--accent-light); color: var(--accent); }
         .qa-icon-info  { background: #d1ecf1; color: #0c5460; }
-
         .qa-card strong { font-size: 1.1rem; font-weight: 800; line-height: 1.3; }
         .qa-card p  { font-size: 0.85rem; color: var(--muted); line-height: 1.4; margin: 0; }
 
@@ -367,7 +505,6 @@
             gap: 2rem;
             margin-top: 2rem;
         }
-
         /* AFFICHE WIDGET - Version image */
         .affiche-widget {
             background: var(--card);
@@ -377,12 +514,10 @@
             box-shadow: var(--shadow-card);
             transition: all 0.3s;
         }
-
         .affiche-widget:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 28px rgba(37,81,86,0.15);
         }
-
         .affiche-widget h3 {
             font-size: 1rem;
             font-weight: 800;
@@ -393,7 +528,6 @@
             padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--primary-light);
         }
-
         .affiche-image {
             width: 100%;
             border-radius: 12px;
@@ -402,11 +536,9 @@
             cursor: pointer;
             transition: transform 0.3s;
         }
-
         .affiche-image:hover {
             transform: scale(1.02);
         }
-
         .affiche-image img {
             width: 100%;
             height: auto;
@@ -414,7 +546,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
         .btn-dl {
             display: block;
             width: 100%;
@@ -430,7 +561,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn-dl::before {
             content: '';
             position: absolute;
@@ -441,17 +571,14 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: left 0.5s;
         }
-
         .btn-dl:hover::before {
             left: 100%;
         }
-
         .btn-dl:hover { 
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(37,81,86,0.3);
         }
-
         /* CONTACTS WIDGET */
         .contacts-widget {
             background: var(--card);
@@ -620,231 +747,39 @@
             .urgence-inner { flex-direction: column; align-items: flex-start; }
             .hero-contact { flex-direction: column; }
         }
-    </style>
+</style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation au scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
 
-{{-- HEADER --}}
-<header>
-    <div class="header-inner">
-        <a href="{{ url('/') }}" class="header-brand">
-            <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet des Alpes-Maritimes">
-            <div class="header-title">
-                <h1>Schéma Départemental<br>de la lutte contre les violences faites aux femmes</h1>
-                <p>Alpes-Maritimes · DDETS 06</p>
-            </div>
-        </a>
-    </div>
-</header>
-{{-- URGENCE BANNER --}}
-<div class="urgence-banner">
-    <div class="urgence-inner">
-        <span class="urgence-title"><i class='bx bx-alarm-exclamation'></i> En cas d'urgence</span>
-        <div class="urgence-numbers">
-            <div class="urgence-num" ><span class="num">17</span> Police / Gendarmerie</div>
-            <div class="urgence-num" ><span class="num">15</span> SAMU</div>
-            <div class="urgence-num" ><span class="num">3919</span> Violences Femmes Info</div>
-            <div class="urgence-num" ><span class="num">115</span> Hébergement d'urgence</div>
-        </div>
-    </div>
-</div>
-{{-- HERO --}}
-<section class="hero">
-    <div class="hero-inner">
-        <span class="hero-badge">Plateforme officielle</span>
-        <h2>Bienvenue sur la plateforme<br>du Schéma Départemental</h2>
-        <p>
-            Espace numérique dédié aux acteurs et partenaires du schéma départemental
-            pour les droits des femmes et l'égalité dans les Alpes-Maritimes.
-            Accédez aux ressources, à l'annuaire et à la cartographie.
-        </p>
-        <div class="hero-contact">
-            <div class="hero-contact-card">
-                <strong>Patricia Mendoza Cerisuelo</strong>
-                Déléguée départementale aux droits des femmes<br>
-                <i class="bx bx-phone"></i> 04 93 72 27 26 &nbsp;·&nbsp; <i class="bx bx-mobile"></i> 07 89 29 36 97
-            </div>
-            <div class="hero-contact-card">
-                <strong>DDETS 06</strong>
-                147, Bd du Mercantour · CADAM<br>
-                06286 Nice Cedex 3
-            </div>
-        </div>
-    </div>
-</section>
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
 
-{{-- MAIN --}}
-<main class="main">
-
-    {{-- Accès rapides --}}
-    <div class="quick-actions">
-        <a href="{{ route('annuaire.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-blue"><i class="bx bx-folder"></i></div>
-            <div>
-                <strong>Annuaire</strong>
-                <p>Structures, membres, carte interactive</p>
-            </div>
-        </a>
-        <a href="{{ route('structures.map') }}" class="qa-card">
-            <div class="qa-icon qa-icon-green"><i class="bx bx-map"></i></div>
-            <div>
-                <strong>Cartographie</strong>
-                <p>Visualisation géographique des acteurs</p>
-            </div>
-        </a>
-        <a href="{{ route('events.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-gold"><i class="bx bx-calendar"></i></div>
-            <div>
-                <strong>Agenda</strong>
-                <p>Événements, 8 mars, 25 novembre</p>
-            </div>
-        </a>
-
-        <a href="{{ route('forum.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-info"><i class="bx bx-message"></i></div>
-            <div>
-                <strong>Forum</strong>
-                <p>Échanges entre partenaires</p>
-            </div>
-        </a>  
-        <a href="{{ route('resources.index') }}" class="qa-card">
-            <div class="qa-icon qa-icon-green"><i class="bx bx-book"></i></div>
-            <div>
-                <strong>Ressources</strong>
-                <p>Espace documentaire</p>
-            </div>
-        </a>
-        @auth
-            @if(auth()->user()->role === 'admin')
-            <a href="{{ route('dashboard') }}" class="qa-card">
-                <div class="qa-icon qa-icon-blue"><i class="bx bx-bar-chart"></i></div>
-                <div>
-                    <strong>Tableau de bord</strong>
-                    <p>Statistiques et administration</p>
-                </div>
-            </a>
-            @endif
-        @endauth
-    </div>
-
-    {{-- Section dynamique: Affiche + Contacts --}}
-    <div class="dynamic-section">
-
-        {{-- Affiche avec image --}}
-        <div class="affiche-widget">
-            <h3><i class="bx bx-note"></i> Document à diffuser</h3>
-            <div class="affiche-image">
-                <img src="{{ asset('img/affiche-violences-femmes.jpg') }}" 
-                     alt="Affiche violences faites aux femmes - Alpes-Maritimes"
-                     onerror="this.src='https://via.placeholder.com/400x500?text=AFFICHE+VIOLENCES+FEMMES'; this.style.objectFit='cover'">
-            </div>
-            <a href="{{ asset('img/Affiche-ALPES-MARITIMES.pdf') }}"
-               download class="btn-dl">
-                <i class="bx bx-download"></i> Télécharger l'affiche (PDF)
-            </a>
-            <div style="height: 0.75rem;"></div>
-            <a href="{{ asset('img/SDLVFF 2024-27_VO.odt') }}"
-               download class="btn-dl">
-                <i class="bx bx-download"></i> Télécharger le schéma (ODT)
-            </a>
-            <div style="height: 0.75rem;"></div>
-            <a href="{{ asset('doc/Programmation_GT_Schéma_Avril_2026.pdf') }}"
-               download class="btn-dl">
-                <i class="bx bx-download"></i> Télécharger la Programmation GT Schéma Avril 2026 (PDF)
-            </a>
-            <div style="height: 0.75rem;"></div>
-            <a href="{{ asset('doc/Ville_Nice_VO_2026 _GUIDE_VICTIMES_CONJUGALES_SEXISTES_SEXUELLE.pdf') }}"
-               download class="btn-dl">
-                <i class="bx bx-download"></i> Télécharger le guide de la Ville de Nice pour les victimes de violences conjugales, sexistes et sexuelles (PDF)
-            </a>
-            <div style="height: 0.75rem;"></div>
-            <a href="{{ asset('doc/CARF_RESEAU_RIVIERA_FRANCAISE_guide_victimes.pdf') }}"
-               download class="btn-dl">
-                <i class="bx bx-download"></i> Télécharger le guide du CARF Réseau Riviera Française pour les victimes de violences conjugales (PDF)
-            </a>
-            <div style="height: 0.75rem;"></div>
-            <a href="{{ asset('doc/Flyer_Parcours _de _Femmes _2026.pdf') }}"
-               download class="btn-dl">
-                <i class="bx bx-download"></i> Télécharger le flyer de parcours de femmes 2026 (PDF)
-            </a>
-
-        </div>
-
-        {{-- Contacts locaux --}}
-        <div class="contacts-widget">
-            <h3>📞 Contacts locaux</h3>
-            <div class="contact-list">
-                <div class="contact-item">
-                    <strong>CIDFF 06</strong>
-                    <a href="tel:0493715569">📞 04 93 71 55 69</a>
-                </div>
-                <div class="contact-item">
-                    <strong>ALC – Violences conjugales</strong>
-                    <a href="tel:0492075500">📞 04 92 07 55 00</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Pass'R'elles (Nice)</strong>
-                    <a href="tel:0497133946">📞 04 97 13 39 46</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Parcours de femmes (Cannes)</strong>
-                    <a href="tel:0493480356">📞 04 93 48 03 56</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Parenthèse (Sophia Antipolis)</strong>
-                    <a href="tel:0492197560">📞 04 92 19 75 60</a>
-                </div>
-            </div>
-            <a href="{{ route('annuaire.index') }}" class="voir-annuaire">
-                Voir l'annuaire complet →
-            </a>
-        </div>
-
-    </div>
-</main>
-
-{{-- FOOTER --}}
-<footer>
-    <div class="footer-inner">
-        <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet des Alpes-Maritimes">
-        <div class="footer-links">
-            <a href="{{ route('charte') }}">Mentions légales</a>  
-            <a href="https://www.arretonslesviolences.gouv.fr" target="_blank" rel="noopener">arretonslesviolences.gouv.fr</a>
-        </div>
-        <p class="footer-copy">© {{ date('Y') }} Préfecture des Alpes-Maritimes – DDETS 06</p>
-    </div>
-</footer>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Animation au scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+            document.querySelectorAll('.affiche-widget, .contacts-widget').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s ease-out';
+                observer.observe(el);
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.affiche-widget, .contacts-widget').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'all 0.6s ease-out';
-            observer.observe(el);
-        });
-
-        // Animation des numéros d'urgence
-        document.querySelectorAll('.urgence-num').forEach(num => {
-            num.addEventListener('click', function() {
-                const phone = this.querySelector('.num').innerText;
-                console.log(`Appel vers le ${phone}`);
+            // Animation des numéros d'urgence
+            document.querySelectorAll('.urgence-num').forEach(num => {
+                num.addEventListener('click', function() {
+                    const phone = this.querySelector('.num').innerText;
+                    console.log(`Appel vers le ${phone}`);
+                });
             });
-        });
-    }); 
-</script>
+        }); 
+    </script>
 
 @endsection
