@@ -124,8 +124,8 @@
                 <!-- Stats des catégories -->
                 <div class="p-3 bg-gray-50 border-t border-gray-200">
                     <div class="flex justify-between text-xs text-gray-600">
-                        <span>Total catégories</span>
-                        <span class="font-semibold">{{ $categories->count() }}</span>
+                        <a href="{{ route('categories.index') }}" class="hover:underline">Voir toutes les catégories</a>
+                        <span>{{ $categories->count() }} catégories</span>
                     </div>
                 </div>
             </div>

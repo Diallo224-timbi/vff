@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-     // Liste des catégories
+    // Liste des catégories
     public function index()
     {
         $categories = Category::latest()->paginate(10);
@@ -29,22 +29,34 @@ class CategoryController extends Controller
             'description' => 'nullable|string|max:500',
         ]);
 
-        Category::create($request->all());
+        Category::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => auth()->id(),
+        ]);
 
-        return redirect()->route('categories.index')->with('success', 'Catégorie créée avec succès !');
+        return redirect()->route('categories.index')
+            ->with('success', 'Catégorie créée avec succès !');
     }
+
     // Supprime une catégorie
     public function destroy(Category $category)
-{
-    // Supprimer tous les threads de cette catégorie
-    $category->threads()->delete();
+    {
+        // Supprimer tous les threads de cette catégorie ET leurs commentaires
+        foreach ($category->threads as $thread) {
+            // Supprimer d'abord les commentaires du thread
+            $thread->comments()->delete();
+            // Puis supprimer le thread
+            $thread->delete();
+        }
 
-    // Supprimer la catégorie
-    $category->delete();
+        // Supprimer la catégorie
+        $category->delete();
 
-    return redirect()->route('categories.index')
-                     ->with('success', 'Catégorie et ses threads supprimés.');
-}
+        return redirect()->route('categories.index')
+                         ->with('success', 'Catégorie et tous ses contenus supprimés.');
+    }
+
     // Formulaire d'édition
     public function edit(Category $category)
     {
@@ -57,6 +69,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
+            'user_id'=> auth()->id()
         ]);
 
         $category->update($request->all());
