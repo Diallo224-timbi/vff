@@ -53,17 +53,17 @@
 <body>
     <div class="container">
         <h1>Bienvenue sur notre plateforme</h1>
-        <p>Bonjour <strong>{{ $user->name }}</strong>,</p>
+        <p>Bonjour <strong>{{ $user->prenom }}</strong>,</p>
         <p>
-            Nous sommes heureux de vous accueillir sur notre plateforme multi-acteurs dédiée à la prévention et l'accompagnement des femmes victimes de violences dans le département des Alpes-Maritimes.
+            Nous sommes heureux de vous accueillir sur notre plateforme multi-acteurs dédiée à la lutte contre les violences faites aux femmes dans le département des Alpes‑Maritimes.
         </p>
-        <p>
-            Vous pouvez dès maintenant accéder à nos ressources, signaler des situations préoccupantes, et collaborer avec d'autres acteurs pour offrir un soutien efficace aux victimes.
+        <p class="font-semibold text-blue-700">
+            Votre compte a bien été créé. Un administrateur devra le valider avant que vous puissiez accéder pleinement à la plateforme.
         </p>
-        <a href="{{ route('login') }}" class="btn">Accéder à la plateforme</a>
+
         <p class="footer">
             Merci de votre engagement pour cette cause essentielle.<br>
-            &copy; 2025 Plateforme de lutte contre les violences faites aux femmes - Alpes-Maritimes
+            L’équipe de la plateforme.
         </p>
     </div>
 </body>

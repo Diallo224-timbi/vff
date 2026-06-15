@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Thread;
 use App\Models\Category;
 use App\Models\ThreadReaction;  
-
+use Carbon\Carbon;
+Carbon::setLocale('fr'); // Définir la locale sur français
 class ForumController extends Controller
 {
     public function index() {
@@ -78,6 +79,55 @@ class ForumController extends Controller
         );
 
         return back()->with('success', 'Réaction enregistrée !');
-    }   
+    } 
+    //modifier un sujet
+    public function edit(Thread $thread)
+    {
+        // Vérifier les permissions
+        if (auth()->id() !== $thread->user_id && !in_array(auth()->user()->role, ['admin', 'moderateur','moderateur_classique','user'])) {
+            return redirect()->route('forum.index')->with('error', 'Non autorisé');
+        }
+
+        return view('forum.edit', compact('thread'));
+    }
+    // Mettre à jour un sujet
+    public function update(Request $request, Thread $thread)
+    {
+        // Vérifier les permissions
+        if (auth()->id() !== $thread->user_id && !in_array(auth()->user()->role, ['admin', 'moderateur','moderateur_classique','user'])) {
+            return redirect()->route('forum.index')->with('error', 'Non autorisé');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
+
+        $thread->update([
+            'title' => $request->title,
+            'body' => $request->body,
+            'category_id' => $request->category_id,
+        ]);
+
+        return redirect()->route('forum.index', $thread)->with('success', 'Sujet mis à jour !');
+    }
+    
+    // Supprimer un sujet avec les commentaires associés
+    public function destroy(Thread $thread)
+    {
+        // Vérifier les permissions pour supprimer le sujet afin de s'assurer que seul l'auteur ou un administrateur peut le faire
+        if (auth()->id() !== $thread->user_id && !in_array(auth()->user()->role, ['admin', 'moderateur','moderateur_classique','user'])) {
+            return redirect()->route('forum.index')->with('error', 'Non autorisé');
+        }
+
+        // Supprimer les commentaires associés
+        $thread->comments()->delete();
+
+        // Supprimer le sujet
+        $thread->delete();
+
+        return redirect()->route('forum.index')->with('success', 'Sujet et ses commentaires supprimés !');
+    }
 
 }

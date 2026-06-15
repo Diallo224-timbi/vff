@@ -90,9 +90,9 @@
     </div>
 
     <!-- Cartes des catégories -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="categoriesGrid">
         @forelse($categories as $category)
-        <div class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden category-card" data-category-name="{{ strtolower($category->name) }}">
+        <div class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden category-card" data-category-name="{{ strtolower($category->name) }}" data-category-id="{{ $category->id }}">
             <!-- Bandeau coloré en haut avec les couleurs du forum -->
             <div class="h-2" style="background: linear-gradient(135deg, #255156, #1e7c86, #008C95);"></div>
             
@@ -136,20 +136,25 @@
                     <!-- accessible uniquement aux admins et à celui qui a créé la catégorie -->
                     @if(auth()->user()?->role === "admin" || auth()->id() === $category->user_id)
                     <div class="flex gap-2">
-                        <a href="{{ route('categories.edit', $category) }}"
-                           class="p-2 rounded-lg transition-all duration-300 group/tooltip relative" style="background: rgba(37, 81, 86, 0.1); color: #255156; hover:bg-[#255156] hover:text-white">
+                        <!-- Bouton Modifier avec modale SweetAlert2 -->
+                        <button type="button" 
+                                class="edit-category-btn p-2 rounded-lg transition-all duration-300 group/tooltip relative" 
+                                style="background: rgba(37, 81, 86, 0.1); color: #255156; hover:bg-[#255156] hover:text-white"
+                                data-category-id="{{ $category->id }}"
+                                data-category-name="{{ $category->name }}"
+                                data-category-description="{{ $category->description ?? '' }}">
                             <i class="fas fa-edit" title="modifier"></i>
                             <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Modifier</span>
-                        </a>
+                        </button>
                         
-                        <form action="{{ route('categories.destroy', $category) }}" method="POST" class="inline">
+                        <form action="{{ route('categories.destroy', $category) }}" method="POST" class="delete-form" data-category-name="{{ $category->name }}" data-threads-count="{{ $category->threads->count() }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" 
-                                    onclick="return confirmDelete('{{ $category->name }}', {{ $category->threads->count() }})"
-                                    class="p-2 rounded-lg transition-all duration-300 group/tooltip relative" style="background: rgba(199, 150, 116, 0.1); color: #C79674; hover:bg-[#C79674] hover:text-white">
-                                <i class="fas fa-trash" title="supprimer"></i>
-                                <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Supprimer</span>
+                            <button type="button" 
+                                    class="delete-category-btn p-2 rounded-lg transition-all duration-300 group/tooltip relative" 
+                                    style="background: rgba(199, 150, 116, 0.1); color: #C79674; hover:bg-[#C79674] hover:text-white">
+                                    <i class="fas fa-trash" title="supprimer"></i>
+                                    <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">Supprimer</span>
                             </button>
                         </form>
                     </div>
@@ -174,93 +179,246 @@
     </div>
 </div>
 
-<!-- JavaScript amélioré -->
+<!-- Formulaire de modification caché -->
+<form id="editCategoryForm" method="POST" style="display: none;">
+    @csrf
+    @method('PUT')
+    <input type="hidden" name="name" id="edit_category_name">
+    <input type="hidden" name="description" id="edit_category_description">
+</form>
+
+<!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-function confirmDelete(categoryName, threadsCount) {
-    let warningMessage = `Voulez-vous vraiment supprimer la catégorie "${categoryName}" ?`;
-    
-    if (threadsCount > 0) {
-        warningMessage += `\n\n⚠️ Attention : Cette catégorie contient ${threadsCount} sujet(s). Tous les sujets et leurs commentaires seront définitivement supprimés !`;
-    }
-    
-    Swal.fire({
-        title: 'Êtes-vous sûr ?',
-        html: `<div class="text-left">
-            <p class="mb-2">Vous allez supprimer la catégorie :</p>
-            <p class="text-lg font-bold" style="color: #C79674;">"${categoryName}"</p>
-            ${threadsCount > 0 ? `<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                <i class="fas fa-exclamation-triangle text-yellow-600"></i>
-                <span class="text-sm text-yellow-800">Cette catégorie contient ${threadsCount} sujet(s) qui seront supprimés avec tous leurs commentaires !</span>
-            </div>` : ''}
-        </div>`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#C79674',
-        cancelButtonColor: '#255156',
-        confirmButtonText: '<i class="fas fa-trash mr-2"></i>Oui, supprimer',
-        cancelButtonText: '<i class="fas fa-times mr-2"></i>Annuler',
-        reverseButtons: true,
-        background: '#fff',
-        customClass: {
-            popup: 'rounded-2xl',
-            title: 'text-2xl font-bold text-[#2D2926]',
-            confirmButton: 'px-6 py-2 rounded-lg font-semibold',
-            cancelButton: 'px-6 py-2 rounded-lg font-semibold'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: 'Suppression en cours...',
-                text: 'Veuillez patienter',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
+// ==================== GESTION DE LA MODIFICATION ====================
+document.querySelectorAll('.edit-category-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const categoryId = this.dataset.categoryId;
+        const currentName = this.dataset.categoryName;
+        const currentDescription = this.dataset.categoryDescription || '';
+        
+        Swal.fire({
+            title: '<i class="fas fa-edit"></i> Modifier la catégorie',
+            html: `
+                <div class="text-left">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2 text-left">Nom de la catégorie</label>
+                        <input type="text" id="swal-category-name" class="swal2-input w-full" placeholder="Nom de la catégorie" value="${escapeHtml(currentName)}" style="width: 100%; margin: 0;">
+                    </div>
+                    <div class="mb-2">
+                        <label class="block text-gray-700 font-semibold mb-2 text-left">Description</label>
+                        <textarea id="swal-category-description" class="swal2-textarea w-full" placeholder="Description de la catégorie" rows="3" style="width: 100%; margin: 0; resize: vertical;">${escapeHtml(currentDescription)}</textarea>
+                    </div>
+                </div>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonColor: '#255156',
+            cancelButtonColor: '#C79674',
+            confirmButtonText: '<i class="fas fa-save mr-2"></i>Enregistrer',
+            cancelButtonText: '<i class="fas fa-times mr-2"></i>Annuler',
+            reverseButtons: true,
+            background: '#fff',
+            customClass: {
+                popup: 'rounded-2xl',
+                title: 'text-2xl font-bold',
+                confirmButton: 'px-5 py-2.5 rounded-lg font-semibold text-white',
+                cancelButton: 'px-5 py-2.5 rounded-lg font-semibold'
+            },
+            preConfirm: () => {
+                const newName = document.getElementById('swal-category-name').value.trim();
+                const newDescription = document.getElementById('swal-category-description').value.trim();
+                
+                if (!newName) {
+                    Swal.showValidationMessage('Le nom de la catégorie est requis');
+                    return false;
                 }
-            });
-            setTimeout(() => {
-                event.target.closest('form').submit();
-            }, 500);
-        }
+                
+                if (newName.length < 2) {
+                    Swal.showValidationMessage('Le nom doit contenir au moins 2 caractères');
+                    return false;
+                }
+                
+                if (newName.length > 100) {
+                    Swal.showValidationMessage('Le nom ne peut pas dépasser 100 caractères');
+                    return false;
+                }
+                
+                return { name: newName, description: newDescription };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const { name, description } = result.value;
+                
+                // Afficher le chargement
+                Swal.fire({
+                    title: 'Modification en cours...',
+                    html: 'Veuillez patienter...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Préparer et soumettre le formulaire
+                const form = document.getElementById('editCategoryForm');
+                form.action = `/categories/${categoryId}`;
+                document.getElementById('edit_category_name').value = name;
+                document.getElementById('edit_category_description').value = description;
+                
+                setTimeout(() => {
+                    form.submit();
+                }, 300);
+            }
+        });
     });
-    
-    return false;
+});
+
+// ==================== GESTION DE LA SUPPRESSION ====================
+document.querySelectorAll('.delete-category-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const form = this.closest('.delete-form');
+        const categoryName = form.dataset.categoryName;
+        const threadsCount = parseInt(form.dataset.threadsCount) || 0;
+        
+        Swal.fire({
+            title: '<i class="fas fa-trash"></i> Supprimer la catégorie',
+            html: `
+                <div class="text-left">
+                    <p class="mb-3 text-gray-700">Vous êtes sur le point de supprimer :</p>
+                    <div class="bg-gray-100 p-3 rounded-lg mb-3">
+                        <p class="font-bold text-lg" style="color: #C79674;">"${escapeHtml(categoryName)}"</p>
+                    </div>
+                    ${threadsCount > 0 ? `
+                        <div class="mt-3 p-3 bg-red-50 border-l-4 border-red-400 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+                                <div>
+                                    <p class="font-semibold text-red-700">Attention ! Suppression en cascade</p>
+                                    <p class="text-sm text-red-600 mt-1">
+                                        Cette catégorie contient <strong>${threadsCount} sujet(s)</strong>.
+                                        Tous les sujets et leurs commentaires seront <strong>définitivement supprimés</strong>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                                <p class="text-sm text-blue-700">
+                                    Cette catégorie est vide. Aucun sujet ne sera affecté.
+                                </p>
+                            </div>
+                        </div>
+                    `}
+                    <p class="mt-3 text-gray-500 text-sm">
+                        <i class="fas fa-ban mr-1"></i> Cette action est irréversible.
+                    </p>
+                </div>
+            `,
+            icon: threadsCount > 0 ? 'error' : 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#C79674',
+            cancelButtonColor: '#255156',
+            confirmButtonText: '<i class="fas fa-trash mr-2"></i>Oui, supprimer définitivement',
+            cancelButtonText: '<i class="fas fa-times mr-2"></i>Annuler',
+            reverseButtons: true,
+            background: '#fff',
+            customClass: {
+                popup: 'rounded-2xl',
+                title: 'text-2xl font-bold',
+                confirmButton: 'px-5 py-2.5 rounded-lg font-semibold text-white',
+                cancelButton: 'px-5 py-2.5 rounded-lg font-semibold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Afficher le chargement
+                Swal.fire({
+                    title: 'Suppression en cours...',
+                    html: 'Veuillez patienter, suppression des données associées...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Soumettre le formulaire après un court délai
+                setTimeout(() => {
+                    form.submit();
+                }, 300);
+            }
+        });
+    });
+});
+
+// ==================== FONCTIONS UTILITAIRES ====================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
-// Recherche améliorée avec animation
-document.getElementById('searchCategory').addEventListener('keyup', function() {
-    const filter = this.value.toLowerCase();
-    const categories = document.querySelectorAll('.category-card');
-    let visibleCount = 0;
-    
-    categories.forEach(card => {
-        const categoryName = card.getAttribute('data-category-name');
-        if (categoryName.includes(filter)) {
-            card.style.display = '';
-            card.style.animation = 'fadeInUp 0.3s ease-out';
-            visibleCount++;
-        } else {
-            card.style.display = 'none';
+// ==================== RECHERCHE ====================
+const searchInput = document.getElementById('searchCategory');
+if (searchInput) {
+    searchInput.addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase().trim();
+        const categories = document.querySelectorAll('.category-card');
+        let visibleCount = 0;
+        
+        categories.forEach(card => {
+            const categoryName = card.getAttribute('data-category-name');
+            if (categoryName && categoryName.includes(filter)) {
+                card.style.display = '';
+                card.style.animation = 'fadeInUp 0.3s ease-out';
+                visibleCount++;
+            } else if (card.style) {
+                card.style.display = 'none';
+            }
+        });
+        
+        const grid = document.getElementById('categoriesGrid');
+        let existingMessage = document.querySelector('#no-results-message');
+        
+        if (visibleCount === 0 && categories.length > 0 && filter !== '') {
+            if (!existingMessage) {
+                const message = document.createElement('div');
+                message.id = 'no-results-message';
+                message.className = 'col-span-2 text-center py-12 animate-fadeIn';
+                message.innerHTML = `
+                    <div class="text-6xl mb-4">🔍</div>
+                    <h3 class="text-2xl font-semibold text-gray-600 mb-2">Aucun résultat</h3>
+                    <p class="text-gray-500">Aucune catégorie ne correspond à "${escapeHtml(filter)}"</p>
+                `;
+                grid.appendChild(message);
+            } else {
+                existingMessage.querySelector('p.text-gray-500').innerHTML = `Aucune catégorie ne correspond à "${escapeHtml(filter)}"`;
+            }
+        } else if (existingMessage) {
+            existingMessage.remove();
         }
     });
-    
-    // Afficher un message si aucun résultat
-    const existingMessage = document.querySelector('#no-results-message');
-    if (visibleCount === 0 && categories.length > 0) {
-        if (!existingMessage) {
-            const message = document.createElement('div');
-            message.id = 'no-results-message';
-            message.className = 'col-span-2 text-center py-12 animate-fadeIn';
-            message.innerHTML = `
-                <div class="text-6xl mb-4">🔍</div>
-                <h3 class="text-2xl font-semibold text-gray-600 mb-2">Aucun résultat</h3>
-                <p class="text-gray-500">Aucune catégorie ne correspond à votre recherche</p>
-            `;
-            document.querySelector('.grid').appendChild(message);
-        }
-    } else if (existingMessage) {
-        existingMessage.remove();
-    }
+}
+
+// ==================== AUTO-DISPARITION DES MESSAGES FLASH ====================
+document.addEventListener('DOMContentLoaded', function() {
+    const flashMessages = document.querySelectorAll('.animate-slide-in-right, .animate-shake');
+    flashMessages.forEach(message => {
+        setTimeout(() => {
+            message.style.opacity = '0';
+            message.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                if (message.parentNode) message.remove();
+            }, 300);
+        }, 5000);
+    });
 });
 </script>
 
@@ -294,7 +452,7 @@ document.getElementById('searchCategory').addEventListener('keyup', function() {
     75% { transform: translateX(5px); }
 }
 
-.animate-fadeInUp {
+.animate-fadeIn {
     animation: fadeInUp 0.3s ease-out;
 }
 
@@ -330,6 +488,7 @@ document.getElementById('searchCategory').addEventListener('keyup', function() {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .pagination .page-item .page-link {
@@ -359,6 +518,25 @@ document.getElementById('searchCategory').addEventListener('keyup', function() {
 
 .category-card:hover {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Transition pour les messages flash */
+.animate-slide-in-right, .animate-shake {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Style pour les inputs SweetAlert2 */
+.swal2-input, .swal2-textarea {
+    border-radius: 0.5rem !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+}
+
+.swal2-input:focus, .swal2-textarea:focus {
+    border-color: #255156 !important;
+    box-shadow: 0 0 0 3px rgba(37, 81, 86, 0.1) !important;
+    outline: none !important;
 }
 </style>
 @endsection

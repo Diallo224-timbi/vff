@@ -69,7 +69,6 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
-            'user_id'=> auth()->id()
         ]);
 
         $category->update($request->all());

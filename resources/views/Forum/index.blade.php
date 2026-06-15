@@ -3,20 +3,36 @@
 @section('title', 'Forum')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-2 space-y-2">
+    <!-- message de succès avec fermeture -->
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Succès !</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    @endif
+ 
 
     <!-- Header -->
     <div class="rounded-2xl p-3 shadow-xl text-white flex items-center justify-between" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-        <div>
-            <h1 class="text-2xl font-bold font-montserrat">Forum communautaire</h1>
-            <p class="text-white/90 text-sm">Échanger, signaler et partager avec la communauté</p>
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold font-montserrat text-white">
+                Forum communautaire
+            </h1>
+            <p class="text-white text-base mt-1 max-w-2xl">
+                Échanger, signaler et partager avec la communauté, tout en respectant les bonnes pratiques mentionnées dans la charte.
+            </p>
         </div>
+
         <div class="flex flex-wrap gap-2">
             <input type="search" id="search" placeholder=" Rechercher..." class="px-3 py-2 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-white">
             <button onclick="openNewThreadModal()" class="px-3 py-1 bg-white text-[#255156] rounded-xl font-semibold shadow hover:scale-105 transition flex items-center gap-2 text-sm">
                 <i class="fas fa-plus-circle"></i> Nouveau sujet
             </button>
-            <a href="{{ route('categories.create') }}" class="px-3 py-1 bg-[#255156] rounded-xl font-semibold shadow text-white hover:scale-105 transition flex items-center gap-2 text-sm">
+            <a href="{{ route('categories.index') }}" class="px-3 py-1 bg-[#255156] rounded-xl font-semibold shadow text-white hover:scale-105 transition flex items-center gap-2 text-sm">
                 <i class="fas fa-folder-plus"></i> Catégorie
             </a>
         </div>
@@ -39,9 +55,8 @@
     <!-- Main content -->
     <div class="flex flex-col lg:flex-row gap-6">
 
-        <!-- Sidebar gauche - Liste des catégories avec recherche -->
+        <!-- Sidebar gauche - Liste des catégories -->
         <div class="lg:w-80 space-y-4">
-            <!-- Carte des catégories -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
                 <div class="p-4" style="background: linear-gradient(135deg, #255156, #1e7c86);">
                     <h3 class="font-bold text-white flex items-center gap-2">
@@ -65,7 +80,6 @@
                 
                 <!-- Liste des catégories -->
                 <div class="max-h-96 overflow-y-auto" id="categoriesList">
-                    <!-- Toutes les catégories -->
                     <div class="category-item border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer" data-category-name="all" data-category-id="all">
                         <div class="p-3 flex items-center justify-between">
                             <div class="flex items-center gap-3">
@@ -102,10 +116,7 @@
                                 <div class="flex items-center gap-2">
                                     @if($category->description)
                                         <div class="group relative">
-                                            <i class="fas fa-info-circle text-gray-400 text-xs cursor-help"></i>
-                                            <div class="absolute right-0 bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
-                                                {{ $category->description }}
-                                            </div>
+                                            <i class="fas fa-info-circle text-gray-400 text-xs cursor-help" title="{{ $category->description }}"></i> 
                                         </div>
                                     @endif
                                     <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
@@ -115,13 +126,11 @@
                     @endforeach
                 </div>
                 
-                <!-- Message aucun résultat -->
                 <div id="noCategoryResult" class="hidden p-4 text-center text-gray-500">
                     <i class="fas fa-search text-3xl mb-2 text-gray-300"></i>
                     <p class="text-sm">Aucune catégorie trouvée</p>
                 </div>
                 
-                <!-- Stats des catégories -->
                 <div class="p-3 bg-gray-50 border-t border-gray-200">
                     <div class="flex justify-between text-xs text-gray-600">
                         <a href="{{ route('categories.index') }}" class="hover:underline">Voir toutes les catégories</a>
@@ -129,33 +138,11 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Suggestions / Catégories populaires -->
-            <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl shadow-sm p-4">
-                <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <i class="fas fa-fire text-orange-500"></i>
-                    Catégories actives
-                </h3>
-                <div class="flex flex-wrap gap-2" id="popularCategories">
-                    @foreach($categories->take(5) as $category)
-                        @php
-                            $categoryThreadCount = $threads->where('category_id', $category->id)->count();
-                        @endphp
-                        @if($categoryThreadCount > 0)
-                            <button class="quick-category-btn px-3 py-1 bg-white rounded-full text-xs font-medium text-gray-700 hover:bg-[#255156] hover:text-white transition shadow-sm" data-category-id="{{ $category->id }}">
-                                {{ $category->name }}
-                                <span class="ml-1 text-xs">({{ $categoryThreadCount }})</span>
-                            </button>
-                        @endif
-                    @endforeach
-                </div>
-            </div>
         </div>
 
         <!-- Colonne droite - Liste des sujets -->
         <div class="flex-1 space-y-6">
             <div>
-                <!-- Header + filtre -->
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
                     <h2 class="text-xl font-bold text-[#2D2926] flex items-center gap-2">
                         <i class="fas fa-stream text-[#255156]"></i> Sujets
@@ -183,22 +170,52 @@
                             @if($thread->is_resolved) bg-green-100 border-green-400 
                             @else bg-white border-gray-200 @endif" 
                              data-created="{{ $thread->created_at }}" 
-                             data-likes="{{ $thread->likes() ?? 0 }}"
+                             data-comments="{{ $thread->commentsCount() ?? 0 }}"
                              data-thread-id="{{ $thread->id }}"
                              data-title="{{ strtolower($thread->title) }}"
                              data-body="{{ strtolower(strip_tags($thread->body)) }}"
                              data-category="{{ strtolower($thread->category->name) }}"
-                             data-category-id="{{ $thread->category_id }}">
+                             data-category-id="{{ $thread->category_id }}"
+                             data-thread-title="{{ addslashes($thread->title) }}"
+                             data-thread-body="{{ addslashes(strip_tags($thread->body)) }}"
+                             data-category-id-edit="{{ $thread->category_id }}">
                             <div class="flex justify-between items-start mb-2">
                                 <div class="flex-1">
-                                    <a href="{{ route('forum.show', $thread) }}">
-                                        <h3 class="thread-title font-bold text-gray-800 text-lg">
-                                            {{ $thread->title }}
-                                            @if($thread->is_resolved)
-                                                <span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">Résolu</span>
-                                            @endif
-                                        </h3>
-                                    </a>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <a href="{{ route('forum.show', $thread) }}" class="flex-1">
+                                            <h3 class="thread-title font-bold text-gray-800 text-lg">
+                                                {{ $thread->title }}
+                                                @if($thread->is_resolved)
+                                                    <span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">Résolu</span>
+                                                @endif
+                                            </h3>
+                                        </a>
+                                        <!-- Boutons Modifier et Supprimer - visibles uniquement pour le créateur et l'admin -->
+                                        @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === 'admin')
+                                            <div class="flex gap-1">
+                                                <button type="button" 
+                                                        class="edit-thread-btn p-1.5 rounded-lg transition-all duration-300 hover:bg-[#255156] hover:text-white group/tooltip relative"
+                                                        style="background: rgba(37, 81, 86, 0.1); color: #255156;"
+                                                        data-thread-id="{{ $thread->id }}"
+                                                        data-thread-title="{{ addslashes($thread->title) }}"
+                                                        data-thread-body="{{ addslashes($thread->body) }}"
+                                                        data-category-id="{{ $thread->category_id }}"
+                                                        title="Modifier le sujet">
+                                                    <i class="fas fa-edit text-sm"></i>
+                                                    <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">Modifier</span>
+                                                </button>
+                                                <button type="button" 
+                                                        class="delete-thread-btn p-1.5 rounded-lg transition-all duration-300 hover:bg-red-600 hover:text-white group/tooltip relative"
+                                                        style="background: rgba(199, 150, 116, 0.1); color: #C79674;"
+                                                        data-thread-id="{{ $thread->id }}"
+                                                        data-thread-title="{{ addslashes($thread->title) }}"
+                                                        title="Supprimer le sujet">
+                                                    <i class="fas fa-trash text-sm"></i>
+                                                    <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">Supprimer</span>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
                                     <p class="mt-2 text-xs text-gray-400">
                                         Catégorie : 
                                         <span class="thread-category font-medium text-[#255156]">{{ $thread->category->name }}</span>
@@ -284,6 +301,24 @@
     </div>
   </div>
 </div>
+
+<!-- Formulaire de modification caché -->
+<form id="editThreadForm" method="POST" style="display: none;">
+    @csrf
+    @method('PUT')
+    <input type="hidden" name="title" id="edit_thread_title">
+    <input type="hidden" name="body" id="edit_thread_body">
+    <input type="hidden" name="category_id" id="edit_thread_category_id">
+</form>
+
+<!-- Formulaire de suppression caché -->
+<form id="deleteThreadForm" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 let currentSearch = '';
@@ -407,7 +442,6 @@ function resetAllFilters() {
     document.getElementById('search').value = '';
     filterThreads();
     
-    // Reset category active style
     document.querySelectorAll('.category-item').forEach(item => {
         item.classList.remove('active-category', 'bg-[#255156]/10');
         const iconDiv = item.querySelector('.w-8.h-8');
@@ -426,7 +460,196 @@ function resetAllFilters() {
     }
 }
 
-// Recherche dynamique des sujets
+// ==================== MODIFICATION D'UN SUJET ====================
+document.querySelectorAll('.edit-thread-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const threadId = this.dataset.threadId;
+        const currentTitle = this.dataset.threadTitle;
+        const currentBody = this.dataset.threadBody;
+        const currentCategoryId = this.dataset.categoryId;
+        
+        // Récupérer la liste des catégories pour le select
+        let categoriesOptions = '';
+        @foreach($categories as $category)
+            categoriesOptions += `<option value="{{ $category->id }}" ${currentCategoryId == {{ $category->id }} ? 'selected' : ''}>{{ addslashes($category->name) }}</option>`;
+        @endforeach
+        
+        Swal.fire({
+            title: '✏️ Modifier le sujet',
+            html: `
+                <div class="text-left">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2 text-left">Titre</label>
+                        <input type="text" id="swal-thread-title" class="swal2-input w-full" placeholder="Titre du sujet" value="${escapeHtml(currentTitle)}" style="width: 100%; margin: 0;">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2 text-left">Contenu</label>
+                        <textarea id="swal-thread-body" class="swal2-textarea w-full" placeholder="Contenu du sujet" rows="6" style="width: 100%; margin: 0; resize: vertical;">${escapeHtml(currentBody)}</textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label class="block text-gray-700 font-semibold mb-2 text-left">Catégorie</label>
+                        <select id="swal-thread-category" class="swal2-select w-full" style="width: 100%; margin: 0; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+                            ${categoriesOptions}
+                        </select>
+                    </div>
+                </div>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonColor: '#255156',
+            cancelButtonColor: '#C79674',
+            confirmButtonText: '<i class="fas fa-save mr-2"></i>Enregistrer',
+            cancelButtonText: '<i class="fas fa-times mr-2"></i>Annuler',
+            reverseButtons: true,
+            background: '#fff',
+            customClass: {
+                popup: 'rounded-2xl',
+                title: 'text-2xl font-bold',
+                confirmButton: 'px-5 py-2.5 rounded-lg font-semibold text-white',
+                cancelButton: 'px-5 py-2.5 rounded-lg font-semibold'
+            },
+            preConfirm: () => {
+                const newTitle = document.getElementById('swal-thread-title').value.trim();
+                const newBody = document.getElementById('swal-thread-body').value.trim();
+                const newCategoryId = document.getElementById('swal-thread-category').value;
+                
+                if (!newTitle) {
+                    Swal.showValidationMessage('Le titre est requis');
+                    return false;
+                }
+                
+                if (newTitle.length < 3) {
+                    Swal.showValidationMessage('Le titre doit contenir au moins 3 caractères');
+                    return false;
+                }
+                
+                if (!newBody) {
+                    Swal.showValidationMessage('Le contenu est requis');
+                    return false;
+                }
+                
+                if (newBody.length < 10) {
+                    Swal.showValidationMessage('Le contenu doit contenir au moins 10 caractères');
+                    return false;
+                }
+                
+                if (!newCategoryId) {
+                    Swal.showValidationMessage('Veuillez sélectionner une catégorie');
+                    return false;
+                }
+                
+                return { title: newTitle, body: newBody, category_id: newCategoryId };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const { title, body, category_id } = result.value;
+                
+                // Afficher le chargement
+                Swal.fire({
+                    title: 'Modification en cours...',
+                    html: 'Veuillez patienter...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Préparer et soumettre le formulaire
+                const form = document.getElementById('editThreadForm');
+                form.action = `/forum/${threadId}`;
+                document.getElementById('edit_thread_title').value = title;
+                document.getElementById('edit_thread_body').value = body;
+                document.getElementById('edit_thread_category_id').value = category_id;
+                
+                setTimeout(() => {
+                    form.submit();
+                }, 300);
+            }
+        });
+    });
+});
+
+// ==================== SUPPRESSION D'UN SUJET ====================
+document.querySelectorAll('.delete-thread-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const threadId = this.dataset.threadId;
+        const threadTitle = this.dataset.threadTitle;
+        
+        Swal.fire({
+            title: '⚠️ Supprimer le sujet',
+            html: `
+                <div class="text-left">
+                    <p class="mb-3 text-gray-700">Vous êtes sur le point de supprimer :</p>
+                    <div class="bg-gray-100 p-3 rounded-lg mb-3">
+                        <p class="font-bold text-lg" style="color: #C79674;">"${escapeHtml(threadTitle)}"</p>
+                    </div>
+                    <div class="mt-3 p-3 bg-red-50 border-l-4 border-red-400 rounded-lg">
+                        <div class="flex items-start gap-2">
+                            <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+                            <div>
+                                <p class="font-semibold text-red-700">Attention ! Suppression définitive</p>
+                                <p class="text-sm text-red-600 mt-1">
+                                    Tous les commentaires associés à ce sujet seront également <strong>définitivement supprimés</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-3 text-gray-500 text-sm">
+                        <i class="fas fa-ban mr-1"></i> Cette action est irréversible.
+                    </p>
+                </div>
+            `,
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonColor: '#C79674',
+            cancelButtonColor: '#255156',
+            confirmButtonText: '<i class="fas fa-trash mr-2"></i>Oui, supprimer définitivement',
+            cancelButtonText: '<i class="fas fa-times mr-2"></i>Annuler',
+            reverseButtons: true,
+            background: '#fff',
+            customClass: {
+                popup: 'rounded-2xl',
+                title: 'text-2xl font-bold',
+                confirmButton: 'px-5 py-2.5 rounded-lg font-semibold text-white',
+                cancelButton: 'px-5 py-2.5 rounded-lg font-semibold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Afficher le chargement
+                Swal.fire({
+                    title: 'Suppression en cours...',
+                    html: 'Veuillez patienter...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Préparer et soumettre le formulaire de suppression
+                const form = document.getElementById('deleteThreadForm');
+                form.action = `/forum/${threadId}`;
+                
+                setTimeout(() => {
+                    form.submit();
+                }, 300);
+            }
+        });
+    });
+});
+
+// ==================== FONCTIONS UTILITAIRES ====================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Recherche dynamique
 let searchTimeout;
 var searchInput = document.getElementById('search');
 if (searchInput) {
@@ -439,7 +662,7 @@ if (searchInput) {
     });
 }
 
-// Recherche dynamique des catégories
+// Recherche catégories
 var categorySearchInput = document.getElementById('categorySearch');
 var clearCategoryBtn = document.getElementById('clearCategorySearch');
 
@@ -471,7 +694,6 @@ function filterCategories() {
         noResultDiv.classList.add('hidden');
     }
     
-    // Afficher/masquer le bouton clear
     if (searchTerm !== '') {
         clearCategoryBtn.classList.remove('hidden');
     } else {
@@ -496,7 +718,6 @@ document.querySelectorAll('.category-item').forEach(function(categoryItem) {
         var categoryId = this.dataset.categoryId;
         var categoryName = this.dataset.categoryDisplay || (categoryId === 'all' ? 'Tous les sujets' : (this.querySelector('p.font-semibold') ? this.querySelector('p.font-semibold').textContent : ''));
         
-        // Mettre à jour l'état actif
         document.querySelectorAll('.category-item').forEach(function(item) {
             item.classList.remove('active-category', 'bg-[#255156]/10');
             var iconDiv = item.querySelector('.w-8.h-8');
@@ -515,7 +736,6 @@ document.querySelectorAll('.category-item').forEach(function(categoryItem) {
         currentCategoryName = categoryName;
         filterThreads();
         
-        // Scroll vers le haut de la liste des sujets
         var flexContainer = document.querySelector('.flex-1');
         if (flexContainer) {
             flexContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -523,18 +743,7 @@ document.querySelectorAll('.category-item').forEach(function(categoryItem) {
     });
 });
 
-// Filtre rapide par catégories populaires
-document.querySelectorAll('.quick-category-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        var categoryId = this.dataset.categoryId;
-        var categoryItem = document.querySelector('.category-item[data-category-id="' + categoryId + '"]');
-        if (categoryItem) {
-            categoryItem.click();
-        }
-    });
-});
-
-// Filtre de tri
+// TRI DES SUJETS
 var filterButtons = document.querySelectorAll('.filter-btn');
 var threadsContainer = document.getElementById('threadsContainer');
 
@@ -553,7 +762,7 @@ function sortThreads(sortType) {
         });
     } else if(sortType === 'popular') {
         sortedThreads = threads.sort(function(a,b) {
-            return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
+            return parseInt(b.dataset.comments) - parseInt(a.dataset.comments);
         });
     }
     
@@ -576,7 +785,7 @@ filterButtons.forEach(function(btn) {
     });
 });
 
-// Marquer comme résolu via checkbox
+// Marquer comme résolu
 document.querySelectorAll('.resolve-checkbox').forEach(function(cb) {
     cb.addEventListener('change', function() {
         var threadId = this.dataset.threadId;
@@ -655,12 +864,11 @@ document.querySelectorAll('.resolve-checkbox').forEach(function(cb) {
     });
 });
 
-// Initialiser la catégorie active par défaut
+// Initialisation
 document.addEventListener('DOMContentLoaded', function() {
     var totalThreads = document.querySelectorAll('#threadsContainer .thread-item').length;
     updateVisibleCount(totalThreads);
     
-    // Activer "Tous les sujets" par défaut
     var allCategory = document.querySelector('.category-item[data-category-id="all"]');
     if (allCategory) {
         allCategory.classList.add('active-category', 'bg-[#255156]/10');
@@ -669,18 +877,15 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Animation pour les cartes */
 .thread-item {
     transition: all 0.3s ease;
 }
 
-/* Style pour le champ de recherche */
 #search:focus, #categorySearch:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(37, 81, 86, 0.3);
 }
 
-/* Line clamp */
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -688,7 +893,6 @@ document.addEventListener('DOMContentLoaded', function() {
     overflow: hidden;
 }
 
-/* Style pour les filtres */
 .filter-btn {
     cursor: pointer;
     transition: all 0.2s ease;
@@ -698,7 +902,6 @@ document.addEventListener('DOMContentLoaded', function() {
     transform: translateY(-1px);
 }
 
-/* Style pour la modale */
 .modal-header {
     border-bottom: none;
 }
@@ -707,7 +910,6 @@ document.addEventListener('DOMContentLoaded', function() {
     border-top: none;
 }
 
-/* Checkbox stylée */
 .resolve-checkbox {
     accent-color: #255156;
     width: 18px;
@@ -715,7 +917,6 @@ document.addEventListener('DOMContentLoaded', function() {
     cursor: pointer;
 }
 
-/* Style pour les catégories */
 .category-item {
     transition: all 0.2s ease;
 }
@@ -729,7 +930,6 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #255156;
 }
 
-/* Scrollbar personnalisée pour la liste des catégories */
 #categoriesList::-webkit-scrollbar {
     width: 5px;
 }
@@ -743,13 +943,35 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 5px;
 }
 
-/* Animation pour les cartes de catégories */
-.quick-category-btn {
+/* Style pour les boutons d'édition et suppression */
+.edit-thread-btn, .delete-thread-btn {
     transition: all 0.2s ease;
 }
 
-.quick-category-btn:hover {
-    transform: translateY(-2px);
+.edit-thread-btn:hover {
+    transform: scale(1.1);
+    background: #255156 !important;
+    color: white !important;
+}
+
+.delete-thread-btn:hover {
+    transform: scale(1.1);
+    background: #dc2626 !important;
+    color: white !important;
+}
+
+/* Style pour les inputs SweetAlert2 */
+.swal2-input, .swal2-textarea, .swal2-select {
+    border-radius: 0.5rem !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+}
+
+.swal2-input:focus, .swal2-textarea:focus, .swal2-select:focus {
+    border-color: #255156 !important;
+    box-shadow: 0 0 0 3px rgba(37, 81, 86, 0.1) !important;
+    outline: none !important;
 }
 </style>
 @endsection
