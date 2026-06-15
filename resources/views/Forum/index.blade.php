@@ -14,8 +14,6 @@
             </button>
         </div>
     @endif
- 
-
     <!-- Header -->
     <div class="rounded-2xl p-3 shadow-xl text-white flex items-center justify-between" style="background: linear-gradient(135deg, #255156, #1e7c86);">
         <div class="mb-6">
@@ -54,7 +52,6 @@
 
     <!-- Main content -->
     <div class="flex flex-col lg:flex-row gap-6">
-
         <!-- Sidebar gauche - Liste des catégories -->
         <div class="lg:w-80 space-y-4">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
@@ -64,8 +61,7 @@
                         Catégories
                     </h3>
                     <p class="text-white/80 text-xs mt-1">Filtrer les sujets par catégorie</p>
-                </div>
-                
+                </div> 
                 <!-- Barre de recherche des catégories -->
                 <div class="p-3 border-b border-gray-200 bg-gray-50">
                     <div class="relative">
@@ -76,8 +72,7 @@
                             <i class="fas fa-times-circle text-sm"></i>
                         </button>
                     </div>
-                </div>
-                
+                </div>            
                 <!-- Liste des catégories -->
                 <div class="max-h-96 overflow-y-auto" id="categoriesList">
                     <div class="category-item border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer" data-category-name="all" data-category-id="all">

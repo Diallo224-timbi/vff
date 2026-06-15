@@ -52,7 +52,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenue sur notre plateforme</h1>
+        <h1>Bienvenue sur notre plateforme </h1>
         <p>Bonjour <strong>{{ $user->prenom }}</strong>,</p>
         <p>
             Nous sommes heureux de vous accueillir sur notre plateforme multi-acteurs dédiée à la lutte contre les violences faites aux femmes dans le département des Alpes‑Maritimes.
