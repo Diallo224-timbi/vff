@@ -9,12 +9,17 @@
             <!-- Carte principale -->
             <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">  
                 <!-- En-tête -->
-                <div class="card-header text-white py-3" style="background: #255156; border: none;">
+                <div class="card-header text-white py-3" style="background: #145f68; border: none;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <i class="fas fa-folder-open me-2"></i>
                             <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire</h4>
-                            <p class="mt-1 mb-0 opacity-75 small">Toutes les ressources professionnelles</p>
+                            <div class="alert alert-light mt-3 shadow-sm border-0">
+                                <i class="fas fa-info-circle text-primary me-2"></i>
+                                <strong>Rappel :</strong>
+                                Partagez des ressources professionnelles dans un esprit de bienveillance et de collaboration,
+                                tout en respectant les dispositions de la charte de la plateforme.
+                            </div>
                         </div>
                     </div>
                 </div>

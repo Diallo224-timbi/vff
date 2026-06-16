@@ -3,27 +3,20 @@
 @section('title', $thread->title)
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 py-6">
-    <!-- Retour au forum -->
-    <div class="mb-6">
-        <a href="{{ route('forum.index') }}"
-        class="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 transition-colors">
-            <i class="fas fa-arrow-left"></i>
-            Retour au forum
-        </a>
-    </div>
-
+<a href="{{ route('forum.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold shadow-md text-white bg-[#255156] hover:bg-[#1e7c86] transition-all duration-300">
+        <i class="fas fa-arrow-left"></i> Retour au forum
+    </a>
+<div class="max-w-10xl mx-auto px-4 py-6">
     <!-- Sujet -->
     <div class="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-6 animate-fade-in">
         <h1 class="text-2xl sm:text-3xl font-bold font-montserrat text-[#2D2926]">{{ $thread->title }}</h1>
         <p class="text-gray-500 text-sm mt-1">
-            Par <span class="font-medium">{{ $thread->user->name }}</span> 
-            @if($thread->category) dans <span class="font-medium">{{ $thread->category->name }}</span> @endif
+            Par <span class="font-medium">{{ $thread->user->prenom}} {{ $thread->user->structure->organisme->nom_organisme ??' ' }} {{ $thread->user->structure->organisme->ville  ?? ' ' }} ({{ $thread->user->structure->organisme->code_postal  ?? ' ' }})</span> 
+            @if($thread->category) dans <span class="font-medium">{{ $thread->category->name }} </span> @endif
                 {{ $thread->created_at->diffForHumans() }}
         </p>
         <p class="text-gray-700 mt-4">{{ $thread->body }}</p>
-    </div>
-    
+    </div>  
     <!-- Commentaires -->
     <h2 class="text-xl font-semibold mb-4">Commentaires</h2>
 
@@ -34,7 +27,8 @@
                 <!-- Auteur et corps -->
                 <div class="flex-1">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="font-semibold text-gray-800">{{ $comment->user->name }}</span>
+                        <a href="{{ route('annuaire.membre') }}"><span class="font-semibold text-gray-800">{{ $comment->user->prenom }} {{ $comment->user->structure->organisme->nom_organisme ??' ' }} {{ $comment->user->structure->organisme->ville  ?? ' ' }} </span></a>
+                        </span>
                         <span class="text-gray-500 text-xs">{{ $comment->created_at->diffForHumans() }}</span>
                     </div>
                     <!-- Contenu du commentaire (modifiable) -->
@@ -93,18 +87,16 @@
             <p class="text-gray-500">Aucun commentaire pour le moment.</p>
         @endforelse
     </div>
-
     <!-- Formulaire nouveau commentaire -->
     <div class="bg-white border border-gray-200 rounded-2xl shadow p-6 animate-fade-in">
         <h3 class="font-semibold text-gray-900 mb-4">Ajouter un commentaire</h3>
         <form action="{{ route('comment.store', $thread) }}" method="POST" class="space-y-4">
             @csrf
             <textarea name="body" rows="2" class="form-control w-full border border-gray-300 rounded-xl p-2 focus:ring-2 focus:ring-[#008C95] focus:border-[#008C95] transition resize-none" placeholder="Votre commentaire..." oninput="autoResize(this)" required></textarea>
-            <button type="submit" class="px-4 py-2 bg-[#008C95] text-white rounded hover:bg-[#59BEC9] shadow transition">Publier</button>
+            <button type="submit" class="px-4 py-2 text-white bg-[#255156] hover:bg-[#1e7c86] shadow transition">Publier</button>
         </form>
     </div>
 </div>
-
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

@@ -23,7 +23,6 @@
         </a>
     </div>
 </header>
-
 {{-- HERO --}}
 <section class="hero">
     <div class="hero-inner">

@@ -12,6 +12,7 @@ Carbon::setLocale('fr'); // Définir la locale sur français
 class ForumController extends Controller
 {
     public function index() {
+        //recuperer le nom de l'organisme de l'utilisateur qui a fait le commentaire
         $threads = Thread::latest()->with('user', 'category')->paginate(10);
         $categories = Category::all();
         $categories->loadCount('threads');

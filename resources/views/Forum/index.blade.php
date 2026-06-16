@@ -3,7 +3,7 @@
 @section('title', 'Forum')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-2 space-y-2">
+<div class="max-w-10xl mx-auto px-0 sm:px-6 lg:px-4 py-2 space-y-2">
     <!-- message de succès avec fermeture -->
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -15,27 +15,46 @@
         </div>
     @endif
     <!-- Header -->
-    <div class="rounded-2xl p-3 shadow-xl text-white flex items-center justify-between" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-        <div class="mb-6">
-            <h1 class="text-3xl font-bold font-montserrat text-white">
-                Forum communautaire
-            </h1>
-            <p class="text-white text-base mt-1 max-w-2xl">
-                Échanger, signaler et partager avec la communauté, tout en respectant les bonnes pratiques mentionnées dans la charte.
-            </p>
+    <div class="rounded-2xl p-3 shadow-xl text-white d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3"
+     style="background: linear-gradient(135deg, #255156, #1e7c86);">
+
+        <!-- Titre + rappel -->
+        <div class="grow">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-comments me-2"></i>
+                <h6 class="mb-0 fw-bold">Forum professionnel</h6>
+            </div>
+
+            <div class="bg-white text-dark rounded p-2 small">
+                <i class="fas fa-info-circle text-primary me-1"></i>
+                <strong>Rappel :</strong>
+                Ce forum est un espace d'échange entre professionnels. Merci de privilégier des discussions respectueuses et conformes à la charte.<br> Aucune information permettant d'identifier une victime ne doit être publiée.
+            </div>
         </div>
 
-        <div class="flex flex-wrap gap-2">
-            <input type="search" id="search" placeholder=" Rechercher..." class="px-3 py-2 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-white">
-            <button onclick="openNewThreadModal()" class="px-3 py-1 bg-white text-[#255156] rounded-xl font-semibold shadow hover:scale-105 transition flex items-center gap-2 text-sm">
-                <i class="fas fa-plus-circle"></i> Nouveau sujet
+         <!-- Actions -->
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <input
+                type="search"
+                id="search"
+                placeholder="Rechercher..."
+                class="form-control form-control-sm"
+                style="width: 180px;"
+            >
+            <button
+                onclick="openNewThreadModal()"
+                class="btn btn-light btn-sm fw-semibold">
+                <i class="fas fa-plus-circle me-1"></i>
+                Nouveau sujet
             </button>
-            <a href="{{ route('categories.index') }}" class="px-3 py-1 bg-[#255156] rounded-xl font-semibold shadow text-white hover:scale-105 transition flex items-center gap-2 text-sm">
-                <i class="fas fa-folder-plus"></i> Catégorie
+            <a href="{{ route('categories.index') }}"
+            class="btn btn-outline-light btn-sm fw-semibold">
+                <i class="fas fa-folder-plus me-1"></i>
+                Catégories
             </a>
         </div>
-    </div>
 
+    </div>
     <!-- Résultat de recherche info -->
     <div id="searchResultInfo" class="bg-blue-50 border-l-4 border-[#255156] p-4 rounded-r-lg hidden">
         <div class="flex items-center justify-between">
@@ -49,7 +68,6 @@
             </button>
         </div>
     </div>
-
     <!-- Main content -->
     <div class="flex flex-col lg:flex-row gap-6">
         <!-- Sidebar gauche - Liste des catégories -->
@@ -88,8 +106,7 @@
                             </div>
                             <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
                         </div>
-                    </div>
-                    
+                    </div>   
                     @foreach($categories as $category)
                         @php
                             $categoryThreadCount = $threads->where('category_id', $category->id)->count();
@@ -119,8 +136,7 @@
                             </div>
                         </div>
                     @endforeach
-                </div>
-                
+                </div> 
                 <div id="noCategoryResult" class="hidden p-4 text-center text-gray-500">
                     <i class="fas fa-search text-3xl mb-2 text-gray-300"></i>
                     <p class="text-sm">Aucune catégorie trouvée</p>
@@ -134,7 +150,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Colonne droite - Liste des sujets -->
         <div class="flex-1 space-y-6">
             <div>
@@ -157,7 +172,6 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- Threads container -->
                 <div class="grid grid-cols-1 gap-4" id="threadsContainer">
                     @forelse($threads as $thread)
@@ -226,7 +240,9 @@
                                     <div class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background: linear-gradient(135deg, #255156, #1e7c86);">
                                         {{ strtoupper(substr($thread->user->prenom, 0, 1)) }}
                                     </div>
-                                    <span class="text-sm">{{ $thread->user->prenom }}</span>
+                                    <a href="{{ route('annuaire.membre') }}">
+                                        <span class="text-sm">{{ $thread->user->prenom }} {{ $thread->user->structure->organisme->nom_organisme ??' ' }} {{ $thread->user->structure->organisme->ville  ?? ' ' }} ({{ $thread->user->structure->organisme->code_postal  ?? ' ' }})</span>
+                                    </a>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <span class="flex items-center gap-1">
@@ -319,11 +335,9 @@
 let currentSearch = '';
 let currentCategoryId = 'all';
 let currentCategoryName = '';
-
 function openNewThreadModal() {
     new bootstrap.Modal(document.getElementById('newThreadModal')).show();
 }
-
 function clearSearch() {
     const searchInput = document.getElementById('search');
     if (searchInput) {
@@ -332,7 +346,6 @@ function clearSearch() {
         filterThreads();
     }
 }
-
 function filterThreads() {
     const searchTerm = currentSearch.toLowerCase();
     const threads = document.querySelectorAll('#threadsContainer .thread-item');
@@ -343,7 +356,6 @@ function filterThreads() {
         const body = thread.dataset.body || '';
         const category = thread.dataset.category || '';
         const categoryId = thread.dataset.categoryId || '';
-        
         const matchesSearch = searchTerm === '' || 
                               title.includes(searchTerm) || 
                               body.includes(searchTerm) || 
@@ -364,7 +376,6 @@ function filterThreads() {
     updateVisibleCount(visibleCount);
     updateSelectedCategoryBadge();
 }
-
 function updateSelectedCategoryBadge() {
     const badge = document.getElementById('selectedCategoryBadge');
     if (currentCategoryId !== 'all') {
@@ -374,7 +385,6 @@ function updateSelectedCategoryBadge() {
         badge.classList.add('hidden');
     }
 }
-
 function updateSearchResultInfo(visibleCount) {
     const searchResultInfo = document.getElementById('searchResultInfo');
     const searchQuerySpan = document.getElementById('searchQuery');
@@ -388,11 +398,9 @@ function updateSearchResultInfo(visibleCount) {
         searchResultInfo.classList.add('hidden');
     }
 }
-
 function updateVisibleCount(visibleCount) {
     const visibleCountSpan = document.getElementById('visibleCount');
     const totalThreads = document.querySelectorAll('#threadsContainer .thread-item').length;
-    
     if (visibleCountSpan && totalThreads > 0) {
         if (currentSearch !== '' || currentCategoryId !== 'all') {
             visibleCountSpan.textContent = '(' + visibleCount + '/' + totalThreads + ' affichés)';
@@ -401,7 +409,6 @@ function updateVisibleCount(visibleCount) {
         }
     }
 }
-
 function showNoResultsMessage(visibleCount) {
     const existingNoResults = document.querySelector('#noResultsMessage');
     if (existingNoResults) existingNoResults.remove();
@@ -429,14 +436,12 @@ function showNoResultsMessage(visibleCount) {
         if (emptyState) emptyState.style.display = '';
     }
 }
-
 function resetAllFilters() {
     currentSearch = '';
     currentCategoryId = 'all';
     currentCategoryName = '';
     document.getElementById('search').value = '';
     filterThreads();
-    
     document.querySelectorAll('.category-item').forEach(item => {
         item.classList.remove('active-category', 'bg-[#255156]/10');
         const iconDiv = item.querySelector('.w-8.h-8');
@@ -444,7 +449,6 @@ function resetAllFilters() {
             iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
         }
     });
-    
     const allCategoryItem = document.querySelector('.category-item[data-category-id="all"]');
     if (allCategoryItem) {
         allCategoryItem.classList.add('active-category', 'bg-[#255156]/10');

@@ -423,7 +423,10 @@
       </button>
       @endauth
       <div class="logo-text">
-        <span>Plateforme</span><span class="hidden sm:inline"><br></span><span>Multi Acteurs</span>
+       <div class="leading-tight">
+          <span class="block">Plateforme</span>
+          <span class="block text-sm">Multi-Acteurs VFF 06</span>
+        </div>
       </div>
     </div>
     @auth
@@ -489,12 +492,6 @@
           <i class='bx bx-calendar'></i>
           <span title="Consulter l'agenda des évenements">Agenda</span>
         </a>
-        <!--
-        <a href="{{ route('structures.index') }}" class="sidebar-link">
-          <i class='bx bx-building'></i>
-          <span>Structure</span>
-        </a>
-        -->
         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur_classique' || Auth::user()->role === 'moderateur')
         <a href="{{ route('admin.users') }}" class="sidebar-link">
           <i class='bx bx-shield'></i>

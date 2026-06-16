@@ -3,8 +3,10 @@
 @section('title', 'Catégories du forum')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-
+    <a href="{{ route('forum.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold shadow-md text-white bg-[#255156] hover:bg-[#1e7c86] transition-all duration-300">
+        <i class="fas fa-arrow-left"></i> Retour au forum
+    </a>
+<div class="max-w-10xl mx-auto py-4 px-4 sm:px-6 lg:px-4">
     <!-- Header avec les couleurs du forum -->
     <div class="rounded-2xl p-6 mb-8 shadow-xl text-white" style="background: linear-gradient(135deg, #255156, #1e7c86);">
         <div class="flex flex-col sm:flex-row justify-between items-center">

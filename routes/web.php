@@ -23,7 +23,6 @@ Route::get('/', function () {
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
     ->middleware(['auth'])->name('dashboardUser');
-
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
@@ -39,22 +38,16 @@ Route::get('/login',[AuthController::class, 'showFormLogin'])->name('login');
 Route::post('/login',[AuthController::class, 'login'])->name('login.submit');
 // gérer la soumission du formulaire de connexion
 Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
-
 // Password Reset
 Route::get('forgot-password', [PasswordResetController::class, 'showForgotForm'])->name('password.request');
 Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
-
 Route::get('reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
-
 // Route pour envoyer le code de vérification
 Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode'])
      ->name('sendVerificationCode');
-
 // Route pour vérifier le code de vérification
 Route::post('/verify-code', [AuthController::class, 'verifyCode'])->name('verifyCode');
-
-
 // Route pour le tableau de bord admin
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.users');
@@ -63,18 +56,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
     //route pours supprimer un utilisateur
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
-    //route pour filtrer les utilisateurs par structure
-    
+    //route pour filtrer les utilisateurs par structure 
 });
-
 // Route pour filtrer les utilisateurs par structure
 Route::middleware(['auth'])->group(function () {
     Route::get('/annuaire/list', [AnnuaireController::class, 'listeGroupee'])
         ->name('annuaire.list');
-    
-    // Autres routes qui nécessitent une connexion...
 });
-
 // Route pour les organismes
 Route::middleware(['auth'])->group(function () {
     Route::get('/organismes', [OrganismeController::class, 'index'])->name('organismes.index');
@@ -85,23 +73,17 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/organismes/{id}', [OrganismeController::class, 'destroy'])->name('organismes.destroy');
     Route::get('/organismes/{id}', [OrganismeController::class, 'show'])->name('organismes.show');
 });
-
-
-
 // Route pour le profil utilisateur
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
-
 // route pour la charte
-
 Route::get('/charte', function () {
     return view('auth.charte');
 })->name('charte');
 
 // Routes pour le forum et les commentaires
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
     Route::get('/forum/{thread}', [ForumController::class, 'show'])->name('forum.show');
@@ -110,23 +92,21 @@ Route::middleware(['auth'])->group(function () {
     // Route pour marquer un fil de discussion comme résolu ou non résolu
     Route::post('/forum/{thread}/resolve', [ForumController::class, 'toggleResolve'])->name('forum.resolve');
     Route::prefix('forum')->name('forum.')->group(function () {
-        Route::get('/{thread}/edit', [ForumController::class, 'edit'])->name('edit');      // <--- EDIT
-        Route::put('/{thread}', [ForumController::class, 'update'])->name('update');       // <--- UPDATE
-        Route::delete('/{thread}', [ForumController::class, 'destroy'])->name('destroy');  // <--- DELETE
+        Route::get('/{thread}/edit', [ForumController::class, 'edit'])->name('edit');     
+        Route::put('/{thread}', [ForumController::class, 'update'])->name('update');      
+        Route::delete('/{thread}', [ForumController::class, 'destroy'])->name('destroy');  
         Route::post('/{thread}/react', [ForumController::class, 'react'])->name('react');
     });
-
     //commentaire routes
     Route::prefix('comment')->name('comment.')->group(function () {
-        Route::get('/{comment}/edit', [CommentController::class, 'edit'])->name('edit');         // <--- EDIT
-        Route::put('/{comment}', [CommentController::class, 'update'])->name('update');        // <--- UPDATE
-        Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');   // <--- DELETE
+        Route::get('/{comment}/edit', [CommentController::class, 'edit'])->name('edit');        
+        Route::put('/{comment}', [CommentController::class, 'update'])->name('update');        
+        Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');   
         Route::post('/{comment}/react', [CommentController::class, 'react'])->name('react');
     }); 
 });
 
 // Routes pour la gestion des catégories du forum
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
@@ -150,20 +130,16 @@ Route::middleware('auth')->group(function () {
     // Route pour afficher le details d'une structure dans la carte
     Route::get('/structures/{structure}/details', [StructureController::class, 'details'])->name('annuaire.details');
 });
-
-
 // Routes pour l'annuaire
 Route::middleware('auth')->group(function () {
      
         Route::get('/annuaire', [AnnuaireController::class, 'index'])->name('annuaire.index');
         // route pour afficher les membres d'une structure spécifique
-        Route::get('/annuaire/structure', [AnnuaireController::class, 'showByStructure'])->name('annuaire.membre');
+        Route::get('/annuaire/membres', [AnnuaireController::class, 'showByStructure'])->name('annuaire.membre');
         Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
         Route::get('/annuaire/export/pdf', [AnnuaireController::class, 'exportPdf'])->name('annuaire.export.pdf');
     });
-
 // Routes pour les logs d'activité
-
 Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->group(function () {
     Route::get('/', [ActivityLogController::class, 'index'])->name('index');
     Route::get('/stats', [ActivityLogController::class, 'stats'])->name('stats');
@@ -174,38 +150,27 @@ Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->gr
     Route::delete('/{id}', [ActivityLogController::class, 'destroy'])->name('destroy');
 });
 
-
 // Routes pour la gestion des ressources
-
 Route::middleware(['auth'])->group(function () {
-    
     // ===== ROUTES RESSOURCES =====
     // Liste des ressources (page principale)
     Route::get('/ressources', [ResourceController::class, 'index'])->name('resources.index');
-    
     // Formulaire de création
     Route::get('/ressources/creer', [ResourceController::class, 'create'])->name('resources.create');
-    
     // Enregistrement d'une nouvelle ressource
     Route::post('/ressources', [ResourceController::class, 'store'])->name('resources.store');
-    
     // Formulaire d'édition
     Route::get('/ressources/{resource}/modifier', [ResourceController::class, 'edit'])->name('resources.edit');
-    
     // Mise à jour
     Route::put('/ressources/{resource}', [ResourceController::class, 'update'])->name('resources.update');
-    
     // Suppression
     Route::delete('/ressources/{resource}', [ResourceController::class, 'destroy'])->name('resources.destroy');
-    
     // Téléchargement
     Route::get('/ressources/{resource}/telecharger', [ResourceController::class, 'download'])->name('resources.download');
-  
     // Routes pour la corbeille
     Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
     Route::post('/resources/{id}/restore', [ResourceController::class, 'restore'])->name('resources.restore');
     Route::delete('/resources/{id}/force-delete', [ResourceController::class, 'forceDelete'])->name('resources.force-delete');
-
     //route vider la corbeille
     Route::delete('/resources/trash/empty', [ResourceController::class, 'emptyTrash'])->name('resources.trash.empty');
 });
@@ -219,29 +184,23 @@ Route::get('/test-routes', function() {
     ];
 });
 
-
-
 //route pour events
 Route::middleware(['auth'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
-    
     // ROUTE SPÉCIFIQUE - À PLACER AVANT LES ROUTES AVEC PARAMÈTRES
     Route::get('/events/calendrier', [EventController::class, 'calendrier'])->name('events.calendrier'); 
-    
     // Routes avec paramètre {event} - À PLACER APRÈS
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
     Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
-    
     // Routes d'inscription (avec paramètre aussi)
     Route::post('/events/{event}/inscrire', [EventController::class, 'inscrire'])->name('events.inscrire'); 
     Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
     Route::delete('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
 });
-
 
 // Routes pour le formulaire d'inscription avec génération de PDF
 

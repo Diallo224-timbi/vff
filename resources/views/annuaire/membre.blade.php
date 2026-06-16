@@ -24,13 +24,10 @@
                                class="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent text-sm bg-gray-50 hover:bg-white transition-all">
                     </div>   
                     <!-- Filtre par structure -->
-                    <div class="lg:w-72 relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                            </svg>
-                        </div>
-                        <select id="structureFilter" class="w-full pl-0 pr-0 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent appearance-none bg-gray-50 hover:bg-white transition-all cursor-pointer text-sm">
+                    <div class="lg:w-60 relative">
+                        <select id="structureFilter"
+                            class="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent bg-gray-50 hover:bg-white transition-all cursor-pointer text-sm">
+                            
                             <option value="">Toutes les structures</option>
                             @php
                                 $structuresUniques = $membres->unique(function($membre) {
@@ -43,16 +40,13 @@
                                 @if($membre->structure)
                                     <option value="{{ $membre->structure->id }}">
                                         {{ $membre->structure->organisme->nom_organisme ?? 'N/A' }}
-                                        @if($membre->structure->ville) - {{ $membre->structure->ville }} @endif
+                                        @if($membre->structure->ville)
+                                            - {{ $membre->structure->ville }}
+                                        @endif
                                     </option>
                                 @endif
                             @endforeach
                         </select>
-                        <div class="absolute inset-y-0 right-0 pr-0 flex items-center pointer-events-none">
-                            <svg class="h-0 w-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </div>
                     </div>
                 </div>
                 <!-- Badges des filtres actifs -->
@@ -116,7 +110,6 @@
                 </div>
             @endforeach
         </div>
-        
         <!-- Aucun résultat -->
         <div id="no-results" class="text-center py-12 hidden">
             <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
@@ -126,8 +119,7 @@
                 <h3 class="text-xl font-semibold text-gray-600 mb-2">Aucun membre trouvé</h3>
                 <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
             </div>
-        </div>
-        
+        </div>  
         <!-- Pagination -->
         <div class="mt-8">
             @if(method_exists($membres, 'links'))
@@ -138,7 +130,6 @@
         </div>
     </div>
 </div>
-
 <script>
     const searchInput = document.querySelector('#search');
     const structureFilter = document.querySelector('#structureFilter');
@@ -174,8 +165,7 @@
                 filterMembers();
             });
             activeFiltersDiv.appendChild(badge);
-        }
-        
+        }     
         if (currentSearchTerm) {
             const badge = document.createElement('div');
             badge.className = 'inline-flex items-center bg-blue-50 text-blue-700 rounded-full px-2.5 py-1 text-xs font-medium';
@@ -198,7 +188,6 @@
             activeFiltersDiv.appendChild(badge);
         }
     }
-
     function filterMembers() {
         currentSearchTerm = searchInput.value.toLowerCase().trim();
         currentStructureFilter = structureFilter.value;
