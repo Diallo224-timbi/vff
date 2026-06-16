@@ -456,13 +456,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme ?? '-';
             document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme ?? '-';
             document.getElementById('modal-categories').textContent = structure.categories || 'Non spécifié';
-            document.getElementById('modal-type_structure').textContent = structure.type_structure || 'Non spécifié';
             document.getElementById('modal-public_cible').textContent = structure.public_cible || 'Non spécifié';
             document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
             
             const siteElement = document.getElementById('modal-site');
             if (structure.site) {
-                siteElement.innerHTML = `<a href="${structure.site}" target="_blank" class="text-[#255156] hover:text-[#8bbdc3]">${structure.site}</a>`;
+                siteElement.innerHTML = structure.organisme?.site
+                ? `<a href="${structure.organisme.site}" target="_blank" rel="noopener noreferrer" class="text-[#255156] hover:text-[#8bbdc3]">
+                    ${structure.organisme.site}
+                </a>`
+                : `<span class="text-gray-400 italic">Aucun site disponible</span>`;
+
             } else {
                 siteElement.innerHTML = '<span class="text-gray-400">Non disponible</span>';
             }

@@ -24,19 +24,6 @@
     </div>
 </header>
 
-{{-- URGENCE BANNER --}}
-<div class="urgence-banner">
-    <div class="urgence-inner">
-        <span class="urgence-title"><i class='bx bx-alarm-exclamation'></i> En cas d'urgence</span>
-        <div class="urgence-numbers">
-            <div class="urgence-num"><span class="num">17</span> Police / Gendarmerie</div>
-            <div class="urgence-num"><span class="num">15</span> SAMU</div>
-            <div class="urgence-num"><span class="num">3919</span> Violences Femmes Info</div>
-            <div class="urgence-num"><span class="num">115</span> Hébergement d'urgence</div>
-        </div>
-    </div>
-</div>
-
 {{-- HERO --}}
 <section class="hero">
     <div class="hero-inner">

@@ -182,7 +182,7 @@
                                                         <h6 class="fw-semibold mb-0" title="{{ $resource->title }}">{{ $resource->title }}</h6>
                                                         @if($resource->is_link)
                                                             <span class="badge" style="background: #e0f2fe; color: #0284c7;">
-                                                                <i class="bx bxs-link me-1"></i>Lien
+                                                                <i class="fas fa-link"></i>Lien
                                                             </span>
                                                         @elseif($resource->is_image)
                                                             <span class="badge" style="background: #f3e8ff; color: #9333ea;">
@@ -211,7 +211,7 @@
                                                     
                                                     <div class="d-flex gap-3 small text-muted">
                                                         @if(!$resource->is_link)
-                                                             <span><i class="fas fa-file-alt me-1"></i> {{ $resource->file_type }}</span>
+                                                             <span><i class="fas fa-link"></i> {{ $resource->file_type }}</span>
                                                        
                                                         <span><i class="fas fa-download me-1"></i> {{ $resource->download_count }} téléchargements</span>
                                                         @endif
@@ -225,7 +225,7 @@
                                                 <div class="d-flex gap-2">
                                                     @if($resource->is_link)
                                                         <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-sm" style="background: #e0f2fe; color: #0284c7;" title="Ouvrir le lien">
-                                                            <i class="fas fa-external-link-alt"></i>
+                                                          <i class="fas fa-link"></i>
                                                         </a>
                                                     @endif
                                                     
@@ -242,8 +242,7 @@
                                                         <a href="{{ route('resources.download', $resource) }}" class="btn btn-sm" style="background: #dbeafe; color: #2563eb;" title="Télécharger">
                                                             <i class="fas fa-download"></i>
                                                         </a>
-                                                    @endif
-                                                    
+                                                    @endif   
                                                     @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
                                                         <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3;" title="Modifier">
                                                             <i class="fas fa-edit"></i>
@@ -330,7 +329,6 @@
                         <input type="url" id="linkUrl" name="link_url" class="form-control" placeholder="https://exemple.com/document">
                         <small class="text-muted">Entrez l'URL complète du lien externe</small>
                     </div>
-                    
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
                         <select id="category" name="category" required class="form-select">
@@ -359,8 +357,6 @@
         </div>
     </div>
 </div>
-
-
 @endsection
 
 @section('scripts')

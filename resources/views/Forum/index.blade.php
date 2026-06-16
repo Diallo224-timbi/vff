@@ -224,9 +224,9 @@
                             <div class="flex items-center justify-between mt-2 text-gray-500">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-                                        {{ strtoupper(substr($thread->user->name, 0, 1)) }}
+                                        {{ strtoupper(substr($thread->user->prenom, 0, 1)) }}
                                     </div>
-                                    <span class="text-sm">{{ $thread->user->name }}</span>
+                                    <span class="text-sm">{{ $thread->user->prenom }}</span>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <span class="flex items-center gap-1">
