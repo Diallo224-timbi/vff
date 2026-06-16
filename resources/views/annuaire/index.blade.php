@@ -72,29 +72,6 @@
                 <h1 class="text-3xl font-bold text-[#255156] mb-2"><i class="bx bx-building"></i>  Annuaire des structures</h1>
                 <small class="text-gray-600"><i class="bx bx-info-circle"></i>Gestion centralisée des structures et organismes</small>
             </div>
-            
-            <div class="flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-lg">
-                <div class="flex items-center gap-1">
-                    <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xs">
-                        <i class="fas fa-eye"></i>
-                    </span>
-                    <span class="text-xs text-gray-600">Voir détails</span>
-                </div>
-                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
-                    <div class="flex items-center gap-1">
-                        <span class="w-6 h-6 bg-yellow-200 text-yellow-600 rounded-lg flex items-center justify-center text-xs">
-                            <i class="fas fa-edit"></i>
-                        </span>
-                        <span class="text-xs text-gray-600">Modifier</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <span class="w-6 h-6 bg-red-600 text-white rounded-lg flex items-center justify-center text-xs">
-                            <i class="fas fa-trash"></i>
-                        </span>
-                        <span class="text-xs text-gray-600">Supprimer</span>
-                    </div>
-                @endif
-            </div>
         </div>       
         <!-- Barre d'actions -->
         <div class="flex flex-wrap items-center justify-between mb-2 p-2 bg-white rounded-xl shadow-lg">
@@ -141,18 +118,16 @@
         <div class="bg-white rounded-xl shadow-lg p-2">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
                 <div class="lg:col-span-2">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Recherche globale</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2"><i class="fas fa-search mr-2"></i>Recherche globale</label>
                     <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="text" id="searchInput" 
                                placeholder="Rechercher par nom, ville, catégorie..."
                                class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
                     </div>
                 </div>   
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Organisme</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2"><i class="fas fa-building mr-2"></i>Organisme</label>
                     <div class="relative">
-                        <i class="fas fa-building absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <select id="filterOrganisme" class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
                             <option value="">Tous les organismes</option>
                             @php
@@ -165,9 +140,8 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Ville</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2"><i class="fas fa-city mr-2"></i>Ville</label>
                     <div class="relative">
-                        <i class="fas fa-city absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <select id="filterCity" class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#8bbdc3]">
                             <option value="">Toutes les villes</option>
                             @php

@@ -241,7 +241,7 @@
                                         {{ strtoupper(substr($thread->user->prenom, 0, 1)) }}
                                     </div>
                                     <a href="{{ route('annuaire.membre') }}">
-                                        <span class="text-sm">{{ $thread->user->prenom }} {{ $thread->user->structure->organisme->nom_organisme ??' ' }} {{ $thread->user->structure->organisme->ville  ?? ' ' }} ({{ $thread->user->structure->organisme->code_postal  ?? ' ' }})</span>
+                                        <span class="text-sm">{{ $thread->user->prenom }} <small>{{ $thread->user->structure->organisme->nom_organisme ??' ' }} {{ $thread->user->structure->organisme->ville  ?? ' ' }} ({{ $thread->user->structure->organisme->code_postal  ?? ' ' }})</small></span>
                                     </a>
                                 </div>
                                 <div class="flex items-center gap-4">

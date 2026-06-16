@@ -509,10 +509,10 @@
 
       <div class="sidebar-bottom">
         <div class="user-avatar">
-          {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+          {{ strtoupper(substr(Auth::user()->prenom, 0, 1)) }}
         </div>
         <div class="user-info">
-          <div class="user-name">{{ Auth::user()->name }}</div>
+          <div class="user-name">{{ Auth::user()->prenom }} {{ Auth::user()->name ?? '' }}</div>
           @if(Auth::user()->role === 'admin')
             <div class="text-xs text-gray-200">Administrateur</div>
           @elseif(Auth::user()->role === 'moderateur_classique')

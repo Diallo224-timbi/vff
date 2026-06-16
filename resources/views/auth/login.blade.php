@@ -23,7 +23,7 @@
 
             @if ($errors->any())
                 <div class="mb-4 sm:mb-5 bg-[#E3FCFF] border-l-4 border-[#41797F] text-[#173235] px-3 sm:px-4 py-2 sm:py-3 rounded-r-lg text-xs sm:text-sm flex items-start">
-                    <span class="mr-2 text-[#41797F]">⚠️</span>
+                    <span class="mr-2 text-[#41797F]"><i class='bx bx-error'></i></span>
                     <span>{{ $errors->first() }}</span>
                 </div>
             @endif

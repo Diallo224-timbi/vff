@@ -12,7 +12,7 @@
 {{-- HEADER --}}
 <header>
     <div class="header-inner">
-        <a href="{{ url('/') }}" class="header-brand">
+        <a class="header-brand">
             <img src="{{ asset('img/logo_prefet.png') }}" 
                  alt="Préfet des Alpes-Maritimes"
                  onerror="this.style.display='none'">
@@ -241,7 +241,7 @@
         overflow: hidden;
     }
     .hero::before {
-        content: '👩‍⚖️';
+        content: '';
         position: absolute;
         bottom: -50px;
         right: -50px;
@@ -250,7 +250,7 @@
         pointer-events: none;
     }
     .hero::after {
-        content: '⚖️';
+        content: '';
         position: absolute;
         top: -30px;
         left: -30px;

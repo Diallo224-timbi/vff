@@ -135,7 +135,7 @@ body {
 
 .btn-login:hover::after {
   width: 300px;
-  height: 300px;
+  height: 100px;
 }
 
 .btn-login:hover {
