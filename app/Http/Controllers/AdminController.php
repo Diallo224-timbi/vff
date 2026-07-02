@@ -39,8 +39,6 @@ class AdminController extends Controller
                 $q->where('id_organisme', $authUser->structure->id_organisme);
             });
         }
-    
-
         $users = $query->get();
         $structures = Structures::orderBy('id_organisme')->get();
         $organismes = Organisme::orderBy('nom_organisme')->get();

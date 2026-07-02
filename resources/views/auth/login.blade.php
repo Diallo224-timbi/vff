@@ -10,10 +10,11 @@
         
         <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-[#255156]/20 my-4 lg:my-0">
             
-            <!-- Logo / Titre charté -->
+            <!-- Titre charté -->
             <div class="text-center mb-4 sm:mb-6">
                 <span class="text-xl sm:text-2xl font-bold tracking-tight text-[#173235] block">PLATEFORME</span>
                 <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block">MULTI-ACTEURS</span>
+                <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block">VFF 06</span>
                 <div class="w-12 h-0.5 bg-[#255156] mx-auto mt-2 sm:mt-3"></div>
             </div>
 
@@ -30,7 +31,6 @@
 
             <form action="{{ route('login.submit') }}" method="POST" class="space-y-4 sm:space-y-5">
                 @csrf
-
                 <!-- Email -->
                 <div>
                     <label class="block text-xs font-semibold text-[#173235] uppercase tracking-wider mb-1">

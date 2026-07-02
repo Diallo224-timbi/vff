@@ -24,14 +24,12 @@
                 <i class="fas fa-comments me-2"></i>
                 <h6 class="mb-0 fw-bold">Forum professionnel</h6>
             </div>
-
             <div class="bg-white text-dark rounded p-2 small">
                 <i class="fas fa-info-circle text-primary me-1"></i>
                 <strong>Rappel :</strong>
                 Ce forum est un espace d'échange entre professionnels. Merci de privilégier des discussions respectueuses et conformes à la charte.<br> Aucune information permettant d'identifier une victime ne doit être publiée.
             </div>
         </div>
-
          <!-- Actions -->
         <div class="d-flex flex-wrap gap-2 align-items-center">
             <input
@@ -53,7 +51,6 @@
                 Catégories
             </a>
         </div>
-
     </div>
     <!-- Résultat de recherche info -->
     <div id="searchResultInfo" class="bg-blue-50 border-l-4 border-[#255156] p-4 rounded-r-lg hidden">
@@ -141,7 +138,6 @@
                     <i class="fas fa-search text-3xl mb-2 text-gray-300"></i>
                     <p class="text-sm">Aucune catégorie trouvée</p>
                 </div>
-                
                 <div class="p-3 bg-gray-50 border-t border-gray-200">
                     <div class="flex justify-between text-xs text-gray-600">
                         <a href="{{ route('categories.index') }}" class="hover:underline">Voir toutes les catégories</a>
@@ -159,7 +155,6 @@
                         <span id="visibleCount" class="text-sm font-normal text-gray-500"></span>
                         <span id="selectedCategoryBadge" class="hidden ml-2 text-xs bg-[#255156] text-white px-2 py-1 rounded-full"></span>
                     </h2>
-
                     <div class="flex gap-2 text-sm">
                         <button class="filter-btn px-3 py-1 rounded-xl bg-[#255156] text-white font-medium transition" data-sort="recent">
                             <i class="fas fa-clock"></i> Récents
@@ -269,7 +264,6 @@
                         </div>
                     @endforelse
                 </div>
-
                 @if($threads->hasPages())
                     <div class="mt-4">
                         {{ $threads->links('vendor.pagination.tailwind') }}
@@ -279,7 +273,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal création -->
 <div class="modal fade" id="newThreadModal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -312,7 +305,6 @@
     </div>
   </div>
 </div>
-
 <!-- Formulaire de modification caché -->
 <form id="editThreadForm" method="POST" style="display: none;">
     @csrf
@@ -321,13 +313,11 @@
     <input type="hidden" name="body" id="edit_thread_body">
     <input type="hidden" name="category_id" id="edit_thread_category_id">
 </form>
-
 <!-- Formulaire de suppression caché -->
 <form id="deleteThreadForm" method="POST" style="display: none;">
     @csrf
     @method('DELETE')
 </form>
-
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -458,25 +448,21 @@ function resetAllFilters() {
         }
     }
 }
-
 // ==================== MODIFICATION D'UN SUJET ====================
 document.querySelectorAll('.edit-thread-btn').forEach(button => {
     button.addEventListener('click', function(e) {
-        e.preventDefault();
-        
+        e.preventDefault(); 
         const threadId = this.dataset.threadId;
         const currentTitle = this.dataset.threadTitle;
         const currentBody = this.dataset.threadBody;
         const currentCategoryId = this.dataset.categoryId;
-        
         // Récupérer la liste des catégories pour le select
         let categoriesOptions = '';
         @foreach($categories as $category)
             categoriesOptions += `<option value="{{ $category->id }}" ${currentCategoryId == {{ $category->id }} ? 'selected' : ''}>{{ addslashes($category->name) }}</option>`;
         @endforeach
-        
         Swal.fire({
-            title: '✏️ Modifier le sujet',
+            title: '<i class="fas fa-edit mr-2"></i>Modifier le sujet',
             html: `
                 <div class="text-left">
                     <div class="mb-4">
@@ -579,7 +565,7 @@ document.querySelectorAll('.delete-thread-btn').forEach(button => {
         const threadTitle = this.dataset.threadTitle;
         
         Swal.fire({
-            title: '⚠️ Supprimer le sujet',
+            title: '<i class="fas fa-trash mr-2"></i>Supprimer le sujet',
             html: `
                 <div class="text-left">
                     <p class="mb-3 text-gray-700">Vous êtes sur le point de supprimer :</p>
@@ -647,7 +633,6 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
-
 // Recherche dynamique
 let searchTimeout;
 var searchInput = document.getElementById('search');
@@ -660,7 +645,6 @@ if (searchInput) {
         }, 300);
     });
 }
-
 // Recherche catégories
 var categorySearchInput = document.getElementById('categorySearch');
 var clearCategoryBtn = document.getElementById('clearCategorySearch');
@@ -685,7 +669,6 @@ function filterCategories() {
             category.style.display = 'none';
         }
     });
-    
     var noResultDiv = document.getElementById('noCategoryResult');
     if (visibleCount === 0) {
         noResultDiv.classList.remove('hidden');
@@ -699,18 +682,15 @@ function filterCategories() {
         clearCategoryBtn.classList.add('hidden');
     }
 }
-
 if (categorySearchInput) {
     categorySearchInput.addEventListener('input', filterCategories);
 }
-
 if (clearCategoryBtn) {
     clearCategoryBtn.addEventListener('click', function() {
         categorySearchInput.value = '';
         filterCategories();
     });
 }
-
 // Filtre par catégorie
 document.querySelectorAll('.category-item').forEach(function(categoryItem) {
     categoryItem.addEventListener('click', function() {

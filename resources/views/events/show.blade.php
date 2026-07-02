@@ -51,6 +51,11 @@ if (!function_exists('generateGoogleCalendarUrl')) {
     50% { transform: scale(1.05); }
 }
 
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
 .animate-fadeIn {
     animation: fadeIn 0.5s ease-out;
 }
@@ -223,6 +228,48 @@ if (!function_exists('generateGoogleCalendarUrl')) {
     color: white;
 }
 
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 1.5rem;
+    max-width: 650px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalFadeIn 0.3s ease;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #255156;
+    border-radius: 10px;
+}
+
 /* Dropdown élégant */
 .calendar-dropdown {
     position: absolute;
@@ -290,6 +337,30 @@ if (!function_exists('generateGoogleCalendarUrl')) {
     box-shadow: 0 5px 15px -5px rgba(37, 81, 86, 0.1);
 }
 
+/* Form styles */
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(37, 81, 86, 0.1);
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .info-item {
@@ -310,6 +381,11 @@ if (!function_exists('generateGoogleCalendarUrl')) {
     .type-badge {
         padding: 0.4rem 1rem;
         font-size: 0.7rem;
+    }
+
+    .modal-content {
+        margin: 0.5rem;
+        max-height: 95vh;
     }
 }
 </style>
@@ -356,6 +432,7 @@ if (!function_exists('generateGoogleCalendarUrl')) {
             <span>Retour à l'agenda</span>
         </a>
     </div>
+    
     <!-- Contenu principal -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         <!-- Colonne principale - Description -->
@@ -371,6 +448,7 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                 </div>
                 @endif
             </div>
+            
             <!-- Participants (si admin) -->
             @if((auth()->user()->role === 'admin' || auth()->user()->id == $event->cree_par) && $event->inscriptions->count() > 0)
             <div class="modern-card p-6">
@@ -428,6 +506,7 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                             </div>
                         </div>
                     </div>
+                    
                     <!-- Lieu -->
                     @if($event->lieu)
                     <div class="info-item">
@@ -444,6 +523,7 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                         </div>
                     </div>
                     @endif
+                    
                     <!-- Organisateur -->
                     @if($event->organisateur)
                     <div class="info-item">
@@ -456,9 +536,28 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                         </div>
                     </div>
                     @endif
+                    
                     <!-- Places -->
-                    <!--
-                        code mis à coté dans showw.blade.php pour éviter les conflits de merge -->
+                    @if($event->nombre_places)
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-500">Places disponibles</div>
+                            <div class="font-semibold text-gray-800">
+                                <span class="text-green-600">{{ $event->nombre_places - $event->nombre_inscrits }}</span>
+                                <span class="text-gray-400 text-sm font-normal">/ {{ $event->nombre_places }}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div class="bg-[#255156] h-2 rounded-full transition-all duration-500" 
+                                     style="width: {{ ($event->nombre_inscrits / $event->nombre_places) * 100 }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                
                 <!-- Actions -->
                 <div class="mt-8 space-y-3">
                     <!-- Bouton Ajouter à l'agenda -->
@@ -481,12 +580,14 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                         </div>
                     </div>
                     @endif
+                    
+                    <!-- Boutons Modifier et Supprimer -->
                     @if(auth()->user()->role === 'admin' || auth()->user()->id == $event->cree_par)
                         <div class="flex gap-2 pt-4 border-t border-gray-100">
-                            <a href="{{ route('events.edit', $event) }}" class="flex-1 action-button action-button-outline">
+                            <button onclick="openEditModal({{ $event->id }})" class="flex-1 action-button action-button-outline">
                                 <i class="fas fa-edit"></i>
                                 Modifier
-                            </a>
+                            </button>
                             <form method="POST" action="{{ route('events.destroy', $event) }}" class="flex-1">
                                 @csrf
                                 @method('DELETE')
@@ -498,6 +599,7 @@ if (!function_exists('generateGoogleCalendarUrl')) {
                         </div>
                     @endif
                 </div>
+                
                 <!-- Info création -->
                 <div class="mt-6 pt-4 border-t border-gray-100 text-xs text-gray-400 flex items-center gap-2">
                     <i class="fas fa-user-circle"></i>
@@ -510,8 +612,119 @@ if (!function_exists('generateGoogleCalendarUrl')) {
         </div>
     </div>
 </div>
-<!-- Script pour le dropdown -->
+
+<!-- ============================================ -->
+<!-- MODAL D'ÉDITION -->
+<!-- ============================================ -->
+<div id="editModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="p-6 md:p-8">
+            <!-- En-tête de la modale -->
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                    <i class="fas fa-edit text-[#255156]"></i>
+                    Modifier l'événement
+                </h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Formulaire -->
+            <form id="editForm" method="POST" action="{{ route('events.update', $event) }}">
+                @csrf
+                @method('PUT')
+                
+                <div class="space-y-5">
+                    <!-- Titre -->
+                    <div>
+                        <label class="form-label" for="edit_titre">Titre *</label>
+                        <input type="text" name="titre" id="edit_titre" 
+                               value="{{ $event->titre }}"
+                               required class="form-input">
+                    </div>
+                    
+                    <!-- Description -->
+                    <div>
+                        <label class="form-label" for="edit_description">Description</label>
+                        <textarea name="description" id="edit_description" rows="4" 
+                                  class="form-input resize-y">{{ $event->description }}</textarea>
+                    </div>
+                    
+                    <!-- Dates -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label" for="edit_date_debut">Date de début *</label>
+                            <input type="datetime-local" name="date_debut" id="edit_date_debut" 
+                                   value="{{ $event->date_debut->format('Y-m-d\TH:i') }}"
+                                   required class="form-input">
+                        </div>
+                        <div>
+                            <label class="form-label" for="edit_date_fin">Date de fin *</label>
+                            <input type="datetime-local" name="date_fin" id="edit_date_fin" 
+                                   value="{{ $event->date_fin->format('Y-m-d\TH:i') }}"
+                                   required class="form-input">
+                        </div>
+                    </div>
+                    
+                    <!-- Type -->
+                    <div>
+                        <label class="form-label" for="edit_type">Type *</label>
+                        <select name="type" id="edit_type" required class="form-input">
+                            <option value="réunion" {{ $event->type == 'réunion' ? 'selected' : '' }}>Réunion</option>
+                            <option value="formation" {{ $event->type == 'formation' ? 'selected' : '' }}>Formation</option>
+                            <option value="atelier" {{ $event->type == 'atelier' ? 'selected' : '' }}>Atelier</option>
+                            <option value="autre" {{ $event->type == 'autre' ? 'selected' : '' }}>Autre</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Lieu -->
+                    <div>
+                        <label class="form-label" for="edit_lieu">Lieu</label>
+                        <input type="text" name="lieu" id="edit_lieu" 
+                               value="{{ $event->lieu }}"
+                               class="form-input">
+                    </div>
+                    
+                    <!-- Organisateur -->
+                    <div>
+                        <label class="form-label" for="edit_organisateur">Organisateur</label>
+                        <input type="text" name="organisateur" id="edit_organisateur" 
+                               value="{{ $event->organisateur }}"
+                               class="form-input">
+                    </div>
+                    
+                    <!-- Nombre de places -->
+                    <div>
+                        <label class="form-label" for="edit_nombre_places">Nombre de places</label>
+                        <input type="number" name="nombre_places" id="edit_nombre_places" 
+                               value="{{ $event->nombre_places }}"
+                               min="1" class="form-input">
+                    </div>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="closeEditModal()" 
+                            class="px-6 py-3 text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all font-medium">
+                        Annuler
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1a3a3f] transition-all font-medium flex items-center justify-center gap-2">
+                        <i class="fas fa-save"></i>
+                        Mettre à jour
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================ -->
 <script>
+    // === GESTION DU DROPDOWN CALENDRIER ===
     function toggleCalendarDropdown() {
         const dropdown = document.getElementById('calendarDropdown');
         dropdown.classList.toggle('hidden');
@@ -526,18 +739,46 @@ if (!function_exists('generateGoogleCalendarUrl')) {
         }
     }
 
-    // Animation smooth pour les boutons
+    // === GESTION DE LA MODALE D'ÉDITION ===
+    function openEditModal(eventId) {
+        const modal = document.getElementById('editModal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+        const modal = document.getElementById('editModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Fermer la modale en cliquant en dehors
+    document.getElementById('editModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+
+    // Fermer avec la touche Echap
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeEditModal();
+        }
+    });
+
+    // === EFFET RIPPLE SUR LES BOUTONS ===
     document.querySelectorAll('.action-button').forEach(button => {
         button.addEventListener('click', function(e) {
             let ripple = document.createElement('span');
             ripple.classList.add('ripple');
             this.appendChild(ripple);
             
-            let x = e.clientX - e.target.offsetLeft;
-            let y = e.clientY - e.target.offsetTop;
+            let rect = this.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
             
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
             
             setTimeout(() => {
                 ripple.remove();
@@ -546,79 +787,85 @@ if (!function_exists('generateGoogleCalendarUrl')) {
     });
 </script>
 
-    <style>
-    /* Style pour l'effet ripple */
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        transform: scale(0);
-        animation: ripple 0.6s linear;
-        pointer-events: none;
-    }
+<style>
+/* Style pour l'effet ripple */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
 
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
     }
+}
 
-    /* Custom scrollbar */
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-    }
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #255156;
-        border-radius: 10px;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #255156;
+    border-radius: 10px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #3a7077;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3a7077;
+}
 
-    /* Améliorations responsive */
-    @media (max-width: 768px) {
-        .modern-card {
-            border-radius: 1rem;
-            padding: 1.25rem;
-        }
-        
-        .info-item {
-            padding: 0.75rem;
-        }
-        
-        .action-button {
-            padding: 0.75rem 1rem;
-        }
+/* Améliorations responsive */
+@media (max-width: 768px) {
+    .modern-card {
+        border-radius: 1rem;
+        padding: 1.25rem;
     }
+    
+    .info-item {
+        padding: 0.75rem;
+    }
+    
+    .action-button {
+        padding: 0.75rem 1rem;
+    }
+}
 
-    /* Loading animation */
-    .loading {
-        position: relative;
-        overflow: hidden;
-    }
+/* Loading animation */
+.loading {
+    position: relative;
+    overflow: hidden;
+}
 
-    .loading::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        animation: loading 1.5s infinite;
-    }
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: loading 1.5s infinite;
+}
 
-    @keyframes loading {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
+@keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Animation de la modale */
+.modal-overlay.active .modal-content {
+    animation: modalFadeIn 0.3s ease;
+}
 </style>
+
 @endsection

@@ -6,7 +6,6 @@
 <a href="{{ route('forum.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold shadow-md text-white bg-[#255156] hover:bg-[#1e7c86] transition-all duration-300">
     <i class="fas fa-arrow-left"></i> Retour au forum
 </a>
-
 <div class="max-w-10xl mx-auto px-4 py-6">
     <!-- Sujet -->
     <div class="bg-white border border-gray-200 rounded-2xl shadow p-6 mb-6 animate-fade-in">
@@ -24,14 +23,11 @@
         </p>
         <p class="text-gray-700 mt-4">{{ $thread->body }}</p>
     </div>  
-    
     <!-- Commentaires -->
     <h2 class="text-xl font-semibold mb-4">Commentaires</h2>
-
     <div class="space-y-4 mb-6">
         @forelse($thread->comments as $comment)
-            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center animate-fade-in transition hover:shadow-md comment-item" data-comment-id="{{ $comment->id }}">
-                
+            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center animate-fade-in transition hover:shadow-md comment-item" data-comment-id="{{ $comment->id }}">    
                 <!-- Auteur et corps -->
                 <div class="flex-1">
                     <div class="flex items-center justify-between mb-2">
@@ -47,9 +43,9 @@
                               data-user-fonction="{{ $comment->user->fonction ?? 'Non renseigné' }}">
                             {{ $comment->user->prenom }} {{ $comment->user->nom ?? '' }}
                             <small style="color: rgb(11, 131, 131)">
-                                <i class="">{{ $comment->user->structure->organisme->nom_organisme ?? '' }} 
-                                {{ $comment->user->structure->organisme->ville ?? '' }} 
-                                ({{ $comment->user->structure->organisme->code_postal ?? '' }})
+                                <i class="fas fa-building"></i> {{ $comment->user->structure->organisme->nom_organisme ?? '' }} 
+                                    {{ $comment->user->structure->organisme->ville ?? '' }} 
+                                    ({{$comment->user->structure->organisme->code_postal ?? '' }})
                                 </i>
                             </small>
                         </span>
@@ -76,7 +72,6 @@
                         </form>
                     </div>
                 </div>
-
                 <!-- Actions et réactions -->
                 <div class="flex items-center gap-4 mt-2 sm:mt-0">
                     <!-- Like / Unlike -->
@@ -89,7 +84,6 @@
                             <i class="fas fa-thumbs-down"></i> <span class="dislike-count-{{ $comment->id }}">{{ $comment->dislikes() }}</span>    
                         </button>
                     </form>
-
                     <!-- Modifier / Supprimer si auteur ou admin -->
                     @if(auth()->id() === $comment->user_id || (auth()->user()->role ?? '') === 'admin')
                         <div class="flex gap-2">
@@ -111,7 +105,6 @@
             <p class="text-gray-500">Aucun commentaire pour le moment.</p>
         @endforelse
     </div>
-    
     <!-- Formulaire nouveau commentaire -->
     <div class="bg-white border border-gray-200 rounded-2xl shadow p-6 animate-fade-in">
         <h3 class="font-semibold text-gray-900 mb-4">Ajouter un commentaire</h3>
@@ -122,12 +115,10 @@
         </form>
     </div>
 </div>
-
 <!-- ============ MODAL UTILISATEUR COMPACT ============ -->
 <div id="userModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 opacity-0 pointer-events-none transition-all duration-400 ease-out">
     <!-- Overlay -->
     <div id="modalOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-400"></div>
-    
     <!-- Modal compact -->
     <div id="modalContent" class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl transform scale-95 translate-y-6 transition-all duration-400 ease-out overflow-hidden">
         <!-- En-tête avec dégradé -->
@@ -135,7 +126,6 @@
             <button id="closeModal" class="absolute top-2 right-3 text-white/60 hover:text-white transition-colors text-lg">
                 <i class="fas fa-times"></i>
             </button>
-            
             <!-- Nom + Prénom (sans avatar) -->
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-2xl text-white shadow-lg flex-shrink-0">
@@ -148,8 +138,7 @@
                     </p>
                 </div>
             </div>
-        </div>
-        
+        </div> 
         <!-- Corps compact -->
         <div class="p-4 space-y-2">
             <!-- Grille 2 colonnes pour les infos -->
@@ -164,7 +153,6 @@
                         <p id="modalStructure" class="text-xs text-gray-700 font-medium truncate">Non renseignée</p>
                     </div>
                 </div>
-                
                 <!-- Organisme -->
                 <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div class="w-7 h-7 rounded-full bg-[#C9A227]/10 flex items-center justify-center text-[#C9A227] flex-shrink-0 text-xs">
@@ -175,7 +163,6 @@
                         <p id="modalOrganisme" class="text-xs text-gray-700 font-medium truncate">Non renseigné</p>
                     </div>
                 </div>
-                
                 <!-- Fonction -->
                 <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div class="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0 text-xs">
@@ -186,7 +173,6 @@
                         <p id="modalFonction" class="text-xs text-gray-700 font-medium truncate">Non renseignée</p>
                     </div>
                 </div>
-                
                 <!-- Téléphone -->
                 <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <div class="w-7 h-7 rounded-full bg-[#C9A227]/10 flex items-center justify-center text-[#C9A227] flex-shrink-0 text-xs">
@@ -198,7 +184,6 @@
                     </div>
                 </div>
             </div>
-            
             <!-- Email sur toute la largeur -->
             <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 text-xs">
@@ -209,7 +194,6 @@
                     <p id="modalEmail" class="text-xs text-gray-700 font-medium truncate">Non renseigné</p>
                 </div>
             </div>
-            
             <!-- Bouton de contact compact -->
             <button id="modalContactBtn" class="w-full mt-1 py-2 bg-gradient-to-r from-[#255156] to-[#008C95] text-white font-semibold rounded-lg hover:shadow-lg hover:scale-[1.02] transition-all duration-300 text-sm">
                 <i class="fas fa-paper-plane mr-2"></i> Contacter
@@ -217,10 +201,8 @@
         </div>
     </div>
 </div>
-
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
 // ==================== MODAL UTILISATEUR COMPACT ====================
 document.addEventListener('DOMContentLoaded', function() {
@@ -228,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const overlay = document.getElementById('modalOverlay');
     const content = document.getElementById('modalContent');
     const closeBtn = document.getElementById('closeModal');
-    
     // Éléments du modal
     const modalName = document.getElementById('modalName');
     const modalRole = document.getElementById('modalRole');
@@ -238,12 +219,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalEmail = document.getElementById('modalEmail');
     const modalTelephone = document.getElementById('modalTelephone');
     const modalContactBtn = document.getElementById('modalContactBtn');
-    
     // Ouvrir le modal
     document.querySelectorAll('.user-info-trigger').forEach(trigger => {
         trigger.addEventListener('click', function(e) {
             e.stopPropagation();
-            
             // Récupérer les données
             const userData = {
                 prenom: this.dataset.userPrenom || 'Utilisateur',
@@ -254,8 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 organisme: this.dataset.userOrganisme || 'Non renseigné',
                 telephone: this.dataset.userTelephone || 'Non renseigné',
                 fonction: this.dataset.userFonction || 'Non renseigné'
-            };
-            
+            }; 
             // Remplir le modal
             const fullName = userData.prenom + (userData.nom ? ' ' + userData.nom : '');
             modalName.textContent = fullName;
@@ -265,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modalFonction.textContent = userData.fonction;
             modalEmail.textContent = userData.email;
             modalTelephone.textContent = userData.telephone;
-            
             // Afficher le modal
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modal.classList.add('opacity-100', 'pointer-events-auto');
@@ -274,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'hidden';
         });
     });
-    
     // Fermer le modal
     function closeModal() {
         modal.classList.remove('opacity-100', 'pointer-events-auto');
@@ -283,15 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
         content.classList.add('scale-95', 'translate-y-6');
         document.body.style.overflow = '';
     }
-    
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
-    
     // Fermer avec Echap
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
-    
     // Bouton de contact
     modalContactBtn.addEventListener('click', function() {
         const email = modalEmail.textContent;
@@ -307,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
 // ==================== MODIFICATION D'UN COMMENTAIRE ====================
 document.querySelectorAll('.edit-comment-btn').forEach(button => {
     button.addEventListener('click', function() {
@@ -322,12 +294,10 @@ document.querySelectorAll('.edit-comment-btn').forEach(button => {
         }
     });
 });
-
 // ==================== ANNULATION DE LA MODIFICATION ====================
 document.querySelectorAll('.cancel-edit-btn').forEach(button => {
     button.addEventListener('click', function() {
         const commentId = this.dataset.commentId;
-        
         const displayDiv = document.querySelector(`.comment-display-${commentId}`);
         const editForm = document.querySelector(`.comment-edit-form-${commentId}`);
         
@@ -337,18 +307,15 @@ document.querySelectorAll('.cancel-edit-btn').forEach(button => {
         }
     });
 });
-
 // ==================== SUPPRESSION D'UN COMMENTAIRE ====================
 document.querySelectorAll('.delete-comment-btn').forEach(button => {
     button.addEventListener('click', function(e) {
         e.preventDefault();
-        
         const form = this.closest('.delete-comment-form');
         const commentDiv = this.closest('.comment-item');
         const commentText = commentDiv.querySelector(`.comment-text-${form.dataset.commentId}`)?.innerText || 'ce commentaire';
-        
         Swal.fire({
-            title: '⚠️ Supprimer le commentaire',
+            title: '<i class="fas fa-trash mr-2"></i>Supprimer le commentaire',
             html: `
                 <div class="text-left">
                     <p class="mb-3 text-gray-700">Vous êtes sur le point de supprimer :</p>
@@ -396,12 +363,10 @@ document.querySelectorAll('.delete-comment-btn').forEach(button => {
         });
     });
 });
-
 // ==================== SOUMISSION DU FORMULAIRE D'ÉDITION ====================
 document.querySelectorAll('.edit-comment-form').forEach(form => {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
         const textarea = this.querySelector('textarea[name="body"]');
         const newBody = textarea.value.trim();
         
@@ -413,8 +378,7 @@ document.querySelectorAll('.edit-comment-form').forEach(form => {
                 confirmButtonColor: '#255156'
             });
             return;
-        }
-        
+        } 
         if (newBody.length < 2) {
             Swal.fire({
                 title: 'Erreur',

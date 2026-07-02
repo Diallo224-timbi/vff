@@ -33,7 +33,8 @@ class User extends Authenticatable
         'id_structure',
         'chart',
         'last_login_at',
-        'notification'
+        'notification',
+        'niveau'
         
     ];
 

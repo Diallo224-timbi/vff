@@ -13,7 +13,7 @@ use App\Mail\EmailVerificationMail;
 use Illuminate\Validation\ValidationException;
 use App\Models\Structures;
 use App\Models\ActivityLog;
-
+use App\Mail\AdminNewUserEmail;
 
 class AuthController extends Controller
 {
@@ -51,45 +51,36 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-
         //  Récupérer l'utilisateur par email
         $user = User::where('email', $request->email)->first();
-
         //  Vérifier si l'utilisateur existe
         if (!$user) {
             return back()
                 ->withErrors(['email' => 'Identifiants invalides'])
                 ->withInput();
         }
-
         // Vérifier si le compte est validé
         if (!$user->isValidated()) {
             return back()
                 ->withErrors(['email' => 'Votre compte n’est pas encore validé.'])
                 ->withInput();
         }
-
         //  Tentative de connexion
         if (Auth::attempt($request->only('email', 'password'))) {
             // Utilisateur connecté avec succès
             $user = Auth::user(); // IMPORTANT : récupérer après Auth::attempt
-
             // Mettre à jour la date de dernière connexion
             $user->update(['last_login_at' => now()]);
-
             // Créer le log de connexion
             ActivityLog::log('Connexion', 'Utilisateur connecté: ' . $user->name, $user->id);
-
                 return redirect()->route('dashboardUser');  
         }
-
         //  Mot de passe incorrect
         return back()
             ->withErrors(['email' => 'Identifiants invalides'])
             ->withInput();
     }
     // fonction pour gérer la soumission du formulaire d'inscription
-
    public function showRegistrationForm(Request $request)
     {
         $structures = Structures::all()->sortBy('id_organisme');
@@ -112,12 +103,12 @@ class AuthController extends Controller
                 'code_postal' => 'required|string|max:10',
                 'id_structure' => 'nullable|exists:structure,id',
                 'chart' => 'required|boolean',
+                'niveau' => 'required|integer|min:0',
             ],[
                 'confirmEmail.same' => 'L\'adresse e-mail de confirmation ne correspond pas.',
                 'email.unique' => 'Cette adresse e-mail est déjà utilisée.',
                 'chart' => 'Vous devez accepter la charte pour vous inscrire.',
             ]);
-
             $user = User::create([
                 'name' => $request->name,
                 'prenom' => $request->prenom,
@@ -130,16 +121,37 @@ class AuthController extends Controller
                 'code_postal' => $request->code_postal,
                 'id_structure' => $request->id_structure,
                 'chart' => $request->chart,
+                'niveau' => $request->niveau,
             ]);
                 // Créer le log de l'inscription
-
             ActivityLog::logUserCreation($user);
             // Nettoyer les sessions liées à la vérification email
             session()->forget(['email_verification_code', 'email_to_verify', 'email_sent', 'code_verified']);   
+            // Envoyer l'email de bienvenue
             Mail::to($user->email)->send(new welcomEmail($user));
-
-            return back()->with('success', 'Inscription réussie. Vérifiez votre email pour confirmer votre compte.');
-
+           // Récupérer l'administrateur
+            $admin = User::where('role', 'admin')->first();
+            // Vérifier le niveau de l'utilisateur inscrit
+            if ($admin && $request->niveau == 1) {
+                Mail::to($admin->email)->send(new AdminNewUserEmail($user));
+            }
+          // Récupérer le responsable de l'organisme
+            $resp_organisme = User::where('id_structure', $request->id_structure)
+                                ->where('role', 'moderateur')
+                                ->first();
+            // Récupérer le responsable de la structure
+            $resp_structure = User::where('id_structure', $request->id_structure)
+                                ->where('role', 'moderateur_classique')
+                                ->first();
+            // Si niveau = 2 → informer le responsable de l'organisme
+            if ($resp_organisme && $request->niveau == 2) {
+                Mail::to($resp_organisme->email)->send(new AdminNewUserEmail($user));
+            }
+            // Si niveau = 0 → informer le responsable de la structure
+            if ($resp_structure && $request->niveau == 0) {
+                Mail::to($resp_structure->email)->send(new AdminNewUserEmail($user));
+            }
+            return back()->with('success', 'Inscription réussie. Vérifiez votre email.');
         } catch (ValidationException $e) {
             // Redirige avec les erreurs de validation
             return back()->withErrors($e->errors());
@@ -155,19 +167,15 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('login');
     }
-
     // fonction pour envoyer le code de vérification par email
     public function sendVerificationCode(Request $request)
     {
         $request->validate([
             'email' => 'required|email|unique:users,email',
         ]);
-
         $code = rand(100000, 999999);
         session(['email_verification_code' => $code, 'email_to_verify' => $request->email, 'email_sent' => true]);
-
         Mail::to($request->email)->send(new EmailVerificationMail($code));
-
         return redirect()->back()->with('success', 'Code envoyé par email !');
     } 
     // fonction pour vérifier le code de vérification
@@ -176,9 +184,7 @@ class AuthController extends Controller
         $request->validate([
             'code' => 'required|numeric',
         ]);
-
         $codeSession = session('email_verification_code');
-
         if ($request->code == $codeSession) {
             // Code correct → étape 3
             session(['code_verified' => true]);
@@ -188,6 +194,4 @@ class AuthController extends Controller
             return redirect()->back()->with('code_error', 'Code incorrect ');
         }
     }
-
-
 }

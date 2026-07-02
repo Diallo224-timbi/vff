@@ -8,16 +8,20 @@
     <!-- Carte légèrement plus grande -->
     <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row border border-[#59BEC9]/20 mt-3 md:mt-6">
 
-        <!-- Section image - taille augmentée -->
+        <!-- Section image - -->
         <div class="md:w-1/5 bg-gradient-to-br from-[#255156] to-[#173235] relative hidden md:flex flex-col items-center justify-start p-4 overflow-hidden">
             <div class="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-[#59BEC9] opacity-20"></div>
             <div class="relative z-10 text-center text-white w-full">
                 <span class="text-lg font-bold tracking-tight block">PLATEFORME</span>
-                <span class="text-sm font-light tracking-wider block">MULTI-ACTEURS</span>
+                <span class="text-sm font-light tracking-wider block">MULTI-ACTEURS VFF 06</span>
                 <div class="w-12 h-12 mx-auto my-3 rounded-full bg-white/20 flex items-center justify-center">
-                    <span class="text-2xl">🤝</span>
+                    <span class="text-2xl"><i class="bx bx-group"></i></span>
                 </div>
-                <p class="text-xs font-light italic leading-tight">"Construisons<br>ensemble"</p>
+                    <div class="flex items-center justify-center w-28 h-28 rounded-full  border border-[#ffffff]">
+                    <p class="text-[11px] font-semibold italic text-[#] text-center leading-tight">
+                        Rejoignez une<br>dynamique collaborative
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -34,29 +38,33 @@
                 <h2 class="text-lg font-bold text-[#173235]">
                     @if(session('code_verified'))
                         Finaliser votre inscription
+                       <p class="text-sm font-bold text-[#2D2926] mt-1">
+                            <a href="{{ route('charte') }}" target="_blank"><i class="bx bx-info-circle"></i> <small> Veuillez lire la charte avant de compléter le formulaire.</small></a>
+                        </p>
+
                     @else
                         S'inscrire
                     @endif
                 </h2>
             </div>
 
-            <!-- Messages feedback - plus grands -->
+            <!-- Messages feedback -->
             @if (session('success') || session('error'))
                 <div class="mb-3">
                     @if (session('success'))
                         <div class="bg-[#B3D2D4]/30 border-l-4 border-[#255156] text-[#173235] px-3 py-1.5 text-sm">
-                            ✓{{ session('success') }}
+                            <i class="bx bx-check-circle"></i> {{ session('success') }}
                         </div>   
                     @endif
                     @if (session('error'))
                         <div class="bg-[#E3FCFF] border-l-4 border-[#41797F] text-[#173235] px-3 py-1.5 text-sm">
-                            ⚠️ {{ session('error') }}
+                            <i class="bx bx-error-circle"></i> {{ session('error') }}
                         </div>   
                     @endif
                 </div>
             @endif
 
-            <!-- ÉTAPE 1 : Email - taille augmentée -->
+            <!-- ÉTAPE 1 : Email  -->
             @if(!session('email_sent') && !session('code_verified'))
                 <form action="{{ route('sendVerificationCode') }}" method="POST">
                     @csrf
@@ -91,20 +99,18 @@
                                 maxlength="6">
                         </div>
                         <button type="submit" class="bg-[#41797F] hover:bg-[#2D6268] text-white text-sm font-semibold py-2 px-4 rounded-lg">
-                            ✓ Valider
+                            <i class="bx bx-check"></i> Valider
                         </button>
                     </div>
                     @if(session('code_error'))
                         <p class="text-[#41797F] text-xs mt-2 bg-[#E3FCFF] p-2 rounded border border-[#8EC0C6]">
-                            ⚠️ {{ session('code_error') }}
+                            <i class="bx bx-error-circle"></i> {{ session('code_error') }}
                         </p>
                     @endif
                 </form>
             @endif
-
             <!-- ÉTAPE 3 : Finalisation inscription -->
             @if(session('code_verified'))
-
                 <!-- Bloc global pour toutes les erreurs de validation -->
                 @if ($errors->any())
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -115,7 +121,6 @@
                         </ul>
                     </div>
                 @endif
-
                 <!-- Messages success/code_error -->
                 @if(session('code_error'))
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -126,10 +131,8 @@
                         {{ session('success') }}
                     </div>
                 @endif
-
                 <form action="{{ route('registration.register') }}" method="POST" id="registrationForm">
                     @csrf
-
                     <!-- Grille 3 colonnes -->
                     <div class="grid grid-cols-3 gap-2 mb-2">
                         <div>
@@ -148,7 +151,6 @@
                             @error('phone')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
                     </div>
-
                     <!-- Email et confirmation -->
                     <div class="grid grid-cols-2 gap-2 mb-2">
                         <div>
@@ -161,7 +163,6 @@
                             @error('confirmEmail')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
                     </div>
-
                     <!-- Mot de passe et adresse -->
                     <div class="grid grid-cols-2 gap-2 mb-2">
                         <div>
@@ -169,7 +170,6 @@
                                 class="w-full border border-[#B3D2D4] rounded-lg p-2 text-sm focus:ring-1 focus:ring-[#255156]"
                                 oninput="checkPasswordStrength()">
                             @error('password')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
-
                             <div class="h-1.5 mt-1 rounded-full bg-[#E3FCFF] overflow-hidden">
                                 <div id="password-strength" class="h-1.5 w-0 transition-all"></div>
                             </div>
@@ -181,7 +181,6 @@
                             @error('adresse')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
                     </div>
-
                     <!-- Ville et code postal -->
                     <div class="grid grid-cols-2 gap-2 mb-2">
                         <div>
@@ -197,24 +196,17 @@
                     </div>
                     <!-- Responsable structure -->
                     <div class="bg-[#E3FCFF] p-3 rounded-lg border border-[#8EC0C6] mb-2">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-bold text-[#173235]">Responsable organisme ou structure ?</span>
-                            <div class="flex items-center space-x-4">
-                                <label class="flex items-center space-x-2 cursor-pointer">
-                                    <input type="radio" name="is_responsable" value="1" class="responsable-radio w-4 h-4 text-[#255156]">
-                                    <span class="text-sm text-[#173235]">Oui</span>
-                                </label>
-                                <label class="flex items-center space-x-2 cursor-pointer">
-                                    <input type="radio" name="is_responsable" value="0" class="responsable-radio w-4 h-4 text-[#255156]" checked>
-                                    <span class="text-sm text-[#173235]">Non</span>
-                                </label>
-                            </div>
-                        </div>
+                        <select name="niveau" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            <option value="">Êtes-vous responsable ?</option>
+                            <option value="0" class="responsable-radio">Non</option>
+                            <option value="1" class="responsable-radio">Organisme</option>
+                            <option value="2" class="responsable-radio">Structure</option>
+                        </select>
                     </div>
                     <!-- Sélection structure  -->
                     <div id="structureField" class="mb-2">
                         <!-- Sélection de l'organisme parent -->
-                    <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
+                    <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2" required>
                         <option value="">Aucun organisme</option>
                         @foreach($organismes as $organisme)
                             <option value="{{ $organisme->id }}" >
@@ -222,7 +214,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
                         <option value="">Aucune structure</option>
                         @foreach($structures as $structure)
                             <option value="{{ $structure->id}}" 
