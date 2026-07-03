@@ -20,7 +20,7 @@ class AdminNewUserEmail extends Mailable
 
     public function build()
     {
-        return $this->subject('Nouvelle inscription utilisateur')
+        return $this->subject('Nouvelle inscription d\'un responsable d\'organisme')
                     ->view('emails.admin_new_user');
     }
 }

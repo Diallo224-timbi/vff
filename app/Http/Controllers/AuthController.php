@@ -123,7 +123,7 @@ class AuthController extends Controller
                 'chart' => $request->chart,
                 'niveau' => $request->niveau,
             ]);
-                // Créer le log de l'inscription
+            // Créer le log de l'inscription
             ActivityLog::logUserCreation($user);
             // Nettoyer les sessions liées à la vérification email
             session()->forget(['email_verification_code', 'email_to_verify', 'email_sent', 'code_verified']);   

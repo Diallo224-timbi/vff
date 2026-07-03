@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Plateforme Multi Acteurs')</title>
   <link rel="apple-touch-icon" type="image/x-icon" href="{{ asset('logo.png') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -14,17 +14,17 @@
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4V4lF7+v1wZz0+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4V4lF7+v1wZ0z+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  
+
   <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  
+
   <!-- changement de vite pour O2switch -->
   <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
   <script src="{{ asset('build/assets/app.css') }}" defer></script>
@@ -66,7 +66,7 @@
 
     /* ===== NAVBAR RESPONSIVE ===== */
     .navbar {
-      background-color: #255156;
+      background-color: #1a3c40; /* Couleur plus soutenue et nette */
       z-index: 1050;
       color: white;
       height: var(--header-height);
@@ -77,7 +77,8 @@
       position: sticky;
       top: 0;
       width: 100%;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-bottom: 2px solid #0f2a2d; /* Bordure pour renforcer la netteté */
     }
 
     .navbar-brand {
@@ -91,6 +92,7 @@
       font-size: 1.25rem;
       line-height: 1.2;
       color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     @media (max-width: 640px) {
@@ -110,7 +112,7 @@
 
     /* ===== SIDEBAR PRINCIPAL RESPONSIVE ===== */
     .sidebar {
-      background-color: #2d6268;
+      background-color: #1e4a4f; /* Couleur plus vive et opaque */
       color: white;
       display: flex;
       flex-direction: column;
@@ -120,6 +122,8 @@
       flex-shrink: 0;
       overflow-y: auto;
       overflow-x: hidden;
+      border-right: 2px solid #0f2a2d; /* Bordure pour renforcer la netteté */
+      box-shadow: 2px 0 10px rgba(0,0,0,0.15);
     }
 
     .sidebar.collapsed {
@@ -155,6 +159,8 @@
       transition: all 0.2s;
       white-space: nowrap;
       font-size: 0.95rem;
+      font-weight: 500;
+      border: 1px solid transparent;
     }
 
     .sidebar-link i {
@@ -163,30 +169,34 @@
     }
 
     .sidebar-link:hover {
-      background-color: #3A7378;
+      background-color: #2d6b72;
       transform: translateX(5px);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     .sidebar-bottom {
       padding: 1.25rem 1rem;
-      border-top: 1px solid rgba(255,255,255,0.15);
+      border-top: 2px solid rgba(255,255,255,0.2);
       display: flex;
       align-items: center;
       gap: 0.75rem;
       flex-shrink: 0;
+      background-color: #164043;
     }
 
     .user-avatar {
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #484f5c 0%, #e1dfe2 100%);
+      background: linear-gradient(135deg, #3a6b72 0%, #1e4a4f 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       color: white;
       flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.3);
     }
 
     .user-info {
@@ -212,7 +222,7 @@
         top: var(--header-height);
         height: calc(100vh - var(--header-height));
         z-index: 1040;
-        box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+        box-shadow: 2px 0 15px rgba(0,0,0,0.2);
       }
 
       .sidebar.collapsed {
@@ -251,13 +261,15 @@
     /* ===== DESSIN SECONDAIRE (OFFCANVAS) ===== */
     .offcanvas.drawer-sub {
       width: min(18rem, 85vw) !important;
-      background-color: #145a5f !important;
+      background-color: #1a494e !important; /* Couleur vive et nette */
       color: white;
+      border-right: 2px solid #0f2a2d;
     }
 
     .offcanvas-header {
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 2px solid rgba(255,255,255,0.15);
       padding: 1.25rem 1.5rem;
+      background-color: #164043;
     }
 
     .offcanvas-body {
@@ -265,6 +277,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      background-color: #1a494e;
     }
 
     .drawer-link {
@@ -276,10 +289,13 @@
       color: white;
       text-decoration: none;
       transition: background 0.2s;
+      font-weight: 500;
+      border: 1px solid transparent;
     }
 
     .drawer-link:hover {
-      background-color: rgba(255,255,255,0.15);
+      background-color: #2d6b72;
+      border-color: rgba(255,255,255,0.15);
     }
 
     /* ===== PROFIL DROPDOWN ===== */
@@ -292,14 +308,17 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      background-color: rgba(255,255,255,0.1);
+      background-color: rgba(255,255,255,0.15);
       border-radius: 2rem;
       transition: all 0.2s;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      font-weight: 500;
     }
 
     .profile-btn:hover {
-      background-color: rgba(255,255,255,0.2);
+      background-color: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.4);
     }
 
     .dropdown-menu-custom {
@@ -308,7 +327,7 @@
       right: 0;
       background: white;
       border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       width: 240px;
       display: none;
       z-index: 1060;
@@ -404,12 +423,12 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: rgba(45, 98, 104, 0.5);
+      background: rgba(45, 98, 104, 0.6);
       border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(45, 98, 104, 0.8);
+      background: rgba(45, 98, 104, 0.9);
     }
   </style>
 </head>
@@ -542,10 +561,17 @@
           <span title="Gérer les organismes et structures">Organismes</span>
         </a>
         @endif
+        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur_classique' || Auth::user()->role === 'moderateur')
         <a href="{{ route('annuaire.index') }}" class="drawer-link">
           <i class='bx bx-building'></i>
           Structures
         </a>
+        @else
+        <a href="{{ route('annuaire.list') }}" class="drawer-link">
+          <i class='bx bx-building'></i>
+          Structures
+        </a>
+        @endif
          <a href="{{ route('annuaire.membre') }}" class="drawer-link">
           <i class='bx bx-group'></i>
           Membres
@@ -572,13 +598,13 @@
       // ===== SIDEBAR TOGGLE RESPONSIVE =====
       const sidebar = document.getElementById('sidebar');
       const toggleBtn = document.getElementById('sidebarToggle');
-      
+
       if (toggleBtn && sidebar) {
         toggleBtn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
           sidebar.classList.toggle('collapsed');
-          
+
           // Sauvegarde préférence utilisateur
           localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
         });
@@ -596,7 +622,7 @@
         openSecondarySidebar.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          
+
           // Utilisation de Bootstrap Offcanvas
           const secondaryDrawer = document.getElementById('secondarySidebar');
           if (secondaryDrawer) {
@@ -672,7 +698,7 @@
       }, 250);
     });
   </script>
-  
+
   @yield('scripts')
 </body>
 </html>

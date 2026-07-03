@@ -206,7 +206,7 @@
                     <!-- Sélection structure  -->
                     <div id="structureField" class="mb-2">
                         <!-- Sélection de l'organisme parent -->
-                    <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2" required>
+                    <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
                         <option value="">Aucun organisme</option>
                         @foreach($organismes as $organisme)
                             <option value="{{ $organisme->id }}" >
@@ -214,7 +214,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" >
                         <option value="">Aucune structure</option>
                         @foreach($structures as $structure)
                             <option value="{{ $structure->id}}" 

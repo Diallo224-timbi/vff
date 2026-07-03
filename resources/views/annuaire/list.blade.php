@@ -3,302 +3,675 @@
 @section('title', 'Liste groupée des structures')
 
 @section('content')
-<div class="container mx-auto px-2 py-4">
-    <!-- Message succès avec padding réduit -->
+<div class="max-w-10xl mx-auto px-0 sm:px-6 lg:px-4 py-2 space-y-2">
+    <!-- Message succès -->
     @if(session('success'))
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg mb-3 shadow-lg border-l-4 border-white"
-            x-data="{ show: true }"
-            x-show="show"
-            x-init="setTimeout(() => show = false, 3000)">
-            <div class="flex items-center text-sm">
-                <i class="fas fa-check-circle text-lg mr-2"></i>
-                <div>
-                    <p class="font-semibold">{{ session('success') }}</p>
-                </div>
-            </div>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Succès !</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     @endif
-    <!-- En-tête et navigation avec espacement réduit -->
-    <div class="flex flex-wrap items-center justify-between mb-3">
-        <div class="flex items-center gap-2">
-            <a href="{{ route('annuaire.index') }}" 
-               class="btn-secondary-custom flex items-center gap-1 px-4 py-2 rounded-lg font-semibold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]">
-                <i class="fas fa-arrow-left text-xs"></i>
-                Retour
-            </a>
-            <h1 class="text-xl font-bold text-[#255156]">
-                <i class="fas fa-building mr-1"></i>
-                Structures par siège
-            </h1>
+
+    <!-- HEADER SIMPLIFIÉ -->
+    <div class="rounded-2xl p-4 shadow-xl text-white d-flex flex-wrap justify-content-between align-items-center gap-3"
+         style="background: linear-gradient(135deg, #255156, #1e7c86);">
+        
+        <div class="d-flex align-items-center gap-3">
+            <i class="fas fa-building" style="font-size: 1.3rem;"></i>
+            <div>
+                <h5 class="mb-0 fw-bold">Structures par siège</h5>
+                <small class="text-white/80">
+                    <i class="fas fa-info-circle me-1"></i>
+                    {{ $totalStructures }} structures - {{ count($groupes) }} sièges
+                </small>
+            </div>
         </div>
-        <div class="text-xs text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
-            <i class="fas fa-info-circle mr-1 text-[#255156]"></i>
-            <span>{{ $totalStructures }} structures - {{ count($groupes) }} sièges</span>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('annuaire.index') }}" 
+               class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
+               style="border: 1px solid rgba(255,255,255,0.3); color: white;"
+               onmouseover="this.style.background='rgba(255,255,255,0.15)';"
+               onmouseout="this.style.background='transparent';">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
         </div>
     </div>
-    <!-- SECTION RECHERCHE ET FILTRES COMPACTE -->
-    <div class="bg-white p-2 rounded-lg shadow-sm mb-3 border border-gray-100">
-        <div class="flex flex-wrap items-center gap-2">
-            <!-- Recherche globale - plus compacte -->
-            <div class="flex-1 min-w-[200px]">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
-                    <input type="text" id="searchGroupes" 
-                           class="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:border-[#8bbdc3] focus:ring-1 focus:ring-[#8bbdc3]/30 outline-none transition-all" 
-                           placeholder="Rechercher siège ou structure...">
+
+    <!-- FILTRES -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        <div class="p-3" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+            <h6 class="font-bold text-white flex items-center gap-2 mb-0">
+                <i class="fas fa-filter"></i> Filtres
+            </h6>
+        </div>
+        <div class="p-3" style="background: #f8fcfc;">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
+                <div class="lg:col-span-2">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="searchGroupes" 
+                               placeholder="Rechercher..."
+                               class="w-full pl-8 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none transition-all bg-white">
+                    </div>
                 </div>
-            </div>   
-            <!-- Filtre par organisme - dropdown compact -->
-            <div class="w-48">
-                <div class="relative">
-                    <i class="fas fa-filter absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                
+                <div>
                     <select id="filterOrganisme" 
-                            class="w-full pl-8 pr-8 py-1.5 text-xs border border-gray-200 rounded-lg focus:border-[#8bbdc3] focus:ring-1 focus:ring-[#8bbdc3]/30 outline-none appearance-none bg-white">
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none appearance-none bg-white">
                         <option value="">Tous les organismes</option>
                         @foreach($organismes as $organisme)
                             <option value="{{ $organisme->nom_organisme }}">{{ $organisme->nom_organisme }}</option>
                         @endforeach
                     </select>
-                    <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-[10px]"></i>
+                </div>
+                
+                <div>
+                    <select id="filterVille" 
+                            class="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none appearance-none bg-white">
+                        <option value="">Toutes les villes</option>
+                        @php
+                            $villes = $structures->pluck('ville')->unique()->filter()->sort();
+                        @endphp
+                        @foreach($villes as $ville)
+                            <option value="{{ $ville }}">{{ $ville }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
-            <!-- Bouton réinitialiser - compact -->
-            <button id="resetFilters" 
-                    class="flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors whitespace-nowrap">
-                <i class="fas fa-undo-alt text-[10px]"></i>
-                Réinitialiser
-            </button>
-        </div>
-        <!-- Indicateurs de filtres actifs (caché par défaut) -->
-        <div id="activeFilters" class="hidden mt-2 flex flex-wrap gap-1">
-            <span class="text-[10px] text-gray-500 mr-1">Filtres actifs:</span>
-            <div id="filterBadges" class="flex flex-wrap gap-1"></div>
+            
+            <div class="flex flex-wrap items-center justify-between mt-2">
+                <div id="activeFilters" class="hidden">
+                    <div id="filterBadges" class="flex flex-wrap gap-1"></div>
+                </div>
+                <button id="resetFilters"
+                        class="text-xs text-[#255156] hover:underline px-2 py-1 rounded transition-all">
+                    <i class="fas fa-undo-alt me-1"></i> Réinitialiser
+                </button>
+            </div>
         </div>
     </div>
-    <!-- Liste groupée par siège avec espacement réduit -->
+
+    <!-- LISTE GROUPÉE -->
     <div class="space-y-3" id="groupesContainer">
         @forelse($groupes as $siege => $structures)
-            <div class="groupe-card bg-white rounded-lg shadow border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-300"
+            @php
+                $firstStructure = $structures->first();
+                $logoPath = $firstStructure && $firstStructure->organisme ? $firstStructure->organisme->logo_path : null;
+                $nom = $siege;
+                $initiales = '';
+                $mots = explode(' ', $nom);
+                foreach($mots as $mot) {
+                    if(!empty($mot) && strlen($mot) > 0) {
+                        $initiales .= strtoupper(substr($mot, 0, 1));
+                    }
+                    if(strlen($initiales) >= 2) break;
+                }
+                if(empty($initiales)) $initiales = 'S';
+            @endphp
+            <div class="groupe-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 transition-all duration-300"
                  data-siege="{{ $siege }}">
-                <!-- En-tête du siège plus compact -->
-                <div class="bg-gradient-to-r from-[#255156] to-[#8bbdc3] text-white p-3 cursor-pointer groupe-header">
+                
+                <div class="groupe-header cursor-pointer transition-colors duration-200 p-3"
+                     style="background: linear-gradient(90deg, #f8fcfc, #f0f6f5);"
+                     onmouseover="this.style.background='linear-gradient(90deg, #f0f6f5, #e8f3f2)';"
+                     onmouseout="this.style.background='linear-gradient(90deg, #f8fcfc, #f0f6f5)';">
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="bg-white/20 p-1.5 rounded-lg">
-                                <i class="fas fa-map-marker-alt text-lg"></i>
+                        <div class="flex items-center gap-3">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-chevron-right text-gray-400 transition-transform duration-200 groupe-chevron"></i>
+                            </div>
+                            <!-- LOGO AVEC ZOOM AU CLIC -->
+                            <div class="logo-container w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
+                                 style="background: linear-gradient(135deg, #255156, #4a8599);"
+                                 onclick="openLogoZoom('{{ $logoPath ? asset('storage/' . $logoPath) : '' }}', '{{ $siege }}')">
+                                
+                                @if($logoPath && file_exists(storage_path('app/public/' . $logoPath)))
+                                    <img src="{{ asset('storage/' . $logoPath) }}" 
+                                         alt="Logo {{ $siege }}"
+                                         class="w-full h-full object-contain"
+                                         style="width: 100%; height: 100%; object-fit: contain; object-position: center; padding: 4px;"
+                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size: 0.9rem; font-weight: 700; color: white;\'>{{ $initiales }}</span>';">
+                                @else
+                                    <span style="font-size: 0.9rem; font-weight: 700; color: white;">{{ $initiales }}</span>
+                                @endif
                             </div>
                             <div>
-                                <h2 class="text-lg font-bold">{{ $siege ?: 'Siège non spécifié' }}</h2>
-                                <p class="text-xs text-white/80">
+                                <h2 class="text-lg font-bold" style="color: #255156;">
+                                    {{ $siege ?: 'Siège non spécifié' }}
+                                </h2>
+                                <p class="text-sm" style="color: #4a7a7f;">
                                     <i class="fas fa-building mr-1"></i>
-                                    @if($structures->count() > 1)
-                                        <span class="structures-count">{{ $structures->count() }}</span> structures
-                                    @else
-                                        aucunne structure
+                                    <span class="structures-count">{{ $structures->count() }}</span> structure(s)
+                                    @if($structures->first()->siege_adresse || $structures->first()->siege_ville)
+                                        <span class="text-xs ml-2" style="color: #7fa8ac;">
+                                            <i class="fas fa-map-pin mr-1"></i>
+                                            {{ $structures->first()->siege_adresse ?: '' }}
+                                            {{ $structures->first()->siege_ville ? '- ' . $structures->first()->siege_ville : '' }}
+                                        </span>
                                     @endif
                                 </p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="bg-white/20 px-2 py-0.5 rounded-full text-xs font-semibold max-w-[350px] truncate"
-                            title="{{ $structures->first()->siege_adresse .' - '. $structures->first()->siege_ville ?? 'Adresse non spécifiée' }}">
-                                        {{ $structures->first()->siege_adresse .' - '. $structures->first()->siege_ville ?? 'Adresse non spécifiée' }}
-                                    </span>
-                            <button class="toggle-group text-white hover:scale-110 transition-transform">
-                                <i class="fas fa-chevron-up text-lg"></i>
-                            </button>
-                        </div>
+                        <button class="toggle-group text-gray-400 hover:text-[#255156] transition-all p-1 rounded-lg hover:bg-white/50">
+                            <i class="fas fa-chevron-down text-lg"></i>
+                        </button>
                     </div>
                 </div>
-                <!-- Liste des structures -->
-                <div class="structures-list p-3 bg-gray-50">     
-                    <!-- Barre de recherche spécifique (si > 5) -->
-                    @if($structures->count() > 5)
-                    <div class="mb-3 px-1">
+                
+                <div class="structures-list hidden p-3 border-t border-gray-100" style="background: #fafdfd;">
+                    <div class="mb-3">
                         <div class="relative">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
                             <input type="text" 
-                                   class="search-structure form-control-professional pl-8 py-1.5 text-xs w-full bg-white border border-gray-200 focus:border-[#8bbdc3] rounded-lg" 
+                                   class="search-structure w-full pl-8 pr-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none transition-all bg-white"
                                    placeholder="Rechercher dans {{ $structures->count() }} structures..."
                                    data-siege-id="siege-{{ $loop->index }}">
-                            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs px-2 py-0.5 rounded-full"
+                                  style="background: #e8f3f2; color: #255156;">
                                 {{ $structures->count() }}
                             </span>
                         </div>
                     </div>
-                    @endif
-                    <!-- Grille des cartes avec gap réduit -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" 
-                         id="siege-{{ $loop->index }}-grid">
-                        @foreach($structures as $structure)
-                            <div class="structure-card bg-white rounded-lg border border-gray-200 p-3 hover:border-[#8bbdc3] hover:shadow-sm transition-all duration-200 structure-card"
-                                 data-organisme="{{ strtolower($structure->organisme->nom_organisme ?? '') }}"
-                                 data-categorie="{{ strtolower($structure->categories ?? '') }}"
-                                 data-ville="{{ strtolower($structure->ville ?? '') }}"
-                                 data-search="{{ strtolower($structure->organisme->nom_organisme ?? '') . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '') }}"
-                                 data-siege-id="siege-{{ $loop->parent->index }}">                               
-                                <!-- En-tête de la carte plus compact -->
-                                <div class="flex justify-between items-start mb-2">
-                                    <div class="flex items-start gap-1.5">
-                                        <div class="bg-[#255156]/10 p-1.5 rounded-lg">
-                                            <i class="fas fa-building text-[#255156] text-xs"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-gray-800 text-sm line-clamp-2 organisme-nom" title="{{ $structure->organisme->nom_organisme ?? '' }}">
-                                                {{ $structure->organisme->nom_organisme ?? 'Organisme non spécifié' }}
-                                            </h3>
-                                            <span class="inline-block mt-0.5 px-1.5 py-0.5 bg-[#8bbdc3]/20 text-[#255156] text-xs rounded-full categorie-badge">
-                                                {{ Str::limit($structure->categories ?? 'Non catégorisé', 20) }}
-                                            </span>
+                    
+                    @if($structures->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" 
+                             id="siege-{{ $loop->index }}-grid">
+                            @foreach($structures as $index => $structure)
+                                @php
+                                    $rowColor = $index % 2 === 0 ? 'white' : '#f8fcfc';
+                                    $borderColor = $index % 2 === 0 ? '#e8f3f2' : '#dceeec';
+                                    $structLogoPath = $structure->organisme && $structure->organisme->logo_path ? $structure->organisme->logo_path : null;
+                                    $structNom = $structure->organisme->nom_organisme ?? 'S';
+                                    $structInitiales = '';
+                                    $structMots = explode(' ', $structNom);
+                                    foreach($structMots as $mot) {
+                                        if(!empty($mot) && strlen($mot) > 0) {
+                                            $structInitiales .= strtoupper(substr($mot, 0, 1));
+                                        }
+                                        if(strlen($structInitiales) >= 2) break;
+                                    }
+                                    if(empty($structInitiales)) $structInitiales = 'S';
+                                @endphp
+                                <div class="structure-card rounded-lg border p-3 transition-all duration-200"
+                                     style="background: {{ $rowColor }}; border-color: {{ $borderColor }};"
+                                     data-organisme="{{ strtolower($structure->organisme->nom_organisme ?? '') }}"
+                                     data-ville="{{ strtolower($structure->ville ?? '') }}"
+                                     data-search="{{ strtolower($structure->organisme->nom_organisme ?? '') . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '') }}"
+                                     data-siege-id="siege-{{ $loop->parent->index }}"
+                                     onmouseover="this.style.borderColor='#2d6268'; this.style.boxShadow='0 4px 12px rgba(45,98,104,0.12)'; this.style.transform='translateY(-2px)';"
+                                     onmouseout="this.style.borderColor='{{ $borderColor }}'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">                               
+                                    
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-start gap-2">
+                                            <!-- Logo structure avec zoom -->
+                                            <div class="logo-container w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
+                                                 style="background: linear-gradient(135deg, #255156, #4a8599);"
+                                                 onclick="event.stopPropagation(); openLogoZoom('{{ $structLogoPath ? asset('storage/' . $structLogoPath) : '' }}', '{{ $structure->organisme->nom_organisme ?? 'Structure' }}')">
+                                                
+                                                @if($structLogoPath && file_exists(storage_path('app/public/' . $structLogoPath)))
+                                                    <img src="{{ asset('storage/' . $structLogoPath) }}" 
+                                                         alt="Logo {{ $structure->organisme->nom_organisme ?? '' }}"
+                                                         class="w-full h-full object-contain"
+                                                         style="width:100%; height:100%; object-fit:contain; object-position:center; padding:2px;"
+                                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size: 0.7rem; font-weight: 700; color: white;\'>{{ $structInitiales }}</span>';">
+                                                @else
+                                                    <span style="font-size: 0.7rem; font-weight: 700; color: white;">{{ $structInitiales }}</span>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-sm line-clamp-2" style="color: #1a3c40;" 
+                                                    title="{{ $structure->organisme->nom_organisme ?? '' }}">
+                                                    {{ $structure->organisme->nom_organisme ?? 'Organisme non spécifié' }}
+                                                </h3>
+                                                <span class="inline-block mt-0.5 px-2 py-0.5 rounded-full text-xs font-medium"
+                                                      style="background: #e8f3f2; color: #255156;">
+                                                    {{ Str::limit($structure->categories ?? 'Non catégorisé', 20) }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Informations essentielles compactes -->
-                                <div class="space-y-1.5 text-xs">
-                                    <!-- Adresse -->
-                                    <div class="flex items-start gap-1.5 text-gray-600">
-                                        <i class="fas fa-map-marker-alt mt-0.5 text-gray-400 w-3 text-xs"></i>
-                                        <span class="flex-1 line-clamp-1 text-xs" title="{{ $structure->adresse }}, {{ $structure->code_postal }} {{ $structure->ville }}">
-                                            {{ Str::limit($structure->adresse ?? 'Adresse non spécifiée', 25) }}
-                                            @if($structure->code_postal || $structure->ville)
-                                                , {{ $structure->code_postal }} {{ Str::limit($structure->ville, 15) }}
+                                    <div class="space-y-1.5 text-xs" style="color: #3d6f74;">
+                                        <div class="flex items-start gap-2">
+                                            <i class="fas fa-map-marker-alt mt-0.5" style="color: #7fa8ac;"></i>
+                                            <span class="flex-1 line-clamp-1" title="{{ $structure->adresse }}, {{ $structure->code_postal }} {{ $structure->ville }}">
+                                                {{ Str::limit($structure->adresse ?? 'Adresse non spécifiée', 25) }}
+                                                @if($structure->code_postal || $structure->ville)
+                                                    , {{ $structure->code_postal }} {{ Str::limit($structure->ville, 15) }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-phone" style="color: #7fa8ac;"></i>
+                                            @if($structure->telephone)
+                                                <a href="tel:{{ $structure->telephone }}" 
+                                                   class="hover:underline font-medium"
+                                                   style="color: #255156;">
+                                                    {{ Str::limit($structure->telephone, 15) }}
+                                                </a>
+                                            @else
+                                                <span style="color: #b0c8cb;">Non disponible</span>
                                             @endif
-                                        </span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-envelope" style="color: #7fa8ac;"></i>
+                                            @if($structure->email)
+                                                <a href="mailto:{{ $structure->email }}" 
+                                                   class="hover:underline truncate font-medium"
+                                                   style="color: #255156;">
+                                                    {{ Str::limit($structure->email, 20) }}
+                                                </a>
+                                            @else
+                                                <span style="color: #b0c8cb;">Non disponible</span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <!-- Téléphone -->
-                                    <div class="flex items-center gap-1.5 text-gray-600">
-                                        <i class="fas fa-phone text-gray-400 w-3 text-xs"></i>
-                                        @if($structure->telephone)
-                                            <a href="tel:{{ $structure->telephone }}" 
-                                               class="text-[#255156] hover:text-[#8bbdc3] font-medium hover:underline text-xs">
-                                                {{ Str::limit($structure->telephone, 15) }}
-                                            </a>
-                                        @else
-                                            <span class="text-gray-400 italic text-xs">Non disponible</span>
-                                        @endif
-                                    </div>
-                                    <!-- Email -->
-                                    <div class="flex items-center gap-1.5 text-gray-600">
-                                        <i class="fas fa-envelope text-gray-400 w-3 text-xs"></i>
-                                        @if($structure->email)
-                                            <a href="mailto:{{ $structure->email }}" 
-                                               class="text-[#255156] hover:text-[#8bbdc3] font-medium hover:underline truncate text-xs">
-                                                {{ Str::limit($structure->email, 20) }}
-                                            </a>
-                                        @else
-                                            <span class="text-gray-400 italic text-xs">Non disponible</span>
-                                        @endif
-                                    </div>
-                                    <!-- Badges compacts -->
-                                    <div class="flex flex-wrap gap-1 mt-1 pt-1 border-t border-gray-100">
-                                        @if($structure->type_structure)
-                                            <span class="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded-full">
-                                                {{ Str::limit($structure->type_structure, 12) }}
-                                            </span>
-                                        @endif
-                                        @if($structure->zone)
-                                            <span class="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded-full">
-                                                {{ Str::limit($structure->zone, 12) }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
 
-                                <!-- Bouton détails compact -->
-                                <div class="mt-2 pt-1.5 border-t border-gray-100 flex justify-end">
-                                    <button class="view-details-btn text-xs bg-[#255156]/10 hover:bg-[#255156] text-[#255156] hover:text-white px-2 py-1 rounded-lg font-medium transition-all duration-200 flex items-center gap-1"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#detailsModal"
-                                            data-structure='@json($structure)'>
-                                        <i class="fas fa-eye text-xs"></i>
-                                        Détails
-                                    </button>
+                                    <div class="mt-2 pt-2 border-t" style="border-color: #f0f6f5;">
+                                        <button class="view-details-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all flex items-center gap-1"
+                                                style="background: #e8f3f2; color: #255156;"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#detailsModal"
+                                                data-structure='@json($structure)'
+                                                onmouseover="this.style.background='#255156'; this.style.color='white';"
+                                                onmouseout="this.style.background='#e8f3f2'; this.style.color='#255156';">
+                                            <i class="fas fa-eye text-xs"></i>
+                                            Détails
+                                        </button>
+                                    </div>
                                 </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-8">
+                            <div class="flex flex-col items-center justify-center">
+                                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-3"
+                                     style="background: #e8f3f2;">
+                                    <i class="fas fa-building text-2xl" style="color: #b0c8cb;"></i>
+                                </div>
+                                <p class="text-sm font-medium" style="color: #7fa8ac;">Aucune structure</p>
+                                <p class="text-xs mt-1" style="color: #b0c8cb;">Aucune structure n'est rattachée à ce siège</p>
                             </div>
-                        @endforeach
-                    </div>
-                    <!-- Message aucun résultat compact -->
+                        </div>
+                    @endif
+                    
                     <div id="no-structure-result-{{ $loop->index }}" 
-                         class="hidden flex flex-col items-center justify-center py-4 text-gray-500">
-                        <i class="fas fa-map-marker-alt text-2xl mb-1 opacity-30"></i>
-                        <p class="text-xs font-medium">Aucune structure trouvée</p>
+                         class="hidden flex flex-col items-center justify-center py-6" style="color: #7fa8ac;">
+                        <i class="fas fa-map-marker-alt text-3xl mb-2 opacity-30"></i>
+                        <p class="text-sm font-medium">Aucune structure trouvée</p>
                     </div>
                 </div>
             </div>
         @empty
-            <div class="bg-white rounded-lg shadow p-8 text-center">
-                <div class="flex flex-col items-center justify-center text-gray-500">
-                    <i class="fas fa-building text-4xl mb-3 opacity-20"></i>
-                    <p class="text-base font-medium mb-1">Aucune structure trouvée</p>
-                    <p class="text-xs text-gray-400">Il n'y a pas encore de structures dans l'annuaire</p>
+            <div class="bg-white rounded-xl shadow-lg p-8 text-center border border-gray-100">
+                <div class="flex flex-col items-center justify-center" style="color: #7fa8ac;">
+                    <i class="fas fa-building text-5xl mb-3 opacity-20"></i>
+                    <p class="text-base font-medium" style="color: #255156;">Aucune structure trouvée</p>
+                    <p class="text-sm mt-1">Il n'y a pas encore de structures dans l'annuaire</p>
                 </div>
             </div>
         @endforelse
     </div>
 </div>
 
-<!-- Modal détails -->
-@include('annuaire.details')
+<!-- MODAL ZOOM LOGO -->
+<div class="modal fade" id="logoZoomModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+        <div class="modal-content border-0 shadow-2xl" style="border-radius: 1rem; background: rgba(0,0,0,0.85);">
+            <div class="modal-body p-4 text-center">
+                <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="modal"></button>
+                <div class="mt-2">
+                    <img id="logoZoomImage" src="" alt="Logo agrandi" 
+                         style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 0.5rem;">
+                    <p id="logoZoomTitle" class="text-white mt-3 font-semibold"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DÉTAILS AVEC LOGO INTÉGRÉ -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 800px;">
+        <div class="modal-content border-0 shadow-2xl overflow-hidden" style="border-radius: 1rem;">
+            <div style="background: linear-gradient(135deg, #255156, #3a7378); color: white; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                <div class="flex items-center gap-3">
+                    <!-- LOGO DANS LA MODALE -->
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
+                         style="background: linear-gradient(135deg, #255156, #4a8599);"
+                         onclick="event.stopPropagation(); openLogoZoom(document.getElementById('modal-logo-img-detail').src, document.getElementById('modal-organisme-detail').textContent)">
+                        <i class="fas fa-building text-white text-2xl" id="modal-logo-icon-detail"></i>
+                        <img id="modal-logo-img-detail" src="" alt="Logo" 
+                             class="w-full h-full object-contain" 
+                             style="width:100%; height:100%; object-fit:contain; object-position:center; padding:4px; display:none;">
+                    </div>
+                    <div>
+                        <h5 class="modal-title text-lg font-bold" id="detailsModalLabel">
+                            <span id="modal-organisme-detail">-</span>
+                        </h5>
+                        <p class="text-sm text-white/80 font-medium">Structure détaillée</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" style="background: #f8fcfc; max-height: 70vh; overflow-y: auto;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <div class="bg-white p-3 rounded-lg border" style="border-color: #dceeec; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                        <h6 class="font-semibold mb-2 text-sm" style="color: #255156;">
+                            <i class="fas fa-info-circle mr-1"></i> Informations principales
+                        </h6>
+                        <div class="space-y-1.5 text-sm">
+                            <div class="flex justify-between py-1 border-b" style="border-color: #f0f6f5;">
+                                <span class="font-medium" style="color: #4a7a7f;">Organisme:</span>
+                                <span class="font-semibold" style="color: #255156;" id="modal-organisme-text">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b" style="border-color: #f0f6f5;">
+                                <span class="font-medium" style="color: #4a7a7f;">Catégories:</span>
+                                <span style="color: #3d6f74;" id="modal-categories">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b" style="border-color: #f0f6f5;">
+                                <span class="font-medium" style="color: #4a7a7f;">Public cible:</span>
+                                <span style="color: #3d6f74;" id="modal-public_cible">-</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b" style="border-color: #f0f6f5;">
+                                <span class="font-medium" style="color: #4a7a7f;">Zone d'intervention:</span>
+                                <span style="color: #3d6f74;" id="modal-zone">-</span>
+                            </div>
+                            <div class="flex justify-between py-1">
+                                <span class="font-medium" style="color: #4a7a7f;">Site web:</span>
+                                <span style="color: #3d6f74;" id="modal-site">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-3 rounded-lg border" style="border-color: #dceeec; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                        <h6 class="font-semibold mb-2 text-sm" style="color: #255156;">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Localisation
+                        </h6>
+                        <div class="mb-2 p-2 rounded" style="background: #e3f2fd;">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fas fa-landmark text-blue-500 text-xs"></i>
+                                <span class="font-semibold text-blue-700 text-xs">SIÈGE SOCIAL</span>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <div class="flex">
+                                    <span class="w-16" style="color: #4a7a7f;">Ville:</span>
+                                    <span class="font-medium" style="color: #255156;" id="modal-siege_ville">-</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-16" style="color: #4a7a7f;">Adresse:</span>
+                                    <span class="truncate" style="color: #3d6f74;" id="modal-siege_adresse">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-2 rounded" style="background: #e8f5e9;">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fas fa-map-pin text-green-500 text-xs"></i>
+                                <span class="font-semibold text-green-700 text-xs">STRUCTURE LOCALE</span>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <div class="flex">
+                                    <span class="w-20" style="color: #4a7a7f;">Ville:</span>
+                                    <span class="font-medium" style="color: #255156;" id="modal-ville">-</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-20" style="color: #4a7a7f;">Code postal:</span>
+                                    <span style="color: #3d6f74;" id="modal-code_postal">-</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="w-20" style="color: #4a7a7f;">Adresse:</span>
+                                    <span class="truncate" style="color: #3d6f74;" id="modal-adresse">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-3 rounded-lg border mb-3" style="border-color: #dceeec; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                    <h6 class="font-semibold mb-2 text-sm" style="color: #255156;">
+                        <i class="fas fa-address-card mr-1"></i> Contact
+                    </h6>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                        <div class="flex items-center gap-2 p-2 rounded" style="background: #f8fcfc;">
+                            <i class="fas fa-phone text-green-500"></i>
+                            <div>
+                                <div class="text-xs" style="color: #4a7a7f;">Téléphone</div>
+                                <div class="font-medium" style="color: #255156;" id="modal-telephone">-</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-2 rounded" style="background: #f8fcfc;">
+                            <i class="fas fa-envelope text-blue-500"></i>
+                            <div>
+                                <div class="text-xs" style="color: #4a7a7f;">Email</div>
+                                <span class="font-medium" style="color: #255156;" id="modal-email">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-3 rounded-lg border" style="border-color: #dceeec; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                    <h6 class="font-semibold mb-2 text-sm" style="color: #255156;">
+                        <i class="fas fa-align-left mr-1"></i> Description
+                    </h6>
+                    <div class="text-sm leading-relaxed p-3 rounded min-h-[80px]" style="background: #f8fcfc; color: #3d6f74; border: 1px dashed #dceeec;" id="modal-description">-</div>
+                </div>
+            </div>
+            <div class="modal-footer bg-white p-3 border-t" style="border-color: #dceeec;">
+                <div class="flex justify-end gap-2 w-full">
+                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                            style="background: #e8f3f2; color: #255156;"
+                            data-bs-dismiss="modal"
+                            onmouseover="this.style.background='#d4ecea';"
+                            onmouseout="this.style.background='#e8f3f2';">
+                        <i class="fas fa-times"></i> Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Accordéon */
+.groupe-chevron {
+    transition: transform 0.2s ease;
+}
+.groupe-header.active .groupe-chevron {
+    transform: rotate(90deg);
+}
+.structures-list {
+    display: none !important;
+}
+.structures-list:not(.hidden) {
+    display: block !important;
+}
+
+/* Animation */
+.groupe-card {
+    animation: slideIn 0.3s ease-out;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cartes */
+.structure-card {
+    transition: all 0.2s ease-in-out;
+}
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Logos */
+.logo-container {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.logo-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(37,81,86,0.3);
+}
+
+/* Selects */
+select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    padding-right: 30px !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #e8f3f2; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #4a8599; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #255156; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .groupe-header .flex.items-center.justify-between {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* Modal Zoom Logo */
+.modal-content.bg-dark {
+    background: rgba(0,0,0,0.9) !important;
+}
+</style>
 
 <script>
+function openLogoZoom(imageUrl, title) {
+    const modal = new bootstrap.Modal(document.getElementById('logoZoomModal'));
+    const img = document.getElementById('logoZoomImage');
+    const titleEl = document.getElementById('logoZoomTitle');
+    
+    if (imageUrl && imageUrl !== '' && imageUrl !== 'http://localhost' && imageUrl !== 'http://localhost/') {
+        img.src = imageUrl;
+        img.style.display = 'block';
+        titleEl.textContent = title || 'Logo';
+    } else {
+        img.style.display = 'none';
+        titleEl.textContent = 'Aucun logo disponible';
+    }
+    
+    modal.show();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. GESTION DES GROUPES - TOGGLE
-    document.querySelectorAll('.groupe-header').forEach(header => {
+    // ==================== ACCORDÉON ====================
+    const headers = document.querySelectorAll('.groupe-header');
+    const toggleButtons = document.querySelectorAll('.toggle-group');
+    
+    headers.forEach(header => {
+        header.classList.remove('active');
+        const list = header.closest('.groupe-card').querySelector('.structures-list');
+        if(list) list.classList.add('hidden');
+        const icon = header.querySelector('.toggle-group i');
+        if(icon) {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
+    });
+    
+    headers.forEach(header => {
         header.addEventListener('click', function(e) {
-            if (e.target.closest('.toggle-group')) return;
+            if (e.target.closest('.toggle-group') || e.target.closest('.logo-container')) return;
             
-            const groupe = this.closest('.groupe-card');
-            const structuresList = groupe.querySelector('.structures-list');
-            const toggleIcon = groupe.querySelector('.toggle-group i');
+            const card = this.closest('.groupe-card');
+            const list = card.querySelector('.structures-list');
+            const isActive = this.classList.contains('active');
             
-            structuresList.classList.toggle('hidden');
+            headers.forEach(h => {
+                if(h !== this && h.classList.contains('active')) {
+                    h.classList.remove('active');
+                    const otherList = h.closest('.groupe-card').querySelector('.structures-list');
+                    if(otherList) {
+                        otherList.classList.add('hidden');
+                        const otherIcon = h.querySelector('.toggle-group i');
+                        if(otherIcon) {
+                            otherIcon.classList.remove('fa-chevron-up');
+                            otherIcon.classList.add('fa-chevron-down');
+                        }
+                    }
+                }
+            });
             
-            if (structuresList.classList.contains('hidden')) {
-                toggleIcon.classList.remove('fa-chevron-up');
-                toggleIcon.classList.add('fa-chevron-down');
+            if(isActive) {
+                this.classList.remove('active');
+                list.classList.add('hidden');
+                const icon = this.querySelector('.toggle-group i');
+                if(icon) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
             } else {
-                toggleIcon.classList.remove('fa-chevron-down');
-                toggleIcon.classList.add('fa-chevron-up');
+                this.classList.add('active');
+                list.classList.remove('hidden');
+                const icon = this.querySelector('.toggle-group i');
+                if(icon) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
             }
         });
     });
-
-    // Gestion du bouton toggle spécifique
-    document.querySelectorAll('.toggle-group').forEach(btn => {
+    
+    toggleButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
-            const groupe = this.closest('.groupe-card');
-            const structuresList = groupe.querySelector('.structures-list');
-            const toggleIcon = this.querySelector('i');
+            const header = this.closest('.groupe-header');
+            const card = header.closest('.groupe-card');
+            const list = card.querySelector('.structures-list');
+            const isActive = header.classList.contains('active');
+            const icon = this.querySelector('i');
             
-            structuresList.classList.toggle('hidden');
-            
-            if (structuresList.classList.contains('hidden')) {
-                toggleIcon.classList.remove('fa-chevron-up');
-                toggleIcon.classList.add('fa-chevron-down');
+            if(isActive) {
+                header.classList.remove('active');
+                list.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
             } else {
-                toggleIcon.classList.remove('fa-chevron-down');
-                toggleIcon.classList.add('fa-chevron-up');
+                header.classList.add('active');
+                list.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
             }
         });
     });
 
-    // 2. FONCTION DE FILTRAGE GLOBAL
+    // ==================== FILTRAGE ====================
     function filterStructures() {
         const searchQuery = document.getElementById('searchGroupes')?.value.toLowerCase().trim() || '';
         const filterOrganisme = document.getElementById('filterOrganisme')?.value.toLowerCase().trim() || '';
-        const filterCategorie = document.getElementById('filterCategorie')?.value.toLowerCase().trim() || '';
+        const filterVille = document.getElementById('filterVille')?.value.toLowerCase().trim() || '';
         
         const groupeCards = document.querySelectorAll('.groupe-card');
         let totalVisibleStructures = 0;
         let activeFilters = [];
         
         if (filterOrganisme) activeFilters.push('Organisme');
-        if (filterCategorie) activeFilters.push('Catégorie');
+        if (filterVille) activeFilters.push('Ville');
         if (searchQuery) activeFilters.push('Recherche');
         
-        // Afficher les badges de filtres actifs
         const activeFiltersDiv = document.getElementById('activeFilters');
         const filterBadges = document.getElementById('filterBadges');
         
@@ -307,13 +680,15 @@ document.addEventListener('DOMContentLoaded', function() {
             filterBadges.innerHTML = '';
             
             if (filterOrganisme) {
-                filterBadges.innerHTML += `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-[#255156]/10 text-[#255156] text-[10px] rounded-full">
-                    <i class="fas fa-filter text-[8px]"></i> Organisme: ${document.getElementById('filterOrganisme').value}
+                filterBadges.innerHTML += `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                    style="background: #e8f3f2; color: #255156;">
+                    <i class="fas fa-filter text-[8px]"></i> ${document.getElementById('filterOrganisme').value}
                 </span>`;
             }
-            if (filterCategorie) {
-                filterBadges.innerHTML += `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-[#255156]/10 text-[#255156] text-[10px] rounded-full">
-                    <i class="fas fa-tag text-[8px]"></i> Catégorie: ${document.getElementById('filterCategorie').value}
+            if (filterVille) {
+                filterBadges.innerHTML += `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                    style="background: #e8f3f2; color: #255156;">
+                    <i class="fas fa-city text-[8px]"></i> ${document.getElementById('filterVille').value}
                 </span>`;
             }
         } else {
@@ -328,15 +703,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             structuresCards.forEach(structure => {
                 const organisme = structure.dataset.organisme || '';
-                const categorie = structure.dataset.categorie || '';
+                const ville = structure.dataset.ville || '';
                 const structureText = structure.textContent.toLowerCase();
                 
-                // Vérifier tous les filtres
                 const matchesSearch = searchQuery === '' || structureText.includes(searchQuery) || siegeNom.includes(searchQuery);
                 const matchesOrganisme = filterOrganisme === '' || organisme.includes(filterOrganisme);
-                const matchesCategorie = filterCategorie === '' || categorie.includes(filterCategorie);
+                const matchesVille = filterVille === '' || ville.includes(filterVille);
                 
-                const matches = matchesSearch && matchesOrganisme && matchesCategorie;
+                const matches = matchesSearch && matchesOrganisme && matchesVille;
                 
                 structure.style.display = matches ? '' : 'none';
                 if (matches) {
@@ -345,14 +719,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Mettre à jour le compteur de structures dans l'en-tête
             const countSpan = card.querySelector('.structures-count');
-            if (countSpan) {
-                countSpan.textContent = visibleInSiege;
-            }
+            if (countSpan) countSpan.textContent = visibleInSiege;
             
-            // Masquer/afficher le groupe
-            if (searchQuery === '' && filterOrganisme === '' && filterCategorie === '') {
+            if (searchQuery === '' && filterOrganisme === '' && filterVille === '') {
                 card.style.display = '';
                 totalVisibleStructures += structuresCards.length;
             } else {
@@ -360,12 +730,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 totalVisibleStructures += visibleInSiege;
             }
         });
-        
-        updateResultCount(totalVisibleStructures);
     }
 
-    // 3. RECHERCHE SPÉCIFIQUE PAR structure
-    function filterstructures(siegeId, query) {
+    function filterStructuresInSiege(siegeId, query) {
         const grid = document.getElementById(siegeId + '-grid');
         if (!grid) return;
         
@@ -387,187 +754,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 noResultMsg.classList.add('hidden');
             }
         }
-        
-        return visibleCount;
     }
 
-    // 4. INITIALISATION DES ÉCOUTEURS D'ÉVÉNEMENTS
-    // Recherche globale
-    const searchInput = document.getElementById('searchGroupes');
-    if (searchInput) {
-        searchInput.addEventListener('input', filterStructures);
-    }
+    // Écouteurs
+    document.getElementById('searchGroupes')?.addEventListener('input', filterStructures);
+    document.getElementById('filterOrganisme')?.addEventListener('change', filterStructures);
+    document.getElementById('filterVille')?.addEventListener('change', filterStructures);
     
-    // Filtres déroulants
-    const filterOrganisme = document.getElementById('filterOrganisme');
-    const filterCategorie = document.getElementById('filterCategorie');
-    
-    if (filterOrganisme) filterOrganisme.addEventListener('change', filterStructures);
-    if (filterCategorie) filterCategorie.addEventListener('change', filterStructures);
-    
-    // Bouton réinitialiser
-    const resetBtn = document.getElementById('resetFilters');
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            if (searchInput) searchInput.value = '';
-            if (filterOrganisme) filterOrganisme.value = '';
-            if (filterCategorie) filterCategorie.value = '';
-            filterStructures();
-            
-            // Réinitialiser les recherches d'structures
-            document.querySelectorAll('.search-structure').forEach(input => {
-                input.value = '';
-                const siegeId = input.dataset.siegeId;
-                filterstructures(siegeId, '');
-            });
+    document.getElementById('resetFilters')?.addEventListener('click', function() {
+        document.getElementById('searchGroupes').value = '';
+        document.getElementById('filterOrganisme').value = '';
+        document.getElementById('filterVille').value = '';
+        filterStructures();
+        document.querySelectorAll('.search-structure').forEach(input => {
+            input.value = '';
+            filterStructuresInSiege(input.dataset.siegeId, '');
         });
-    }
-
-    // Recherches d'structures
+    });
+    
     document.querySelectorAll('.search-structure').forEach(input => {
-        input.addEventListener('input', function(e) {
-            const query = this.value.toLowerCase().trim();
-            const siegeId = this.dataset.siegeId;
-            filterstructures(siegeId, query);
+        input.addEventListener('input', function() {
+            filterStructuresInSiege(this.dataset.siegeId, this.value.toLowerCase().trim());
         });
     });
 
-    // 5. FONCTION DE MISE À JOUR DU COMPTEUR GLOBAL
-    function updateResultCount(visibleCount) {
-        const totalStructures = document.querySelectorAll('.structure-card').length;
-        const visibleGroupes = Array.from(document.querySelectorAll('.groupe-card'))
-            .filter(el => el.style.display !== 'none').length;
-        
-        const countDisplay = document.querySelector('.text-sm.text-gray-600.bg-gray-50 span');
-        if (countDisplay) {
-            if (visibleCount < totalStructures) {
-                countDisplay.textContent = `${visibleCount} structures - ${visibleGroupes} sièges (filtrés)`;
-            } else {
-                countDisplay.textContent = `{{ $totalStructures }} structures - ${visibleGroupes} sièges`;
-            }
-        }
-    }
-
-    // 6. MODAL DÉTAILS
-    const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
-    viewDetailsButtons.forEach(btn => {
+    // ==================== MODAL DÉTAILS AVEC LOGO ====================
+    document.querySelectorAll('.view-details-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            const structure = JSON.parse(this.dataset.structure); 
-            document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme ?? '-';
-            document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme ?? '-';
+            const structure = JSON.parse(this.dataset.structure);
+            const org = structure.organisme || {};
+            
+            // Informations principales
+            document.getElementById('modal-organisme-detail').textContent = org.nom_organisme || '-';
+            document.getElementById('modal-organisme-text').textContent = org.nom_organisme || '-';
             document.getElementById('modal-categories').textContent = structure.categories || 'Non spécifié';
             document.getElementById('modal-public_cible').textContent = structure.public_cible || 'Non spécifié';
             document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
             
+            // Site web
             const siteElement = document.getElementById('modal-site');
-            if (structure.site) {
-                siteElement.innerHTML = structure.organisme?.site
-                ? `<a href="${structure.organisme.site}" target="_blank" rel="noopener noreferrer" class="text-[#255156] hover:text-[#8bbdc3]">
-                    ${structure.organisme.site}
-                </a>`
-                : `<span class="text-gray-400 italic">Aucun site disponible</span>`;
-
+            if (org.site) {
+                siteElement.innerHTML = `<a href="${org.site}" target="_blank" style="color: #255156; text-decoration: underline;">${org.site}</a>`;
             } else {
                 siteElement.innerHTML = '<span class="text-gray-400">Non disponible</span>';
             }
             
-            document.getElementById('modal-siege_ville').textContent = structure.organisme?.ville && structure.organisme?.code_postal ? `${structure.organisme.ville} (${structure.organisme.code_postal})` : 'Non spécifié';
-            document.getElementById('modal-siege_adresse').textContent = structure.organisme?.adresse || 'Non spécifié';
+            // Localisation
+            document.getElementById('modal-siege_ville').textContent = org.ville && org.code_postal ? `${org.ville} (${org.code_postal})` : 'Non spécifié';
+            document.getElementById('modal-siege_adresse').textContent = org.adresse || 'Non spécifié';
             document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
             document.getElementById('modal-code_postal').textContent = structure.code_postal || 'Non spécifié';
             document.getElementById('modal-adresse').textContent = structure.adresse || 'Non spécifié';
+            
+            // Contact
             document.getElementById('modal-telephone').textContent = structure.telephone || 'Non disponible';
             document.getElementById('modal-email').textContent = structure.email || 'Non disponible';
             document.getElementById('modal-contact').textContent = structure.contact || 'Non spécifié';
+            
+            // Description
             document.getElementById('modal-description').textContent = structure.description || 'Aucune description disponible';
-            document.getElementById('modal-hebergement').textContent = structure.hebergement || 'Non spécifié';
-            document.getElementById('modal-details').textContent = structure.details || 'Aucun détail spécifique';
+            
+            // ==================== GESTION DU LOGO DANS LA MODALE ====================
+            const modalLogoImg = document.getElementById('modal-logo-img-detail');
+            const modalLogoIcon = document.getElementById('modal-logo-icon-detail');
+            
+            if (org.logo_path && org.logo_path !== '') {
+                const logoUrl = "{{ asset('storage/') }}/" + org.logo_path;
+                modalLogoImg.src = logoUrl;
+                modalLogoImg.style.display = 'block';
+                modalLogoIcon.style.display = 'none';
+            } else {
+                modalLogoImg.style.display = 'none';
+                modalLogoIcon.style.display = 'block';
+            }
         });
     });
-
-    // Initialisation du compteur
-    updateResultCount(document.querySelectorAll('.structure-card').length);
 });
 </script>
-
-<style>
-/* Styles spécifiques à la liste groupée */
-.hidden {
-    display: none;
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.structure-card {
-    transition: all 0.2s ease-in-out;
-}
-
-.groupe-header {
-    transition: all 0.2s ease;
-}
-
-.groupe-header:hover {
-    background: linear-gradient(135deg, #1a3a3e, #4b7479) !important;
-}
-
-/* Animation d'entrée */
-.groupe-card {
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Style pour les selects */
-select {
-    cursor: pointer;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 12px;
-    padding-right: 28px !important;
-}
-
-/* Badge de filtre actif */
-.bg-\[\\#255156\]\/10 {
-    transition: all 0.2s ease;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .groupe-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .groupe-header .flex.items-center.justify-between {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .flex.flex-wrap.items-center.gap-2 {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .flex-1.min-w-\[200px\],
-    .w-48,
-    .w-40 {
-        width: 100%;
-    }
-}
-</style>
 @endsection
