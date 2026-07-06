@@ -963,7 +963,6 @@
                 if (nextBtn) nextBtn.style.opacity = '1';
             }, 300);
         });
-
         function startAutoSlide() {
             if (autoSlideInterval) clearInterval(autoSlideInterval);
             if (isPaused) return;
@@ -981,7 +980,6 @@
                 }
             }, 5000);
         }
-
         function stopAutoSlide() {
             if (autoSlideInterval) {
                 clearInterval(autoSlideInterval);
