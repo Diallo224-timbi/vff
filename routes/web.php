@@ -16,9 +16,15 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\DashboardUserController;
+use App\Models\Organisme;
+use App\Models\Structures;
+use App\Models\User;
 
 Route::get('/', function () {
-    return view('welcome');
+     $organismes = Organisme::orderBy('nom_organisme')->get();
+     $structures = Structures::all();
+     $user = User::all();
+    return view('welcome', compact('organismes', 'structures', 'user'));
 });
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])

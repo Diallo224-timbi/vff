@@ -153,4 +153,11 @@ class OrganismeController extends Controller
         $structures = $organisme->structures;
         return view('organismes.structures', compact('organisme', 'structures'));
     } 
+
+    // afficher les logo dans la page welcome
+    public function showLogos()
+    {
+        $organismes = Organisme::all();
+        return view('welcome', compact('organismes'));
+    }
 }

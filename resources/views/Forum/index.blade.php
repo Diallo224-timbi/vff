@@ -946,7 +946,6 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 0.5rem 0.75rem !important;
     font-size: 0.875rem !important;
 }
-
 .swal2-input:focus, .swal2-textarea:focus, .swal2-select:focus {
     border-color: #255156 !important;
     box-shadow: 0 0 0 3px rgba(37, 81, 86, 0.1) !important;
