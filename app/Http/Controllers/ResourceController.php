@@ -58,9 +58,7 @@ class ResourceController extends Controller
    public function store(Request $request)
     {
     $isAjax = $request->ajax() || $request->wantsJson();
-
     $maxSize = 51200; // 50 Mo en KB
-
     // Validation
     $validator = Validator::make($request->all(), [
         'title' => 'required|string|max:255',
