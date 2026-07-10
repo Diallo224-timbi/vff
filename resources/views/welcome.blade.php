@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Plateforme sécurisée qui réunit l’ensemble des acteurs engagés contre les violences faites aux femmes dans les Alpes-Maritimes, afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.">
     <title>Plateforme Multi-Acteurs VFF - Alpes-Maritimes</title>
     <!-- Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,7 +19,8 @@
 
         html, body {
             height: 100%;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             background: #0a0a0a;
             color: #fff;
             font-family: 'Inter', sans-serif;
@@ -46,20 +48,20 @@
         /* --- HEADER --- */
         .header {
             position: fixed;
-            top: 20px;
-            left: 30px;
-            right: 30px;
+            top: 16px;
+            left: 16px;
+            right: 16px;
             z-index: 100;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 10px;
             background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 60px;
-            padding: 8px 20px 8px 12px;
+            padding: 6px 16px 6px 10px;
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
             animation: headerFade 0.8s ease-out;
         }
@@ -72,26 +74,27 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .header-logo-box {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             background: rgba(255, 255, 255, 0.06);
-            padding: 6px 14px 6px 10px;
+            padding: 4px 10px 4px 6px;
             border-radius: 40px;
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .header-logo-box img {
-            width: 36px;
+            width: 28px;
             height: auto;
         }
 
         .header-logo-box .org-name {
-            font-size: 12px;
+            font-size: 9px;
             line-height: 1.2;
             color: #b0b0b0;
             font-weight: 500;
@@ -103,39 +106,36 @@
         }
 
         .header-title {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
             color: #4fd1d9;
-            letter-spacing: 0.5px;
-            padding-left: 4px;
+            letter-spacing: 0.3px;
+            padding-left: 8px;
             border-left: 1px solid rgba(255, 255, 255, 0.1);
-            padding-left: 12px;
-        }
-
-        .header-title span {
-            font-weight: 300;
-            color: #888;
+            display: none;
         }
 
         .header-buttons {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .btn-outline {
             background: transparent;
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 8px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 10px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.25s ease;
             text-decoration: none;
             display: inline-block;
             font-family: 'Inter', sans-serif;
+            white-space: nowrap;
         }
 
         .btn-outline:hover {
@@ -148,15 +148,16 @@
             background: linear-gradient(135deg, #4fd1d9, #3bbac1);
             color: #0a0a0a;
             border: none;
-            padding: 8px 24px;
+            padding: 5px 14px;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.25s ease;
             text-decoration: none;
             display: inline-block;
             font-family: 'Inter', sans-serif;
+            white-space: nowrap;
         }
 
         .btn-primary:hover {
@@ -166,7 +167,7 @@
 
         /* --- HERO --- */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             width: 100vw;
             background-image: url("{{ asset('img/photo.png') }}");
             background-size: cover;
@@ -175,7 +176,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            padding-left: 80px;
+            padding: 90px 20px 180px 20px;
         }
 
         .hero::before {
@@ -216,6 +217,7 @@
             position: relative;
             z-index: 3;
             max-width: 620px;
+            width: 100%;
             animation: contentFade 1s ease-out;
         }
 
@@ -227,30 +229,30 @@
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(79, 209, 217, 0.12);
             border: 1px solid rgba(79, 209, 217, 0.20);
-            padding: 5px 16px;
+            padding: 4px 12px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 500;
             color: #4fd1d9;
             letter-spacing: 0.3px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .hero-badge i {
-            font-size: 12px;
+            font-size: 10px;
         }
 
         .hero h1 {
             font-family: 'Poppins', sans-serif;
             font-weight: 800;
-            font-size: 72px;
-            line-height: 1.05;
+            font-size: 36px;
+            line-height: 1.08;
             color: #fff;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
         }
 
         .hero h1 .highlight {
@@ -261,8 +263,8 @@
         }
 
         .hero-subtitle {
-            font-size: 18px;
-            line-height: 1.7;
+            font-size: 14px;
+            line-height: 1.6;
             color: rgba(255, 255, 255, 0.85);
             max-width: 500px;
             font-weight: 400;
@@ -274,11 +276,11 @@
         }
 
         .hero-divider {
-            width: 60px;
+            width: 40px;
             height: 3px;
             background: linear-gradient(90deg, #4fd1d9, transparent);
             border-radius: 2px;
-            margin: 24px 0 28px 0;
+            margin: 16px 0 20px 0;
         }
 
         /* --- STATS BADGE --- */
@@ -291,14 +293,17 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 40px;
-            padding: 6px 8px;
+            padding: 4px 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
         }
 
         .stats-badge .stat-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
+            gap: 6px;
+            padding: 5px 12px;
             border-right: 1px solid rgba(255, 255, 255, 0.06);
         }
 
@@ -309,12 +314,12 @@
         .stats-badge .stat-number {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 14px;
             color: #4fd1d9;
         }
 
         .stats-badge .stat-label {
-            font-size: 12px;
+            font-size: 9px;
             color: rgba(255, 255, 255, 0.6);
             font-weight: 400;
         }
@@ -322,12 +327,15 @@
         /* --- SERVICES --- */
         .services {
             position: absolute;
-            bottom: 130px;
-            left: 80px;
+            bottom: 115px;
+            left: 16px;
+            right: 16px;
             z-index: 3;
             display: flex;
-            gap: 16px;
+            gap: 8px;
             animation: contentFade 1s ease-out 0.3s both;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .service-item {
@@ -336,11 +344,13 @@
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-top: 2px solid rgba(79, 209, 217, 0.4);
-            padding: 14px 22px;
-            border-radius: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
             transition: all 0.3s ease;
             cursor: default;
-            min-width: 100px;
+            flex: 1;
+            min-width: 55px;
+            max-width: 120px;
             text-align: center;
         }
 
@@ -351,23 +361,24 @@
         }
 
         .service-item i {
-            font-size: 20px;
+            font-size: 16px;
             color: #4fd1d9;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .service-item h3 {
-            font-size: 13px;
+            font-size: 10px;
             font-weight: 600;
             color: #fff;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
         }
 
         .service-item p {
-            font-size: 11px;
+            font-size: 8px;
             color: rgba(255, 255, 255, 0.5);
-            margin-top: 2px;
+            margin-top: 1px;
+            display: none;
         }
 
         /* --- BANDEAU PARTENAIRES --- */
@@ -378,99 +389,103 @@
             right: 0;
             z-index: 3;
             background: rgba(255, 255, 255, 0.96);
-            border-top: 3px solid #4fd1d9;
-            padding: 18px 30px;
+            border-top: 2px solid #4fd1d9;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 24px;
+            gap: 10px;
             animation: contentFade 1s ease-out 0.6s both;
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.25);
-            min-height: 90px;
+            min-height: 62px;
+            flex-wrap: wrap;
         }
 
         .partners-bar .label-group {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 2px;
+            gap: 0px;
             flex-shrink: 0;
         }
 
         .partners-bar .label {
-            font-size: 13px;
+            font-size: 10px;
             color: #1a1a2e;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
         }
 
         .partners-bar .label i {
             color: #4fd1d9;
-            font-size: 18px;
+            font-size: 14px;
         }
 
         .partners-bar .count {
-            font-size: 11px;
+            font-size: 8px;
             color: #888;
             font-weight: 400;
-            padding-left: 28px;
+            padding-left: 0px;
         }
 
         .partners-carousel {
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
             overflow: hidden;
             position: relative;
-            max-width: 78%;
+            max-width: 100%;
+            min-width: 0;
         }
 
         .partners-carousel-wrapper {
             overflow: hidden;
             flex: 1;
             position: relative;
-            padding: 4px 0;
+            padding: 2px 0;
+            min-width: 0;
         }
 
         .partner-logos {
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 16px;
             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             white-space: nowrap;
+            will-change: transform;
         }
 
         .partners-bar .partner-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 4px;
             transition: all 0.3s ease;
             background: #ffffff;
-            padding: 10px 22px;
-            border-radius: 10px;
+            padding: 6px 10px;
+            border-radius: 8px;
             border: 1px solid #e8e8e8;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             flex-shrink: 0;
-            min-width: 130px;
-            min-height: 76px;
+            min-width: 60px;
+            min-height: 42px;
         }
 
         .partners-bar .partner-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 28px rgba(79, 209, 217, 0.15);
             border-color: #4fd1d9;
         }
 
         .partners-bar .partner-item img {
-            height: 56px;
+            height: 30px;
             width: auto;
-            max-width: 120px;
+            max-width: 55px;
             object-fit: contain;
         }
 
@@ -482,7 +497,7 @@
         }
 
         .partners-bar .partner-item span {
-            font-size: 13px;
+            font-size: 9px;
             color: #333;
             font-weight: 500;
         }
@@ -490,17 +505,17 @@
         /* Boutons de navigation */
         .nav-btn {
             background: transparent;
-            border: 1.5px solid rgba(79, 209, 217, 0.4);
+            border: 1px solid rgba(79, 209, 217, 0.3);
             color: #4fd1d9;
-            width: 38px;
-            height: 38px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 10px;
             flex-shrink: 0;
         }
 
@@ -517,138 +532,146 @@
         }
 
         .nav-btn.prev {
-            margin-right: 2px;
+            margin-right: 0px;
         }
 
         .nav-btn.next {
-            margin-left: 2px;
+            margin-left: 0px;
         }
 
         /* --- RESPONSIVE --- */
-        @media (max-width: 1100px) {
+        @media (min-width: 601px) {
+            .header {
+                top: 20px;
+                left: 30px;
+                right: 30px;
+                padding: 8px 20px 8px 12px;
+                border-radius: 60px;
+            }
+            .header-logo-box img {
+                width: 36px;
+            }
+            .header-logo-box .org-name {
+                font-size: 12px;
+            }
+            .header-title {
+                display: block;
+                font-size: 13px;
+                padding-left: 12px;
+            }
+            .btn-outline {
+                padding: 8px 20px;
+                font-size: 13px;
+            }
+            .btn-primary {
+                padding: 8px 24px;
+                font-size: 13px;
+            }
             .hero {
                 padding-left: 50px;
+                padding-right: 50px;
+                padding-top: 100px;
+                padding-bottom: 120px;
             }
             .hero h1 {
                 font-size: 56px;
             }
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            .hero-divider {
+                width: 60px;
+                margin: 20px 0 24px 0;
+            }
+            .stats-badge .stat-number {
+                font-size: 18px;
+            }
+            .stats-badge .stat-label {
+                font-size: 12px;
+            }
+            .service-item {
+                padding: 14px 22px;
+                min-width: 100px;
+                max-width: none;
+            }
+            .service-item i {
+                font-size: 20px;
+            }
+            .service-item h3 {
+                font-size: 13px;
+            }
+            .service-item p {
+                display: block;
+                font-size: 11px;
+            }
             .services {
                 left: 50px;
+                right: auto;
                 bottom: 110px;
+                gap: 16px;
+                flex-wrap: nowrap;
+            }
+            .partners-bar {
+                padding: 18px 30px;
+                gap: 20px;
+                min-height: 90px;
+            }
+            .partners-bar .label {
+                font-size: 13px;
+                gap: 8px;
+            }
+            .partners-bar .label i {
+                font-size: 18px;
+            }
+            .partners-bar .count {
+                font-size: 11px;
+                padding-left: 28px;
             }
             .partners-bar .partner-item {
-                min-width: 110px;
-                padding: 8px 16px;
-                min-height: 64px;
+                padding: 10px 22px;
+                min-width: 130px;
+                min-height: 76px;
             }
             .partners-bar .partner-item img {
-                height: 44px;
-                max-width: 90px;
+                height: 56px;
+                max-width: 120px;
+            }
+            .partners-bar .partner-item span {
+                font-size: 13px;
+            }
+            .nav-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 14px;
+            }
+            .partners-carousel {
+                gap: 12px;
+                max-width: 78%;
+            }
+            .partner-logos {
+                gap: 28px;
             }
         }
 
-        @media (max-width: 900px) {
-            .header {
-                top: 12px;
-                left: 16px;
-                right: 16px;
-                padding: 6px 14px 6px 10px;
-                border-radius: 40px;
-            }
+        @media (min-width: 901px) {
             .header-title {
-                display: none;
-            }
-            .header-logo-box .org-name {
-                font-size: 10px;
-            }
-            .header-logo-box img {
-                width: 30px;
-            }
-            .hero {
-                padding-left: 30px;
-                padding-right: 30px;
+                display: block;
             }
             .hero h1 {
-                font-size: 44px;
+                font-size: 72px;
+            }
+            .hero {
+                padding-left: 80px;
+                padding-right: 80px;
             }
             .hero-subtitle {
-                font-size: 15px;
-            }
-            .hero-divider {
-                width: 40px;
-                margin: 16px 0 20px 0;
+                font-size: 18px;
             }
             .services {
-                left: 30px;
-                right: 30px;
-                bottom: 95px;
-                gap: 10px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .service-item {
-                padding: 10px 16px;
-                min-width: 70px;
-                flex: 1;
-            }
-            .service-item i {
-                font-size: 16px;
-            }
-            .service-item h3 {
-                font-size: 11px;
-            }
-            .service-item p {
-                display: none;
-            }
-            .stats-badge .stat-item {
-                padding: 6px 14px;
-            }
-            .stats-badge .stat-number {
-                font-size: 15px;
-            }
-            .stats-badge .stat-label {
-                font-size: 10px;
-            }
-            .partners-bar {
-                padding: 12px 16px;
-                gap: 12px;
-                min-height: 72px;
-                flex-wrap: wrap;
-            }
-            .partners-bar .label-group {
-                flex-direction: row;
-                align-items: center;
-                gap: 8px;
-            }
-            .partners-bar .count {
-                padding-left: 0;
-                font-size: 10px;
-            }
-            .partners-bar .label {
-                font-size: 11px;
+                left: 80px;
             }
             .partners-carousel {
-                max-width: 100%;
-                gap: 8px;
-            }
-            .partners-bar .partner-item {
-                min-width: 80px;
-                padding: 6px 12px;
-                min-height: 54px;
-            }
-            .partners-bar .partner-item img {
-                height: 36px;
-                max-width: 70px;
-            }
-            .nav-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 12px;
-            }
-            .btn-outline,
-            .btn-primary {
-                padding: 6px 14px;
-                font-size: 11px;
+                max-width: 78%;
             }
         }
 
@@ -659,17 +682,15 @@
                 right: 10px;
                 padding: 4px 10px 4px 8px;
                 border-radius: 30px;
-                flex-wrap: nowrap;
             }
             .header-logo-box {
-                padding: 4px 10px 4px 6px;
-                gap: 6px;
+                padding: 3px 8px 3px 5px;
             }
             .header-logo-box img {
-                width: 24px;
+                width: 22px;
             }
             .header-logo-box .org-name {
-                font-size: 8px;
+                font-size: 7px;
             }
             .header-logo-box .org-name br {
                 display: none;
@@ -678,106 +699,145 @@
                 display: none;
             }
             .header-buttons .btn-primary {
-                padding: 2px 10px;
-                font-size: 10px;
+                padding: 3px 10px;
+                font-size: 9px;
             }
             .hero {
-                padding-left: 16px;
-                padding-right: 16px;
+                padding: 80px 14px 160px 14px;
                 align-items: center;
                 text-align: center;
             }
             .hero h1 {
-                font-size: 36px;
+                font-size: 28px;
             }
             .hero-subtitle {
-                font-size: 13px;
+                font-size: 12px;
                 max-width: 100%;
             }
             .hero-subtitle br {
                 display: none;
             }
             .hero-badge {
-                font-size: 10px;
-                padding: 4px 12px;
-                margin-bottom: 16px;
+                font-size: 9px;
+                padding: 3px 10px;
+                margin-bottom: 12px;
             }
             .hero-divider {
-                margin: 14px auto 18px auto;
+                margin: 12px auto 14px auto;
             }
             .stats-badge {
-                flex-wrap: wrap;
-                justify-content: center;
+                padding: 3px 4px;
                 border-radius: 20px;
-                padding: 4px 6px;
-                gap: 0;
             }
             .stats-badge .stat-item {
-                padding: 4px 12px;
-                border-right: 1px solid rgba(255, 255, 255, 0.06);
-            }
-            .stats-badge .stat-item:last-child {
-                border-right: none;
+                padding: 3px 8px;
             }
             .stats-badge .stat-number {
-                font-size: 13px;
+                font-size: 11px;
             }
             .stats-badge .stat-label {
-                font-size: 9px;
+                font-size: 8px;
             }
             .services {
-                left: 10px;
-                right: 10px;
-                bottom: 78px;
-                gap: 6px;
+                left: 8px;
+                right: 8px;
+                bottom: 75px;
+                gap: 4px;
             }
             .service-item {
-                padding: 8px 10px;
-                min-width: 50px;
+                padding: 6px 8px;
+                min-width: 40px;
                 border-top-width: 2px;
+                border-radius: 8px;
             }
             .service-item i {
-                font-size: 14px;
+                font-size: 12px;
             }
             .service-item h3 {
-                font-size: 9px;
+                font-size: 8px;
             }
             .partners-bar {
-                padding: 10px 10px;
-                min-height: 58px;
-                gap: 6px;
+                padding: 8px 8px;
+                min-height: 50px;
+                gap: 4px;
                 border-top-width: 2px;
             }
             .partners-bar .label {
-                font-size: 9px;
-                gap: 4px;
+                font-size: 8px;
+                gap: 3px;
             }
             .partners-bar .label i {
-                font-size: 14px;
+                font-size: 11px;
             }
             .partners-bar .count {
-                font-size: 8px;
+                font-size: 7px;
             }
             .partners-carousel {
                 gap: 4px;
             }
             .partners-bar .partner-item {
-                min-width: 55px;
-                padding: 4px 8px;
-                min-height: 38px;
+                min-width: 45px;
+                padding: 4px 6px;
+                min-height: 32px;
+                border-radius: 6px;
             }
             .partners-bar .partner-item img {
-                height: 28px;
-                max-width: 50px;
+                height: 24px;
+                max-width: 40px;
             }
             .partners-bar .partner-item span {
-                font-size: 8px;
+                font-size: 7px;
             }
             .nav-btn {
-                width: 22px;
-                height: 22px;
-                font-size: 10px;
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
                 border-width: 1px;
+            }
+            .partner-logos {
+                gap: 10px;
+            }
+            .partners-bar .label-group {
+                flex-direction: row;
+                align-items: center;
+                gap: 4px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+            .hero-subtitle {
+                font-size: 11px;
+            }
+            .service-item {
+                padding: 4px 6px;
+                min-width: 35px;
+            }
+            .service-item i {
+                font-size: 10px;
+            }
+            .service-item h3 {
+                font-size: 7px;
+            }
+            .partners-bar .partner-item {
+                min-width: 38px;
+                padding: 3px 5px;
+                min-height: 28px;
+            }
+            .partners-bar .partner-item img {
+                height: 20px;
+                max-width: 32px;
+            }
+            .stats-badge .stat-item {
+                padding: 2px 6px;
+            }
+            .stats-badge .stat-number {
+                font-size: 10px;
+            }
+            .stats-badge .stat-label {
+                font-size: 7px;
             }
         }
     </style>
@@ -795,7 +855,7 @@
                 </div>
             </div>
             <div class="header-title">
-                Plateforme <span>·</span> Multi-Acteurs
+                Plateforme <span>·</span> Multi-Acteurs VFF 06
             </div>
         </div>
         <div class="header-buttons">
@@ -816,25 +876,24 @@
 
             <div class="hero-divider" aria-hidden="true"></div>
 
-         <p class="hero-subtitle">
-            <strong style="color: rgb(255, 255, 255);">
-                Une plateforme sécurisée qui réunit l’ensemble des acteurs engagés contre les violences faites aux femmes, 
-                afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.
-            </strong>
-          </p>
+            <p class="hero-subtitle">
+                <strong style="color: rgb(255, 255, 255);">
+                    Une plateforme sécurisée qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes, 
+                    afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.
+                </strong>
+            </p>
 
-
-            <div style="margin-top: 28px;">
+            <div style="margin-top: 20px;">
                 <div class="stats-badge">
                     <div class="stat-item">
                         <span class="stat-number">{{ $organismes->count() }}</span>
-                        <span class="stat-label">Organisme</span>
+                        <span class="stat-label">Organismes</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">{{ $structures->count() }}</span>
                         <span class="stat-label">Structures</span>
                     </div>
-                     <div class="stat-item">
+                    <div class="stat-item">
                         <span class="stat-number">{{ $user->count() }}</span>
                         <span class="stat-label">Membres</span>
                     </div>
@@ -917,7 +976,8 @@
 
         function updateItemsPerView() {
             const width = window.innerWidth;
-            if (width < 600) itemsPerView = 2;
+            if (width < 400) itemsPerView = 2;
+            else if (width < 600) itemsPerView = 2;
             else if (width < 900) itemsPerView = 3;
             else itemsPerView = 4;
         }
@@ -935,7 +995,7 @@
             if (currentIndex < 0) currentIndex = maxIndex;
             else if (currentIndex > maxIndex) currentIndex = 0;
 
-            const itemWidth = logos[0].offsetWidth + 28;
+            const itemWidth = logos[0].offsetWidth + 16;
             const offset = currentIndex * itemWidth;
             
             const logosContainer = document.getElementById('partnerLogos');
@@ -963,6 +1023,7 @@
                 if (nextBtn) nextBtn.style.opacity = '1';
             }, 300);
         });
+
         function startAutoSlide() {
             if (autoSlideInterval) clearInterval(autoSlideInterval);
             if (isPaused) return;
@@ -980,6 +1041,7 @@
                 }
             }, 5000);
         }
+
         function stopAutoSlide() {
             if (autoSlideInterval) {
                 clearInterval(autoSlideInterval);
@@ -1011,7 +1073,6 @@
             setTimeout(() => {
                 updateItemsPerView();
                 moveCarousel(0);
-                // Démarrer après un délai
                 setTimeout(startAutoSlide, 2000);
             }, 100);
         });
@@ -1040,6 +1101,5 @@
             createParticles();
         });
     </script>
-
 </body>
 </html>

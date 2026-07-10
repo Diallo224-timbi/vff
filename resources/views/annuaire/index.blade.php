@@ -196,8 +196,8 @@
                                         <i class="fas fa-chevron-right text-gray-400 transition-transform duration-200 organisme-chevron"></i>
                                     </div>
                                     <!-- LOGO AVEC OBJECT-FIT POUR BIEN TENIR DANS LA CASE -->
-                                    <div class="flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center font-bold text-white"
-                                         style="background: linear-gradient(135deg, #255156, #4a8599); box-shadow: 0 2px 8px rgba(37,81,86,0.2); font-size: 1.1rem; min-width: 3rem; min-height: 3rem;">
+                                    <div class="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center font-bold text-white"
+                                         style="background: white; box-shadow: 0 2px 8px rgba(37,81,86,0.2); font-size: 1.1rem; min-width: 3rem; min-height: 3rem;">
                                         @php
                                             $firstStructure = $structuresByOrganisme->first();
                                             $logoPath = $firstStructure && $firstStructure->organisme ? $firstStructure->organisme->logo_path : null;
@@ -214,11 +214,12 @@
                                         @endphp
                                         
                                         @if($logoPath && file_exists(storage_path('app/public/' . $logoPath)))
-                                            <img src="{{ asset('storage/' . $logoPath) }}" 
-                                                 alt="Logo {{ $organismeNom }}"
-                                                 class="w-full h-full object-cover object-center"
-                                                 style="width: 100%; height: 100%; object-fit: cover; object-position: center;"
-                                                 onerror="this.style.display='none'; this.parentElement.textContent='{{ $initiales }}'; this.parentElement.style.fontSize='1.1rem';">
+                                            <img src="{{ asset('storage/' . $logoPath) }}"
+                                                alt="Logo {{ $organismeNom }}"
+                                                style="width:100%;
+                                                        height:100%;
+                                                        object-fit:contain;
+                                                        object-position:center;">
                                         @else
                                             {{ $initiales }}
                                         @endif
@@ -449,16 +450,20 @@
 </div>
 @endif
 
-<!-- MODAL DETAILS AMÉLIORÉ -->
+<!-- MODAL DETAILS  -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 800px;">
         <div class="modal-content border-0 shadow-2xl overflow-hidden" style="border-radius: 1rem;">
             <div style="background: linear-gradient(135deg, #255156, #3a7378); color: white; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center;">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center overflow-hidden">
-                        <div id="modal-logo-container" class="w-8 h-8 flex items-center justify-center">
-                            <i class="fas fa-building text-white text-xl" id="modal-logo-icon"></i>
-                            <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-cover hidden">
+                    <div class="modal-logo-frame w-16 h-18 rounded-lg bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <div id="modal-logo-container" class="w-full h-full flex items-center justify-center">
+                            <i class=" text-white text-xl" id="modal-logo-icon"></i>
+                            <img id="modal-logo-img" 
+                                 src="" 
+                                 alt="Logo" 
+                                 class="w-full h-full object-contain hidden logo-clickable"
+                                 title="Cliquez pour agrandir le logo">
                         </div>
                     </div>
                     <div>
@@ -591,6 +596,18 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL ZOOM LOGO -->
+<div class="modal fade" id="logoZoomModal" tabindex="-1" aria-labelledby="logoZoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered logo-zoom-dialog">
+        <div class="modal-content border-0 bg-transparent shadow-none">
+            <button type="button" class="btn-close btn-close-white logo-zoom-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            <div class="logo-zoom-body">
+                <img id="logoZoomImg" src="" alt="Logo agrandi" class="logo-zoom-image">
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('styles')
@@ -685,8 +702,102 @@
     .logo-container img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         object-position: center;
+    }
+
+    /* ===== LOGO DANS LE MODAL DETAILS ===== */
+    .modal-logo-frame {
+        width: 3rem;
+        height: 3rem;
+        min-width: 3rem;
+        min-height: 3rem;
+    }
+    #modal-logo-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    #modal-logo-container i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #modal-logo-container i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Logo cliquable = zoom au survol + curseur pointeur */
+    .logo-clickable {
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .logo-clickable:hover,
+    .logo-clickable:focus {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+
+    /* ===== MODAL DE ZOOM DU LOGO ===== */
+    .logo-zoom-dialog {
+        max-width: 90vw;
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+    .logo-zoom-dialog .modal-content {
+        display: inline-flex;
+        position: relative;
+        width: auto;
+    }
+    .logo-zoom-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+    }
+    .logo-zoom-image {
+        max-width: 80vw;
+        max-height: 80vh;
+        border-radius: 1rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+        background: white;
+        object-fit: contain;
+    }
+    .logo-zoom-close {
+        position: absolute;
+        top: -2.5rem;
+        right: 0;
+        z-index: 10;
+        opacity: 1;
+    }
+
+    /* ===== RESPONSIVE MOBILE ===== */
+    @media (max-width: 576px) {
+        .modal-logo-frame {
+            width: 2.25rem;
+            height: 2.25rem;
+            min-width: 2.25rem;
+            min-height: 2.25rem;
+        }
+        #detailsModalLabel {
+            font-size: 1rem;
+        }
+        .logo-zoom-dialog {
+            max-width: 95vw;
+            margin: 1rem auto;
+        }
+        .logo-zoom-image {
+            max-width: 90vw;
+            max-height: 65vh;
+        }
+        .logo-zoom-close {
+            top: -2.25rem;
+        }
     }
 </style>
 @endsection
@@ -695,6 +806,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Base URL du stockage, calculée une seule fois pour éviter les doubles slashs
+    const storageBaseUrl = "{{ asset('storage') }}/";
+
     function initAccordion() {
         const headers = document.querySelectorAll('.organisme-header');
         // Tous fermés par défaut
@@ -766,6 +880,21 @@
         if(filterOrganisme) filterOrganisme.addEventListener('change', filterAndSearch);
         const filterCity = document.getElementById('filterCity');
         if(filterCity) filterCity.addEventListener('change', filterAndSearch);
+
+        // ===== Gestion de la modale de zoom du logo =====
+        const logoImg = document.getElementById('modal-logo-img');
+        const logoZoomModalEl = document.getElementById('logoZoomModal');
+        const logoZoomImg = document.getElementById('logoZoomImg');
+        const logoZoomModal = logoZoomModalEl ? new bootstrap.Modal(logoZoomModalEl) : null;
+
+        if(logoImg && logoZoomModal) {
+            logoImg.addEventListener('click', function() {
+                if(this.dataset.zoomSrc) {
+                    logoZoomImg.src = this.dataset.zoomSrc;
+                    logoZoomModal.show();
+                }
+            });
+        }
         
         const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
         viewDetailsButtons.forEach(btn => {
@@ -790,16 +919,36 @@
                     document.getElementById('modal-email').textContent = structure.email || '-';
                     
                     // Gestion du logo dans la modale
-                    const logoImg = document.getElementById('modal-logo-img');
+                    const logoImgEl = document.getElementById('modal-logo-img');
                     const logoIcon = document.getElementById('modal-logo-icon');
+
                     if(org.logo_path && org.logo_path !== '') {
-                        const logoUrl = "{{ asset('storage/') }}/" + org.logo_path;
-                        logoImg.src = logoUrl;
-                        logoImg.classList.remove('hidden');
-                        logoIcon.classList.add('hidden');
-                    } else {
-                        logoImg.classList.add('hidden');
+                        const logoUrl = storageBaseUrl + org.logo_path;
+
+                        // Reset des états avant chargement
+                        logoImgEl.onerror = null;
+                        logoImgEl.classList.add('hidden');
                         logoIcon.classList.remove('hidden');
+
+                        logoImgEl.onload = function() {
+                            logoImgEl.classList.remove('hidden');
+                            logoIcon.classList.add('hidden');
+                        };
+                        logoImgEl.onerror = function() {
+                            logoImgEl.classList.add('hidden');
+                            logoIcon.classList.remove('hidden');
+                            delete logoImgEl.dataset.zoomSrc;
+                        };
+
+                        logoImgEl.src = logoUrl;
+                        logoImgEl.dataset.zoomSrc = logoUrl;
+                    } else {
+                        logoImgEl.onerror = null;
+                        logoImgEl.onload = null;
+                        logoImgEl.removeAttribute('src');
+                        logoImgEl.classList.add('hidden');
+                        logoIcon.classList.remove('hidden');
+                        delete logoImgEl.dataset.zoomSrc;
                     }
                 } catch(e) { console.error('Erreur:', e); }
             });

@@ -7,6 +7,7 @@ use App\Models\Structures;
 use App\Models\Resource;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use App\Models\Organisme;
 
 class DashboardController extends Controller
 {
@@ -18,8 +19,18 @@ class DashboardController extends Controller
         $pendingUsers = User::where('etatV', 'attente')->count();
         $admins = User::where('role', 'admin')->count();
         $moderateurs = User::where('role', 'moderateur')->count();
+        $moderateur_classique = User::where('role', 'moderateur_classique')->count();
         $usersCount = User::where('role', 'user')->count();
-
+       //recuperer le nom des organisme
+        $organismes = Organisme::all();
+        $organismesCount = $organismes->count();
+        //nombre de structure par organisme
+        $organismeStructures = [];
+        foreach ($organismes as $organisme) {
+            $count = Structures::where('id_organisme', $organisme->id)->count();
+            $organismeStructures[] = $count;
+        }
+       
         // ===== STATISTIQUES STRUCTURES =====
         $totalStructures = Structures::count();
        // $typesCount = Structures::whereNotNull('type_structure')->distinct('type_structure')->count('type_structure');
@@ -44,9 +55,11 @@ class DashboardController extends Controller
         // Types de fichiers
         $imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
         $videoTypes = ['mp4', 'webm', 'avi', 'mov', 'mkv'];
+        $liens  = ['lien'];
         
         $stats = [
             'images' => Resource::whereIn('file_type', $imageTypes)->count(),
+            'liens' => Resource::where('file_type', 'lien')->count(),
             'videos' => Resource::whereIn('file_type', $videoTypes)->count(),
             'documents' => Resource::whereNotIn('file_type', array_merge($imageTypes, $videoTypes))->count(),
             'categories' => [
@@ -129,6 +142,7 @@ for($i = 6; $i >= 0; $i--) {
             'pendingUsers',
             'admins',
             'moderateurs',
+            'moderateur_classique',
             'usersCount',
             'totalStructures',
             //'typesCount',
@@ -147,7 +161,10 @@ for($i = 6; $i >= 0; $i--) {
             'activityDeletes',
             'recentUsers',
             'recentDocuments',
-            'recentLogs'
+            'recentLogs',
+            'organismes',
+            'organismesCount',
+            'organismeStructures'
         ));
     }
 }

@@ -24,7 +24,6 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-
   <!-- changement de vite pour O2switch -->
   <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
   <script src="{{ asset('build/assets/app.css') }}" defer></script>
@@ -453,9 +452,9 @@
     <div class="profile-dropdown ">
       <button id="profileBtn" class="profile-btn">
         <div class="w-8 h-8 rounded-full bg-linear-to-r from-gray-900 to-gray-800 flex items-center justify-center text-white font-semibold">
-          {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}{{ strtoupper(substr(Auth::user()->prenom,0,1)) }}
+          {{ strtoupper(substr(Auth::user()->prenom, 0, 1)) }}{{ strtoupper(substr(Auth::user()->name,0,1)) }}
         </div>
-        <span class="hidden md:inline">{{ Auth::user()->name }}</span>
+        <span class="hidden md:inline">{{ Auth::user()->prenom }}</span>
         <i class='bx bx-chevron-down'></i>
       </button>
       <div id="profileMenu" class="dropdown-menu-custom text-[#076a75]">

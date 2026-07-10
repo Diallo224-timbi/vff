@@ -96,7 +96,7 @@
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center">
                                     <i class="fas fa-th-large text-white text-sm"></i>
                                 </div>
-                                <div>
+                                <div>   
                                     <p class="font-semibold text-gray-800">Tous les sujets</p>
                                     <p class="text-xs text-gray-500">{{ $threads->total() }} sujets</p>
                                 </div>
@@ -114,11 +114,8 @@
                              data-category-display="{{ $category->name }}">
                             <div class="p-3 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                                        <i class="fas fa-folder text-white text-sm"></i>
-                                    </div>
                                     <div>
-                                        <p class="font-semibold text-gray-800">{{ $category->name }}</p>
+                                        <p class="font-semibold text-gray-800"><i class="fas fa-plus-circle me-1"></i>{{ $category->name }}</p>
                                         <p class="text-xs text-gray-500">{{ $categoryThreadCount }} sujet(s)</p>
                                     </div>
                                 </div>
@@ -313,7 +310,7 @@
     <input type="hidden" name="body" id="edit_thread_body">
     <input type="hidden" name="category_id" id="edit_thread_category_id">
 </form>
-<!-- Formulaire de suppression caché -->
+<!-- Formulaire de suppression  -->
 <form id="deleteThreadForm" method="POST" style="display: none;">
     @csrf
     @method('DELETE')

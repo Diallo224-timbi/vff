@@ -6,9 +6,7 @@
     <!-- Boxicons CDN - CRITICAL pour les icônes -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 @endsection
-
 @section('content')
-  
 {{-- HEADER --}}
 <header>
     <div class="header-inner">
@@ -27,11 +25,11 @@
 <section class="hero">
     <div class="hero-inner">
         <span class="hero-badge">Plateforme officielle</span>
-        <h2>Bienvenue sur la plateforme<br>du Schéma Départemental</h2>
+        <h2>Bienvenue sur la plateforme<br>Multi-Acteurs VFF 06</h2>
         <p>
-            Espace numérique dédié aux acteurs et partenaires du schéma départemental
-            pour les droits des femmes et l'égalité dans les Alpes-Maritimes.
-            Accédez aux ressources, à l'annuaire et à la cartographie.
+            Espace numérique sécurisé dédié aux professionnels engagés dans la prévention,
+            la protection et l'accompagnement des femmes victimes de violences dans les
+            Alpes-Maritimes.
         </p>
         <div class="hero-contact">
             <div class="hero-contact-card">
@@ -47,7 +45,6 @@
         </div>
     </div>
 </section>
-
 {{-- MAIN --}}
 <main class="main">
     {{-- Accès rapides --}}
@@ -62,7 +59,6 @@
                 'resources.index' => 'Ressources'
             ];
         @endphp
-        
         @foreach($routes as $routeName => $title)
             @if(Route::has($routeName))
                 <a href="{{ route($routeName) }}" class="qa-card">
@@ -76,7 +72,6 @@
                 </a>
             @endif
         @endforeach
-        
         @auth
             @if(auth()->user()->role === 'admin' && Route::has('dashboard'))
             <a href="{{ route('dashboard') }}" class="qa-card">
@@ -89,7 +84,6 @@
             @endif
         @endauth
     </div>
-    
     {{-- Section dynamique: Affiche + Contacts --}}
     <div class="dynamic-section">
         {{-- Affiche avec image --}}
@@ -114,8 +108,7 @@
                 <div style="height: 0.75rem;"></div>
                 @endif
             @endforeach
-        </div>
-        
+        </div> 
         {{-- Contacts locaux --}}
         <div class="contacts-widget">
             <h3>📞 Contacts locaux</h3>

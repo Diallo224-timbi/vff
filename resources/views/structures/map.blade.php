@@ -53,20 +53,6 @@
                     </div>
                 </div>
 
-                <!-- Type de structure
-                <div class="mb-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-xs font-medium text-gray-700">Type de structure</label>
-                        <div class="flex gap-2">
-                            <button onclick="checkAll('.type-filter')" class="text-[10px] bg-[#255156] text-white px-2 py-0.5 rounded hover:bg-[#1d4144]">Tous</button>
-                            <button onclick="uncheckAll('.type-filter')" class="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded hover:bg-gray-300">Aucun</button>
-                        </div>
-                    </div>
-                    <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1 border border-gray-100 rounded p-2">
-                        
-                    </div>
-                </div> -->
-
                 <!-- Catégorie -->
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
@@ -141,31 +127,32 @@
     <div class="modal-dialog modal-dialog-centered custom-modal-width">
         <div class="modal-content border-0 shadow-2xl overflow-hidden rounded-2xl">
             <!-- Header avec gradient et logo -->
-            <div class="bg-gradient-to-r from-[#255156] to-[#255156] text-white p-1">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <!-- Logo container -->
-                        <div class="relative">
-                            <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
-                                <div id="modal-logo-placeholder" class="flex items-center justify-center">
-                                    <i class="fas fa-building text-white text-4xl"></i>
+           <!-- En-tête du modal avec fond clair -->
+                <div class="bg-gradient-to-r from-[#f0f6f5] to-[#e8f3f2] border-b border-gray-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <!-- Logo container -->
+                            <div class="relative">
+                                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-md overflow-hidden border border-gray-200">
+                                    <div id="modal-logo-placeholder" class="flex items-center justify-center">
+                                        <i class="fas fa-building text-[#255156] text-4xl"></i>
+                                    </div>
+                                    <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-contain hidden">
+                                </div> 
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-[#255156]" id="modal-organisme">-</h3>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="px-3 py-1 bg-[#255156]/10 text-[#255156] rounded-full text-xs font-medium" id="modal-type-badge">-</span>
+                                    <span class="px-3 py-1 bg-[#255156]/10 text-[#255156] rounded-full text-xs font-medium" id="modal-hebergement-badge">-</span>
                                 </div>
-                                <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-contain hidden">
-                            </div> 
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold" id="modal-organisme">-</h3>
-                            <div class="flex items-center gap-2 mt-2">
-                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-medium" id="modal-type-badge">-</span>
-                                <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-medium" id="modal-hebergement-badge">-</span>
                             </div>
                         </div>
+                        <button type="button" class="text-gray-500 hover:bg-gray-100 rounded-lg p-2 transition-colors" data-bs-dismiss="modal">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
                     </div>
-                    <button type="button" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors" data-bs-dismiss="modal">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
                 </div>
-            </div>
             <!-- Body avec toutes les informations -->
             <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
                 <!-- Grille d'informations principale -->
@@ -297,7 +284,7 @@
             <!-- Footer -->
             <div class="modal-footer bg-white p-4 border-t border-gray-200">
                 <div class="flex justify-end gap-3 w-full">
-                        <i class="">dernier mise à jour: <span id="modal-created_at" class="">-</span></i>
+                    <i class="">dernier mise à jour: <span id="modal-created_at" class="">-</span></i>
                     <button type="button" 
                             class="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-colors flex items-center gap-2"
                             data-bs-dismiss="modal">
@@ -396,7 +383,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour afficher les détails complets dans le modal
     function showFullDetailsModal(structure) {
         currentStructure = structure;
-        const logoUrl = structure.organisme?.logo_path ? `data:image/jpeg;base64,${structure.organisme?.logo_path}` : null;
+        
+        // LOGO - Récupération depuis organisme
+        const logoPath = structure.organisme?.logo_path;
+        const logoUrl = logoPath ? `/storage/${logoPath}` : null;
         
         // Logo
         const modalLogoImg = document.getElementById('modal-logo-img');
@@ -422,11 +412,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Site web
         const siteElement = document.getElementById('modal-site');
-        if (structure.site && structure.site.trim() !== '') {
-            siteElement.innerHTML = `<a href="${structure.site}" target="_blank" class="text-[#255156] hover:underline break-all">${escapeHtml(structure.site)} <i class="fas fa-external-link-alt text-xs ml-1"></i></a>`;
+    if (structure.organisme.site_web && structure.organisme.site_web.trim() !== '') {
+            const url = structure.organisme.site_web.trim();
+
+            siteElement.innerHTML = `
+                <a href="${url}" target="_blank" 
+                class="text-[#255156] hover:underline break-all">
+                ${escapeHtml(url)} 
+                <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                </a>`;
         } else {
             siteElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
-        }
+    }
+
         
         // Description
         const descriptionElement = document.getElementById('modal-description');
@@ -507,22 +505,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             dateElement.textContent = '-';
         }
-        
-        /* Bouton itinéraire
-        const itineraireBtn = document.getElementById('modal-itineraire-btn');
-        if (structure.latitude && structure.longitude) {
-            itineraireBtn.onclick = () => {
-                window.open(`https://www.google.com/maps/dir/?api=1&destination=${structure.latitude},${structure.longitude}`, '_blank');
-            };
-            itineraireBtn.disabled = false;
-            itineraireBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
-            itineraireBtn.onclick = () => {
-                alert('Coordonnées GPS non disponibles pour cette structure');
-            };
-            itineraireBtn.disabled = true;
-            itineraireBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }*/
     }
 
     // Fonctions check/uncheck
@@ -567,9 +549,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fonction pour créer le contenu de l'infobulle (popup) - Utilisation d'une approche sécurisée
+    // Fonction pour créer le contenu de l'infobulle (popup)
     function createPopupContent(structure) {
-        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
+        // LOGO - Récupération depuis organisme
+        const logoPath = structure.organisme?.logo_path;
+        const logoUrl = logoPath ? `/storage/${logoPath}` : null;
         const color = getColorByType(structure.ville);
         
         // Échapper les données pour le JSON dans l'attribut data-structure
@@ -632,7 +616,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Afficher détails dans le panneau latéral
     function showStructureDetails(structure) {
-        const logoUrl = structure.logo ? `{{ asset('storage') }}/${structure.logo}` : null;
+        // LOGO - Récupération depuis organisme
+        const logoPath = structure.organisme?.logo_path;
+        const logoUrl = logoPath ? `/storage/${logoPath}` : null;
         const color = getColorByType(structure.type_structure);
         
         // Échapper les données pour le JSON dans l'attribut data-structure
@@ -653,7 +639,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h4 class="font-bold text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
                             ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
-                        
                     </div>
                 </div>   
                 <!-- Localisation -->

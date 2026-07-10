@@ -29,18 +29,19 @@
                 </small>
             </div>
         </div>
-
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('annuaire.index') }}" 
-               class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
-               style="border: 1px solid rgba(255,255,255,0.3); color: white;"
-               onmouseover="this.style.background='rgba(255,255,255,0.15)';"
-               onmouseout="this.style.background='transparent';">
-                <i class="fas fa-arrow-left me-1"></i> Retour
-            </a>
-        </div>
-    </div>
-
+        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'moderateur_classique')
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ route('annuaire.index') }}" 
+                    class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
+                    style="border: 1px solid rgba(255,255,255,0.3); color: white;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.15)';"
+                    onmouseout="this.style.background='transparent';">
+                        <i class="fas fa-arrow-left me-1"></i> Retour
+                    </a>
+                </div>
+         @endif
+            </div>
+   
     <!-- FILTRES -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <div class="p-3" style="background: linear-gradient(135deg, #255156, #1e7c86);">
@@ -125,8 +126,8 @@
                                 <i class="fas fa-chevron-right text-gray-400 transition-transform duration-200 groupe-chevron"></i>
                             </div>
                             <!-- LOGO AVEC ZOOM AU CLIC -->
-                            <div class="logo-container w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
-                                 style="background: linear-gradient(135deg, #255156, #4a8599);"
+                            <div class="logo-container w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
+                                 style="background: linear-gradient(135deg, #f8fbfc, #e3e7e9);"
                                  onclick="openLogoZoom('{{ $logoPath ? asset('storage/' . $logoPath) : '' }}', '{{ $siege }}')">
                                 
                                 @if($logoPath && file_exists(storage_path('app/public/' . $logoPath)))
@@ -321,7 +322,7 @@
 <!-- MODAL ZOOM LOGO -->
 <div class="modal fade" id="logoZoomModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
-        <div class="modal-content border-0 shadow-2xl" style="border-radius: 1rem; background: rgba(0,0,0,0.85);">
+        <div class="modal-content border-0 shadow-2xl" style="border-radius: 1rem; ">
             <div class="modal-body p-4 text-center">
                 <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="modal"></button>
                 <div class="mt-2">

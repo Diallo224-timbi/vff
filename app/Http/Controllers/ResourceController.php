@@ -18,7 +18,7 @@ class ResourceController extends Controller
      */
     public function index()
     {
-        $resources = Resource::latest()->paginate(8);
+        $resources = Resource::latest()->paginate(12);
         
         // Récupérer toutes les ressources non supprimées pour les statistiques
         $allResources = Resource::all();
@@ -56,7 +56,7 @@ class ResourceController extends Controller
      * Ajouter une nouvelle ressource
      */
    public function store(Request $request)
-{
+    {
     $isAjax = $request->ajax() || $request->wantsJson();
 
     $maxSize = 51200; // 50 Mo en KB
@@ -102,7 +102,7 @@ class ResourceController extends Controller
         }
 
         // =========================
-        // 🔥 VÉRIFICATION DES DOUBLONS
+        // VÉRIFICATION DES DOUBLONS
         // =========================
         $file_name = null;
         $link_url = null;
@@ -141,7 +141,6 @@ class ResourceController extends Controller
                     ->with('error', $errorMessage)
                     ->withInput();
         }
-
         // =========================
         // GESTION FICHIER
         // =========================
@@ -172,7 +171,6 @@ class ResourceController extends Controller
             $fileName = time() . '_' . uniqid() . '.' . $extension;
             $path = $file->storeAs('resources', $fileName, 'public');
         }
-
         // =========================
         // CREATION RESOURCE
         // =========================
