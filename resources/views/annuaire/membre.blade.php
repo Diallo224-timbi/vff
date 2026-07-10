@@ -101,7 +101,7 @@
                      data-name="{{ strtolower($membre->prenom . ' ' . $membre->name) }}"
                      data-email="{{ strtolower($membre->email) }}"
                      data-structure="{{ strtolower($membre->structure->organisme->nom_organisme ?? '') }}"
-                     onclick="viewMember({{ $membre->id }})">
+                     >
                     
                     <!-- Bandeau supérieur -->
                     <div class="h-2 rounded-t-2xl" style="background: linear-gradient(90deg, #255156, #4a8599, #2d6268); background-size: 200% 100%;"></div>
@@ -368,9 +368,7 @@
     });
 
     // Fonction de visualisation du profil
-    function viewMember(id) {
-        window.location.href = '/members/' + id;
-    }
+
 
     // Initialisation
     applyFilters();
