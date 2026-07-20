@@ -70,7 +70,6 @@
                             <span class="text-sm">👁️</span>
                         </button>
                     </div>
-
                     <div class="mt-1 sm:mt-2 text-right">
                         <a href="{{ route('password.request') }}"
                            class="text-xs text-[#41797F] hover:text-[#255156] hover:underline font-medium">
@@ -78,7 +77,6 @@
                         </a>
                     </div>
                 </div>
-
                 <!-- Checkbox "Rester connecté" -->
                 <div class="flex items-center">
                     <input type="checkbox" 
@@ -89,14 +87,12 @@
                         Rester connecté
                     </label>
                 </div>
-
                 <!-- Bouton de connexion -->
                 <button type="submit"
                         class="w-full py-2 sm:py-2.5 rounded-lg bg-[#255156] hover:bg-[#2D6268] text-white font-semibold text-xs sm:text-sm transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-xl flex items-center justify-center space-x-2 mt-2">
                     <span><i class='bx bx-log-in'></i></span>
                     <span>Se connecter</span>
                 </button>
-
                 <!-- Lien inscription -->
                 <div class="text-center text-xs text-[#2D6268] pt-3 sm:pt-4 border-t border-[#B3D2D4] mt-3 sm:mt-4">
                     Vous découvrez la Plateforme ?

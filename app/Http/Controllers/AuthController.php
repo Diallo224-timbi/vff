@@ -134,33 +134,32 @@ class AuthController extends Controller
             Mail::to($user->email)->send(new welcomEmail($user));
            // Récupérer les administrateurs
             $admins = User::where('role', 'admin')->get();
-            // Envoyer un email à chaque administrateur
-            foreach ($admins as $admin) {
-                Mail::to($admin->email)->send(new AdminNewUserEmail($user));
+            // Envoyer un email à chaque administrateur si le niveau de l'utilisateur est égale à 1
+           if($admins->isNotEmpty() && $user->niveau == 1){
+                foreach ($admins as $admin) {
+                    Mail::to($admin->email)->send(new AdminNewUserEmail($user));
+                }
             }
           // Récupérer la structure choisie
-            $structure = Structures::find($user->id_structure);
+           $structure = Structures::find($user->id_structure);
             // Responsable de la structure
-            $respStructure = User::where('id_structure', $user->id_structure)
-                ->where('role', 'moderateur_classique')
-                ->first();
-            // Responsable(s) de l'organisme
-            $respOrganismes = User::where('role', 'moderateur')
-                ->whereHas('structure', function ($query) use ($structure) {
-                    $query->where('id_organisme', $structure->id_organisme);
-                })
-                ->get();
-            // Notification responsable structure
-            if ($respStructure && $respStructure->email !== $user->email) {
-                Mail::to($respStructure->email)
-                    ->send(new StructureNewUserEmail($user));
-            }
-            // Notification responsables organisme
-            foreach ($respOrganismes as $respOrganisme) {
-                if ($respOrganisme->email !== $user->email) {
-                    Mail::to($respOrganisme->email)
-                        ->send(new OrganismeNewUserEmail($user));
-                }
+            $respStructure = null;
+            $respOrganismes = collect();
+            if ($structure) {
+                $respStructure = User::where('id_structure', $user->id_structure)
+                    ->where('role', 'moderateur_classique')
+                    ->first();
+                $respOrganismes = User::where('role', 'moderateur')
+                    ->whereHas('structure', function ($query) use ($structure) {
+                        $query->where('id_organisme', $structure->id_organisme);
+                    })
+                    ->get();
+            } else {
+                // Si aucune structure n'est sélectionnée
+                session()->flash(
+                    'warning',
+                    'Aucune structure n\'a été sélectionnée. Les responsables de structure et d\'organisme ne peuvent pas être notifiés.'
+                );
             }
             return back()->with('success', 'Inscription réussie. Vérifiez votre email.');
         } catch (ValidationException $e) {

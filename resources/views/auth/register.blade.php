@@ -198,7 +198,7 @@
                     <div class="bg-[#E3FCFF] p-3 rounded-lg border border-[#8EC0C6] mb-2">
                         <select name="niveau" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                             <option value="">Êtes-vous responsable ?</option>
-                            <option value="0" class="responsable-radio">Non</option>
+                            <option value="0" class="responsable-radio">Non</option> 
                             <option value="1" class="responsable-radio">Organisme</option>
                             <option value="2" class="responsable-radio">Structure</option>
                         </select>
