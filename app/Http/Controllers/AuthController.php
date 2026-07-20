@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Mail\OrganismeNewUserEmail;
+use App\Mail\StructureNewUserEmail;
 use App\Models\Organisme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Structures;
 use App\Models\ActivityLog;
 use App\Mail\AdminNewUserEmail;
+
 
 class AuthController extends Controller
 {
@@ -129,27 +132,35 @@ class AuthController extends Controller
             session()->forget(['email_verification_code', 'email_to_verify', 'email_sent', 'code_verified']);   
             // Envoyer l'email de bienvenue
             Mail::to($user->email)->send(new welcomEmail($user));
-           // Récupérer l'administrateur
-            $admin = User::where('role', 'admin')->first();
-            // Vérifier le niveau de l'utilisateur inscrit
-            if ($admin && $request->niveau == 1) {
+           // Récupérer les administrateurs
+            $admins = User::where('role', 'admin')->get();
+            // Envoyer un email à chaque administrateur
+            foreach ($admins as $admin) {
                 Mail::to($admin->email)->send(new AdminNewUserEmail($user));
             }
-          // Récupérer le responsable de l'organisme
-            $resp_organisme = User::where('id_structure', $request->id_structure)
-                                ->where('role', 'moderateur')
-                                ->first();
-            // Récupérer le responsable de la structure
-            $resp_structure = User::where('id_structure', $request->id_structure)
-                                ->where('role', 'moderateur_classique')
-                                ->first();
-            // Si niveau = 2 → informer le responsable de l'organisme
-            if ($resp_organisme && $request->niveau == 2) {
-                Mail::to($resp_organisme->email)->send(new AdminNewUserEmail($user));
+          // Récupérer la structure choisie
+            $structure = Structures::find($user->id_structure);
+            // Responsable de la structure
+            $respStructure = User::where('id_structure', $user->id_structure)
+                ->where('role', 'moderateur_classique')
+                ->first();
+            // Responsable(s) de l'organisme
+            $respOrganismes = User::where('role', 'moderateur')
+                ->whereHas('structure', function ($query) use ($structure) {
+                    $query->where('id_organisme', $structure->id_organisme);
+                })
+                ->get();
+            // Notification responsable structure
+            if ($respStructure && $respStructure->email !== $user->email) {
+                Mail::to($respStructure->email)
+                    ->send(new StructureNewUserEmail($user));
             }
-            // Si niveau = 0 → informer le responsable de la structure
-            if ($resp_structure && $request->niveau == 0) {
-                Mail::to($resp_structure->email)->send(new AdminNewUserEmail($user));
+            // Notification responsables organisme
+            foreach ($respOrganismes as $respOrganisme) {
+                if ($respOrganisme->email !== $user->email) {
+                    Mail::to($respOrganisme->email)
+                        ->send(new OrganismeNewUserEmail($user));
+                }
             }
             return back()->with('success', 'Inscription réussie. Vérifiez votre email.');
         } catch (ValidationException $e) {

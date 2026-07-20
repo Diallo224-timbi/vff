@@ -89,7 +89,7 @@
             </div>
             
             <!-- Filtres actifs -->
-            <div id="activeFilters" class="flex flex-wrap gap-2 mt-3 min-h-[32px]"></div>
+            <div id="activeFilters" class="flex flex-wrap gap-2 mt-3 min-h-8"></div>
         </div>
 
         <!-- Grille des membres - 4 colonnes -->
@@ -109,7 +109,7 @@
                     <div class="p-4">
                         <!-- En-tête avec avatar -->
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold flex-shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-3"
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-3"
                                  style="background: linear-gradient(135deg, #255156, #4a8599); color: white; box-shadow: 0 4px 16px rgba(37,81,86,0.25);">
                                 {{ strtoupper(substr($membre->prenom, 0, 1)) }}{{ strtoupper(substr($membre->name, 0, 1)) }}
                             </div>

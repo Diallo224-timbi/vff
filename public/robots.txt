@@ -1,2 +1,3 @@
 User-agent: *
 Disallow:
+Sitemap: https://plate-forme-multi-acteur-vff.fr/sitemap.xml

@@ -1,6 +1,6 @@
 <p>Bonjour,</p>
 
-<p>Un nouvel Responsable d'organisme vient de s'inscrire, il est en attente de la validation de son compte :</p>
+<p>Un nouvel Responsable de structure vient de s'inscrire, il est en attente de la validation de son compte :</p>
 
 <ul>
     <li><strong>Nom :</strong> {{ $user->name }}</li>

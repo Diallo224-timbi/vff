@@ -26,6 +26,59 @@ Route::get('/', function () {
      $user = User::all();
     return view('welcome', compact('organismes', 'structures', 'user'));
 });
+
+// Route pour générer le sitemap XML
+// Sitemap XML
+Route::get('/sitemap.xml', function () {
+
+    $urls = [
+        [
+            'loc' => url('/'),
+            'changefreq' => 'weekly',
+            'priority' => '1.0',
+        ],
+        [
+            'loc' => url('/login'),
+            'changefreq' => 'monthly',
+            'priority' => '0.8',
+        ],
+        [
+            'loc' => url('/register'),
+            'changefreq' => 'monthly',
+            'priority' => '0.8',
+        ],
+        [
+            'loc' => url('/forgot-password'),
+            'changefreq' => 'yearly',
+            'priority' => '0.5',
+        ],
+        [
+            'loc' => url('/charte'),
+            'changefreq' => 'yearly',
+            'priority' => '0.6',
+        ],
+    ];
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    foreach ($urls as $page) {
+
+        $xml .= '<url>';
+        $xml .= '<loc>'.$page['loc'].'</loc>';
+        $xml .= '<changefreq>'.$page['changefreq'].'</changefreq>';
+        $xml .= '<priority>'.$page['priority'].'</priority>';
+        $xml .= '</url>';
+
+    }
+
+    $xml .= '</urlset>';
+
+    return response($xml)
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
+
+
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
     ->middleware(['auth'])->name('dashboardUser');
