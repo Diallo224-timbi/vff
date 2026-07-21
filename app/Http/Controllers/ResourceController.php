@@ -10,6 +10,7 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use App\Mail\ImportantResourceMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Schema;
 
 class ResourceController extends Controller
 {
@@ -38,9 +39,13 @@ class ResourceController extends Controller
                 'fiche_reflexe' => $allResources->where('category', 'fiche_reflexe')->count(),
                 'ressource' => $allResources->where('category', 'ressource')->count(),
             ]
-        ];  
+        ];
         
-        return view('resources.index', compact('resources', 'stats'));
+         $schemas = Schema::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('resources.index', compact('resources', 'stats', 'schemas'));
     }
 
     /**

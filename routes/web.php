@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SchemaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
@@ -27,8 +28,7 @@ Route::get('/', function () {
     return view('welcome', compact('organismes', 'structures', 'user'));
 });
 
-// Route pour générer le sitemap XML
-// Sitemap XML
+
 Route::get('/sitemap.xml', function () {
 
     $urls = [
@@ -165,6 +165,16 @@ Route::middleware(['auth'])->group(function () {
     }); 
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('schemas')->name('schemas.')->group(function () {
+    Route::get('/', [SchemaController::class, 'index'])->name('index');
+    Route::post('/', [SchemaController::class, 'store'])->name('store');
+    Route::get('/{schema}', [SchemaController::class, 'show'])->name('show');
+    Route::put('/{schema}', [SchemaController::class, 'update'])->name('update');
+    Route::delete('/{schema}', [SchemaController::class, 'destroy'])->name('destroy');
+});
+});
+
 // Routes pour la gestion des catégories du forum
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -260,6 +270,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
     Route::delete('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
 });
+
 
 // Routes pour le formulaire d'inscription avec génération de PDF
 
