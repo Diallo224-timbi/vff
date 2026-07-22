@@ -26,9 +26,11 @@
                             <button type="button" class="btn btn-light active" id="tabDocs" onclick="switchTab('docs')">
                                 <i class="fas fa-file-alt me-1"></i> Documents
                             </button>
-                            <button type="button" class="btn btn-light" id="tabSchemas" onclick="switchTab('schemas')">
-                                <i class="fas fa-project-diagram me-1"></i> Schéma violences
-                            </button>
+                            @if(auth()->user()->role === 'admin')
+                                <button type="button" class="btn btn-light" id="tabSchemas" onclick="switchTab('schemas')">
+                                    <i class="fas fa-project-diagram me-1"></i> Schéma violences
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
