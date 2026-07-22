@@ -1071,7 +1071,7 @@
                     <i class="fas fa-file-pdf fa-3x mb-3 opacity-25"></i>
                     <p>Aucun compte rendu pour ce groupe</p>
                     <button onclick="openCreateSchemaModal('${gt}')" class="btn btn-sm" style="background: #145f68; color: white;">
-                        <i class="fas fa-plus me-1"></i> Ajouter un CR
+                        <i class="fas fa-plus me-1"></i> Nouveau
                     </button>
                 </div>
             `;
