@@ -22,7 +22,7 @@
         <div class="d-flex align-items-center gap-3">
             <i class="fas fa-building" style="font-size: 1.3rem;"></i>
             <div>
-                <h5 class="mb-0 fw-bold">Structures par siège</h5>
+                <h5 class="mb-0 fw-bold">Structure par organisme</h5>
                 <small class="text-white/80">
                     <i class="fas fa-info-circle me-1"></i>
                     {{ $totalStructures }} structures - {{ count($groupes) }} sièges
