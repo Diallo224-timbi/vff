@@ -325,7 +325,7 @@
                                         Groupes de travail
                                     </h5>
                                     <button onclick="openCreateSchemaModal()" class="btn btn-sm" style="background: #145f68; color: white;">
-                                        <i class="fas fa-plus me-1"></i> Nouveau GT
+                                        <i class="fas fa-plus me-1"></i> Nouveau
                                     </button>
                                 </div>
                                 <!-- Arborescence des GT -->
@@ -713,6 +713,10 @@
     .fa-chevron-down {
         transition: transform 0.3s ease;
     }
+
+    .badge.bg-secondary {
+        background-color: #6c757d !important;
+    }
 </style>
 
 <script>
@@ -730,6 +734,7 @@
             schemasSection.style.display = 'none';
             tabDocs.classList.add('active');
             tabSchemas.classList.remove('active');
+            setTimeout(updateCategoryCounts, 100);
         } else {
             docsSection.style.display = 'none';
             schemasSection.style.display = 'block';
@@ -742,7 +747,6 @@
     // ============================================
     // GESTION DES DOCUMENTS
     // ============================================
-    const allResources = @json($resources->items() ?? []);
     let selectedResourceType = 'file';
     let currentCategoryFilter = null;
     let currentSubCategoryFilter = null;
@@ -770,6 +774,55 @@
         ]
     };
 
+    // ============================================
+    // COMPTEURS DOCUMENTS
+    // ============================================
+    function updateCategoryCounts() {
+        const cards = document.querySelectorAll('#resourcesGrid .resource-card');
+        const counts = {
+            all: 0,
+            guides_etudes: 0,
+            affiches_flyers: 0,
+            reseaux: 0,
+            sensibilisation: 0,
+            outils: 0,
+            conventions: 0
+        };
+        
+        cards.forEach(card => {
+            const category = card.dataset.category;
+            if (card.style.display !== 'none') {
+                counts.all++;
+                if (category && counts.hasOwnProperty(category)) {
+                    counts[category]++;
+                }
+            }
+        });
+        
+        // Mettre à jour les éléments HTML
+        const allCount = document.getElementById('countAll');
+        if (allCount) allCount.textContent = counts.all;
+        
+        const countElements = {
+            'countGuidesEtudes': counts.guides_etudes,
+            'countAffichesFlyers': counts.affiches_flyers,
+            'countReseaux': counts.reseaux,
+            'countSensibilisation': counts.sensibilisation,
+            'countOutils': counts.outils,
+            'countConventions': counts.conventions
+        };
+        
+        Object.keys(countElements).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = countElements[id];
+        });
+        
+        console.log('📊 Compteurs documents:', counts);
+    }
+
+    // ============================================
+    // FILTRES DOCUMENTS
+    // ============================================
     function updateSubCategories(category) {
         const subSelect = document.getElementById('subCategory');
         subSelect.innerHTML = '<option value="">Aucune</option>';
@@ -871,8 +924,14 @@
 
             card.style.display = show ? '' : 'none';
         });
+        
+        // Mettre à jour les compteurs APRÈS le filtrage
+        updateCategoryCounts();
     }
 
+    // ============================================
+    // TYPE DE RESSOURCE
+    // ============================================
     window.selectResourceType = function(type) {
         selectedResourceType = type;
         const btnFile = document.getElementById('btnFileType');
@@ -899,68 +958,10 @@
         }
     };
 
-    function updateCategoryCounts() {
-        const counts = {
-            all: allResources.length,
-            guides_etudes: 0,
-            affiches_flyers: 0,
-            reseaux: 0,
-            sensibilisation: 0,
-            outils: 0,
-            conventions: 0
-        };
-        allResources.forEach(r => {
-            if (counts.hasOwnProperty(r.category)) {
-                counts[r.category]++;
-            }
-        });
-        document.getElementById('countAll').textContent = counts.all;
-        document.getElementById('countGuidesEtudes').textContent = counts.guides_etudes || 0;
-        document.getElementById('countAffichesFlyers').textContent = counts.affiches_flyers || 0;
-        document.getElementById('countReseaux').textContent = counts.reseaux || 0;
-        document.getElementById('countSensibilisation').textContent = counts.sensibilisation || 0;
-        document.getElementById('countOutils').textContent = counts.outils || 0;
-        document.getElementById('countConventions').textContent = counts.conventions || 0;
-    }
-
+    // ============================================
+    // MODALS
+    // ============================================
     let imageModal, resourceModal, createSchemaModal;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const imageModalEl = document.getElementById('imageModal');
-        const resourceModalEl = document.getElementById('resourceModal');
-        const createSchemaModalEl = document.getElementById('createSchemaModal');
-
-        if (imageModalEl) imageModal = new bootstrap.Modal(imageModalEl);
-        if (resourceModalEl) resourceModal = new bootstrap.Modal(resourceModalEl);
-        if (createSchemaModalEl) createSchemaModal = new bootstrap.Modal(createSchemaModalEl);
-
-        updateCategoryCounts();
-
-        const searchInput = document.getElementById('searchInput');
-        const filterType = document.getElementById('filterType');
-
-        if (searchInput && filterType) {
-            searchInput.addEventListener('input', filterResourcesByCategory);
-            filterType.addEventListener('change', filterResourcesByCategory);
-        }
-
-        document.getElementById('createSchemaForm')?.addEventListener('submit', function(e) {
-            const fileInput = document.getElementById('schemaFile');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                e.preventDefault();
-                alert('Veuillez sélectionner un fichier PDF');
-                return false;
-            }
-        });
-
-        // Initialiser les données des schémas
-        window.allSchemas = @json($schemas ?? []);
-        console.log('📦 Schémas chargés :', window.allSchemas.length);
-        if (window.allSchemas.length > 0) {
-            console.table(window.allSchemas);
-        }
-        setTimeout(updateGtCounts, 500);
-    });
 
     window.openCreateModal = function() {
         document.getElementById('resourceForm').reset();
@@ -1005,28 +1006,10 @@
         });
     };
 
-    document.getElementById('resourceForm')?.addEventListener('submit', function(e) {
-        if (selectedResourceType === 'file') {
-            const fileInput = document.getElementById('file');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                e.preventDefault();
-                alert('Veuillez sélectionner un fichier');
-                return false;
-            }
-        } else {
-            const linkUrl = document.getElementById('linkUrl');
-            if (!linkUrl.value.trim()) {
-                e.preventDefault();
-                alert('Veuillez entrer une URL valide');
-                return false;
-            }
-        }
-    });
-
     // ============================================
     // GESTION DES SCHÉMAS (GT)
     // ============================================
-    let allSchemas = [];
+    window.allSchemas = [];
 
     function toggleSubGroups(id) {
         const subGroup = document.getElementById(id);
@@ -1060,7 +1043,6 @@
     };
 
     window.filterSchemasByGT = function(gt) {
-        // Récupérer le label
         const labels = {
             'GT1': 'GT1 - Réseau VIF-VC & coordination entre acteurs',
             'GT2': 'GT2 - Force de l\'ordre, justice et santé',
@@ -1076,19 +1058,9 @@
         const label = labels[gt] || gt;
         document.getElementById('currentGtTitle').textContent = label;
         
-        console.log('🔍 Filtrage par GT:', gt);
-        console.log('📊 Schémas disponibles:', allSchemas.length);
-        
-        // Filtrer les schémas
-        const filteredSchemas = allSchemas.filter(s => {
-            const match = s.category === gt || s.sub_category === gt;
-            if (match) {
-                console.log('✅ Match trouvé:', s.title);
-            }
-            return match;
+        const filteredSchemas = window.allSchemas.filter(s => {
+            return s.category === gt || s.sub_category === gt;
         });
-        
-        console.log('📋 Résultats:', filteredSchemas.length);
         
         const container = document.getElementById('meetingReportsList');
         if (filteredSchemas.length === 0) {
@@ -1160,49 +1132,94 @@
         }).catch(console.error);
     };
 
-    window.addMeetingReport = function() {
-        const currentTitle = document.getElementById('currentGtTitle').textContent;
-        let gt = '';
-        const match = currentTitle.match(/^(S?GT\d+)/);
-        if (match) {
-            gt = match[1];
-        }
-        openCreateSchemaModal(gt);
-    };
-
     function updateGtCounts() {
         const counts = {
             GT1: 0, SGT1: 0, SGT2: 0, SGT3: 0, SGT4: 0,
             GT2: 0, GT3: 0, GT4: 0, GT5: 0, GT6: 0
         };
         
-        allSchemas.forEach(s => {
-            if (s.category && counts[s.category] !== undefined) {
-                counts[s.category]++;
-            }
-            if (s.sub_category && counts[s.sub_category] !== undefined) {
-                counts[s.sub_category]++;
-            }
-        });
+        if (window.allSchemas && window.allSchemas.length > 0) {
+            window.allSchemas.forEach(s => {
+                if (s.category && counts[s.category] !== undefined) {
+                    counts[s.category]++;
+                }
+                if (s.sub_category && counts[s.sub_category] !== undefined) {
+                    counts[s.sub_category]++;
+                }
+            });
+        }
         
         document.querySelectorAll('[id^="count"]').forEach(el => {
             const id = el.id.replace('count', '');
             if (counts[id] !== undefined) {
                 el.textContent = counts[id];
-            } else {
-                el.textContent = '0';
             }
         });
+        
+        console.log('📊 Compteurs GT:', counts);
     }
 
-    // Initialisation des données des schémas
+    // ============================================
+    // INITIALISATION
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-        allSchemas = @json($schemas ?? []);
-        console.log('📦 Schémas chargés :', allSchemas.length);
-        if (allSchemas.length > 0) {
-            console.table(allSchemas);
+        const imageModalEl = document.getElementById('imageModal');
+        const resourceModalEl = document.getElementById('resourceModal');
+        const createSchemaModalEl = document.getElementById('createSchemaModal');
+
+        if (imageModalEl) imageModal = new bootstrap.Modal(imageModalEl);
+        if (resourceModalEl) resourceModal = new bootstrap.Modal(resourceModalEl);
+        if (createSchemaModalEl) createSchemaModal = new bootstrap.Modal(createSchemaModalEl);
+
+        // Initialiser les schémas
+        window.allSchemas = @json($schemas ?? []);
+        console.log('📦 Schémas chargés :', window.allSchemas.length);
+        
+        // Mettre à jour les compteurs
+        setTimeout(function() {
+            updateCategoryCounts();
+            updateGtCounts();
+        }, 300);
+
+        // Événements
+        const searchInput = document.getElementById('searchInput');
+        const filterType = document.getElementById('filterType');
+
+        if (searchInput && filterType) {
+            searchInput.addEventListener('input', function() {
+                filterResourcesByCategory();
+            });
+            filterType.addEventListener('change', function() {
+                filterResourcesByCategory();
+            });
         }
-        setTimeout(updateGtCounts, 500);
+
+        document.getElementById('createSchemaForm')?.addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('schemaFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                e.preventDefault();
+                alert('Veuillez sélectionner un fichier PDF');
+                return false;
+            }
+        });
+
+        document.getElementById('resourceForm')?.addEventListener('submit', function(e) {
+            if (selectedResourceType === 'file') {
+                const fileInput = document.getElementById('file');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Veuillez sélectionner un fichier');
+                    return false;
+                }
+            } else {
+                const linkUrl = document.getElementById('linkUrl');
+                if (!linkUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Veuillez entrer une URL valide');
+                    return false;
+                }
+            }
+        });
     });
 </script>
 @endsection
