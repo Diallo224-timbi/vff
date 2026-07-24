@@ -21,18 +21,17 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
             <div class="text-xs text-gray-500 mb-1">Total structures</div>
-            <div class="text-xl font-semibold text-[#255156]" id="totalStructures">{{ $structures->count() }}</div>
+            <div class="text-3xl font-bold text-[#255156]" id="totalStructures">{{ $structures->count() }}</div>
         </div>
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
             <div class="text-xs text-gray-500 mb-1">Structures visibles</div>
-            <div class="text-xl font-semibold text-green-600" id="visibleCount">{{ $structures->count() }}</div>
+            <div class="text-3xl font-bold text-green-600" id="visibleCount">{{ $structures->count() }}</div>
         </div>
         <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
             <div class="text-xs text-gray-500 mb-1">Total organismes</div>
-            <div class="text-xl font-semibold text-blue-600">{{ $structures->pluck('id_organisme')->unique()->filter()->count() }}</div>
+            <div class="text-3xl font-bold text-blue-600">{{ $structures->pluck('id_organisme')->unique()->filter()->count() }}</div>
         </div>
     </div>
-
     <!-- SECTION PRINCIPALE -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <!-- FILTRES (colonne de gauche) -->
@@ -52,7 +51,6 @@
                                class="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-[#255156] focus:outline-none">
                     </div>
                 </div>
-
                 <!-- Catégorie -->
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">

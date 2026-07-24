@@ -272,19 +272,30 @@
                                         </div>
                                     </div>
 
-                                    <div class="mt-2 pt-2 border-t" style="border-color: #f0f6f5;">
-                                        <button class="view-details-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all flex items-center gap-1"
-                                                style="background: #e8f3f2; color: #255156;"
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#detailsModal"
-                                                data-structure='@json($structure)'
-                                                onmouseover="this.style.background='#255156'; this.style.color='white';"
-                                                onmouseout="this.style.background='#e8f3f2'; this.style.color='#255156';">
-                                            <i class="fas fa-eye text-xs"></i>
-                                            Détails
-                                        </button>
-                                    </div>
-                                </div>
+                                   <div class="mt-2 pt-2 border-t d-flex gap-2" style="border-color: #f0f6f5;">
+
+                                <button class="view-details-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all d-flex align-items-center gap-1"
+                                        style="background: #e8f3f2; color: #255156;"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#detailsModal"
+                                        data-structure='@json($structure)'
+                                        onmouseover="this.style.background='#255156'; this.style.color='white';"
+                                        onmouseout="this.style.background='#e8f3f2'; this.style.color='#255156';">
+                                    <i class="fas fa-eye text-xs"></i>
+                                    Détails
+                                </button>
+
+                                <a href="{{ route('annuaire.membre_structure', [$structure->id]) }}"
+                                    class="text-xs font-medium px-3 py-1.5 rounded-lg transition-all d-flex align-items-center gap-1 text-decoration-none"
+                                    style="background: #e8f3f2; color: #255156;"
+                                    onmouseover="this.style.background='#255156'; this.style.color='white';"
+                                    onmouseout="this.style.background='#e8f3f2'; this.style.color='#255156';">
+                                    <i class="fas fa-users text-xs"></i>
+                                    Membres
+                                </a>
+
+                            </div>
+                        </div>
                             @endforeach
                         </div>
                     @else

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SchemaController;
+use App\Http\Controllers\StructureMembreController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
@@ -207,6 +208,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/annuaire/membres', [AnnuaireController::class, 'showByStructure'])->name('annuaire.membre');
         Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
         Route::get('/annuaire/export/pdf', [AnnuaireController::class, 'exportPdf'])->name('annuaire.export.pdf');
+        Route::get('/annuaire/membre/{structureId}', [StructureMembreController::class, 'show'])->name('annuaire.membre_structure');
     });
 // Routes pour les logs d'activité
 Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->group(function () {
