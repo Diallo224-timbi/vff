@@ -25,7 +25,7 @@
                 <h6 class="mb-0 fw-bold">Forum professionnel</h6>
             </div>
             <div class="bg-white text-dark rounded p-2 small">
-                <i class="fas fa-info-circle text-primary me-1"></i>
+                <i class="fas fa-info-circle me-1"></i>
                 <strong>Rappel :</strong>
                 Ce forum est un espace d'échange entre professionnels. Merci de privilégier des discussions respectueuses et conformes à la charte.<br> Aucune information permettant d'identifier une victime ne doit être publiée.
             </div>
@@ -207,7 +207,7 @@
                                                 </button>
                                                 <button type="button" 
                                                         class="delete-thread-btn p-1.5 rounded-lg transition-all duration-300 hover:bg-red-600 hover:text-white group/tooltip relative"
-                                                        style="background: rgba(199, 150, 116, 0.1); color: #C79674;"
+                                                        style="background: rgba(199, 150, 116, 0.1); color: #fa0606;"
                                                         data-thread-id="{{ $thread->id }}"
                                                         data-thread-title="{{ addslashes($thread->title) }}"
                                                         title="Supprimer le sujet">
@@ -283,7 +283,7 @@
         <div class="modal-body">
             <input type="text" name="title" class="form-control mb-3" placeholder="Titre" required>
             <textarea name="body" class="form-control mb-3" placeholder="Message" required></textarea>
-            <label for="category_id" class="form-label">Catégorie</label>
+            <label for="category_id" class="form-label">Catégorie: <a href="{{ route('categories.create') }}" target="_blank" style="color: blue"><i> créer une catégorie si elle n'existe pas.</i></a></label>
             <select name="category_id" id="category_id" class="form-select" required>
               <option value="">Sélectionnez une catégorie</option>
               @foreach($categories as $category)

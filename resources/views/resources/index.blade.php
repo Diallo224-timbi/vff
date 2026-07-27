@@ -62,16 +62,26 @@
                             </div>
                         </div>
 
+                        @php
+                            $allCount = $resources->count();
+                            $guidesCount = $resources->where('category', 'guides_etudes')->count();
+                            $affichesCount = $resources->where('category', 'affiches_flyers')->count();
+                            $reseauxCount = $resources->where('category', 'reseaux')->count();
+                            $sensibilisationCount = $resources->where('category', 'sensibilisation')->count();
+                            $outilsCount = $resources->where('category', 'outils')->count();
+                            $conventionsCount = $resources->where('category', 'conventions')->count();
+                        @endphp
+
                         <!-- FILTRES PAR CATÉGORIE PRINCIPALE -->
                         <div class="mb-4">
                             <label class="small fw-semibold text-secondary mb-2">Filtrer par catégorie</label>
                             <div class="row g-2">
                                 <div class="col-6 col-md-3 col-lg-2">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
+                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category active" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-folder-open text-secondary fa-lg mb-1"></i>
                                             <p class="fw-semibold text-secondary mb-0 small">Toutes</p>
-                                            <small class="text-secondary" id="countAll">0</small>
+                                            <small class="text-secondary" id="countAll">{{ $allCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +90,7 @@
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-book text-primary fa-lg mb-1"></i>
                                             <p class="fw-semibold text-primary mb-0 small">Guides & Études</p>
-                                            <small class="text-primary" id="countGuidesEtudes">0</small>
+                                            <small class="text-primary" id="countGuidesEtudes">{{ $guidesCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +99,7 @@
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-poster text-success fa-lg mb-1"></i>
                                             <p class="fw-semibold text-success mb-0 small">Affiches & Flyers</p>
-                                            <small class="text-success" id="countAffichesFlyers">0</small>
+                                            <small class="text-success" id="countAffichesFlyers">{{ $affichesCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +108,7 @@
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-network-wired text-warning fa-lg mb-1"></i>
                                             <p class="fw-semibold text-warning mb-0 small">Réseaux</p>
-                                            <small class="text-warning" id="countReseaux">0</small>
+                                            <small class="text-warning" id="countReseaux">{{ $reseauxCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +117,7 @@
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-graduation-cap text-info fa-lg mb-1"></i>
                                             <p class="fw-semibold text-info mb-0 small">Sensibilisation</p>
-                                            <small class="text-info" id="countSensibilisation">0</small>
+                                            <small class="text-info" id="countSensibilisation">{{ $sensibilisationCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +126,7 @@
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-tools text-danger fa-lg mb-1"></i>
                                             <p class="fw-semibold text-danger mb-0 small">Outils</p>
-                                            <small class="text-danger" id="countOutils">0</small>
+                                            <small class="text-danger" id="countOutils">{{ $outilsCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +135,7 @@
                                         <div class="rounded-lg p-2" style="background: #f8f9fa;">
                                             <i class="fas fa-file-signature text-purple fa-lg mb-1"></i>
                                             <p class="fw-semibold text-purple mb-0 small">Conventions</p>
-                                            <small class="text-purple" id="countConventions">0</small>
+                                            <small class="text-purple" id="countConventions">{{ $conventionsCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -174,10 +184,10 @@
                             </a>
                             @endif
                             
-                            <!-- Affichage du nombre total de ressources -->
+                            <!-- Affichage du nombre total de ressources visibles -->
                             <span class="ms-3 text-muted">
                                 <i class="fas fa-database me-1"></i>
-                                <span id="totalResourcesCount">0</span> ressources
+                                <span id="visibleResourcesCount">{{ $allCount }}</span> / <span id="totalResourcesCount">{{ $allCount }}</span> ressources
                             </span>
                         </div>
 
@@ -192,12 +202,13 @@
                                      data-sub-category="{{ $resource->sub_category }}"
                                      data-date="{{ $resource->created_at->timestamp }}"
                                      data-downloads="{{ $resource->download_count }}"
-                                     data-title="{{ strtolower($resource->title) }}">
+                                     data-title="{{ strtolower($resource->title) }}"
+                                     data-description="{{ strtolower($resource->description ?? '') }}">
                                     <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s;">
                                         <!-- Zone image / icône -->
                                         <div style="height: 140px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
                                             @if($resource->is_image)
-                                                <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal('{{ $resource->file_url }}', '{{ $resource->title }}')">
+                                                <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
                                             @elseif($resource->is_link)
                                                 <i class="fas fa-link" style="font-size: 3.5rem; color: #0d6efd;"></i>
                                             @else
@@ -277,7 +288,7 @@
                                                 @endif
 
                                                 @if($resource->is_image)
-                                                    <button onclick="openImageModal('{{ $resource->file_url }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 2px 6px; font-size: 0.7rem;" title="Voir l'image">
+                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 2px 6px; font-size: 0.7rem;" title="Voir l'image">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
@@ -313,10 +324,16 @@
                                 </div>
                                 @endforelse
                             </div>
-                        </div>
-                        <!-- Pagination -->
-                        <div class="mt-4">
-                            {{ $resources->links() }}
+
+                            <!-- MESSAGE SI AUCUN RÉSULTAT DU FILTRE -->
+                            <div id="noResultsMessage" class="col-12 text-center py-5 d-none">
+                                <i class="fas fa-search fa-3x text-muted mb-3 opacity-50"></i>
+                                <h5 class="fw-semibold text-secondary">Aucun document trouvé</h5>
+                                <p class="text-muted small">Aucun document ne correspond à vos critères de recherche ou de filtre.</p>
+                                <button onclick="clearCategoryFilter(); document.getElementById('searchInput').value=''; document.getElementById('filterType').value=''; filterResourcesByCategory();" class="btn btn-sm btn-outline-secondary mt-2">
+                                    <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -472,10 +489,6 @@
         </div>
     </div>
 </div>
-
-<!-- ============================================ -->
-<!-- MODALS -->
-<!-- ============================================ -->
 
 <!-- MODAL IMAGE -->
 <div id="imageModal" class="modal fade" tabindex="-1">
@@ -729,86 +742,9 @@
 
 <script>
     // ============================================
-    // COMPTEURS GLOBAUX (comptage direct des cartes)
+    // VARIABLES & GESTION DU FILTRAGE GLOBAL
     // ============================================
-    let totalResourcesCount = 0;
-    let allResourcesData = [];
-
-    function updateGlobalCounts() {
-        // Compter directement les cartes présentes dans la page
-        const cards = document.querySelectorAll('#resourcesGrid .resource-card');
-        
-        const counts = {
-            all: cards.length,
-            guides_etudes: 0,
-            affiches_flyers: 0,
-            reseaux: 0,
-            sensibilisation: 0,
-            outils: 0,
-            conventions: 0
-        };
-        
-        cards.forEach(card => {
-            const category = card.dataset.category || '';
-            if (category && counts.hasOwnProperty(category)) {
-                counts[category]++;
-            }
-        });
-        
-        totalResourcesCount = counts.all;
-        
-        // Mettre à jour l'affichage
-        const totalEl = document.getElementById('totalResourcesCount');
-        if (totalEl) totalEl.textContent = totalResourcesCount;
-        
-        // Mettre à jour les compteurs des catégories
-        const countMap = {
-            'countAll': counts.all,
-            'countGuidesEtudes': counts.guides_etudes || 0,
-            'countAffichesFlyers': counts.affiches_flyers || 0,
-            'countReseaux': counts.reseaux || 0,
-            'countSensibilisation': counts.sensibilisation || 0,
-            'countOutils': counts.outils || 0,
-            'countConventions': counts.conventions || 0
-        };
-        
-        Object.keys(countMap).forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = countMap[id];
-        });
-        
-        console.log('📊 Compteurs mis à jour:', counts);
-    }
-
-    // ============================================
-    // GESTION DES ONGLETS
-    // ============================================
-    function switchTab(tab) {
-        const docsSection = document.getElementById('docsSection');
-        const schemasSection = document.getElementById('schemasSection');
-        const tabDocs = document.getElementById('tabDocs');
-        const tabSchemas = document.getElementById('tabSchemas');
-
-        if (tab === 'docs') {
-            docsSection.style.display = 'block';
-            schemasSection.style.display = 'none';
-            tabDocs.classList.add('active');
-            tabSchemas.classList.remove('active');
-            setTimeout(updateGlobalCounts, 100);
-        } else {
-            docsSection.style.display = 'none';
-            schemasSection.style.display = 'block';
-            tabDocs.classList.remove('active');
-            tabSchemas.classList.add('active');
-            setTimeout(updateGtCounts, 500);
-        }
-    }
-
-    // ============================================
-    // GESTION DES DOCUMENTS
-    // ============================================
-    let selectedResourceType = 'file';
-    let currentCategoryFilter = null;
+    let currentCategoryFilter = 'all';
     let currentSubCategoryFilter = null;
 
     const subCategoriesMap = {
@@ -834,42 +770,102 @@
         ]
     };
 
-    function updateSubCategories(category) {
-        const subSelect = document.getElementById('subCategory');
-        subSelect.innerHTML = '<option value="">Aucune</option>';
-        
-        if (category && subCategoriesMap[category]) {
-            subCategoriesMap[category].forEach(sub => {
-                const option = document.createElement('option');
-                option.value = sub.value;
-                option.textContent = sub.label;
-                subSelect.appendChild(option);
-            });
+    function filterResourcesByCategory() {
+        const searchTerm = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+        const typeFilter = document.getElementById('filterType')?.value || '';
+
+        const allCards = document.querySelectorAll('#resourcesGrid .resource-card');
+        let visibleCount = 0;
+
+        allCards.forEach(card => {
+            const category = card.dataset.category || '';
+            const subCategory = card.dataset.subCategory || '';
+            const title = card.dataset.title || '';
+            const description = card.dataset.description || '';
+            const type = card.dataset.type || '';
+            
+            let show = true;
+
+            // Filtre par catégorie principale
+            if (currentCategoryFilter && currentCategoryFilter !== 'all' && category !== currentCategoryFilter) {
+                show = false;
+            }
+
+            // Filtre par sous-catégorie
+            if (show && currentSubCategoryFilter && subCategory !== currentSubCategoryFilter) {
+                show = false;
+            }
+
+            // Filtre par mot-clé (cherche dans le titre ET la description de TOUS les documents)
+            if (show && searchTerm) {
+                const matchTitle = title.includes(searchTerm);
+                const matchDesc = description.includes(searchTerm);
+                if (!matchTitle && !matchDesc) {
+                    show = false;
+                }
+            }
+
+            // Filtre par type de ressource (document, image, lien)
+            if (show && typeFilter && type !== typeFilter) {
+                show = false;
+            }
+
+            // Appliquer la visibilité
+            if (show) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Mettre à jour le compteur global de cartes visibles
+        const visibleEl = document.getElementById('visibleResourcesCount');
+        if (visibleEl) visibleEl.textContent = visibleCount;
+
+        // Affichage du message si aucun document ne correspond
+        const noResultsMsg = document.getElementById('noResultsMessage');
+        if (noResultsMsg) {
+            if (visibleCount === 0 && allCards.length > 0) {
+                noResultsMsg.classList.remove('d-none');
+            } else {
+                noResultsMsg.classList.add('d-none');
+            }
         }
     }
 
     window.filterByCategory = function(category, label) {
-        if (currentCategoryFilter === category) {
+        if (currentCategoryFilter === category && category !== 'all') {
             clearCategoryFilter();
         } else {
             currentCategoryFilter = category;
             currentSubCategoryFilter = null;
+
+            // Gestion de l'état visuel actif des cartes catégories
             document.querySelectorAll('.filter-category').forEach(el => {
                 el.classList.toggle('active', el.getAttribute('data-category') === category);
             });
-            const filterLabel = document.getElementById('filterLabel');
-            if (filterLabel) filterLabel.innerHTML = `<i class="fas fa-filter me-2"></i>Filtre actif : ${label}`;
-            const activeFilter = document.getElementById('activeFilter');
-            if (activeFilter) activeFilter.classList.remove('d-none');
 
+            // Label du filtre actif
+            const filterLabel = document.getElementById('filterLabel');
+            const activeFilter = document.getElementById('activeFilter');
+            if (category !== 'all') {
+                if (filterLabel) filterLabel.innerHTML = `<i class="fas fa-filter me-2"></i>Filtre actif : <strong>${label}</strong>`;
+                if (activeFilter) activeFilter.classList.remove('d-none');
+            } else {
+                if (activeFilter) activeFilter.classList.add('d-none');
+            }
+
+            // Génération des sous-catégories
             const subContainer = document.getElementById('subCategoriesContainer');
             const subList = document.getElementById('subCategoriesList');
             subList.innerHTML = '';
             
             if (category && subCategoriesMap[category]) {
                 subContainer.classList.remove('d-none');
+                
                 const allBtn = document.createElement('span');
-                allBtn.className = 'badge bg-secondary p-2 cursor-pointer me-1';
+                allBtn.className = 'badge bg-success p-2 cursor-pointer me-1';
                 allBtn.style.cursor = 'pointer';
                 allBtn.textContent = 'Toutes';
                 allBtn.dataset.value = 'all';
@@ -889,6 +885,7 @@
                 subContainer.classList.add('d-none');
             }
 
+            // Exécution du filtre sur TOUS les documents
             filterResourcesByCategory();
         }
     };
@@ -908,41 +905,65 @@
     }
 
     window.clearCategoryFilter = function() {
-        currentCategoryFilter = null;
+        currentCategoryFilter = 'all';
         currentSubCategoryFilter = null;
-        document.querySelectorAll('.filter-category').forEach(el => el.classList.remove('active'));
+
+        document.querySelectorAll('.filter-category').forEach(el => {
+            el.classList.toggle('active', el.getAttribute('data-category') === 'all');
+        });
+
         const activeFilter = document.getElementById('activeFilter');
         if (activeFilter) activeFilter.classList.add('d-none');
-        document.getElementById('subCategoriesContainer').classList.add('d-none');
+        
+        const subContainer = document.getElementById('subCategoriesContainer');
+        if (subContainer) subContainer.classList.add('d-none');
+
         filterResourcesByCategory();
     };
 
-    function filterResourcesByCategory() {
-        const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
-        const typeFilter = document.getElementById('filterType')?.value || '';
+    // ============================================
+    // GESTION DES ONGLETS
+    // ============================================
+    function switchTab(tab) {
+        const docsSection = document.getElementById('docsSection');
+        const schemasSection = document.getElementById('schemasSection');
+        const tabDocs = document.getElementById('tabDocs');
+        const tabSchemas = document.getElementById('tabSchemas');
 
-        document.querySelectorAll('.resource-card').forEach(card => {
-            const category = card.dataset.category || '';
-            const subCategory = card.dataset.subCategory || '';
-            const title = card.dataset.title || '';
-            const type = card.dataset.type || '';
-            let show = true;
+        if (tab === 'docs') {
+            docsSection.style.display = 'block';
+            schemasSection.style.display = 'none';
+            tabDocs.classList.add('active');
+            tabSchemas.classList.remove('active');
+            setTimeout(filterResourcesByCategory, 100);
+        } else {
+            docsSection.style.display = 'none';
+            schemasSection.style.display = 'block';
+            tabDocs.classList.remove('active');
+            tabSchemas.classList.add('active');
+            setTimeout(updateGtCounts, 300);
+        }
+    }
 
-            if (currentCategoryFilter && currentCategoryFilter !== 'all' && category !== currentCategoryFilter) show = false;
-            if (show && currentSubCategoryFilter && subCategory !== currentSubCategoryFilter) show = false;
-            if (show && searchTerm && !title.includes(searchTerm)) show = false;
-            if (show && typeFilter && type !== typeFilter) show = false;
-
-            card.style.display = show ? '' : 'none';
-        });
+    function updateSubCategories(category) {
+        const subSelect = document.getElementById('subCategory');
+        subSelect.innerHTML = '<option value="">Aucune</option>';
         
-        // Mettre à jour les compteurs après filtrage
-        updateGlobalCounts();
+        if (category && subCategoriesMap[category]) {
+            subCategoriesMap[category].forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub.value;
+                option.textContent = sub.label;
+                subSelect.appendChild(option);
+            });
+        }
     }
 
     // ============================================
-    // TYPE DE RESSOURCE
+    // TYPE DE RESSOURCE & MODALS
     // ============================================
+    let selectedResourceType = 'file';
+
     window.selectResourceType = function(type) {
         selectedResourceType = type;
         const btnFile = document.getElementById('btnFileType');
@@ -969,9 +990,6 @@
         }
     };
 
-    // ============================================
-    // MODALS
-    // ============================================
     let imageModal, resourceModal, createSchemaModal;
 
     window.openCreateModal = function() {
@@ -1165,12 +1183,10 @@
                 el.textContent = counts[id];
             }
         });
-        
-        console.log('📊 Compteurs GT:', counts);
     }
 
     // ============================================
-    // INITIALISATION
+    // INITIALISATION DOM
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
         const imageModalEl = document.getElementById('imageModal');
@@ -1181,29 +1197,25 @@
         if (resourceModalEl) resourceModal = new bootstrap.Modal(resourceModalEl);
         if (createSchemaModalEl) createSchemaModal = new bootstrap.Modal(createSchemaModalEl);
 
-        // Initialiser les schémas
+        // Charger tous les schémas
         window.allSchemas = @json($schemas ?? []);
-        console.log('📦 Schémas chargés :', window.allSchemas.length);
-        
-        // Mettre à jour les compteurs
-        setTimeout(function() {
-            updateGlobalCounts();
-            updateGtCounts();
-        }, 300);
 
-        // Événements
+        // Événements d'écoute en temps réel pour le filtre et la recherche
         const searchInput = document.getElementById('searchInput');
         const filterType = document.getElementById('filterType');
 
-        if (searchInput && filterType) {
-            searchInput.addEventListener('input', function() {
-                filterResourcesByCategory();
-            });
-            filterType.addEventListener('change', function() {
-                filterResourcesByCategory();
-            });
+        if (searchInput) {
+            searchInput.addEventListener('input', filterResourcesByCategory);
+        }
+        if (filterType) {
+            filterType.addEventListener('change', filterResourcesByCategory);
         }
 
+        // Lancer l'initialisation du filtre
+        filterResourcesByCategory();
+        updateGtCounts();
+
+        // Formulaires
         document.getElementById('createSchemaForm')?.addEventListener('submit', function(e) {
             const fileInput = document.getElementById('schemaFile');
             if (!fileInput.files || fileInput.files.length === 0) {
