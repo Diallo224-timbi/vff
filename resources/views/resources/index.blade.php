@@ -729,39 +729,55 @@
 
 <script>
     // ============================================
-    // COMPTEURS GLOBAUX (tous les documents)
+    // COMPTEURS GLOBAUX (comptage direct des cartes)
     // ============================================
     let totalResourcesCount = 0;
     let allResourcesData = [];
 
     function updateGlobalCounts() {
-        // Récupérer tous les documents (même ceux sur d'autres pages)
-        fetch('{{ route("resources.counts") }}')
-            .then(response => response.json())
-            .then(data => {
-                totalResourcesCount = data.total;
-                document.getElementById('totalResourcesCount').textContent = totalResourcesCount;
-                
-                // Mettre à jour les compteurs des catégories
-                if (data.counts) {
-                    const countMap = {
-                        'countAll': data.total,
-                        'countGuidesEtudes': data.counts.guides_etudes || 0,
-                        'countAffichesFlyers': data.counts.affiches_flyers || 0,
-                        'countReseaux': data.counts.reseaux || 0,
-                        'countSensibilisation': data.counts.sensibilisation || 0,
-                        'countOutils': data.counts.outils || 0,
-                        'countConventions': data.counts.conventions || 0
-                    };
-                    
-                    Object.keys(countMap).forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.textContent = countMap[id];
-                    });
-                }
-                console.log('📊 Compteurs globaux mis à jour:', data);
-            })
-            .catch(error => console.error('Erreur chargement compteurs:', error));
+        // Compter directement les cartes présentes dans la page
+        const cards = document.querySelectorAll('#resourcesGrid .resource-card');
+        
+        const counts = {
+            all: cards.length,
+            guides_etudes: 0,
+            affiches_flyers: 0,
+            reseaux: 0,
+            sensibilisation: 0,
+            outils: 0,
+            conventions: 0
+        };
+        
+        cards.forEach(card => {
+            const category = card.dataset.category || '';
+            if (category && counts.hasOwnProperty(category)) {
+                counts[category]++;
+            }
+        });
+        
+        totalResourcesCount = counts.all;
+        
+        // Mettre à jour l'affichage
+        const totalEl = document.getElementById('totalResourcesCount');
+        if (totalEl) totalEl.textContent = totalResourcesCount;
+        
+        // Mettre à jour les compteurs des catégories
+        const countMap = {
+            'countAll': counts.all,
+            'countGuidesEtudes': counts.guides_etudes || 0,
+            'countAffichesFlyers': counts.affiches_flyers || 0,
+            'countReseaux': counts.reseaux || 0,
+            'countSensibilisation': counts.sensibilisation || 0,
+            'countOutils': counts.outils || 0,
+            'countConventions': counts.conventions || 0
+        };
+        
+        Object.keys(countMap).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = countMap[id];
+        });
+        
+        console.log('📊 Compteurs mis à jour:', counts);
     }
 
     // ============================================
@@ -778,7 +794,6 @@
             schemasSection.style.display = 'none';
             tabDocs.classList.add('active');
             tabSchemas.classList.remove('active');
-            // Mettre à jour les compteurs globaux
             setTimeout(updateGlobalCounts, 100);
         } else {
             docsSection.style.display = 'none';
@@ -920,6 +935,9 @@
 
             card.style.display = show ? '' : 'none';
         });
+        
+        // Mettre à jour les compteurs après filtrage
+        updateGlobalCounts();
     }
 
     // ============================================
@@ -1167,7 +1185,7 @@
         window.allSchemas = @json($schemas ?? []);
         console.log('📦 Schémas chargés :', window.allSchemas.length);
         
-        // Mettre à jour les compteurs GLOBAUX
+        // Mettre à jour les compteurs
         setTimeout(function() {
             updateGlobalCounts();
             updateGtCounts();
