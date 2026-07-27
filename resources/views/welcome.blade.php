@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <meta name="description" content="Plateforme sécurisée qui réunit l’ensemble des acteurs engagés contre les violences faites aux femmes dans les Alpes-Maritimes, afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.">
+    <meta name="description" content="Plateforme sécurisée qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes dans les Alpes-Maritimes, afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.">
     <title>Plateforme Multi-Acteurs VFF - Alpes-Maritimes</title>
-    <!-- Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         /* --- RESET & BASE --- */
@@ -26,23 +24,11 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* --- PREFERS REDUCED MOTION --- */
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            .hero {
-                animation: none !important;
-            }
-            .particle {
-                animation: none !important;
-                display: none !important;
-            }
-            .partner-logos {
-                transition: none !important;
-            }
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+            .hero { animation: none !important; }
+            .particle { animation: none !important; display: none !important; }
+            .project-slide { animation: none !important; }
         }
 
         /* --- HEADER --- */
@@ -184,14 +170,14 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(135deg,
-                    rgba(0, 0, 0, 0.88) 0%,
-                    rgba(0, 0, 0, 0.70) 40%,
+                    rgba(0, 0, 0, 0.92) 0%,
+                    rgba(0, 0, 0, 0.75) 40%,
                     rgba(0, 0, 0, 0.50) 70%,
-                    rgba(0, 0, 0, 0.30) 100%);
+                    rgba(0, 0, 0, 0.25) 100%);
             z-index: 1;
         }
 
-        /* --- PARTICLES (discrètes) --- */
+        /* --- PARTICLES --- */
         .particles {
             position: absolute;
             inset: 0;
@@ -202,7 +188,7 @@
 
         .particle {
             position: absolute;
-            background: rgba(79, 209, 217, 0.10);
+            background: rgba(79, 209, 217, 0.06);
             border-radius: 50%;
             animation: float 30s infinite linear;
         }
@@ -212,13 +198,23 @@
             100% { transform: translateY(-100vh) rotate(360deg) scale(1); }
         }
 
-        /* --- CONTENU HERO --- */
-        .hero-content {
+        /* --- CONTENU HERO (2 colonnes) --- */
+        .hero-container {
             position: relative;
             z-index: 3;
-            max-width: 620px;
+            display: flex;
+            align-items: center;
+            gap: 50px;
             width: 100%;
-            animation: contentFade 1s ease-out;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* --- COLONNE GAUCHE : TEXTE --- */
+        .hero-content {
+            flex: 0 0 50%;
+            max-width: 50%;
+            animation: contentFade 2s ease-out;
         }
 
         @keyframes contentFade {
@@ -226,36 +222,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(79, 209, 217, 0.12);
-            border: 1px solid rgba(79, 209, 217, 0.20);
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 10px;
-            font-weight: 500;
-            color: #4fd1d9;
-            letter-spacing: 0.3px;
-            margin-bottom: 16px;
-        }
-
-        .hero-badge i {
-            font-size: 10px;
-        }
-
-        .hero h1 {
+        .hero-content h1 {
             font-family: 'Poppins', sans-serif;
             font-weight: 800;
-            font-size: 36px;
+            font-size: 42px;
             line-height: 1.08;
-            color: #fff;
+            color: #ffffff;
             margin-bottom: 14px;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 40px rgba(0, 0, 0, 0.6);
         }
 
-        .hero h1 .highlight {
+        .hero-content h1 .highlight {
             background: linear-gradient(135deg, #4fd1d9, #7ae0e8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -263,11 +241,12 @@
         }
 
         .hero-subtitle {
-            font-size: 14px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.85);
-            max-width: 500px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.92);
+            max-width: 520px;
             font-weight: 400;
+            text-shadow: 0 1px 20px rgba(0, 0, 0, 0.3);
         }
 
         .hero-subtitle strong {
@@ -276,11 +255,11 @@
         }
 
         .hero-divider {
-            width: 40px;
+            width: 50px;
             height: 3px;
             background: linear-gradient(90deg, #4fd1d9, transparent);
             border-radius: 2px;
-            margin: 16px 0 20px 0;
+            margin: 18px 0 22px 0;
         }
 
         /* --- STATS BADGE --- */
@@ -288,22 +267,22 @@
             display: inline-flex;
             align-items: center;
             gap: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 40px;
             padding: 4px 6px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .stats-badge .stat-item {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 12px;
+            padding: 5px 14px;
             border-right: 1px solid rgba(255, 255, 255, 0.06);
         }
 
@@ -314,14 +293,295 @@
         .stats-badge .stat-number {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 16px;
             color: #4fd1d9;
         }
 
         .stats-badge .stat-label {
-            font-size: 9px;
+            font-size: 10px;
             color: rgba(255, 255, 255, 0.6);
             font-weight: 400;
+        }
+
+        /* ================================================================ */
+        /* === CARTE PROJET - DESIGN OPTIMISÉ VISIBILITÉ === */
+        /* ================================================================ */
+        .hero-project-carousel {
+            flex: 0 0 38%;
+            max-width: 38%;
+            animation: contentFade 1s ease-out 0.3s both;
+        }
+
+        .project-card-wrapper {
+            background: rgba(15, 20, 30, 0.95);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(79, 209, 217, 0.25);
+            border-radius: 24px;
+            padding: 24px 22px 20px 22px;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.9),
+                inset 0 1px 0 rgba(79, 209, 217, 0.15),
+                0 0 60px rgba(79, 209, 217, 0.03);
+            max-height: 460px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .project-card-wrapper:hover {
+            border-color: rgba(79, 209, 217, 0.5);
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.9),
+                inset 0 1px 0 rgba(79, 209, 217, 0.25),
+                0 0 80px rgba(79, 209, 217, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* En-tête */
+        .project-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .project-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(79, 209, 217, 0.2), rgba(79, 209, 217, 0.06));
+            border: 1px solid rgba(79, 209, 217, 0.3);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #4fd1d9;
+            letter-spacing: 0.3px;
+            box-shadow: 0 0 30px rgba(79, 209, 217, 0.05);
+        }
+
+        .project-card-badge i {
+            font-size: 11px;
+        }
+
+        .project-card-date {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .project-card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.3;
+            margin-bottom: 14px;
+            letter-spacing: -0.2px;
+            text-shadow: 0 1px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card-title .highlight {
+            background: linear-gradient(135deg, #4fd1d9, #7ae0e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* === SLIDES AVEC FOND SOMBRE === */
+        .project-slides-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            min-height: 190px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 6px 4px;
+        }
+
+        .project-slides-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        /* Chaque slide = carte avec fond */
+        .project-slide {
+            flex: 0 0 100%;
+            min-width: 0;
+            padding: 10px 10px 6px 10px;
+        }
+
+        /* Fond de chaque slide */
+        .project-slide .slide-inner {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 16px 16px 14px 16px;
+            transition: all 0.3s ease;
+            min-height: 130px;
+        }
+
+        .project-slide .slide-inner:hover {
+            background: rgba(79, 209, 217, 0.05);
+            border-color: rgba(79, 209, 217, 0.15);
+        }
+
+        .project-slide .slide-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(79, 209, 217, 0.15), rgba(79, 209, 217, 0.05));
+            border: 1px solid rgba(79, 209, 217, 0.15);
+            margin-bottom: 8px;
+        }
+
+        .project-slide .slide-icon i {
+            font-size: 16px;
+            color: #4fd1d9;
+        }
+
+        .project-slide .slide-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+            letter-spacing: -0.1px;
+        }
+
+        .project-slide .slide-title .highlight {
+            background: linear-gradient(135deg, #4fd1d9, #7ae0e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-slide .slide-content {
+            font-size: 12.5px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .project-slide .slide-content strong {
+            color: #4fd1d9;
+            font-weight: 600;
+        }
+
+        .project-slide .slide-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4fd1d9;
+            text-decoration: none;
+            font-size: 11.5px;
+            font-weight: 500;
+            margin-top: 6px;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .project-slide .slide-link:hover {
+            border-bottom-color: #4fd1d9;
+            gap: 10px;
+        }
+
+        .project-slide .slide-link i {
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .project-slide .slide-link:hover i {
+            transform: translateX(3px);
+        }
+
+        .project-slide .slide-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 10.5px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .project-slide .slide-footer i {
+            margin-right: 5px;
+            color: #4fd1d9;
+        }
+
+        /* === NAVIGATION === */
+        .project-slides-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .project-slides-nav .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.4);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .project-slides-nav .nav-btn:hover {
+            background: rgba(79, 209, 217, 0.15);
+            border-color: rgba(79, 209, 217, 0.3);
+            color: #4fd1d9;
+            transform: scale(1.08);
+            box-shadow: 0 0 30px rgba(79, 209, 217, 0.1);
+        }
+
+        .project-slides-nav .nav-btn:disabled {
+            opacity: 0.15;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .project-slides-nav .dots {
+            display: flex;
+            gap: 7px;
+        }
+
+        .project-slides-nav .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .project-slides-nav .dot.active {
+            background: #4fd1d9;
+            width: 22px;
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(79, 209, 217, 0.3);
+        }
+
+        .project-slides-nav .dot:hover {
+            background: rgba(79, 209, 217, 0.4);
         }
 
         /* --- SERVICES --- */
@@ -502,7 +762,6 @@
             font-weight: 500;
         }
 
-        /* Boutons de navigation */
         .nav-btn {
             background: transparent;
             border: 1px solid rgba(79, 209, 217, 0.3);
@@ -524,19 +783,6 @@
             color: #0a0a0a;
             border-color: #4fd1d9;
             transform: scale(1.05);
-        }
-
-        .nav-btn:focus-visible {
-            outline: 2px solid #4fd1d9;
-            outline-offset: 2px;
-        }
-
-        .nav-btn.prev {
-            margin-right: 0px;
-        }
-
-        .nav-btn.next {
-            margin-left: 0px;
         }
 
         /* --- RESPONSIVE --- */
@@ -568,27 +814,22 @@
                 font-size: 13px;
             }
             .hero {
-                padding-left: 50px;
-                padding-right: 50px;
+                padding-left: 40px;
+                padding-right: 40px;
                 padding-top: 100px;
                 padding-bottom: 120px;
             }
-            .hero h1 {
-                font-size: 56px;
+            .hero-content h1 {
+                font-size: 44px;
             }
             .hero-subtitle {
-                font-size: 16px;
+                font-size: 15px;
             }
             .hero-divider {
-                width: 60px;
-                margin: 20px 0 24px 0;
+                width: 50px;
+                margin: 18px 0 22px 0;
             }
-            .stats-badge .stat-number {
-                font-size: 18px;
-            }
-            .stats-badge .stat-label {
-                font-size: 12px;
-            }
+
             .service-item {
                 padding: 14px 22px;
                 min-width: 100px;
@@ -605,12 +846,13 @@
                 font-size: 11px;
             }
             .services {
-                left: 50px;
+                left: 40px;
                 right: auto;
                 bottom: 110px;
                 gap: 16px;
                 flex-wrap: nowrap;
             }
+
             .partners-bar {
                 padding: 18px 30px;
                 gap: 20px;
@@ -657,21 +899,90 @@
             .header-title {
                 display: block;
             }
-            .hero h1 {
-                font-size: 72px;
+            .hero-content h1 {
+                font-size: 58px;
             }
             .hero {
-                padding-left: 80px;
-                padding-right: 80px;
+                padding-left: 60px;
+                padding-right: 60px;
             }
             .hero-subtitle {
-                font-size: 18px;
+                font-size: 17px;
             }
             .services {
-                left: 80px;
+                left: 60px;
             }
-            .partners-carousel {
-                max-width: 78%;
+
+            .hero-content {
+                flex: 0 0 52%;
+                max-width: 52%;
+            }
+            .hero-project-carousel {
+                flex: 0 0 35%;
+                max-width: 35%;
+            }
+            .project-card-wrapper {
+                padding: 26px 24px 22px 24px;
+                max-height: 480px;
+            }
+            .project-card-title {
+                font-size: 19px;
+            }
+            .project-slide .slide-content {
+                font-size: 13px;
+            }
+            .project-slide .slide-title {
+                font-size: 15px;
+            }
+            .project-slide .slide-inner {
+                padding: 18px 18px 16px 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 24px;
+            }
+            .hero-content {
+                flex: 1;
+                max-width: 100%;
+                text-align: center;
+            }
+            .hero-content h1 {
+                font-size: 30px;
+            }
+            .hero-divider {
+                margin: 12px auto 16px auto;
+            }
+            .hero-subtitle {
+                max-width: 100%;
+                font-size: 13px;
+            }
+            .stats-badge {
+                justify-content: center;
+            }
+
+            .hero-project-carousel {
+                flex: 1;
+                max-width: 100%;
+                width: 100%;
+            }
+            .project-card-wrapper {
+                max-height: 420px;
+                padding: 18px 16px;
+                max-width: 520px;
+                margin: 0 auto;
+            }
+            .project-card-title {
+                font-size: 16px;
+            }
+            .project-slide .slide-content {
+                font-size: 12px;
+            }
+            .project-slide .slide-inner {
+                padding: 14px 14px 12px 14px;
             }
         }
 
@@ -704,26 +1015,12 @@
             }
             .hero {
                 padding: 80px 14px 160px 14px;
-                align-items: center;
-                text-align: center;
             }
-            .hero h1 {
-                font-size: 28px;
+            .hero-content h1 {
+                font-size: 26px;
             }
             .hero-subtitle {
                 font-size: 12px;
-                max-width: 100%;
-            }
-            .hero-subtitle br {
-                display: none;
-            }
-            .hero-badge {
-                font-size: 9px;
-                padding: 3px 10px;
-                margin-bottom: 12px;
-            }
-            .hero-divider {
-                margin: 12px auto 14px auto;
             }
             .stats-badge {
                 padding: 3px 4px;
@@ -738,6 +1035,46 @@
             .stats-badge .stat-label {
                 font-size: 8px;
             }
+
+            .project-card-wrapper {
+                max-height: 380px;
+                padding: 14px 12px;
+                border-radius: 18px;
+            }
+            .project-card-title {
+                font-size: 14px;
+            }
+            .project-slide .slide-content {
+                font-size: 11px;
+                line-height: 1.5;
+            }
+            .project-slide .slide-title {
+                font-size: 12.5px;
+            }
+            .project-slide .slide-inner {
+                padding: 12px 12px 10px 12px;
+                min-height: 110px;
+            }
+            .project-slide .slide-icon {
+                width: 30px;
+                height: 30px;
+            }
+            .project-slide .slide-icon i {
+                font-size: 14px;
+            }
+            .project-slides-nav .nav-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 10px;
+            }
+            .project-slides-nav .dot {
+                width: 5px;
+                height: 5px;
+            }
+            .project-slides-nav .dot.active {
+                width: 18px;
+            }
+
             .services {
                 left: 8px;
                 right: 8px;
@@ -756,6 +1093,7 @@
             .service-item h3 {
                 font-size: 8px;
             }
+
             .partners-bar {
                 padding: 8px 8px;
                 min-height: 50px;
@@ -805,11 +1143,28 @@
         }
 
         @media (max-width: 400px) {
-            .hero h1 {
-                font-size: 24px;
+            .hero-content h1 {
+                font-size: 22px;
             }
             .hero-subtitle {
                 font-size: 11px;
+            }
+            .project-card-wrapper {
+                max-height: 340px;
+                padding: 10px 10px;
+            }
+            .project-card-title {
+                font-size: 12px;
+            }
+            .project-slide .slide-content {
+                font-size: 10px;
+            }
+            .project-slide .slide-title {
+                font-size: 11px;
+            }
+            .project-slide .slide-inner {
+                padding: 10px 10px 8px 10px;
+                min-height: 100px;
             }
             .service-item {
                 padding: 4px 6px;
@@ -820,15 +1175,6 @@
             }
             .service-item h3 {
                 font-size: 7px;
-            }
-            .partners-bar .partner-item {
-                min-width: 38px;
-                padding: 3px 5px;
-                min-height: 28px;
-            }
-            .partners-bar .partner-item img {
-                height: 20px;
-                max-width: 32px;
             }
             .stats-badge .stat-item {
                 padding: 2px 6px;
@@ -868,41 +1214,166 @@
     <main class="hero" role="main">
         <div class="particles" id="particles" aria-hidden="true"></div>
 
-        <div class="hero-content">
-            <h1>
-                Nos singularités <br>
-                <span class="highlight">au service du collectif.</span>
-            </h1>
+        <div class="hero-container">
 
-            <div class="hero-divider" aria-hidden="true"></div>
+            <!-- ====== COLONNE GAUCHE : TEXTE ====== -->
+            <div class="hero-content">
+                <h1>
+                    Nos singularités <br>
+                    <span class="highlight">au service du collectif.</span>
+                </h1>
 
-            <p class="hero-subtitle">
-                <strong style="color: rgb(255, 255, 255);">
-                    Une plateforme sécurisée qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes, 
-                    afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.
-                </strong>
-            </p>
+                <div class="hero-divider" aria-hidden="true"></div>
 
-            <div style="margin-top: 20px;">
-                <div class="stats-badge">
-                    <div class="stat-item">
-                        <span class="stat-number">{{ $organismes->count() }}</span>
-                        <span class="stat-label">Organismes</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">{{ $structures->count() }}</span>
-                        <span class="stat-label">Structures</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">{{ $user->count() }}</span>
-                        <span class="stat-label">Membres</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">100%</span>
-                        <span class="stat-label">Sécurisé</span>
+                <p class="hero-subtitle">
+                    <strong style="color: #ffffff;">
+                        Une plateforme sécurisée qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes, 
+                        afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.
+                    </strong>
+                </p>
+
+                <div style="margin-top: 20px;">
+                    <div class="stats-badge">
+                        <div class="stat-item">
+                            <span class="stat-number">{{ $organismes->count() }}</span>
+                            <span class="stat-label">Organismes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ $structures->count() }}</span>
+                            <span class="stat-label">Structures</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ $user->count() }}</span>
+                            <span class="stat-label">Membres</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Sécurisé</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- ====== COLONNE DROITE : CARTE PROJET ====== -->
+            <div class="hero-project-carousel">
+                <div class="project-card-wrapper">
+                    <!-- En-tête -->
+                    <div class="project-card-header">
+                        <span class="project-card-badge">
+                            <i class="fas fa-flag-checkered" aria-hidden="true"></i>
+                            Projet départemental
+                        </span>
+                        <span class="project-card-date">2024 ‑ 2027</span>
+                    </div>
+
+                    <h3 class="project-card-title">
+                        Schéma <span class="highlight">VFF 06</span>
+                    </h3>
+
+                    <!-- Carrousel avec fond sombre par slide -->
+                    <div class="project-slides-wrapper">
+                        <div class="project-slides-track" id="projectTrack">
+
+                            <!-- SLIDE 1 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-handshake" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Plateforme <span class="highlight">Multi-Acteurs</span></div>
+                                    <div class="slide-content">
+                                        Un espace numérique sécurisé pour renforcer la coopération entre institutions, collectivités, associations, professionnels de santé, forces de l'ordre et acteurs de la justice.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 2 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-gavel" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Origine du <span class="highlight">projet</span></div>
+                                    <div class="slide-content">
+                                        Issue du <strong>Schéma départemental 2024‑2027</strong> porté par la Préfecture, les Parquets de Nice et Grasse, les collectivités et les associations spécialisées.
+                                    </div>
+                                    <a href="#" class="slide-link" aria-label="Consulter le Schéma départemental">
+                                        Consulter le schéma <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 3 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-network-wired" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Mettre en <span class="highlight">réseau</span></div>
+                                    <div class="slide-content">
+                                        <strong>Annuaire départemental</strong> et <strong>cartographie interactive</strong> pour identifier rapidement les partenaires et dispositifs du territoire.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 4 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-comments" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Favoriser les <span class="highlight">échanges</span></div>
+                                    <div class="slide-content">
+                                        Espace sécurisé pour partager expériences, pratiques et ressources dans le respect du <strong>RGPD</strong>.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 5 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-folder-open" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Centraliser les <span class="highlight">ressources</span></div>
+                                    <div class="slide-content">
+                                        <strong>Documents, procédures, fiches réflexes</strong> et outils métiers pour l'accompagnement des victimes.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 6 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-star" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Valoriser les <span class="highlight">initiatives</span></div>
+                                    <div class="slide-content">
+                                        Mettre en avant les <strong>projets innovants</strong> et groupes de travail développés dans les Alpes‑Maritimes.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 7 -->
+                            <div class="project-slide">
+                                <div class="slide-inner">
+                                    <div class="slide-icon"><i class="fas fa-bullseye" aria-hidden="true"></i></div>
+                                    <div class="slide-title">Notre <span class="highlight">ambition</span></div>
+                                    <div class="slide-content">
+                                        Construire un réseau plus <strong>lisible, accessible et efficace</strong> pour améliorer la prévention, la protection et l'accompagnement.
+                                    </div>
+                                    <div class="slide-footer">
+                                        <i class="fas fa-shield-alt" aria-hidden="true"></i> RGPD · Aucune donnée individuelle
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="project-slides-nav">
+                        <button class="nav-btn" id="projectPrev" aria-label="Slide précédent">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <div class="dots" id="projectDots"></div>
+                        <button class="nav-btn" id="projectNext" aria-label="Slide suivant">
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
         <!-- SERVICES -->
@@ -967,12 +1438,128 @@
     </main>
 
     <script>
-        // --- CARROUSEL ---
+        // ================================================================
+        // CARROUSEL PROJET
+        // ================================================================
+        (function() {
+            const track = document.getElementById('projectTrack');
+            const slides = track.querySelectorAll('.project-slide');
+            const totalSlides = slides.length;
+            let currentSlide = 0;
+            let autoSlideInterval = null;
+            let isPaused = false;
+
+            function moveToSlide(index) {
+                const maxIndex = totalSlides - 1;
+                currentSlide = Math.max(0, Math.min(index, maxIndex));
+
+                const slideWidth = slides[0].offsetWidth;
+                const offset = currentSlide * slideWidth;
+                track.style.transform = `translateX(-${offset}px)`;
+
+                const dots = document.querySelectorAll('#projectDots .dot');
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+
+                document.getElementById('projectPrev').disabled = currentSlide === 0;
+                document.getElementById('projectNext').disabled = currentSlide >= maxIndex;
+            }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    moveToSlide(currentSlide + 1);
+                } else {
+                    moveToSlide(0);
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    moveToSlide(currentSlide - 1);
+                } else {
+                    moveToSlide(totalSlides - 1);
+                }
+            }
+
+            function createDots() {
+                const dotsContainer = document.getElementById('projectDots');
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('data-index', i);
+                    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                    dot.addEventListener('click', function() {
+                        moveToSlide(parseInt(this.dataset.index));
+                        resetAutoSlide();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            function startAutoSlide() {
+                if (autoSlideInterval) clearInterval(autoSlideInterval);
+                if (isPaused) return;
+                autoSlideInterval = setInterval(nextSlide, 4500);
+            }
+
+            function stopAutoSlide() {
+                if (autoSlideInterval) {
+                    clearInterval(autoSlideInterval);
+                    autoSlideInterval = null;
+                }
+            }
+
+            function resetAutoSlide() {
+                stopAutoSlide();
+                startAutoSlide();
+            }
+
+            document.getElementById('projectPrev').addEventListener('click', function() {
+                prevSlide();
+                resetAutoSlide();
+            });
+
+            document.getElementById('projectNext').addEventListener('click', function() {
+                nextSlide();
+                resetAutoSlide();
+            });
+
+            const wrapper = document.querySelector('.project-card-wrapper');
+            wrapper.addEventListener('mouseenter', function() {
+                isPaused = true;
+                stopAutoSlide();
+            });
+            wrapper.addEventListener('mouseleave', function() {
+                isPaused = false;
+                startAutoSlide();
+            });
+
+            setTimeout(function() {
+                createDots();
+                moveToSlide(0);
+                setTimeout(startAutoSlide, 2000);
+            }, 200);
+
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    moveToSlide(currentSlide);
+                }, 300);
+            });
+        })();
+
+
+        // ================================================================
+        // CARROUSEL PARTENAIRES
+        // ================================================================
         let currentIndex = 0;
         let itemsPerView = 4;
         let totalItems = 0;
-        let autoSlideInterval = null;
-        let isPaused = false;
+        let autoSlideIntervalPartner = null;
+        let isPausedPartner = false;
 
         function updateItemsPerView() {
             const width = window.innerWidth;
@@ -1007,10 +1594,10 @@
             if (nextBtn) nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
         }
 
-        let resizeTimeout;
+        let resizeTimeoutPartner;
         window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
+            clearTimeout(resizeTimeoutPartner);
+            resizeTimeoutPartner = setTimeout(() => {
                 updateItemsPerView();
                 currentIndex = 0;
                 const logos = document.querySelectorAll('.partner-item');
@@ -1024,11 +1611,11 @@
             }, 300);
         });
 
-        function startAutoSlide() {
-            if (autoSlideInterval) clearInterval(autoSlideInterval);
-            if (isPaused) return;
+        function startAutoSlidePartner() {
+            if (autoSlideIntervalPartner) clearInterval(autoSlideIntervalPartner);
+            if (isPausedPartner) return;
             
-            autoSlideInterval = setInterval(() => {
+            autoSlideIntervalPartner = setInterval(() => {
                 const logos = document.querySelectorAll('.partner-item');
                 const total = logos.length;
                 const maxIndex = Math.max(0, total - itemsPerView);
@@ -1042,10 +1629,10 @@
             }, 5000);
         }
 
-        function stopAutoSlide() {
-            if (autoSlideInterval) {
-                clearInterval(autoSlideInterval);
-                autoSlideInterval = null;
+        function stopAutoSlidePartner() {
+            if (autoSlideIntervalPartner) {
+                clearInterval(autoSlideIntervalPartner);
+                autoSlideIntervalPartner = null;
             }
         }
 
@@ -1053,31 +1640,26 @@
             const carousel = document.querySelector('.partners-carousel');
             if (carousel) {
                 carousel.addEventListener('mouseenter', function() {
-                    isPaused = true;
-                    stopAutoSlide();
+                    isPausedPartner = true;
+                    stopAutoSlidePartner();
                 });
                 carousel.addEventListener('mouseleave', function() {
-                    isPaused = false;
-                    startAutoSlide();
-                });
-                carousel.addEventListener('focusin', function() {
-                    isPaused = true;
-                    stopAutoSlide();
-                });
-                carousel.addEventListener('focusout', function() {
-                    isPaused = false;
-                    startAutoSlide();
+                    isPausedPartner = false;
+                    startAutoSlidePartner();
                 });
             }
             
             setTimeout(() => {
                 updateItemsPerView();
                 moveCarousel(0);
-                setTimeout(startAutoSlide, 2000);
+                setTimeout(startAutoSlidePartner, 2000);
             }, 100);
         });
 
-        // --- PARTICULES (discrètes) ---
+
+        // ================================================================
+        // PARTICULES
+        // ================================================================
         function createParticles() {
             const container = document.getElementById('particles');
             if (!container) return;
@@ -1096,7 +1678,6 @@
                 container.appendChild(particle);
             }
         }
-
         window.addEventListener('load', function() {
             createParticles();
         });

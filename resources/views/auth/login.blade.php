@@ -126,17 +126,57 @@
             <div class="mb-3 sm:mb-4 lg:mb-6">
                 <span class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight block drop-shadow-lg">PLATEFORME</span>
                 <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">MULTI-ACTEURS</span>
+                <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">VFF 06</span>
             </div>
             
             <!-- Message inspirant -->
-            <div class="my-3 sm:my-4 lg:my-8">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto rounded-full bg-white/20 flex items-center justify-center mb-2 sm:mb-3 lg:mb-4 backdrop-blur-sm">
-                    <span class="text-2xl sm:text-3xl lg:text-4xl">🤝</span>
-                </div>
-                <p class="text-base sm:text-lg lg:text-xl font-light italic">"Construisons ensemble</p>
-                <p class="text-lg sm:text-xl lg:text-2xl font-semibold mt-1">une société inclusive</p>
-                <p class="text-base sm:text-lg lg:text-xl font-light italic mt-1">et collaborative"</p>
-            </div>
+            <div class="my-4 sm:my-6 lg:my-10 px-3 sm:px-6 max-w-6xl mx-auto">
+    
+    <!-- Icône avec animation pulsante -->
+    <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto rounded-full bg-gradient-to-br from-white/25 to-white/5 flex items-center justify-center mb-3 sm:mb-4 lg:mb-5 backdrop-blur-sm shadow-lg shadow-white/5 ring-1 ring-white/15 animate-pulse-slow">
+        <span class="text-2xl sm:text-3xl lg:text-4xl">🤝</span>
+    </div>
+
+    <!-- Bloc titre avec espacement réduit -->
+    <div class="text-center max-w-2xl mx-auto">
+        <p class="text-[0.85rem] sm:text-sm lg:text-base font-light italic text-white/70 tracking-wide">
+            Construisons ensemble
+        </p>
+        <h2 class="text-lg sm:text-xl lg:text-2xl font-bold mt-0.5 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+            une société inclusive
+        </h2>
+        <p class="text-[0.85rem] sm:text-sm lg:text-base font-light italic text-white/70 tracking-wide mt-0.5">
+            et collaborative
+        </p>
+    </div>
+
+    <!-- Séparateur minimal -->
+    <div class="flex justify-center items-center gap-2 my-3 sm:my-4">
+        <span class="h-px w-6 sm:w-10 bg-gradient-to-r from-transparent to-white/20"></span>
+        <span class="text-white/10 text-[10px]">◆</span>
+        <span class="h-px w-6 sm:w-10 bg-gradient-to-l from-transparent to-white/20"></span>
+    </div>
+
+    <!-- Texte justifié avec interlignage optimisé -->
+    <div class="text-justify max-w-4xl mx-auto">
+        <p class="text-[0.75rem] sm:text-[0.85rem] lg:text-sm leading-[1.7] sm:leading-[1.8] lg:leading-[1.9] text-white [word-spacing:0.5px] sm:[word-spacing:1px] tracking-[0.01em]">
+            Cette plateforme collaborative réunit les services de l'État, les collectivités,
+            les associations, les professionnels de santé, les travailleurs sociaux et
+            l'ensemble des acteurs engagés dans la prévention et la lutte contre les violences
+            faites aux femmes. Elle facilite la coordination des interventions, le partage de
+            ressources, l'accès à un annuaire géolocalisé, la consultation de documents
+            professionnels, les échanges entre partenaires et la valorisation des initiatives
+            territoriales afin de renforcer l'efficacité collective au service des victimes.
+        </p>
+    </div>
+    
+    <!-- Petite ligne décorative en bas -->
+    <div class="mt-4 sm:mt-5 flex justify-center">
+        <span class="block w-12 h-[2px] rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent"></span>
+    </div>
+</div>
+
+
             
             <!-- Pictogrammes charte -->
            
@@ -239,6 +279,20 @@ document.addEventListener('DOMContentLoaded', function() {
         ::placeholder {
             font-size: 0.875rem;
         }
+    }
+
+    @keyframes pulse-slow {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+    }
+    .animate-pulse-slow {
+        animation: pulse-slow 3s ease-in-out infinite;
     }
 </style>
 
