@@ -14,7 +14,7 @@
             <div class="text-center mb-4 sm:mb-6">
                 <span class="text-xl sm:text-2xl font-bold tracking-tight text-[#173235] block">PLATEFORME</span>
                 <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block">MULTI-ACTEURS</span>
-                <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block">VFF 06</span>
+                <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block ">VFF 06</span>
                 <div class="w-12 h-0.5 bg-[#255156] mx-auto mt-2 sm:mt-3"></div>
             </div>
 
@@ -76,16 +76,6 @@
                             Mot de passe oublié ?
                         </a>
                     </div>
-                </div>
-                <!-- Checkbox "Rester connecté" -->
-                <div class="flex items-center">
-                    <input type="checkbox" 
-                           name="remember" 
-                           id="remember"
-                           class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#255156] border-2 border-[#B3D2D4] rounded focus:ring-[#255156] focus:ring-2">
-                    <label for="remember" class="ml-2 text-xs text-[#2D6268] font-medium">
-                        Rester connecté
-                    </label>
                 </div>
                 <!-- Bouton de connexion -->
                 <button type="submit"
@@ -156,10 +146,9 @@
         <span class="text-white/10 text-[10px]">◆</span>
         <span class="h-px w-6 sm:w-10 bg-gradient-to-l from-transparent to-white/20"></span>
     </div>
-
     <!-- Texte justifié avec interlignage optimisé -->
     <div class="text-justify max-w-4xl mx-auto">
-        <p class="text-[0.75rem] sm:text-[0.85rem] lg:text-sm leading-[1.7] sm:leading-[1.8] lg:leading-[1.9] text-white [word-spacing:0.5px] sm:[word-spacing:1px] tracking-[0.01em]">
+        <p class="text-[0.75rem] sm:text-[0.85rem] lg:text-sm leading-[1.7] sm:leading-[1.8] lg:leading-[1.9] text-[rgb(255,255,255)] [word-spacing:0.5px] sm:[word-spacing:1px] tracking-[0.01em]">
             Cette plateforme collaborative réunit les services de l'État, les collectivités,
             les associations, les professionnels de santé, les travailleurs sociaux et
             l'ensemble des acteurs engagés dans la prévention et la lutte contre les violences
@@ -169,7 +158,6 @@
             territoriales afin de renforcer l'efficacité collective au service des victimes.
         </p>
     </div>
-    
     <!-- Petite ligne décorative en bas -->
     <div class="mt-4 sm:mt-5 flex justify-center">
         <span class="block w-12 h-[2px] rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent"></span>

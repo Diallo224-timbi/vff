@@ -173,6 +173,12 @@
                                 <i class="fa fa-trash me-1"></i> Corbeille
                             </a>
                             @endif
+                            
+                            <!-- Affichage du nombre total de ressources -->
+                            <span class="ms-3 text-muted">
+                                <i class="fas fa-database me-1"></i>
+                                <span id="totalResourcesCount">0</span> ressources
+                            </span>
                         </div>
 
                         <!-- GRILLE DE CARTES -->
@@ -723,6 +729,42 @@
 
 <script>
     // ============================================
+    // COMPTEURS GLOBAUX (tous les documents)
+    // ============================================
+    let totalResourcesCount = 0;
+    let allResourcesData = [];
+
+    function updateGlobalCounts() {
+        // Récupérer tous les documents (même ceux sur d'autres pages)
+        fetch('{{ route("resources.counts") }}')
+            .then(response => response.json())
+            .then(data => {
+                totalResourcesCount = data.total;
+                document.getElementById('totalResourcesCount').textContent = totalResourcesCount;
+                
+                // Mettre à jour les compteurs des catégories
+                if (data.counts) {
+                    const countMap = {
+                        'countAll': data.total,
+                        'countGuidesEtudes': data.counts.guides_etudes || 0,
+                        'countAffichesFlyers': data.counts.affiches_flyers || 0,
+                        'countReseaux': data.counts.reseaux || 0,
+                        'countSensibilisation': data.counts.sensibilisation || 0,
+                        'countOutils': data.counts.outils || 0,
+                        'countConventions': data.counts.conventions || 0
+                    };
+                    
+                    Object.keys(countMap).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = countMap[id];
+                    });
+                }
+                console.log('📊 Compteurs globaux mis à jour:', data);
+            })
+            .catch(error => console.error('Erreur chargement compteurs:', error));
+    }
+
+    // ============================================
     // GESTION DES ONGLETS
     // ============================================
     function switchTab(tab) {
@@ -736,7 +778,8 @@
             schemasSection.style.display = 'none';
             tabDocs.classList.add('active');
             tabSchemas.classList.remove('active');
-            setTimeout(updateCategoryCounts, 100);
+            // Mettre à jour les compteurs globaux
+            setTimeout(updateGlobalCounts, 100);
         } else {
             docsSection.style.display = 'none';
             schemasSection.style.display = 'block';
@@ -776,55 +819,6 @@
         ]
     };
 
-    // ============================================
-    // COMPTEURS DOCUMENTS
-    // ============================================
-    function updateCategoryCounts() {
-        const cards = document.querySelectorAll('#resourcesGrid .resource-card');
-        const counts = {
-            all: 0,
-            guides_etudes: 0,
-            affiches_flyers: 0,
-            reseaux: 0,
-            sensibilisation: 0,
-            outils: 0,
-            conventions: 0
-        };
-        
-        cards.forEach(card => {
-            const category = card.dataset.category;
-            if (card.style.display !== 'none') {
-                counts.all++;
-                if (category && counts.hasOwnProperty(category)) {
-                    counts[category]++;
-                }
-            }
-        });
-        
-        // Mettre à jour les éléments HTML
-        const allCount = document.getElementById('countAll');
-        if (allCount) allCount.textContent = counts.all;
-        
-        const countElements = {
-            'countGuidesEtudes': counts.guides_etudes,
-            'countAffichesFlyers': counts.affiches_flyers,
-            'countReseaux': counts.reseaux,
-            'countSensibilisation': counts.sensibilisation,
-            'countOutils': counts.outils,
-            'countConventions': counts.conventions
-        };
-        
-        Object.keys(countElements).forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = countElements[id];
-        });
-        
-        console.log('📊 Compteurs documents:', counts);
-    }
-
-    // ============================================
-    // FILTRES DOCUMENTS
-    // ============================================
     function updateSubCategories(category) {
         const subSelect = document.getElementById('subCategory');
         subSelect.innerHTML = '<option value="">Aucune</option>';
@@ -926,9 +920,6 @@
 
             card.style.display = show ? '' : 'none';
         });
-        
-        // Mettre à jour les compteurs APRÈS le filtrage
-        updateCategoryCounts();
     }
 
     // ============================================
@@ -1077,7 +1068,6 @@
             `;
             return;
         }
-
         container.innerHTML = filteredSchemas.map(schema => `
             <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded" style="background: #f8f9fa; border-left: 4px solid #145f68;">
                 <div class="d-flex align-items-center gap-3">
@@ -1177,9 +1167,9 @@
         window.allSchemas = @json($schemas ?? []);
         console.log('📦 Schémas chargés :', window.allSchemas.length);
         
-        // Mettre à jour les compteurs
+        // Mettre à jour les compteurs GLOBAUX
         setTimeout(function() {
-            updateCategoryCounts();
+            updateGlobalCounts();
             updateGtCounts();
         }, 300);
 
