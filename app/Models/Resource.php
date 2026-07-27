@@ -27,19 +27,9 @@ class Resource extends Model
         'user_id',
         'link_url',
         'important',
+        'sub_category',
         // NOUVEAUX CHAMPS
-        'category_id',
-        'type_id',
-        'resource_type',
-        'version',
-        'status',
-        'is_featured',
-        'is_important',
-        'view_count',
-        'published_at',
-        'expires_at',
-        'meta_keywords',
-        'meta_description'
+        
     ];
 
     protected $casts = [

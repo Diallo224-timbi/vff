@@ -71,6 +71,8 @@ class ResourceController extends Controller
         'link_url' => 'nullable|url',
         'category' => 'required|string',
         'description' => 'nullable|string',
+        'sub_category' => 'nullable|string',
+        //'important' => 'nullable|boolean'
     ], [
         'file.max' => 'Le fichier dépasse la taille autorisée (50 Mo maximum).',
         'file.mimes' => 'Format de fichier non autorisé.',
@@ -192,6 +194,7 @@ class ResourceController extends Controller
             'link_url' => $request->link_url,
             'download_count' => 0,
             'important' => $request->has('important') ? true : false,
+            'sub_category' => $request->sub_category,
         ]);
         if ($resource->important) {
             // Envoyer une notification aux utilisateurs (ex: email)
