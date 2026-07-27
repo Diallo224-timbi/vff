@@ -1293,7 +1293,7 @@
                                     <div class="slide-content">
                                         Issue du <strong>Schéma départemental 2024‑2027</strong> porté par la Préfecture, les Parquets de Nice et Grasse, les collectivités et les associations spécialisées.
                                     </div>
-                                    <a href="#" class="slide-link" aria-label="Consulter le Schéma départemental">
+                                    <a href="https://www.bing.com/ck/a?!&&p=389e8d27336663e83e195a13ec63c07a10d7e570f4718c99a44cf10e4cde37c6JmltdHM9MTc4NTExMDQwMA&ptn=3&ver=2&hsh=4&fclid=06c05cf8-ea08-634d-3f65-4a5beb3262c2&psq=shema+departemental+vff+06&u=a1aHR0cHM6Ly93d3cuZGVwYXJ0ZW1lbnQwNi5mci9zaXRlcy9kZWZhdWx0L2ZpbGVzL21lZGlhL2Rvd25sb2Fkcy9zZGx2ZmZfMjAyNC0yN192by5wZGY" class="slide-link" aria-label="Consulter le Schéma départemental">
                                         Consulter le schéma <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
