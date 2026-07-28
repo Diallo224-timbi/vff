@@ -150,10 +150,14 @@
                             </div>
                         </div>
 
-                        <!-- Barre de recherche + Boutons d'affichage + Actions -->
+                        <!-- ============================================ -->
+                        <!-- ZONE CORRIGÉE : BARRE DE RECHERCHE + BOUTONS -->
+                        <!-- ============================================ -->
                         <div class="mb-3">
-                            <div class="row g-2 align-items-center">
-                                <div class="col-md-4 col-lg-5">
+                            <div class="row g-2 align-items-end">
+                                <!-- Recherche -->
+                                <div class="col-md-4 col-lg-4">
+                                    <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Rechercher</label>
                                     <div class="input-group" style="border-radius: 10px; overflow: hidden;">
                                         <span class="input-group-text bg-white border-end-0">
                                             <i class="fas fa-search text-muted"></i>
@@ -162,7 +166,10 @@
                                                placeholder="Rechercher...">
                                     </div>
                                 </div>
+
+                                <!-- Filtre Type -->
                                 <div class="col-md-3 col-lg-2">
+                                    <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Type</label>
                                     <select id="filterType" class="form-select" style="font-size: 0.85rem; height: 38px;">
                                         <option value="">Tous les types</option>
                                         <option value="image">Images</option>
@@ -170,23 +177,26 @@
                                         <option value="link">Liens</option>
                                     </select>
                                 </div>
+                                <!-- Vue Cartes / Liste (CORRIGÉ POUR LE ZOOM) -->
                                 <div class="col-md-3 col-lg-3">
+                                    <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Affichage</label>
                                     <div class="btn-group w-100" role="group" style="height: 38px;">
-                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.85rem;">
+                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.85rem; white-space: nowrap;">
                                             <i class="fas fa-th-large me-1"></i> Cartes
                                         </button>
-                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary" onclick="setViewMode('list')" style="font-size: 0.85rem;">
+                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary" onclick="setViewMode('list')" style="font-size: 0.85rem; white-space: nowrap;">
                                             <i class="fas fa-list me-1"></i> Liste
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-md-2 col-lg-2">
-                                    <div class="d-flex gap-1 justify-content-end">
-                                        <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white; padding: 6px 14px; font-size: 0.85rem;">
+                                <!-- Boutons Actions -->
+                                <div class="col-md-2 col-lg-3">
+                                    <div class="d-flex gap-1 justify-content-end flex-wrap">
+                                        <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white; padding: 6px 14px; font-size: 0.85rem; white-space: nowrap;">
                                             <i class="fas fa-upload me-1"></i> Ajouter
                                         </button>
                                         @if(auth()->user()->role === 'admin')
-                                        <a href="{{ route('resources.trash') }}" class="btn" style="background: #255156; color: white; padding: 6px 12px; font-size: 0.85rem;">
+                                        <a href="{{ route('resources.trash') }}" class="btn" style="background: #255156; color: white; padding: 6px 12px; font-size: 0.85rem; white-space: nowrap;">
                                             <i class="fa fa-trash me-1"></i> Corbeille
                                         </a>
                                         @endif
