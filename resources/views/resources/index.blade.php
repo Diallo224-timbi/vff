@@ -73,69 +73,69 @@
                         @endphp
 
                         <!-- FILTRES PAR CATÉGORIE PRINCIPALE -->
-                        <div class="mb-4">
-                            <label class="small fw-semibold text-secondary mb-2">Filtrer par catégorie</label>
-                            <div class="row g-2">
-                                <div class="col-6 col-md-3 col-lg-2">
+                        <div class="mb-3">
+                            <label class="small fw-semibold text-secondary mb-1">Filtrer par catégorie</label>
+                            <div class="d-flex flex-nowrap gap-2 overflow-auto" style="padding-bottom: 5px;">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category active" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-folder-open text-secondary fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-secondary mb-0 small">Toutes</p>
-                                            <small class="text-secondary" id="countAll">{{ $allCount }}</small>
+                                            <p class="fw-semibold text-secondary mb-0 small" style="font-size: 0.75rem;">Toutes</p>
+                                            <small class="text-secondary" style="font-size: 0.7rem;" id="countAll">{{ $allCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-2">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="guides_etudes" onclick="filterByCategory('guides_etudes', 'Guides & Études')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-book text-primary fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-primary mb-0 small">Guides & Études</p>
-                                            <small class="text-primary" id="countGuidesEtudes">{{ $guidesCount }}</small>
+                                            <p class="fw-semibold text-primary mb-0 small" style="font-size: 0.75rem;">Guides</p>
+                                            <small class="text-primary" style="font-size: 0.7rem;" id="countGuidesEtudes">{{ $guidesCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-2">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="affiches_flyers" onclick="filterByCategory('affiches_flyers', 'Affiches & Flyers')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-poster text-success fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-success mb-0 small">Affiches & Flyers</p>
-                                            <small class="text-success" id="countAffichesFlyers">{{ $affichesCount }}</small>
+                                            <p class="fw-semibold text-success mb-0 small" style="font-size: 0.75rem;">Affiches et flyer</p>
+                                            <small class="text-success" style="font-size: 0.7rem;" id="countAffichesFlyers">{{ $affichesCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-2">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="reseaux" onclick="filterByCategory('reseaux', 'Réseaux')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-network-wired text-warning fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-warning mb-0 small">Réseaux</p>
-                                            <small class="text-warning" id="countReseaux">{{ $reseauxCount }}</small>
+                                            <p class="fw-semibold text-warning mb-0 small" style="font-size: 0.75rem;">Réseaux</p>
+                                            <small class="text-warning" style="font-size: 0.7rem;" id="countReseaux">{{ $reseauxCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-2">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="sensibilisation" onclick="filterByCategory('sensibilisation', 'Sensibilisation & Formations')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-graduation-cap text-info fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-info mb-0 small">Sensibilisation</p>
-                                            <small class="text-info" id="countSensibilisation">{{ $sensibilisationCount }}</small>
+                                            <p class="fw-semibold text-info mb-0 small" style="font-size: 0.75rem;">Sensibilisation</p>
+                                            <small class="text-info" style="font-size: 0.7rem;" id="countSensibilisation">{{ $sensibilisationCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-2">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="outils" onclick="filterByCategory('outils', 'Outils')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-tools text-danger fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-danger mb-0 small">Outils</p>
-                                            <small class="text-danger" id="countOutils">{{ $outilsCount }}</small>
+                                            <p class="fw-semibold text-danger mb-0 small" style="font-size: 0.75rem;">Outils</p>
+                                            <small class="text-danger" style="font-size: 0.7rem;" id="countOutils">{{ $outilsCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-2">
+                                <div class="flex-shrink-0" style="min-width: 95px;">
                                     <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="conventions" onclick="filterByCategory('conventions', 'Conventions & Protocoles')">
-                                        <div class="rounded-lg p-2" style="background: #f8f9fa;">
+                                        <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-file-signature text-purple fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-purple mb-0 small">Conventions</p>
-                                            <small class="text-purple" id="countConventions">{{ $conventionsCount }}</small>
+                                            <p class="fw-semibold text-purple mb-0 small" style="font-size: 0.75rem;">Conventions</p>
+                                            <small class="text-purple" style="font-size: 0.7rem;" id="countConventions">{{ $conventionsCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -143,56 +143,67 @@
                         </div>
 
                         <!-- SOUS-CATÉGORIES -->
-                        <div id="subCategoriesContainer" class="mb-3 d-none">
-                            <label class="small fw-semibold text-secondary mb-2">Sous-catégorie</label>
-                            <div class="d-flex flex-wrap gap-2" id="subCategoriesList">
+                        <div id="subCategoriesContainer" class="mb-2 d-none">
+                            <label class="small fw-semibold text-secondary mb-1">Sous-catégorie</label>
+                            <div class="d-flex flex-wrap gap-1" id="subCategoriesList">
                                 <!-- Rempli dynamiquement par JS -->
                             </div>
                         </div>
 
-                        <!-- Barre de recherche -->
-                        <div class="mb-4">
-                            <div class="row g-2">
-                                <div class="col-md-8">
+                        <!-- Barre de recherche + Boutons d'affichage + Actions -->
+                        <div class="mb-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-md-4 col-lg-5">
                                     <div class="input-group" style="border-radius: 10px; overflow: hidden;">
                                         <span class="input-group-text bg-white border-end-0">
                                             <i class="fas fa-search text-muted"></i>
                                         </span>
-                                        <input type="text" id="searchInput" class="form-control border-start-0"
-                                               placeholder="Rechercher par titre ou description...">
+                                        <input type="text" id="searchInput" class="form-control border-start-0" style="font-size: 0.9rem;"
+                                               placeholder="Rechercher...">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <select id="filterType" class="form-select">
+                                <div class="col-md-3 col-lg-2">
+                                    <select id="filterType" class="form-select" style="font-size: 0.85rem; height: 38px;">
                                         <option value="">Tous les types</option>
                                         <option value="image">Images</option>
                                         <option value="document">Documents</option>
-                                        <option value="link">Liens externes</option>
+                                        <option value="link">Liens</option>
                                     </select>
                                 </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <div class="btn-group w-100" role="group" style="height: 38px;">
+                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.85rem;">
+                                            <i class="fas fa-th-large me-1"></i> Cartes
+                                        </button>
+                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary" onclick="setViewMode('list')" style="font-size: 0.85rem;">
+                                            <i class="fas fa-list me-1"></i> Liste
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white; padding: 6px 14px; font-size: 0.85rem;">
+                                            <i class="fas fa-upload me-1"></i> Ajouter
+                                        </button>
+                                        @if(auth()->user()->role === 'admin')
+                                        <a href="{{ route('resources.trash') }}" class="btn" style="background: #255156; color: white; padding: 6px 12px; font-size: 0.85rem;">
+                                            <i class="fa fa-trash me-1"></i> Corbeille
+                                        </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Compteur de ressources -->
+                            <div class="mt-1 text-end">
+                                <small class="text-muted" style="font-size: 0.8rem;">
+                                    <i class="fas fa-database me-1"></i>
+                                    <span id="visibleResourcesCount">{{ $allCount }}</span> / <span id="totalResourcesCount">{{ $allCount }}</span> ressources
+                                </small>
                             </div>
                         </div>
 
-                        <!-- Bouton Ajouter -->
-                        <div class="mb-3">
-                            <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white;">
-                                <i class="fas fa-upload me-1"></i> Ajouter une ressource
-                            </button>
-                            @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('resources.trash') }}" class="btn" style="background: #255156; color: white;">
-                                <i class="fa fa-trash me-1"></i> Corbeille
-                            </a>
-                            @endif
-                            
-                            <!-- Affichage du nombre total de ressources visibles -->
-                            <span class="ms-3 text-muted">
-                                <i class="fas fa-database me-1"></i>
-                                <span id="visibleResourcesCount">{{ $allCount }}</span> / <span id="totalResourcesCount">{{ $allCount }}</span> ressources
-                            </span>
-                        </div>
-
-                        <!-- GRILLE DE CARTES -->
-                        <div class="mt-3">
+                        <!-- GRILLE / LISTE DES CARTES -->
+                        <div class="mt-2">
                             <div class="row g-3" id="resourcesGrid">
                                 @forelse($resources as $resource)
                                 <div class="col-md-6 col-lg-2 col-xl-2 resource-card"
@@ -204,73 +215,74 @@
                                      data-downloads="{{ $resource->download_count }}"
                                      data-title="{{ strtolower($resource->title) }}"
                                      data-description="{{ strtolower($resource->description ?? '') }}">
-                                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s;">
+                                    <!-- Mode Carte (par défaut) -->
+                                    <div class="card h-100 border-0 shadow-sm card-view" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s;">
                                         <!-- Zone image / icône -->
-                                        <div style="height: 140px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
+                                        <div style="height: 130px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
                                             @if($resource->is_image)
                                                 <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
                                             @elseif($resource->is_link)
-                                                <i class="fas fa-link" style="font-size: 3.5rem; color: #0d6efd;"></i>
+                                                <i class="fas fa-link" style="font-size: 3.2rem; color: #0d6efd;"></i>
                                             @else
                                                 @php
                                                     $extension = strtolower($resource->file_type);
                                                 @endphp
                                                 @if(in_array($extension, ['pdf']))
-                                                    <i class="bx bxs-file-pdf text-danger" style="font-size: 3.5rem;"></i>
+                                                    <i class="bx bxs-file-pdf text-danger" style="font-size: 3.2rem;"></i>
                                                 @elseif(in_array($extension, ['doc', 'docx', 'odt']))
-                                                    <i class="fas fa-file-word text-primary" style="font-size: 3.5rem;"></i>
+                                                    <i class="fas fa-file-word text-primary" style="font-size: 3.2rem;"></i>
                                                 @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                    <i class="fas fa-file-excel text-success" style="font-size: 3.5rem;"></i>
+                                                    <i class="fas fa-file-excel text-success" style="font-size: 3.2rem;"></i>
                                                 @elseif(in_array($extension, ['ppt', 'pptx']))
-                                                    <i class="fas fa-file-powerpoint text-warning" style="font-size: 3.5rem;"></i>
+                                                    <i class="fas fa-file-powerpoint text-warning" style="font-size: 3.2rem;"></i>
                                                 @elseif(in_array($extension, ['txt']))
-                                                    <i class="fas fa-file-alt text-secondary" style="font-size: 3.5rem;"></i>
+                                                    <i class="fas fa-file-alt text-secondary" style="font-size: 3.2rem;"></i>
                                                 @elseif(in_array($extension, ['webm', 'avi', 'mov']))
-                                                    <i class="fas fa-file-video text-danger" style="font-size: 3.5rem;"></i>
+                                                    <i class="fas fa-file-video text-danger" style="font-size: 3.2rem;"></i>
                                                 @else
-                                                    <i class="fas fa-file text-secondary" style="font-size: 3.5rem;"></i>
+                                                    <i class="fas fa-file text-secondary" style="font-size: 3.2rem;"></i>
                                                 @endif
                                             @endif
 
                                             <!-- Badges superposés -->
-                                            <div style="position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 4px;">
+                                            <div style="position: absolute; top: 6px; right: 6px; display: flex; flex-direction: column; gap: 3px;">
                                                 @if($resource->is_link)
-                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.65rem;">
+                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.6rem;">
                                                         <i class="fas fa-link"></i> Lien
                                                     </span>
                                                 @elseif($resource->is_image)
-                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.65rem;">
+                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.6rem;">
                                                         <i class="fas fa-image me-1"></i>Image
                                                     </span>
                                                 @else
-                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.65rem;">
+                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.6rem;">
                                                         <i class="fas fa-file me-1"></i>{{ strtoupper($resource->file_type) }}
                                                     </span>
                                                 @endif
 
                                                 @if($resource->category == 'guides_etudes')
-                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.65rem;">Guide & Étude</span>
+                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.55rem;">Guide</span>
                                                 @elseif($resource->category == 'affiches_flyers')
-                                                    <span class="badge" style="background: #dcfce7; color: #16a34a; font-size: 0.65rem;">Affiche & Flyer</span>
+                                                    <span class="badge" style="background: #dcfce7; color: #16a34a; font-size: 0.55rem;">Affiche</span>
                                                 @elseif($resource->category == 'reseaux')
-                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-size: 0.65rem;">Réseau</span>
+                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-size: 0.55rem;">Réseau</span>
                                                 @elseif($resource->category == 'sensibilisation')
-                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.65rem;">Sensibilisation</span>
+                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.55rem;">Sensib.</span>
                                                 @elseif($resource->category == 'outils')
-                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.65rem;">Outil</span>
+                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.55rem;">Outil</span>
                                                 @elseif($resource->category == 'conventions')
-                                                    <span class="badge" style="background: #fce7f3; color: #be185d; font-size: 0.65rem;">Convention</span>
+                                                    <span class="badge" style="background: #fce7f3; color: #be185d; font-size: 0.55rem;">Convent.</span>
                                                 @endif
                                             </div>
                                         </div>
 
                                         <!-- Corps de la carte -->
                                         <div class="card-body p-2">
-                                            <h6 class="card-title fw-semibold mb-1 small" title="{{ $resource->title }}">{{ Str::limit($resource->title, 25) }}</h6>
+                                            <h6 class="card-title fw-semibold mb-1" style="font-size: 0.85rem;" title="{{ $resource->title }}">{{ Str::limit($resource->title, 22) }}</h6>
                                             @if($resource->description)
-                                                <p class="card-text small text-muted mb-1">{{ Str::limit($resource->description, 50) }}</p>
+                                                <p class="card-text text-muted mb-1" style="font-size: 0.75rem;">{{ Str::limit($resource->description, 45) }}</p>
                                             @endif
-                                            <div class="d-flex flex-wrap gap-1 small text-muted" style="font-size: 0.7rem;">
+                                            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.7rem;">
                                                 @if(!$resource->is_link)
                                                     <span><i class="fas fa-download me-1"></i> {{ $resource->download_count }}</span>
                                                 @endif
@@ -282,31 +294,116 @@
                                         <div class="card-footer bg-transparent border-0 pt-0 pb-2">
                                             <div class="d-flex gap-1 justify-content-end flex-wrap">
                                                 @if($resource->is_link)
-                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-sm" style="background: #e0f2fe; color: #0284c7; padding: 2px 6px; font-size: 0.7rem;" title="Ouvrir le lien">
+                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-sm" style="background: #e0f2fe; color: #0284c7; padding: 2px 8px; font-size: 0.7rem;" title="Ouvrir le lien">
                                                         <i class="fas fa-link"></i>
                                                     </a>
                                                 @endif
 
                                                 @if($resource->is_image)
-                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 2px 6px; font-size: 0.7rem;" title="Voir l'image">
+                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 2px 8px; font-size: 0.7rem;" title="Voir l'image">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
 
                                                 @if(!$resource->is_link)
-                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-sm" style="background: #e5e7eb; color: #4b5563; padding: 2px 6px; font-size: 0.7rem;" title="Ouvrir le fichier">
+                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-sm" style="background: #e5e7eb; color: #4b5563; padding: 2px 8px; font-size: 0.7rem;" title="Ouvrir le fichier">
                                                         <i class="fas fa-external-link-alt"></i>
                                                     </a>
-                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-sm" style="background: #dbeafe; color: #2563eb; padding: 2px 6px; font-size: 0.7rem;" title="Télécharger">
+                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-sm" style="background: #dbeafe; color: #2563eb; padding: 2px 8px; font-size: 0.7rem;" title="Télécharger">
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 @endif
 
                                                 @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
-                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3; padding: 2px 6px; font-size: 0.7rem;" title="Modifier">
+                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3; padding: 2px 8px; font-size: 0.7rem;" title="Modifier">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626; padding: 2px 6px; font-size: 0.7rem;" title="Supprimer">
+                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626; padding: 2px 8px; font-size: 0.7rem;" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Mode Liste (caché par défaut) -->
+                                    <div class="list-view w-100" style="display: none;">
+                                        <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded" style="background: #f8f9fa; border-left: 4px solid #145f68;">
+                                            <div class="d-flex align-items-center gap-3 flex-wrap flex-grow-1">
+                                                <div style="width: 50px; height: 50px; background: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                                    @if($resource->is_image)
+                                                        <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
+                                                    @elseif($resource->is_link)
+                                                        <i class="fas fa-link" style="font-size: 1.5rem; color: #0d6efd;"></i>
+                                                    @else
+                                                        @php
+                                                            $extension = strtolower($resource->file_type);
+                                                        @endphp
+                                                        @if(in_array($extension, ['pdf']))
+                                                            <i class="bx bxs-file-pdf text-danger" style="font-size: 1.5rem;"></i>
+                                                        @elseif(in_array($extension, ['doc', 'docx', 'odt']))
+                                                            <i class="fas fa-file-word text-primary" style="font-size: 1.5rem;"></i>
+                                                        @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
+                                                            <i class="fas fa-file-excel text-success" style="font-size: 1.5rem;"></i>
+                                                        @elseif(in_array($extension, ['ppt', 'pptx']))
+                                                            <i class="fas fa-file-powerpoint text-warning" style="font-size: 1.5rem;"></i>
+                                                        @else
+                                                            <i class="fas fa-file text-secondary" style="font-size: 1.5rem;"></i>
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-semibold" style="font-size: 0.95rem;">{{ $resource->title }}</h6>
+                                                    @if($resource->description)
+                                                        <small class="text-muted" style="font-size: 0.8rem;">{{ Str::limit($resource->description, 100) }}</small>
+                                                    @endif
+                                                    <div>
+                                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                                            <i class="fas fa-calendar me-1"></i> {{ $resource->created_at->format('d/m/Y') }}
+                                                            @if(!$resource->is_link)
+                                                                <i class="fas fa-download ms-2 me-1"></i> {{ $resource->download_count }}
+                                                            @endif
+                                                        </small>
+                                                        @if($resource->is_link)
+                                                            <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.65rem;">Lien</span>
+                                                        @elseif($resource->is_image)
+                                                            <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.65rem;">Image</span>
+                                                        @else
+                                                            <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.65rem;">{{ strtoupper($resource->file_type) }}</span>
+                                                        @endif
+                                                        @if($resource->category)
+                                                            <span class="badge" style="background: #e5e7eb; color: #374151; font-size: 0.65rem;">{{ $resource->category }}</span>
+                                                        @endif
+                                                        @if($resource->sub_category)
+                                                            <span class="badge" style="background: #e5e7eb; color: #374151; font-size: 0.65rem;">{{ $resource->sub_category }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group btn-group-sm flex-shrink-0">
+                                                @if($resource->is_link)
+                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-outline-primary" title="Ouvrir le lien" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                        <i class="fas fa-link"></i>
+                                                    </a>
+                                                @endif
+                                                @if($resource->is_image)
+                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-outline-primary" title="Voir l'image" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                @endif
+                                                @if(!$resource->is_link)
+                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-outline-secondary" title="Ouvrir" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                        <i class="fas fa-external-link-alt"></i>
+                                                    </a>
+                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-outline-success" title="Télécharger" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                        <i class="fas fa-download"></i>
+                                                    </a>
+                                                @endif
+                                                @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
+                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-outline-warning" title="Modifier" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-outline-danger" title="Supprimer" style="padding: 2px 8px; font-size: 0.7rem;">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 @endif
@@ -326,12 +423,12 @@
                             </div>
 
                             <!-- MESSAGE SI AUCUN RÉSULTAT DU FILTRE -->
-                            <div id="noResultsMessage" class="col-12 text-center py-5 d-none">
+                            <div id="noResultsMessage" class="col-12 text-center py-4 d-none">
                                 <i class="fas fa-search fa-3x text-muted mb-3 opacity-50"></i>
                                 <h5 class="fw-semibold text-secondary">Aucun document trouvé</h5>
-                                <p class="text-muted small">Aucun document ne correspond à vos critères de recherche ou de filtre.</p>
+                                <p class="text-muted small">Aucun document ne correspond à vos critères.</p>
                                 <button onclick="clearCategoryFilter(); document.getElementById('searchInput').value=''; document.getElementById('filterType').value=''; filterResourcesByCategory();" class="btn btn-sm btn-outline-secondary mt-2">
-                                    <i class="fas fa-sync-alt me-1"></i> Réinitialiser les filtres
+                                    <i class="fas fa-sync-alt me-1"></i> Réinitialiser
                                 </button>
                             </div>
                         </div>
@@ -361,7 +458,7 @@
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div>
                                                     <i class="fas fa-folder text-primary me-2"></i>
-                                                    <span class="fw-semibold">GT1 - Réseau VIF-VC & coordination entre acteurs</span>
+                                                    <span class="fw-semibold" style="font-size: 0.9rem;">GT1 - Réseau VIF-VC</span>
                                                 </div>
                                                 <span>
                                                     <i class="fas fa-chevron-down" id="iconSubGroupGT1"></i>
@@ -374,7 +471,7 @@
                                             <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT1')">
                                                 <div class="d-flex align-items-center gap-2">
                                                     <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span class="small">SGT1 - Sensibilisation & formations et information grand public</span>
+                                                    <span style="font-size: 0.85rem;">SGT1 - Sensibilisation</span>
                                                 </div>
                                                 <span class="badge bg-info" id="countSGT1">0</span>
                                             </div>
@@ -382,7 +479,7 @@
                                             <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT2')">
                                                 <div class="d-flex align-items-center gap-2">
                                                     <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span class="small">SGT2 - Coordination acteurs / Outils professionnels</span>
+                                                    <span style="font-size: 0.85rem;">SGT2 - Coordination</span>
                                                 </div>
                                                 <span class="badge bg-info" id="countSGT2">0</span>
                                             </div>
@@ -390,7 +487,7 @@
                                             <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT3')">
                                                 <div class="d-flex align-items-center gap-2">
                                                     <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span class="small">SGT3 - Coordination acteurs / Outils professionnels</span>
+                                                    <span style="font-size: 0.85rem;">SGT3 - Outils pro</span>
                                                 </div>
                                                 <span class="badge bg-info" id="countSGT3">0</span>
                                             </div>
@@ -398,7 +495,7 @@
                                             <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT4')">
                                                 <div class="d-flex align-items-center gap-2">
                                                     <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span class="small">SGT4 - Parcours</span>
+                                                    <span style="font-size: 0.85rem;">SGT4 - Parcours</span>
                                                 </div>
                                                 <span class="badge bg-info" id="countSGT4">0</span>
                                             </div>
@@ -410,7 +507,7 @@
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div>
                                                 <i class="fas fa-folder text-primary me-2"></i>
-                                                <span>GT2 - Force de l'ordre, justice et santé</span>
+                                                <span style="font-size: 0.9rem;">GT2 - Force de l'ordre, justice et santé</span>
                                             </div>
                                             <span class="badge bg-secondary" id="countGT2">0</span>
                                         </div>
@@ -421,54 +518,50 @@
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div>
                                                 <i class="fas fa-folder text-primary me-2"></i>
-                                                <span>GT3 - Auteurs de violences</span>
+                                                <span style="font-size: 0.9rem;">GT3 - Auteurs de violences</span>
                                             </div>
                                             <span class="badge bg-secondary" id="countGT3">0</span>
                                         </div>
                                     </div>
-
                                     <!-- GT4 -->
                                     <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT4')">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div>
                                                 <i class="fas fa-folder text-primary me-2"></i>
-                                                <span>GT4 - Cellule familiale</span>
+                                                <span style="font-size: 0.9rem;">GT4 - Cellule familiale</span>
                                             </div>
                                             <span class="badge bg-secondary" id="countGT4">0</span>
                                         </div>
                                     </div>
-
                                     <!-- GT5 -->
                                     <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT5')">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div>
                                                 <i class="fas fa-folder text-primary me-2"></i>
-                                                <span>GT5 - Hébergement - logement FVVC et auteurs</span>
+                                                <span style="font-size: 0.9rem;">GT5 - Hébergement - logement</span>
                                             </div>
                                             <span class="badge bg-secondary" id="countGT5">0</span>
                                         </div>
                                     </div>
-
                                     <!-- GT6 -->
                                     <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT6')">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div>
                                                 <i class="fas fa-folder text-primary me-2"></i>
-                                                <span>GT6 - Pilotage du schéma</span>
+                                                <span style="font-size: 0.9rem;">GT6 - Pilotage du schéma</span>
                                             </div>
                                             <span class="badge bg-secondary" id="countGT6">0</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Colonne de droite : Détails du GT sélectionné -->
                             <div class="col-lg-8">
                                 <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
                                     <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap">
                                         <div>
                                             <i class="fas fa-file-alt text-primary me-2"></i>
-                                            <span id="currentGtTitle" class="fw-semibold">Sélectionnez un groupe de travail</span>
+                                            <span id="currentGtTitle" class="fw-semibold" style="font-size: 1rem;">Sélectionnez un groupe de travail</span>
                                         </div>
                                     </div>
                                     <div class="card-body p-3" style="max-height: 500px; overflow-y: auto;">
@@ -476,7 +569,7 @@
                                         <div id="meetingReportsList">
                                             <div class="text-center py-5 text-muted">
                                                 <i class="fas fa-file-pdf fa-3x mb-3 opacity-25"></i>
-                                                <p>Sélectionnez un GT pour voir les comptes rendus</p>
+                                                <p style="font-size: 0.95rem;">Sélectionnez un GT pour voir les comptes rendus</p>
                                             </div>
                                         </div>
                                     </div>
@@ -489,7 +582,6 @@
         </div>
     </div>
 </div>
-
 <!-- MODAL IMAGE -->
 <div id="imageModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -501,7 +593,6 @@
         </div>
     </div>
 </div>
-
 <!-- MODAL CRÉATION DOCUMENT -->
 <div id="resourceModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -522,7 +613,6 @@
                         <label class="form-label fw-semibold">Description</label>
                         <textarea id="description" name="description" rows="3" class="form-control"></textarea>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
                         <div class="btn-group w-100" role="group">
@@ -534,19 +624,16 @@
                             </button>
                         </div>
                     </div>
-
                     <div id="fileUploadSection" class="mb-3">
                         <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
                         <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
                         <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
                     </div>
-
                     <div id="linkSection" class="mb-3 d-none">
                         <label class="form-label fw-semibold">URL du lien <span class="text-danger">*</span></label>
                         <input type="url" id="linkUrl" name="link_url" class="form-control" placeholder="https://exemple.com/document">
                         <small class="text-muted">Entrez l'URL complète du lien externe</small>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
                         <select id="category" name="category" required class="form-select" onchange="updateSubCategories(this.value)">
@@ -559,14 +646,12 @@
                             <option value="conventions">Conventions, protocoles & dispositif</option>
                         </select>
                     </div>
-
                     <div class="mb-3" id="subCategoryContainer">
                         <label class="form-label fw-semibold">Sous-catégorie</label>
                         <select id="subCategory" name="sub_category" class="form-select">
                             <option value="">Aucune</option>
                         </select>
                     </div>
-
                     @if(auth()->user()->role === 'admin')
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="important" name="important" value="1">
@@ -738,6 +823,36 @@
     .badge.bg-secondary {
         background-color: #6c757d !important;
     }
+
+    /* Mode Liste */
+    .list-view .btn-group .btn {
+        padding: 2px 8px;
+        font-size: 0.7rem;
+    }
+    .list-view .btn-group .btn:hover {
+        z-index: 2;
+    }
+
+    /* Animation de transition entre modes */
+    .resource-card {
+        transition: all 0.3s ease;
+    }
+
+    /* Scrollbar personnalisée pour les filtres */
+    .overflow-auto::-webkit-scrollbar {
+        height: 5px;
+    }
+    .overflow-auto::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    .overflow-auto::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+    .overflow-auto::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 </style>
 
 <script>
@@ -746,6 +861,7 @@
     // ============================================
     let currentCategoryFilter = 'all';
     let currentSubCategoryFilter = null;
+    let currentViewMode = 'grid'; // 'grid' ou 'list'
 
     const subCategoriesMap = {
         'guides_etudes': [
@@ -834,6 +950,45 @@
         }
     }
 
+    // ============================================
+    // GESTION DES MODES D'AFFICHAGE (CARTE / LISTE)
+    // ============================================
+    window.setViewMode = function(mode) {
+        currentViewMode = mode;
+        
+        // Mise à jour des boutons
+        const gridBtn = document.getElementById('gridViewBtn');
+        const listBtn = document.getElementById('listViewBtn');
+        
+        if (mode === 'grid') {
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+        } else {
+            gridBtn.classList.remove('active');
+            listBtn.classList.add('active');
+        }
+
+        // Appliquer le mode à toutes les cartes
+        document.querySelectorAll('#resourcesGrid .resource-card').forEach(card => {
+            const cardView = card.querySelector('.card-view');
+            const listView = card.querySelector('.list-view');
+            
+            if (mode === 'grid') {
+                cardView.style.display = '';
+                listView.style.display = 'none';
+                // Rétablir la largeur des colonnes pour le mode grille
+                card.classList.remove('col-12', 'mb-2');
+                card.classList.add('col-md-6', 'col-lg-2', 'col-xl-2');
+            } else {
+                cardView.style.display = 'none';
+                listView.style.display = '';
+                // Passer en pleine largeur pour le mode liste
+                card.classList.remove('col-md-6', 'col-lg-2', 'col-xl-2');
+                card.classList.add('col-12', 'mb-2');
+            }
+        });
+    };
+
     window.filterByCategory = function(category, label) {
         if (currentCategoryFilter === category && category !== 'all') {
             clearCategoryFilter();
@@ -867,6 +1022,7 @@
                 const allBtn = document.createElement('span');
                 allBtn.className = 'badge bg-success p-2 cursor-pointer me-1';
                 allBtn.style.cursor = 'pointer';
+                allBtn.style.fontSize = '0.75rem';
                 allBtn.textContent = 'Toutes';
                 allBtn.dataset.value = 'all';
                 allBtn.onclick = function() { filterBySubCategory('all', 'Toutes'); };
@@ -876,6 +1032,7 @@
                     const btn = document.createElement('span');
                     btn.className = 'badge bg-primary p-2 cursor-pointer me-1';
                     btn.style.cursor = 'pointer';
+                    btn.style.fontSize = '0.75rem';
                     btn.textContent = sub.label;
                     btn.dataset.value = sub.value;
                     btn.onclick = function() { filterBySubCategory(sub.value, sub.label); };
@@ -895,10 +1052,13 @@
         document.querySelectorAll('#subCategoriesList .badge').forEach(el => {
             if (el.dataset.value === subCategory) {
                 el.className = 'badge bg-success p-2 cursor-pointer me-1';
+                el.style.fontSize = '0.75rem';
             } else if (el.dataset.value === 'all' && subCategory === 'all') {
                 el.className = 'badge bg-success p-2 cursor-pointer me-1';
+                el.style.fontSize = '0.75rem';
             } else {
                 el.className = 'badge bg-primary p-2 cursor-pointer me-1';
+                el.style.fontSize = '0.75rem';
             }
         });
         filterResourcesByCategory();
@@ -1096,7 +1256,7 @@
             container.innerHTML = `
                 <div class="text-center py-5 text-muted">
                     <i class="fas fa-file-pdf fa-3x mb-3 opacity-25"></i>
-                    <p>Aucun compte rendu pour ce groupe</p>
+                    <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
                     <button onclick="openCreateSchemaModal('${gt}')" class="btn btn-sm" style="background: #145f68; color: white;">
                         <i class="fas fa-plus me-1"></i> Nouveau
                     </button>
@@ -1109,33 +1269,33 @@
                 <div class="d-flex align-items-center gap-3">
                     <i class="fas fa-file-pdf text-danger fa-2x"></i>
                     <div>
-                        <h6 class="mb-0 fw-semibold">${schema.title}</h6>
-                        ${schema.description ? `<small class="text-muted">${schema.description}</small>` : ''}
+                        <h6 class="mb-0 fw-semibold" style="font-size: 0.95rem;">${schema.title}</h6>
+                        ${schema.description ? `<small class="text-muted" style="font-size: 0.85rem;">${schema.description}</small>` : ''}
                         <div>
-                            <small class="text-muted">
+                            <small class="text-muted" style="font-size: 0.8rem;">
                                 <i class="fas fa-calendar me-1"></i> ${new Date(schema.created_at).toLocaleDateString('fr-FR')}
                             </small>
                             ${schema.sub_category ? `
-                                <span class="badge bg-info ms-2">${schema.sub_category}</span>
+                                <span class="badge bg-info ms-2" style="font-size: 0.7rem;">${schema.sub_category}</span>
                             ` : ''}
                             ${schema.category ? `
-                                <span class="badge bg-secondary ms-1">${schema.category}</span>
+                                <span class="badge bg-secondary ms-1" style="font-size: 0.7rem;">${schema.category}</span>
                             ` : ''}
                         </div>
                     </div>
                 </div>
                 <div class="btn-group btn-group-sm">
                     ${schema.file_path ? `
-                        <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-outline-primary" title="Voir le PDF">
+                        <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-outline-primary" title="Voir le PDF" style="padding: 2px 8px; font-size: 0.7rem;">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="${'/storage/' + schema.file_path}" download class="btn btn-outline-secondary" title="Télécharger">
+                        <a href="${'/storage/' + schema.file_path}" download class="btn btn-outline-secondary" title="Télécharger" style="padding: 2px 8px; font-size: 0.7rem;">
                             <i class="fas fa-download"></i>
                         </a>
                     ` : `
-                        <span class="badge bg-warning text-dark">Sans PDF</span>
+                        <span class="badge bg-warning text-dark" style="font-size: 0.7rem;">Sans PDF</span>
                     `}
-                    <button onclick="deleteSchema(${schema.id})" class="btn btn-outline-danger" title="Supprimer">
+                    <button onclick="deleteSchema(${schema.id})" class="btn btn-outline-danger" title="Supprimer" style="padding: 2px 8px; font-size: 0.7rem;">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -1214,6 +1374,9 @@
         // Lancer l'initialisation du filtre
         filterResourcesByCategory();
         updateGtCounts();
+
+        // Initialiser le mode d'affichage par défaut (grille)
+        setViewMode('grid');
 
         // Formulaires
         document.getElementById('createSchemaForm')?.addEventListener('submit', function(e) {

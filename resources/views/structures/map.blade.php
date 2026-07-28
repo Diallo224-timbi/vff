@@ -3,10 +3,10 @@
 @section('title', 'Cartographie des structures - Alpes-Maritimes (06)')
 
 @section('content')
-<!-- CONTENEUR PRINCIPAL : Responsive (Scroll fluide sur mobile / 100% Hauteur fixe sans scroll sur PC) -->
-<div class="w-full flex flex-col p-2.5 sm:p-3 bg-gray-50/50 min-h-screen lg:min-h-0 lg:h-[calc(100vh-80px)] lg:max-h-[calc(100vh-80px)] overflow-y-auto lg:overflow-hidden">
+<!-- CONTENEUR PRINCIPAL -->
+<div class="w-full flex flex-col p-2 sm:p-3 bg-gray-50/50 min-h-screen lg:h-[calc(100vh-80px)] lg:max-h-[calc(100vh-80px)] overflow-y-auto lg:overflow-hidden">
 
-    <!-- 1. HEADER (Réponsif flex-wrap) -->
+    <!-- 1. HEADER -->
     <div class="flex-shrink-0 flex flex-wrap justify-between items-center gap-2 mb-2">
         <h1 class="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
             <i class="fas fa-map-marked-alt text-[#255156]"></i>
@@ -19,7 +19,8 @@
             </div>
         </div>
     </div>
-    <!-- 2. STATISTIQUES SIMPLES (1 col mobile / 3 cols tablette & PC) -->
+
+    <!-- 2. STATISTIQUES -->
     <div class="flex-shrink-0 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 mb-2">
         <div class="bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-2xs flex items-center justify-between">
             <div>
@@ -50,11 +51,11 @@
         </div>
     </div>
 
-    <!-- 3. BANDEAU DE FILTRES HORIZONTAL (Adaptatif mobile / desktop) -->
+    <!-- 3. FILTRES -->
     <div class="flex-shrink-0 bg-white border border-gray-200 rounded-xl shadow-2xs p-2 mb-2">
         <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5 justify-between">
             
-            <!-- Recherche rapide -->
+            <!-- Recherche -->
             <div class="w-full lg:w-64 flex-shrink-0">
                 <div class="relative">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
@@ -64,9 +65,9 @@
                 </div>
             </div>
 
-            <!-- Catégories & Boutons TOUS / AUCUN -->
+            <!-- Catégories -->
             <div class="flex-1 min-w-0 flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                <div class="flex items-center gap-1.5 flex-shrink-0">
+                <div class="flex items-center gap-1.5 flex-shrink-0 flex-wrap">
                     <span class="text-sm font-bold text-gray-700 flex items-center gap-1">
                         <i class="fas fa-filter text-[#255156]"></i> Catégories:
                     </span>
@@ -99,7 +100,7 @@
                 </div>
             </div>
 
-            <!-- Bouton Réinitialiser -->
+            <!-- Réinitialiser -->
             <div class="flex-shrink-0">
                 <button id="resetViewBtn" 
                         class="w-full lg:w-auto bg-[#255156] hover:bg-[#1d4144] text-white px-3.5 py-1.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs">
@@ -110,27 +111,25 @@
         </div>
     </div>
 
-    <!-- 4. SECTION PRINCIPALE : CARTE À GAUCHE (3/4) & DÉTAILS À DROITE (1/4) -->
+    <!-- 4. SECTION CARTE + DÉTAILS -->
     <div class="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-2.5 overflow-hidden">
-
-        <!-- CARTE ALPES-MARITIMES À GAUCHE (3/4 sur bureau, pleine hauteur sur mobile) -->
-        <div class="lg:col-span-3 h-[420px] lg:h-full min-h-0">
+        
+        <!-- CARTE -->
+        <div class="lg:col-span-3 relative min-h-[300px] h-[calc(100vh-380px)] sm:h-[calc(100vh-400px)] lg:h-full">
             <div class="bg-white border border-gray-200 rounded-xl shadow-2xs overflow-hidden h-full w-full relative">
                 <div id="map" class="w-full h-full"></div>
             </div>
         </div>
 
-        <!-- PANNEAU DÉTAILS À DROITE (1/4 sur bureau, empilé sous la carte sur mobile) -->
-        <div class="lg:col-span-1 h-[420px] lg:h-full min-h-0">
+        <!-- PANNEAU DÉTAILS -->
+        <div class="lg:col-span-1 relative min-h-[300px] h-[calc(100vh-380px)] sm:h-[calc(100vh-400px)] lg:h-full">
             <div class="bg-white border border-gray-200 rounded-xl shadow-2xs h-full flex flex-col overflow-hidden">
-                <!-- En-tête -->
                 <div class="bg-gradient-to-r from-[#255156] to-[#3a757b] text-white px-4 py-2.5 flex-shrink-0">
                     <h3 class="font-bold text-sm flex items-center">
                         <i class="fas fa-info-circle mr-2"></i>
                         Détails de la structure
                     </h3>
                 </div>
-                <!-- Contenu défilant text-sm -->
                 <div class="flex-1 min-h-0 overflow-y-auto p-3.5" id="detailsPanelContent">
                     <div id="defaultMessage" class="text-center py-12">
                         <div class="w-12 h-12 bg-[#255156]/10 text-[#255156] rounded-full flex items-center justify-center mx-auto mb-2.5">
@@ -147,160 +146,166 @@
     </div>
 </div>
 
-<!-- MODAL DÉTAILS COMPLET -->
+<!-- MODAL DÉTAILS - VERSION CORRIGÉE POUR ORDINATEUR -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered custom-modal-width">
-        <div class="modal-content border-0 shadow-2xl overflow-hidden rounded-2xl">
-            <!-- En-tête du modal -->
-            <div class="bg-gradient-to-r from-[#f0f6f5] to-[#e8f3f2] border-b border-gray-200 p-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="relative">
-                            <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-md overflow-hidden border border-gray-200">
-                                <div id="modal-logo-placeholder" class="flex items-center justify-center">
-                                    <i class="fas fa-building text-[#255156] text-3xl"></i>
-                                </div>
-                                <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-contain hidden">
-                            </div> 
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 95vw; width: 1100px;">
+        <div class="modal-content border-0 shadow-2xl overflow-hidden rounded-2xl" style="max-height: 90vh;">
+            <!-- En-tête -->
+            <div class="bg-gradient-to-r from-[#f0f6f5] to-[#e8f3f2] border-b border-gray-200 p-3 sm:p-4 flex-shrink-0">
+                <div class="flex items-start sm:items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        <div class="w-10 h-10 sm:w-14 sm:h-14 bg-white rounded-xl flex items-center justify-center shadow-md overflow-hidden border border-gray-200 flex-shrink-0">
+                            <div id="modal-logo-placeholder" class="flex items-center justify-center">
+                                <i class="fas fa-building text-[#255156] text-2xl sm:text-3xl"></i>
+                            </div>
+                            <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-contain hidden">
                         </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-[#255156]" id="modal-organisme">-</h3>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="px-2.5 py-0.5 bg-[#255156]/10 text-[#255156] rounded-full text-xs font-medium" id="modal-type-badge">-</span>
-                                <span class="px-2.5 py-0.5 bg-[#255156]/10 text-[#255156] rounded-full text-xs font-medium" id="modal-hebergement-badge">-</span>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-base sm:text-xl font-bold text-[#255156] truncate" id="modal-organisme">-</h3>
+                            <div class="flex flex-wrap items-center gap-1 sm:gap-2 mt-0.5 sm:mt-1">
+                                <span class="px-2 py-0.5 bg-[#255156]/10 text-[#255156] rounded-full text-xs font-medium" id="modal-type-badge">-</span>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="text-gray-500 hover:bg-gray-100 rounded-lg p-2 transition-colors" data-bs-dismiss="modal">
-                        <i class="fas fa-times text-lg"></i>
+                    <button type="button" class="text-gray-500 hover:bg-gray-100 rounded-lg p-1.5 sm:p-2 transition-colors flex-shrink-0" data-bs-dismiss="modal">
+                        <i class="fas fa-times text-base sm:text-lg"></i>
                     </button>
                 </div>
             </div>
-            <!-- Body du modal -->
-            <div class="modal-body bg-gray-50 p-4 max-h-[70vh] overflow-y-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-3">
+            
+            <!-- Body avec scroll -->
+            <div class="modal-body bg-gray-50 p-3 sm:p-4 overflow-y-auto flex-1" style="max-height: calc(90vh - 140px);">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+                    <!-- Colonne gauche -->
                     <div class="space-y-3">
-                        <div class="bg-white rounded-xl shadow-xs p-4 border border-gray-100">
-                            <h4 class="text-[#255156] font-semibold mb-3 text-sm flex items-center gap-2">
+                        <!-- Informations générales -->
+                        <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-2 sm:mb-3 text-xs sm:text-sm flex items-center gap-2">
                                 <i class="fas fa-info-circle"></i>
                                 Informations générales
                             </h4>
                             <div class="space-y-2.5">
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
-                                    <span class="text-gray-500 text-sm">Structure</span>
-                                    <span class="text-gray-800 font-medium text-sm text-right" id="modal-organisme-text">-</span>
+                                    <span class="text-gray-500 text-xs sm:text-sm">Structure</span>
+                                    <span class="text-gray-800 font-medium text-xs sm:text-sm text-right" id="modal-organisme-text">-</span>
                                 </div>     
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
-                                    <span class="text-gray-500 text-sm">Catégories</span>
+                                    <span class="text-gray-500 text-xs sm:text-sm">Catégories</span>
                                     <div class="flex flex-wrap gap-1 justify-end" id="modal-categories-list"></div>
                                 </div>
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
-                                    <span class="text-gray-500 text-sm">Public cible</span>
+                                    <span class="text-gray-500 text-xs sm:text-sm">Public cible</span>
                                     <div class="flex flex-wrap gap-1 justify-end" id="modal-public-list"></div>
                                 </div>
                                 <div class="flex justify-between items-start border-b border-gray-100 pb-2">
-                                    <span class="text-gray-500 text-sm">Zone d'intervention</span>
-                                    <span class="text-gray-800 text-sm text-right" id="modal-zone">-</span>
+                                    <span class="text-gray-500 text-xs sm:text-sm">Zone d'intervention</span>
+                                    <span class="text-gray-800 text-xs sm:text-sm text-right" id="modal-zone">-</span>
                                 </div>
                                 <div class="flex justify-between items-start">
-                                    <span class="text-gray-500 text-sm">Site web</span>
-                                    <span id="modal-site" class="text-sm text-right">-</span>
+                                    <span class="text-gray-500 text-xs sm:text-sm">Site web</span>
+                                    <span id="modal-site" class="text-xs sm:text-sm text-right">-</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-xs p-4 border border-gray-100">
-                            <h4 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                        <!-- Description -->
+                        <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-2 text-xs sm:text-sm flex items-center gap-2">
                                 <i class="fas fa-align-left"></i>
                                 Description
                             </h4>
-                            <p class="text-gray-700 text-sm leading-relaxed" id="modal-description">-</p>
+                            <p class="text-gray-700 text-xs sm:text-sm leading-relaxed" id="modal-description">-</p>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-xs p-4 border border-gray-100">
-                            <h4 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                        <!-- Détails spécifiques -->
+                        <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-2 text-xs sm:text-sm flex items-center gap-2">
                                 <i class="fas fa-list-ul"></i>
                                 Détails spécifiques
                             </h4>
-                            <p class="text-gray-700 text-sm" id="modal-details">-</p>
+                            <p class="text-gray-700 text-xs sm:text-sm" id="modal-details">-</p>
                         </div>
                     </div>
 
+                    <!-- Colonne droite -->
                     <div class="space-y-3">
-                        <div class="bg-white rounded-xl shadow-xs p-4 border border-gray-100">
-                            <h4 class="text-[#255156] font-semibold mb-3 text-sm flex items-center gap-2">
+                        <!-- Localisation -->
+                        <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-2 sm:mb-3 text-xs sm:text-sm flex items-center gap-2">
                                 <i class="fas fa-map-marker-alt"></i>
                                 Localisation
                             </h4>
-                            <div class="mb-2.5 p-2.5 bg-blue-50 rounded-lg">
+                            <div class="mb-2 p-2 sm:p-2.5 bg-blue-50 rounded-lg">
                                 <div class="flex items-center gap-1.5 mb-1">
                                     <i class="fas fa-landmark text-[#206a72] text-xs"></i>
-                                    <span class="font-semibold text-[#206a72] text-xs">SIÈGE SOCIAL</span>
+                                    <span class="font-semibold text-[#206a72] text-[10px] sm:text-xs">SIÈGE SOCIAL</span>
                                 </div>
-                                <div class="space-y-1 text-sm">
+                                <div class="space-y-0.5 sm:space-y-1 text-xs sm:text-sm">
                                     <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-siege_ville">-</span></p>
                                     <p><span class="text-gray-500">Adresse :</span> <span id="modal-siege_adresse">-</span></p>
                                 </div>
                             </div>   
-                            <div class="p-2.5 bg-green-50 rounded-lg">
+                            <div class="p-2 sm:p-2.5 bg-green-50 rounded-lg">
                                 <div class="flex items-center gap-1.5 mb-1">
                                     <i class="fas fa-map-pin text-green-600 text-xs"></i>
-                                    <span class="font-semibold text-green-700 text-xs">STRUCTURE</span>
+                                    <span class="font-semibold text-green-700 text-[10px] sm:text-xs">STRUCTURE</span>
                                 </div>
-                                <div class="space-y-1 text-sm">
+                                <div class="space-y-0.5 sm:space-y-1 text-xs sm:text-sm">
                                     <p><span class="text-gray-500">Ville :</span> <span class="font-medium" id="modal-ville">-</span> <span id="modal-code_postal" class="text-gray-500"></span></p>
                                     <p><span class="text-gray-500">Adresse :</span> <span id="modal-adresse">-</span></p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-xs p-4 border border-gray-100">
-                            <h4 class="text-[#255156] font-semibold mb-3 text-sm flex items-center gap-2">
+                        <!-- Contact -->
+                        <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
+                            <h4 class="text-[#255156] font-semibold mb-2 sm:mb-3 text-xs sm:text-sm flex items-center gap-2">
                                 <i class="fas fa-address-card"></i>
                                 Contact
                             </h4>
                             <div class="space-y-2.5">
                                 <div class="flex items-center gap-2.5 p-2 bg-gray-50 rounded-lg">
-                                    <i class="fas fa-phone text-green-500 text-sm w-4"></i>
-                                    <div>
-                                        <div class="text-xs text-gray-500">Téléphone</div>
-                                        <div id="modal-telephone" class="font-medium text-sm">-</div>
+                                    <i class="fas fa-phone text-green-500 text-xs sm:text-sm w-4"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="text-[10px] sm:text-xs text-gray-500">Téléphone</div>
+                                        <div id="modal-telephone" class="font-medium text-xs sm:text-sm break-all">-</div>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2.5 p-2 bg-gray-50 rounded-lg">
-                                    <i class="fas fa-envelope text-blue-500 text-sm w-4"></i>
-                                    <div>
-                                        <div class="text-xs text-gray-500">Email</div>
-                                        <div id="modal-email" class="font-medium text-sm break-all">-</div>
+                                    <i class="fas fa-envelope text-blue-500 text-xs sm:text-sm w-4"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="text-[10px] sm:text-xs text-gray-500">Email</div>
+                                        <div id="modal-email" class="font-medium text-xs sm:text-sm break-all">-</div>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2.5 p-2 bg-gray-50 rounded-lg">
-                                    <i class="fas fa-user text-[#255160] text-sm w-4"></i>
-                                    <div>
-                                        <div class="text-xs text-gray-500">Personne de contact</div>
-                                        <div id="modal-contact" class="font-medium text-sm">-</div>
+                                    <i class="fas fa-user text-[#255160] text-xs sm:text-sm w-4"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="text-[10px] sm:text-xs text-gray-500">Personne de contact</div>
+                                        <div id="modal-contact" class="font-medium text-xs sm:text-sm">-</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-xs p-4 border border-gray-100" id="horaires-container" style="display: none;">
-                            <h4 class="text-[#255156] font-semibold mb-2 text-sm flex items-center gap-2">
+                        <!-- Horaires -->
+                        <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100" id="horaires-container" style="display: none;">
+                            <h4 class="text-[#255156] font-semibold mb-2 text-xs sm:text-sm flex items-center gap-2">
                                 <i class="fas fa-clock"></i>
                                 Horaires
                             </h4>
-                            <p class="text-gray-700 text-sm" id="modal-horaires">-</p>
+                            <p class="text-gray-700 text-xs sm:text-sm" id="modal-horaires">-</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Footer -->
-            <div class="modal-footer bg-white p-3 border-t border-gray-200">
-                <div class="flex justify-end gap-3 w-full">
-                    <i class="text-xs text-gray-500 my-auto">Dernière mise à jour: <span id="modal-created_at">-</span></i>
+            <div class="modal-footer bg-white p-2 sm:p-3 border-t border-gray-200 flex-shrink-0">
+                <div class="flex flex-col sm:flex-row justify-end items-center gap-2 w-full">
+                    <span class="text-[10px] sm:text-xs text-gray-500 order-2 sm:order-1">Dernière mise à jour: <span id="modal-created_at">-</span></span>
                     <button type="button" 
-                            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-colors flex items-center gap-1.5"
+                            class="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 order-1 sm:order-2 w-full sm:w-auto justify-center"
                             data-bs-dismiss="modal">
                         <i class="fas fa-times"></i>
                         Fermer
@@ -327,8 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSelectedMarker = null;
     let map;
     let currentStructure = null;
+    let resizeTimeout;
     
-    // Cadrage précis sur le département 06 (Alpes-Maritimes)
     const alpesMaritimesBounds = L.latLngBounds(
         L.latLng(43.35, 6.55),
         L.latLng(44.40, 7.80)
@@ -346,15 +351,37 @@ document.addEventListener('DOMContentLoaded', () => {
         maxZoom: 18,
     }).addTo(map);
 
-    const resizeObserver = new ResizeObserver(() => {
+    function invalidateMap() {
         if (map) {
-            map.invalidateSize();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
         }
-    });
-    const mapElement = document.getElementById('map');
-    if (mapElement) {
-        resizeObserver.observe(mapElement);
     }
+
+    const resizeObserver = new ResizeObserver(() => {
+        invalidateMap();
+    });
+    
+    const mapContainer = document.getElementById('map');
+    if (mapContainer) {
+        const parent = mapContainer.closest('.relative');
+        if (parent) {
+            resizeObserver.observe(parent);
+        }
+        resizeObserver.observe(mapContainer);
+    }
+
+    window.addEventListener('orientationchange', () => {
+        invalidateMap();
+    });
+
+    window.addEventListener('resize', () => {
+        invalidateMap();
+    });
+
+    setTimeout(invalidateMap, 300);
 
     const structures = @json($structures);
 
@@ -375,18 +402,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatCategoriesBadges(categories) {
-        if (!categories) return '<span class="text-gray-400 text-xs">Non spécifié</span>';
+        if (!categories) return '<span class="text-gray-400 text-[10px] sm:text-xs">Non spécifié</span>';
         const cats = categories.split(',').map(c => c.trim()).filter(c => c);
         return cats.map(cat => 
-            `<span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium">${escapeHtml(cat)}</span>`
+            `<span class="inline-block px-1.5 sm:px-2 py-0.5 bg-blue-100 text-blue-700 rounded-lg text-[10px] sm:text-xs font-medium">${escapeHtml(cat)}</span>`
         ).join('');
     }
 
     function formatPublicBadges(publics) {
-        if (!publics) return '<span class="text-gray-400 text-xs">Non spécifié</span>';
+        if (!publics) return '<span class="text-gray-400 text-[10px] sm:text-xs">Non spécifié</span>';
         const pubs = publics.split(',').map(p => p.trim()).filter(p => p);
         return pubs.map(pub => 
-            `<span class="inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded-lg text-xs font-medium">${escapeHtml(pub)}</span>`
+            `<span class="inline-block px-1.5 sm:px-2 py-0.5 bg-green-100 text-green-700 rounded-lg text-[10px] sm:text-xs font-medium">${escapeHtml(pub)}</span>`
         ).join('');
     }
 
@@ -396,6 +423,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showFullDetailsModal(structure) {
         currentStructure = structure;
+        
+        if (!structure) {
+            console.error('Structure non définie');
+            return;
+        }
+
+        console.log('Affichage du modal pour:', structure);
         
         const logoPath = structure.organisme?.logo_path;
         const logoUrl = logoPath ? `/storage/${logoPath}` : null;
@@ -412,24 +446,33 @@ document.addEventListener('DOMContentLoaded', () => {
             modalLogoPlaceholder.classList.remove('hidden');
         }
         
+        // Informations de base
         document.getElementById('modal-organisme').textContent = structure.organisme?.nom_organisme || 'Structure sans nom';
-        document.getElementById('modal-type-badge').textContent = structure.organisme?.ville || ' ';
-        document.getElementById('modal-organisme-text').textContent = (structure.organisme?.nom_organisme || '') + ' ' + (structure.ville || '');
+        document.getElementById('modal-type-badge').textContent = structure.type_structure || 'Non spécifié';
+        document.getElementById('modal-organisme-text').textContent = structure.organisme?.nom_organisme || 'Non spécifié';
+        
+        // Catégories
         document.getElementById('modal-categories-list').innerHTML = formatCategoriesBadges(structure.categories);
+        
+        // Public cible
         document.getElementById('modal-public-list').innerHTML = formatPublicBadges(structure.public_cible);
+        
+        // Zone d'intervention
         document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
         
+        // Site web
         const siteElement = document.getElementById('modal-site');
         if (structure.organisme?.site_web && structure.organisme.site_web.trim() !== '') {
             const url = structure.organisme.site_web.trim();
             siteElement.innerHTML = `
-                <a href="${url}" target="_blank" class="text-[#255156] hover:underline break-all">
-                ${escapeHtml(url)} <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                <a href="${url}" target="_blank" class="text-[#255156] hover:underline break-all text-xs sm:text-sm">
+                ${escapeHtml(url)} <i class="fas fa-external-link-alt text-[10px] sm:text-xs ml-1"></i>
                 </a>`;
         } else {
-            siteElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+            siteElement.innerHTML = '<span class="text-gray-400 italic text-xs sm:text-sm">Non disponible</span>';
         }
 
+        // Description
         const descriptionElement = document.getElementById('modal-description');
         if (structure.description && structure.description.trim() !== '') {
             descriptionElement.textContent = structure.description;
@@ -439,6 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             descriptionElement.classList.add('text-gray-400', 'italic');
         }
         
+        // Détails spécifiques
         const detailsElement = document.getElementById('modal-details');
         if (structure.details && structure.details.trim() !== '') {
             detailsElement.textContent = structure.details;
@@ -448,13 +492,16 @@ document.addEventListener('DOMContentLoaded', () => {
             detailsElement.classList.add('text-gray-400', 'italic');
         }
         
+        // Siège social
         document.getElementById('modal-siege_ville').textContent = structure.organisme?.ville || 'Non spécifié';
         document.getElementById('modal-siege_adresse').textContent = structure.organisme?.adresse || 'Non spécifiée';
         
+        // Structure
         document.getElementById('modal-ville').textContent = structure.ville || 'Non spécifié';
         document.getElementById('modal-code_postal').textContent = structure.code_postal ? `(${structure.code_postal})` : '';
         document.getElementById('modal-adresse').textContent = structure.adresse || 'Non spécifiée';
         
+        // Téléphone
         const telephoneElement = document.getElementById('modal-telephone');
         if (structure.telephone && structure.telephone.trim() !== '') {
             telephoneElement.innerHTML = `<a href="tel:${structure.telephone.replace(/\s/g, '')}" class="text-[#255156] hover:underline">${escapeHtml(structure.telephone)}</a>`;
@@ -462,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
             telephoneElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
         }
         
+        // Email
         const emailElement = document.getElementById('modal-email');
         if (structure.email && structure.email.trim() !== '') {
             emailElement.innerHTML = `<a href="mailto:${structure.email}" class="text-[#255156] hover:underline break-all">${escapeHtml(structure.email)}</a>`;
@@ -469,8 +517,10 @@ document.addEventListener('DOMContentLoaded', () => {
             emailElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
         }
         
+        // Contact
         document.getElementById('modal-contact').textContent = structure.contact || 'Non spécifié';
         
+        // Horaires
         const horairesContainer = document.getElementById('horaires-container');
         const horairesElement = document.getElementById('modal-horaires');
         if (structure.horaires && structure.horaires.trim() !== '') {
@@ -480,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
             horairesContainer.style.display = 'none';
         }
         
+        // Date de mise à jour
         const dateElement = document.getElementById('modal-created_at');
         if (structure.updated_at) {
             const date = new Date(structure.updated_at);
@@ -542,18 +593,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const safeStructureJson = escapeJsonForAttribute(structure);
         
         return `
-            <div class="popup-content" style="min-width: 260px; max-width: 300px;">
-                <div class="flex items-center gap-2.5 border-b pb-2 mb-2">
-                    <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
-                        ${logoUrl ? `<img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">` : `<i class="fas fa-building text-gray-400 text-lg"></i>`}
+            <div class="popup-content" style="min-width: 200px; max-width: 280px;">
+                <div class="flex items-center gap-2 border-b pb-2 mb-2">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
+                        ${logoUrl ? `<img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">` : `<i class="fas fa-building text-gray-400 text-sm sm:text-lg"></i>`}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-sm text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
+                        <h4 class="font-bold text-xs sm:text-sm text-[#255156] truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
                             ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
                     </div>
                 </div>
-                <div class="space-y-1.5 text-xs">
+                <div class="space-y-1 text-xs">
                     <p class="flex items-center">
                         <i class="fas fa-map-marker-alt text-red-500 w-4"></i>
                         <span class="text-gray-700 truncate font-medium">${escapeHtml((structure.ville || '') + ' (' + (structure.code_postal || '') + ')')}</span>
@@ -570,16 +621,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="text-gray-600 text-xs leading-relaxed">${escapeHtml(structure.categories.split(',').slice(0, 2).join(', '))}${structure.categories.split(',').length > 2 ? '...' : ''}</span>
                         </p>
                     ` : ''}
+                    ${structure.type_structure ? `
+                        <p class="flex items-start mt-1">
+                            <i class="fas fa-building text-gray-500 w-4 mt-0.5"></i>
+                            <span class="text-gray-600 text-xs">${escapeHtml(structure.type_structure)}</span>
+                        </p>
+                    ` : ''}
                 </div>
-                <div class="mt-3 space-y-1.5">
-                    <button class="view-details-btn w-full text-xs bg-[#255156] hover:bg-[#1d4144] text-white px-3 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-1"
+                <div class="mt-2 space-y-1.5">
+                    <button class="view-details-btn w-full text-xs bg-[#255156] hover:bg-[#1d4144] text-white px-2 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-1"
                         data-structure='${safeStructureJson}'>
                         <i class="fas fa-info-circle mr-1"></i>
                         Voir tous les détails
                     </button>
                     ${structure.latitude && structure.longitude ? `
                         <a href="https://www.google.com/maps/search/?api=1&query=${structure.latitude},${structure.longitude}" target="_blank" 
-                           class="flex items-center justify-center gap-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-semibold transition-all duration-200">
+                           class="flex items-center justify-center gap-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1.5 rounded-lg font-semibold transition-all duration-200">
                             <i class="fas fa-directions mr-1"></i>
                             Itinéraire
                         </a>
@@ -589,27 +646,25 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // PANNEAU DE DÉTAILS À DROITE (ÉCRITURE TAILLE TABLEAU text-sm / 14px)
     function showStructureDetails(structure) {
         const logoPath = structure.organisme?.logo_path;
         const logoUrl = logoPath ? `/storage/${logoPath}` : null;
         const safeStructureJson = escapeJsonForAttribute(structure);
         
         const detailsHtml = `
-            <div class="space-y-3.5 text-sm">
-                <!-- Organisme & Logo -->
+            <div class="space-y-3 text-sm">
                 <div class="flex items-center gap-3 border-b border-gray-200 pb-3">
-                    <div class="w-11 h-11 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center shadow-2xs flex-shrink-0">
-                        ${logoUrl ? `<img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">` : `<i class="fas fa-building text-gray-400 text-xl"></i>`}
+                    <div class="w-10 h-10 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden border border-gray-200 flex items-center justify-center shadow-2xs flex-shrink-0">
+                        ${logoUrl ? `<img src="${logoUrl}" alt="Logo" class="w-full h-full object-contain">` : `<i class="fas fa-building text-gray-400 text-lg"></i>`}
                     </div>
                     <div class="flex-1 min-w-0">
                         <h4 class="font-bold text-[#255156] text-sm leading-snug truncate" title="${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}">
                             ${escapeHtml(structure.organisme?.nom_organisme || 'Structure')}
                         </h4>
+                        ${structure.type_structure ? `<span class="text-xs text-gray-500">${escapeHtml(structure.type_structure)}</span>` : ''}
                     </div>
                 </div>   
 
-                <!-- Localisation -->
                 <div class="bg-blue-50/80 border border-blue-100 p-3 rounded-xl">
                     <h5 class="text-xs uppercase tracking-wider font-bold text-blue-900 mb-1.5 flex items-center gap-1.5">
                         <i class="fas fa-map-marker-alt text-blue-700"></i>
@@ -622,7 +677,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <!-- Contact -->
                 <div class="bg-gray-50 border border-gray-200 p-3 rounded-xl">
                     <h5 class="text-xs uppercase tracking-wider font-bold text-gray-700 mb-2 flex items-center gap-1.5">
                         <i class="fas fa-address-card text-gray-500"></i>
@@ -645,10 +699,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </a>
                             </div>
                         ` : ''}
+                        ${structure.responsable ? `
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-user text-[#255156] w-4"></i>
+                                <span class="text-gray-800 font-medium">${escapeHtml(structure.responsable)}</span>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
 
-                <!-- Catégories -->
                 ${structure.categories ? `
                     <div class="bg-purple-50/80 border border-purple-100 p-3 rounded-xl">
                         <h5 class="text-xs uppercase tracking-wider font-bold text-purple-900 mb-2">Catégories</h5>
@@ -660,7 +719,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 ` : ''}
 
-                <!-- Boutons d'action -->
                 <button class="view-details-btn w-full bg-[#255156] text-white py-2 px-3 rounded-xl text-sm hover:bg-[#1d4144] transition-colors flex items-center justify-center gap-2 font-semibold shadow-2xs"
                     data-structure='${safeStructureJson}'>
                     <i class="fas fa-info-circle"></i>
@@ -698,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const popupContent = createPopupContent(structure);
         marker.bindPopup(popupContent, {
             maxWidth: 300,
-            minWidth: 250,
+            minWidth: 200,
             className: 'custom-popup'
         });
         
@@ -774,20 +832,40 @@ document.addEventListener('DOMContentLoaded', () => {
         map.closePopup();
     });
 
+    // Gestion du clic sur "Voir tous les détails"
     document.addEventListener('click', function(e) {
         const viewDetailsBtn = e.target.closest('.view-details-btn');
         if (viewDetailsBtn) {
             e.preventDefault();
             e.stopPropagation();
-            const structureData = viewDetailsBtn.getAttribute('data-structure');
-            try {
-                const decodedData = structureData.replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-                const structure = JSON.parse(decodedData);
-                showFullDetailsModal(structure);
-                const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
-                modal.show();
-            } catch (error) {
-                console.error('Erreur lors du parsing des données:', error);
+            
+            let structureData = viewDetailsBtn.getAttribute('data-structure');
+            
+            if (!structureData) {
+                const parent = viewDetailsBtn.closest('[data-structure]');
+                if (parent) {
+                    structureData = parent.getAttribute('data-structure');
+                }
+            }
+            
+            if (structureData) {
+                try {
+                    const decodedData = structureData
+                        .replace(/&#39;/g, "'")
+                        .replace(/&amp;/g, '&')
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>');
+                    const structure = JSON.parse(decodedData);
+                    
+                    showFullDetailsModal(structure);
+                    const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+                    modal.show();
+                } catch (error) {
+                    console.error('Erreur lors du parsing des données:', error);
+                    console.error('Données reçues:', structureData);
+                }
+            } else {
+                console.error('Aucune donnée de structure trouvée');
             }
         }
     });
@@ -797,6 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style>
+/* Styles CSS existants */
 .custom-marker, .selected-marker {
     background: none !important;
     border: none !important;
@@ -915,8 +994,59 @@ input[type="checkbox"] {
     accent-color: #255156;
 }
 
-.custom-modal-width {
-    max-width: 900px;
+/* Styles responsifs pour le modal - CORRIGÉ POUR ORDINATEUR */
+.modal-dialog {
+    margin: 0.5rem;
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        margin: 1.75rem auto;
+        max-width: 95vw;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-dialog {
+        max-width: 1100px;
+        width: 90vw;
+    }
+}
+
+/* Pour les très grands écrans */
+@media (min-width: 1400px) {
+    .modal-dialog {
+        max-width: 1200px;
+        width: 80vw;
+    }
+}
+
+.modal-body {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Assurer que le modal est bien centré et visible */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Styles pour la carte responsive */
+.relative {
+    position: relative;
+}
+
+.relative > .bg-white {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 </style>
 @endsection
