@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Plateforme sécurisée qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes dans les Alpes-Maritimes, afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.">
-    <title>Plateforme Multi-Acteurs VFF - Alpes-Maritimes</title>
+    <title>Plateforme Multi-Acteurs Violence faites aux femmes - Alpes-Maritimes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* --- RESET & BASE --- */
+        /* --- RESET & BASE OPTIMISÉ --- */
         * {
             margin: 0;
             padding: 0;
@@ -16,14 +16,15 @@
         }
 
         html, body {
-            min-height: 100%;
-            width: 100%;
+            min-height: 100vh;
             background: #0a0a0a;
             color: #fff;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* --- RÉDUCTION DES MOUVEMENTS --- */
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
             .hero { animation: none !important; }
@@ -31,7 +32,7 @@
             .project-slide { animation: none !important; }
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER OPTIMISÉ --- */
         .header {
             position: fixed;
             top: 16px;
@@ -150,7 +151,7 @@
             box-shadow: 0 6px 24px rgba(79, 209, 217, 0.4);
         }
 
-        /* --- HERO (STRUCTURE FLEXIBILE ANTI-SUPERPOSITION AU ZOOM) --- */
+        /* --- HERO OPTIMISÉ AVEC TEXTE EN HAUT --- */
         .hero {
             min-height: 100vh;
             width: 100%;
@@ -160,7 +161,6 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             padding-top: 100px;
         }
 
@@ -176,7 +176,7 @@
             z-index: 1;
         }
 
-        /* --- PARTICLES --- */
+        /* --- PARTICULES OPTIMISÉES --- */
         .particles {
             position: absolute;
             inset: 0;
@@ -197,7 +197,66 @@
             100% { transform: translateY(-100vh) rotate(360deg) scale(1); }
         }
 
-        /* --- CONTENU PRINCIPAL --- */
+        /* --- BANDEAU TEXTE EN HAUT - HORIZONTAL & GRAND --- */
+        .hero-banner {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            padding: 30px 40px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 2px solid rgba(79, 209, 217, 0.3);
+            animation: bannerSlide 0.8s ease-out;
+        }
+
+        @keyframes bannerSlide {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-banner h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: clamp(32px, 6vw, 72px);
+            line-height: 1.1;
+            color: #ffffff;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 60px rgba(0, 0, 0, 0.9);
+            margin-bottom: 8px;
+        }
+
+        .hero-banner h1 .highlight {
+            background: linear-gradient(135deg, #4fd1d9, #7ae0e8, #a8f0f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        .hero-banner .subtitle {
+            font-size: clamp(12px, 1.8vw, 28px);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-banner .subtitle strong {
+            color: #4fd1d9;
+            font-weight: 600;
+        }
+
+        .hero-banner .banner-divider {
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #4fd1d9, transparent);
+            border-radius: 2px;
+            margin: 12px auto 16px auto;
+        }
+
+        /* --- CONTENU PRINCIPAL OPTIMISÉ --- */
         .hero-container {
             position: relative;
             z-index: 3;
@@ -207,16 +266,16 @@
             gap: 40px;
             width: 100%;
             max-width: 1600px;
-            margin: 0 auto;
+            margin: 20px auto 0 auto;
             padding: 20px 30px 40px 30px;
             flex: 1;
         }
 
-        /* --- COLONNE GAUCHE : TEXTE --- */
+        /* --- COLONNE GAUCHE OPTIMISÉE --- */
         .hero-content {
             flex: 1 1 50%;
             max-width: 700px;
-            animation: contentFade 1.2s ease-out;
+            animation: contentFade 1.2s ease-out 0.3s both;
         }
 
         @keyframes contentFade {
@@ -224,47 +283,26 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .hero-content h1 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: clamp(26px, 4vw, 50px);
-            line-height: 1.15;
-            color: #ffffff;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 40px rgba(0, 0, 0, 0.8);
-        }
-
-        .hero-content h1 .highlight {
-            background: linear-gradient(135deg, #4fd1d9, #7ae0e8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(13px, 1.2vw, 16px);
-            line-height: 1.7;
+        .hero-content .description {
+            font-size: clamp(14px, 1.3vw, 18px);
+            line-height: 1.8;
             color: rgba(255, 255, 255, 0.92);
-            max-width: 580px;
             font-weight: 400;
             text-shadow: 0 1px 20px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
         }
 
-        .hero-subtitle strong {
+        .hero-content .description strong {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .hero-content .description .accent {
             color: #4fd1d9;
             font-weight: 600;
         }
 
-        .hero-divider {
-            width: 55px;
-            height: 3px;
-            background: linear-gradient(90deg, #4fd1d9, transparent);
-            border-radius: 2px;
-            margin: 18px 0 22px 0;
-        }
-
-        /* --- STATS BADGE --- */
+        /* --- STATS BADGE OPTIMISÉ --- */
         .stats-badge {
             display: inline-flex;
             align-items: center;
@@ -276,7 +314,6 @@
             border-radius: 40px;
             padding: 6px;
             flex-wrap: wrap;
-            margin-top: 16px;
         }
 
         .stats-badge .stat-item {
@@ -304,13 +341,11 @@
             font-weight: 400;
         }
 
-        /* ================================================================ */
-        /* === CARTE PROJET - DESIGN ADAPTATIF ZOOM === */
-        /* ================================================================ */
+        /* --- CARTE PROJET OPTIMISÉE --- */
         .hero-project-carousel {
             flex: 0 0 420px;
             max-width: 100%;
-            animation: contentFade 1s ease-out 0.2s both;
+            animation: contentFade 1s ease-out 0.5s both;
         }
 
         .project-card-wrapper {
@@ -323,8 +358,6 @@
             box-shadow: 
                 0 30px 80px rgba(0, 0, 0, 0.9),
                 inset 0 1px 0 rgba(79, 209, 217, 0.2);
-            height: auto;
-            overflow: hidden;
             transition: all 0.3s ease;
         }
 
@@ -381,7 +414,7 @@
             background-clip: text;
         }
 
-        /* SLIDES */
+        /* SLIDES OPTIMISÉES */
         .project-slides-wrapper {
             position: relative;
             overflow: hidden;
@@ -546,7 +579,7 @@
             border-radius: 4px;
         }
 
-        /* --- SERVICES (FLUX DYNAMIQUE, NON ABSOLU) --- */
+        /* --- SERVICES OPTIMISÉS --- */
         .services {
             position: relative;
             z-index: 3;
@@ -555,7 +588,7 @@
             gap: 12px;
             width: 100%;
             max-width: 1600px;
-            margin: 20px auto 30px auto;
+            margin: 0 auto 30px auto;
             padding: 0 30px;
         }
 
@@ -596,7 +629,7 @@
             margin-top: 2px;
         }
 
-        /* --- BANDEAU PARTENAIRES --- */
+        /* --- BANDEAU PARTENAIRES OPTIMISÉ --- */
         .partners-bar {
             position: relative;
             z-index: 3;
@@ -720,12 +753,10 @@
             background: #4fd1d9;
             color: #0a0a0a;
         }
-
-        /* --- RESPONSIVE MEDIA QUERIES --- */
+        /* --- RESPONSIVE OPTIMISÉ --- */
         @media (min-width: 769px) {
             .header-title { display: block; }
         }
-
         @media (max-width: 900px) {
             .hero-container {
                 flex-direction: column;
@@ -736,9 +767,6 @@
                 flex: 1 1 100%;
                 max-width: 100%;
                 text-align: center;
-            }
-            .hero-divider {
-                margin: 14px auto 18px auto;
             }
             .stats-badge {
                 justify-content: center;
@@ -756,14 +784,16 @@
             .partners-bar {
                 padding: 12px 16px;
             }
+            .hero-banner {
+                padding: 20px 16px;
+            }
         }
-
         @media (max-width: 500px) {
             .header {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                padding: 4px 10px;
+                top: 2px;
+                left: 2px;
+                right: 2px;
+                padding: 2px 2px;
             }
             .btn-outline { display: none; }
             .hero {
@@ -782,11 +812,16 @@
             .partners-carousel {
                 width: 100%;
             }
+            .hero-banner h1 {
+                font-size: 28px;
+            }
+            .hero-banner .subtitle {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-
     <!-- HEADER -->
     <header class="header" role="banner">
         <div class="header-left">
@@ -798,7 +833,7 @@
                 </div>
             </div>
             <div class="header-title">
-                Plateforme <span>·</span> Multi-Acteurs VFF 06
+                Plateforme <span>·</span> Multi-Acteurs Violences faites aux femmes 06
             </div>
         </div>
         <div class="header-buttons">
@@ -806,47 +841,45 @@
             <a href="/login" class="btn-primary" aria-label="Se connecter à la plateforme">Se connecter</a>
         </div>
     </header>
-
     <!-- HERO -->
     <main class="hero" role="main">
         <div class="particles" id="particles" aria-hidden="true"></div>
-
+        <!-- ====== BANDEAU TEXTE EN HAUT - HORIZONTAL ====== -->
+        <div class="hero-banner">
+            <h1>
+                Plateforme collaborative <br>
+                <span class="highlight">multi-acteurs</span>
+            </h1>
+            <div class="banner-divider" aria-hidden="true"></div>
+            <div class="subtitle">
+                au service de la lutte contre les <strong>violences faites aux femmes</strong>
+            </div>
+        </div>
         <div class="hero-container">
-
-            <!-- ====== COLONNE GAUCHE : TEXTE ====== -->
+            <!-- ====== COLONNE GAUCHE : DESCRIPTION ====== -->
             <div class="hero-content">
-                <h1>
-                    Nos singularités <br>
-                    <span class="highlight">au service du collectif.</span>
-                </h1>
-
-                <div class="hero-divider" aria-hidden="true"></div>
-
-                <p class="hero-subtitle">
-                    <strong style="color: #ffffff;">
-                        Une plateforme sécurisée qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes, 
-                        afin de coordonner leurs actions, partager leurs ressources et fluidifier les parcours de protection.
-                    </strong>
+                <p class="description">
+                    <strong>Une plateforme sécurisée</strong> qui réunit l'ensemble des acteurs engagés contre les violences faites aux femmes, 
+                    afin de <span class="accent">coordonner leurs actions</span>, <span class="accent">partager leurs ressources</span> 
+                    et <span class="accent">fluidifier les parcours de protection</span>.
                 </p>
 
-                <div style="margin-top: 16px;">
-                    <div class="stats-badge">
-                        <div class="stat-item">
-                            <span class="stat-number">{{ $organismes->count() }}</span>
-                            <span class="stat-label">Organismes</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{{ $structures->count() }}</span>
-                            <span class="stat-label">Structures</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{{ $user->count() }}</span>
-                            <span class="stat-label">Membres</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">100%</span>
-                            <span class="stat-label">Sécurisé</span>
-                        </div>
+                <div class="stats-badge">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ $organismes->count() }}</span>
+                        <span class="stat-label">Organismes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ $structures->count() }}</span>
+                        <span class="stat-label">Structures</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ $user->count() }}</span>
+                        <span class="stat-label">Membres</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Sécurisé</span>
                     </div>
                 </div>
             </div>
@@ -864,10 +897,10 @@
                     </div>
 
                     <h3 class="project-card-title">
-                        Schéma <span class="highlight">VFF 06</span>
+                        Schéma départementale de lutte contre les <span class="highlight">violences faites aux femmes 06</span>
                     </h3>
 
-                    <!-- Carrousel avec fond sombre par slide -->
+                    <!-- Carrousel -->
                     <div class="project-slides-wrapper">
                         <div class="project-slides-track" id="projectTrack">
 
@@ -1036,7 +1069,7 @@
 
     <script>
         // ================================================================
-        // CARROUSEL PROJET (RÉCONCILIATION ET DÉPLACEMENT POURCENTAGE ANTI-ZOOM BUG)
+        // CARROUSEL PROJET OPTIMISÉ
         // ================================================================
         (function() {
             const track = document.getElementById('projectTrack');
@@ -1049,8 +1082,6 @@
             function moveToSlide(index) {
                 const maxIndex = totalSlides - 1;
                 currentSlide = Math.max(0, Math.min(index, maxIndex));
-
-                // Glissement adaptatif en % pour une parfaite résilience au zoom
                 track.style.transform = `translateX(-${currentSlide * 100}%)`;
 
                 const dots = document.querySelectorAll('#projectDots .dot');
@@ -1063,19 +1094,11 @@
             }
 
             function nextSlide() {
-                if (currentSlide < totalSlides - 1) {
-                    moveToSlide(currentSlide + 1);
-                } else {
-                    moveToSlide(0);
-                }
+                moveToSlide(currentSlide < totalSlides - 1 ? currentSlide + 1 : 0);
             }
 
             function prevSlide() {
-                if (currentSlide > 0) {
-                    moveToSlide(currentSlide - 1);
-                } else {
-                    moveToSlide(totalSlides - 1);
-                }
+                moveToSlide(currentSlide > 0 ? currentSlide - 1 : totalSlides - 1);
             }
 
             function createDots() {
@@ -1137,9 +1160,8 @@
             startAutoSlide();
         })();
 
-
         // ================================================================
-        // CARROUSEL PARTENAIRES
+        // CARROUSEL PARTENAIRES OPTIMISÉ
         // ================================================================
         let currentIndex = 0;
         let itemsPerView = 4;
@@ -1183,7 +1205,7 @@
         });
 
         // ================================================================
-        // PARTICULES
+        // PARTICULES OPTIMISÉES
         // ================================================================
         function createParticles() {
             const container = document.getElementById('particles');

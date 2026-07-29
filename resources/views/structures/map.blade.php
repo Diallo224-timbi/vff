@@ -5,7 +5,6 @@
 @section('content')
 <!-- CONTENEUR PRINCIPAL -->
 <div class="w-full flex flex-col p-2 sm:p-3 bg-gray-50/50 min-h-screen lg:h-[calc(100vh-80px)] lg:max-h-[calc(100vh-80px)] overflow-y-auto lg:overflow-hidden">
-
     <!-- 1. HEADER -->
     <div class="flex-shrink-0 flex flex-wrap justify-between items-center gap-2 mb-2">
         <h1 class="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -19,7 +18,6 @@
             </div>
         </div>
     </div>
-
     <!-- 2. STATISTIQUES -->
     <div class="flex-shrink-0 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 mb-2">
         <div class="bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-2xs flex items-center justify-between">
@@ -50,11 +48,9 @@
             </div>
         </div>
     </div>
-
     <!-- 3. FILTRES -->
     <div class="flex-shrink-0 bg-white border border-gray-200 rounded-xl shadow-2xs p-2 mb-2">
-        <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5 justify-between">
-            
+        <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5 justify-between">  
             <!-- Recherche -->
             <div class="w-full lg:w-64 flex-shrink-0">
                 <div class="relative">
@@ -64,7 +60,6 @@
                            class="w-full pl-9 pr-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-[#255156] focus:outline-none">
                 </div>
             </div>
-
             <!-- Catégories -->
             <div class="flex-1 min-w-0 flex flex-col sm:flex-row items-start sm:items-center gap-2">
                 <div class="flex items-center gap-1.5 flex-shrink-0 flex-wrap">
@@ -78,7 +73,6 @@
                         Aucun
                     </button>
                 </div>
-
                 <!-- Puces défilables -->
                 <div class="flex items-center gap-2 overflow-x-auto py-1 px-2 scrollbar-thin border border-gray-200 rounded-lg bg-gray-50/50 w-full flex-1">
                     @php
@@ -99,7 +93,6 @@
                     @endforeach
                 </div>
             </div>
-
             <!-- Réinitialiser -->
             <div class="flex-shrink-0">
                 <button id="resetViewBtn" 
@@ -110,7 +103,6 @@
             </div>
         </div>
     </div>
-
     <!-- 4. SECTION CARTE + DÉTAILS -->
     <div class="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-2.5 overflow-hidden">
         
@@ -120,7 +112,6 @@
                 <div id="map" class="w-full h-full"></div>
             </div>
         </div>
-
         <!-- PANNEAU DÉTAILS -->
         <div class="lg:col-span-1 relative min-h-[300px] h-[calc(100vh-380px)] sm:h-[calc(100vh-400px)] lg:h-full">
             <div class="bg-white border border-gray-200 rounded-xl shadow-2xs h-full flex flex-col overflow-hidden">
@@ -142,10 +133,8 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
 <!-- MODAL DÉTAILS - VERSION CORRIGÉE POUR ORDINATEUR -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 95vw; width: 1100px;">
@@ -171,8 +160,7 @@
                         <i class="fas fa-times text-base sm:text-lg"></i>
                     </button>
                 </div>
-            </div>
-            
+            </div>  
             <!-- Body avec scroll -->
             <div class="modal-body bg-gray-50 p-3 sm:p-4 overflow-y-auto flex-1" style="max-height: calc(90vh - 140px);">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
@@ -216,7 +204,6 @@
                             </h4>
                             <p class="text-gray-700 text-xs sm:text-sm leading-relaxed" id="modal-description">-</p>
                         </div>
-
                         <!-- Détails spécifiques -->
                         <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
                             <h4 class="text-[#255156] font-semibold mb-2 text-xs sm:text-sm flex items-center gap-2">
@@ -226,7 +213,6 @@
                             <p class="text-gray-700 text-xs sm:text-sm" id="modal-details">-</p>
                         </div>
                     </div>
-
                     <!-- Colonne droite -->
                     <div class="space-y-3">
                         <!-- Localisation -->
@@ -256,7 +242,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Contact -->
                         <div class="bg-white rounded-xl shadow-xs p-3 sm:p-4 border border-gray-100">
                             <h4 class="text-[#255156] font-semibold mb-2 sm:mb-3 text-xs sm:text-sm flex items-center gap-2">
@@ -299,7 +284,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Footer -->
             <div class="modal-footer bg-white p-2 sm:p-3 border-t border-gray-200 flex-shrink-0">
                 <div class="flex flex-col sm:flex-row justify-end items-center gap-2 w-full">
@@ -341,14 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     map = L.map('map', {
         center: [43.85, 7.10],
-        zoom: 9.5,
+        zoom: 8.5,
         maxBounds: alpesMaritimesBounds,
         maxBoundsViscosity: 0.8
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
-        maxZoom: 18,
+        maxZoom: 20,
     }).addTo(map);
 
     function invalidateMap() {
