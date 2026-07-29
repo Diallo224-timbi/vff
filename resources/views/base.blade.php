@@ -14,7 +14,7 @@
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4V4lF7+v1wZ0z+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4Vl4F7+v1wZ0z+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -65,7 +65,7 @@
 
     /* ===== NAVBAR RESPONSIVE ===== */
     .navbar {
-      background-color: #1a3c40; /* Couleur plus soutenue et nette */
+      background-color: #1a3c40;
       z-index: 1050;
       color: white;
       height: var(--header-height);
@@ -77,7 +77,7 @@
       top: 0;
       width: 100%;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      border-bottom: 2px solid #0f2a2d; /* Bordure pour renforcer la netteté */
+      border-bottom: 2px solid #0f2a2d;
     }
 
     .navbar-brand {
@@ -94,24 +94,113 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
+    /* ===== PROFIL DROPDOWN - À DROITE SUR MOBILE ===== */
+    .profile-dropdown {
+      position: relative;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: rgba(255,255,255,0.15);
+      border-radius: 2rem;
+      transition: all 0.2s;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .profile-btn:hover {
+      background-color: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .profile-btn .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4a8a8f 0%, #1e4a4f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.3);
+      font-size: 0.8rem;
+    }
+
+    /* Nom d'utilisateur caché sur mobile */
+    .profile-btn .user-name-display {
+      display: inline;
+    }
+
     @media (max-width: 640px) {
-      .navbar {
-        padding: 0.5rem 1rem;
-      }
-      .logo-text {
-        font-size: 1rem;
-      }
-      .logo-text br {
+      .profile-btn .user-name-display {
         display: none;
       }
-      .logo-text span {
-        display: inline;
+      .profile-btn {
+        padding: 0.4rem 0.6rem;
       }
+      .profile-btn .avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+      }
+    }
+
+    .dropdown-menu-custom {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 240px;
+      display: none;
+      z-index: 1060;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+    }
+
+    .dropdown-menu-custom.show {
+      display: block;
+      animation: fadeInDown 0.2s ease;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      color: #1a202c;
+      text-decoration: none;
+      transition: background 0.2s;
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f7fafc;
+    }
+
+    .dropdown-item i {
+      color: #4a5568;
+      width: 1.25rem;
     }
 
     /* ===== SIDEBAR PRINCIPAL RESPONSIVE ===== */
     .sidebar {
-      background-color: #1e4a4f; /* Couleur plus vive et opaque */
+      background-color: #1e4a4f;
       color: white;
       display: flex;
       flex-direction: column;
@@ -121,7 +210,7 @@
       flex-shrink: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      border-right: 2px solid #0f2a2d; /* Bordure pour renforcer la netteté */
+      border-right: 2px solid #0f2a2d;
       box-shadow: 2px 0 10px rgba(0,0,0,0.15);
     }
 
@@ -255,12 +344,30 @@
       .sidebar.collapsed {
         left: -100%;
       }
+      
+      /* Ajustement navbar sur mobile */
+      .navbar {
+        padding: 0.5rem 0.75rem;
+        height: 60px;
+      }
+      
+      .logo-text {
+        font-size: 0.9rem;
+      }
+      
+      .logo-text .block {
+        display: inline;
+      }
+      
+      .logo-text .block:last-child {
+        display: none;
+      }
     }
 
     /* ===== DESSIN SECONDAIRE (OFFCANVAS) ===== */
     .offcanvas.drawer-sub {
       width: min(18rem, 85vw) !important;
-      background-color: #1a494e !important; /* Couleur vive et nette */
+      background-color: #1a494e !important;
       color: white;
       border-right: 2px solid #0f2a2d;
     }
@@ -295,71 +402,6 @@
     .drawer-link:hover {
       background-color: #2d6b72;
       border-color: rgba(255,255,255,0.15);
-    }
-
-    /* ===== PROFIL DROPDOWN ===== */
-    .profile-dropdown {
-      position: relative;
-    }
-
-    .profile-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background-color: rgba(255,255,255,0.15);
-      border-radius: 2rem;
-      transition: all 0.2s;
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
-      font-weight: 500;
-    }
-
-    .profile-btn:hover {
-      background-color: rgba(255,255,255,0.25);
-      border-color: rgba(255,255,255,0.4);
-    }
-
-    .dropdown-menu-custom {
-      position: absolute;
-      top: 120%;
-      right: 0;
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      width: 240px;
-      display: none;
-      z-index: 1060;
-      border: 1px solid #e2e8f0;
-      overflow: hidden;
-    }
-
-    .dropdown-menu-custom.show {
-      display: block;
-      animation: fadeInDown 0.2s ease;
-    }
-
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1.25rem;
-      color: #1a202c;
-      text-decoration: none;
-      transition: background 0.2s;
-      width: 100%;
-      border: none;
-      background: transparent;
-      font-size: 0.95rem;
-    }
-
-    .dropdown-item:hover {
-      background-color: #f7fafc;
-    }
-
-    .dropdown-item i {
-      color: #4a5568;
-      width: 1.25rem;
     }
 
     /* ===== MAIN CONTENT ===== */
@@ -441,20 +483,20 @@
       </button>
       @endauth
       <div class="logo-text">
-       <div class="leading-tight">
+        <div class="leading-tight">
           <span class="block">Plateforme</span>
           <span class="block text-sm">Multi-Acteurs VFF 06</span>
         </div>
       </div>
     </div>
     @auth
-    <!-- Profil avec dropdown responsive -->
-    <div class="profile-dropdown ">
+    <!-- Profil avec dropdown - À DROITE sur mobile -->
+    <div class="profile-dropdown">
       <button id="profileBtn" class="profile-btn">
-        <div class="w-8 h-8 rounded-full bg-linear-to-r from-gray-900 to-gray-800 flex items-center justify-center text-white font-semibold">
-          {{ strtoupper(substr(Auth::user()->prenom, 0, 1)) }}{{ strtoupper(substr(Auth::user()->name,0,1)) }}
+        <div class="avatar">
+          {{ strtoupper(substr(Auth::user()->prenom, 0, 1)) }}{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
         </div>
-        <span class="hidden md:inline">{{ Auth::user()->prenom }}</span>
+        <span class="user-name-display">{{ Auth::user()->prenom }}</span>
         <i class='bx bx-chevron-down'></i>
       </button>
       <div id="profileMenu" class="dropdown-menu-custom text-[#076a75]">
@@ -483,6 +525,7 @@
     </a>
     @endguest
   </header>
+  
   <div class="app-wrapper">
     @auth
     <!-- SIDEBAR PRINCIPAL RESPONSIVE -->
@@ -502,6 +545,12 @@
           <i class='bx bx-book-open'></i>
           <span title="Explorer et partager des ressources">Ressources</span>
         </a>
+        @if (Auth::user()->role === 'admin')
+            <a href="#" class="sidebar-link">
+              <i class='bx bx-book'></i>
+              <span title="Explorer et partager des documents schèma">Schéma</span>
+            </a>
+        @endif
         <a href="{{ route('forum.index') }}" class="sidebar-link">
           <i class='bx bx-chat'></i>
           <span title="Acceder au forum d'échange">Forum</span>
@@ -515,14 +564,13 @@
           <i class='bx bx-shield'></i>
           <span title="Gestion administrative">Administration</span>
         </a>
-        <!-- logs d'activité accessible uniquement aux admins -->
         @endif
-          @if(Auth::user()->role === 'admin')
-            <a href="{{ route('activity_logs.index') }}" class="sidebar-link">
-              <i class='bx bx-list-ul'></i>
-              <span title="visualiser les logs">Logs d'activités</span>
-            </a>
-          @endif
+        @if(Auth::user()->role === 'admin')
+        <a href="{{ route('activity_logs.index') }}" class="sidebar-link">
+          <i class='bx bx-list-ul'></i>
+          <span title="visualiser les logs">Logs d'activités</span>
+        </a>
+        @endif
       </nav>
 
       <div class="sidebar-bottom">
@@ -553,8 +601,7 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
       </div>
       <div class="offcanvas-body">
-          <!--accès aux organismes et structures pour les admins et modérateurs-->
-         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
+        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
         <a href="{{ route('organismes.index') }}" class="sidebar-link">
           <i class='bx bx-building'></i>
           <span title="Gérer les organismes et structures">Organismes</span>
@@ -571,7 +618,7 @@
           Structures
         </a>
         @endif
-         <a href="{{ route('annuaire.membre') }}" class="drawer-link">
+        <a href="{{ route('annuaire.membre') }}" class="drawer-link">
           <i class='bx bx-group'></i>
           Membres
         </a>
@@ -622,7 +669,6 @@
           e.preventDefault();
           e.stopPropagation();
 
-          // Utilisation de Bootstrap Offcanvas
           const secondaryDrawer = document.getElementById('secondarySidebar');
           if (secondaryDrawer) {
             const offcanvas = new bootstrap.Offcanvas(secondaryDrawer);
@@ -640,7 +686,7 @@
       });
       @endauth
 
-      // ===== PROFIL DROPDOWN RESPONSIVE =====
+      // ===== PROFIL DROPDOWN =====
       const profileBtn = document.getElementById('profileBtn');
       const profileMenu = document.getElementById('profileMenu');
 
@@ -683,10 +729,8 @@
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function() {
-        // Logique responsive supplémentaire
         const sidebar = document.getElementById('sidebar');
         if (window.innerWidth >= 1024 && sidebar) {
-          // Desktop: restaurer état sauvegardé
           const savedState = localStorage.getItem('sidebarCollapsed');
           if (savedState === 'true') {
             sidebar.classList.add('collapsed');

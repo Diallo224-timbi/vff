@@ -620,8 +620,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea id="description" name="description" rows="3" class="form-control"></textarea>
+                        <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                        <textarea id="description" name="description" rows="3" class="form-control" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
@@ -657,8 +657,8 @@
                         </select>
                     </div>
                     <div class="mb-3" id="subCategoryContainer">
-                        <label class="form-label fw-semibold">Sous-catégorie</label>
-                        <select id="subCategory" name="sub_category" class="form-select">
+                        <label class="form-label fw-semibold">Sous-catégorie <span class="text-danger">*</span></label>
+                        <select id="subCategory" name="sub_category" class="form-select" required>
                             <option value="">Aucune</option>
                         </select>
                     </div>

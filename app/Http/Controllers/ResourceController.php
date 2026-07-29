@@ -62,173 +62,173 @@ class ResourceController extends Controller
      */
    public function store(Request $request)
     {
-    $isAjax = $request->ajax() || $request->wantsJson();
-    $maxSize = 51200; // 50 Mo en KB
-    // Validation
-    $validator = Validator::make($request->all(), [
-        'title' => 'required|string|max:255',
-        'file' => 'nullable|file|max:' . $maxSize . '|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
-        'link_url' => 'nullable|url',
-        'category' => 'required|string',
-        'description' => 'nullable|string',
-        'sub_category' => 'nullable|string',
-        //'important' => 'nullable|boolean'
-    ], [
-        'file.max' => 'Le fichier dépasse la taille autorisée (50 Mo maximum).',
-        'file.mimes' => 'Format de fichier non autorisé.',
-        'title.required' => 'Le titre est obligatoire.',
-        'category.required' => 'La catégorie est obligatoire.',
-    ]);
+        $isAjax = $request->ajax() || $request->wantsJson();
+        $maxSize = 51200; // 50 Mo en KB
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'file' => 'nullable|file|max:' . $maxSize . '|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
+            'link_url' => 'nullable|url',
+            'category' => 'required|string',
+            'description' => 'nullable|string',
+            'sub_category' => 'nullable|string',
+            //'important' => 'nullable|boolean'
+        ], [
+            'file.max' => 'Le fichier dépasse la taille autorisée (50 Mo maximum).',
+            'file.mimes' => 'Format de fichier non autorisé.',
+            'title.required' => 'Le titre est obligatoire.',
+            'category.required' => 'La catégorie est obligatoire.',
+        ]);
 
-    if ($validator->fails()) {
-        return $isAjax
-            ? response()->json([
-                'success' => false,
-                'message' => 'Erreur de validation',
-                'errors' => $validator->errors()
-            ], 422)
-            : redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Veuillez corriger les erreurs du formulaire.');
-    }
-
-    try {
-        // Obligation : fichier OU lien
-        if (!$request->hasFile('file') && !$request->filled('link_url')) {
+        if ($validator->fails()) {
             return $isAjax
                 ? response()->json([
                     'success' => false,
-                    'message' => 'Ajoutez un fichier ou un lien'
+                    'message' => 'Erreur de validation',
+                    'errors' => $validator->errors()
                 ], 422)
                 : redirect()->back()
-                    ->with('error', 'Ajoutez un fichier ou un lien')
-                    ->withInput();
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Veuillez corriger les erreurs du formulaire.');
         }
 
-        // =========================
-        // VÉRIFICATION DES DOUBLONS
-        // =========================
-        $file_name = null;
-        $link_url = null;
-        
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $file_name = $file->getClientOriginalName();
-        } elseif ($request->filled('link_url')) {
-            $link_url = $request->link_url;
-        }
-        
-        // Vérifier si un document similaire existe déjà
-        $existingResource = Resource::findSimilar(
-            $request->title,
-            $request->category,
-            $file_name,
-            $link_url
-        );
-        
-        if ($existingResource) {
-            $errorMessage = 'Un document similaire existe déjà : "' . $existingResource->title . '" dans la catégorie "' . $existingResource->category . '"';
-            
-            if ($existingResource->file_name) {
-                $errorMessage .= ' avec le fichier "' . $existingResource->file_name . '"';
-            } elseif ($existingResource->link_url) {
-                $errorMessage .= ' avec le lien "' . $existingResource->link_url . '"';
-            }
-            
-            return $isAjax
-                ? response()->json([
-                    'success' => false,
-                    'message' => $errorMessage,
-                    'existing_resource' => $existingResource
-                ], 409) // 409 Conflict
-                : redirect()->back()
-                    ->with('error', $errorMessage)
-                    ->withInput();
-        }
-        // =========================
-        // GESTION FICHIER
-        // =========================
-        $file = $request->file('file');
-
-        $path = null;
-        $fileName = null;
-        $fileSize = null;
-        $extension = null;
-        $isImage = false;
-        $isVideo = false;
-
-        if ($file) {
-            $fileSize = $file->getSize();
-
-            if ($fileSize > ($maxSize * 1024)) {
+        try {
+            // Obligation : fichier OU lien
+            if (!$request->hasFile('file') && !$request->filled('link_url')) {
                 return $isAjax
-                    ? response()->json(['success' => false, 'message' => 'Fichier trop volumineux'], 413)
+                    ? response()->json([
+                        'success' => false,
+                        'message' => 'Ajoutez un fichier ou un lien'
+                    ], 422)
                     : redirect()->back()
-                        ->with('error', 'Fichier trop volumineux (max 50 Mo)')
+                        ->with('error', 'Ajoutez un fichier ou un lien')
                         ->withInput();
             }
 
-            $extension = strtolower($file->getClientOriginalExtension());
-            $isImage = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
-            $isVideo = in_array($extension, ['mp4','webm','avi','mov','mkv']);
-
-            $fileName = time() . '_' . uniqid() . '.' . $extension;
-            $path = $file->storeAs('resources', $fileName, 'public');
-        }
-        // =========================
-        // CREATION RESOURCE
-        // =========================
-        $resource = Resource::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'file_name' => $file ? $file->getClientOriginalName() : null,
-            'file_path' => $path,
-            'file_size' => $fileSize,
-            'file_type' => $extension,
-            'file_icon' => $extension ? $this->getFileIcon($extension) : 'fas fa-link',
-            'is_image' => $isImage,
-            'is_video' => $isVideo,
-            'category' => $request->category,
-            'user_id' => auth()->id(),
-            'link_url' => $request->link_url,
-            'download_count' => 0,
-            'important' => $request->has('important') ? true : false,
-            'sub_category' => $request->sub_category,
-        ]);
-        if ($resource->important) {
-            // Envoyer une notification aux utilisateurs (ex: email)
-            $usersToNotify = User::where('notification', true)->pluck('email');
-            foreach ($usersToNotify as $email) {
-                Mail::to($email)->send(new ImportantResourceMail($resource));
+            // =========================
+            // VÉRIFICATION DES DOUBLONS
+            // =========================
+            $file_name = null;
+            $link_url = null;
+            
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $file_name = $file->getClientOriginalName();
+            } elseif ($request->filled('link_url')) {
+                $link_url = $request->link_url;
             }
+            
+            // Vérifier si un document similaire existe déjà
+            $existingResource = Resource::findSimilar(
+                $request->title,
+                $request->category,
+                $file_name,
+                $link_url
+            );
+            
+            if ($existingResource) {
+                $errorMessage = 'Un document similaire existe déjà : "' . $existingResource->title . '" dans la catégorie "' . $existingResource->category . '"';
+                
+                if ($existingResource->file_name) {
+                    $errorMessage .= ' avec le fichier "' . $existingResource->file_name . '"';
+                } elseif ($existingResource->link_url) {
+                    $errorMessage .= ' avec le lien "' . $existingResource->link_url . '"';
+                }
+                
+                return $isAjax
+                    ? response()->json([
+                        'success' => false,
+                        'message' => $errorMessage,
+                        'existing_resource' => $existingResource
+                    ], 409) // 409 Conflict
+                    : redirect()->back()
+                        ->with('error', $errorMessage)
+                        ->withInput();
+            }
+            // =========================
+            // GESTION FICHIER
+            // =========================
+            $file = $request->file('file');
 
+            $path = null;
+            $fileName = null;
+            $fileSize = null;
+            $extension = null;
+            $isImage = false;
+            $isVideo = false;
+
+            if ($file) {
+                $fileSize = $file->getSize();
+
+                if ($fileSize > ($maxSize * 1024)) {
+                    return $isAjax
+                        ? response()->json(['success' => false, 'message' => 'Fichier trop volumineux'], 413)
+                        : redirect()->back()
+                            ->with('error', 'Fichier trop volumineux (max 50 Mo)')
+                            ->withInput();
+                }
+
+                $extension = strtolower($file->getClientOriginalExtension());
+                $isImage = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
+                $isVideo = in_array($extension, ['mp4','webm','avi','mov','mkv']);
+
+                $fileName = time() . '_' . uniqid() . '.' . $extension;
+                $path = $file->storeAs('resources', $fileName, 'public');
+            }
+            // =========================
+            // CREATION RESOURCE
+            // =========================
+            $resource = Resource::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'file_name' => $file ? $file->getClientOriginalName() : null,
+                'file_path' => $path,
+                'file_size' => $fileSize,
+                'file_type' => $extension,
+                'file_icon' => $extension ? $this->getFileIcon($extension) : 'fas fa-link',
+                'is_image' => $isImage,
+                'is_video' => $isVideo,
+                'category' => $request->category,
+                'user_id' => auth()->id(),
+                'link_url' => $request->link_url,
+                'download_count' => 0,
+                'important' => $request->has('important') ? true : false,
+                'sub_category' => $request->sub_category,
+            ]);
+            if ($resource->important) {
+                // Envoyer une notification aux utilisateurs (ex: email)
+                $usersToNotify = User::where('notification', true)->pluck('email');
+                foreach ($usersToNotify as $email) {
+                    Mail::to($email)->send(new ImportantResourceMail($resource));
+                }
+
+            }
+            ActivityLog::log(
+                'Création de ressource',
+                'Ressource créée: ' . $resource->title, auth()->id()
+            );
+
+            return $isAjax
+                ? response()->json([
+                    'success' => true,
+                    'message' => 'Ressource ajoutée avec succès',
+                    'resource' => $resource
+                ])
+                : redirect()->route('resources.index')
+                    ->with('success', 'Ressource ajoutée avec succès');
+
+        } catch (\Exception $e) {
+            return $isAjax
+                ? response()->json([
+                    'success' => false,
+                    'message' => 'Erreur serveur : ' . $e->getMessage()
+                ], 500)
+                : redirect()->back()
+                    ->with('error', 'Erreur lors de l\'ajout : ' . $e->getMessage())
+                    ->withInput();
         }
-        ActivityLog::log(
-            'Création de ressource',
-            'Ressource créée: ' . $resource->title, auth()->id()
-        );
-
-        return $isAjax
-            ? response()->json([
-                'success' => true,
-                'message' => 'Ressource ajoutée avec succès',
-                'resource' => $resource
-            ])
-            : redirect()->route('resources.index')
-                ->with('success', 'Ressource ajoutée avec succès');
-
-    } catch (\Exception $e) {
-        return $isAjax
-            ? response()->json([
-                'success' => false,
-                'message' => 'Erreur serveur : ' . $e->getMessage()
-            ], 500)
-            : redirect()->back()
-                ->with('error', 'Erreur lors de l\'ajout : ' . $e->getMessage())
-                ->withInput();
     }
-}
 
     /**
      * Afficher le formulaire d'édition
@@ -237,7 +237,35 @@ class ResourceController extends Controller
     {
         try {
             $resource = Resource::findOrFail($id);
-            return view('resources.edit', compact('resource'));
+            
+            // ==========================================================
+            // MAP DES SOUS-CATÉGORIES (Copiée depuis votre formulaire d'ajout)
+            // Cette variable est envoyée à la vue pour peupler le JS
+            // ==========================================================
+            $subCategoriesMap = [
+                'guides_etudes' => [
+                    ['value' => 'national', 'label' => 'National'],
+                    ['value' => 'departemental', 'label' => 'Départemental']
+                ],
+                'affiches_flyers' => [
+                    ['value' => 'victimes', 'label' => 'Victimes'],
+                    ['value' => 'auteurs', 'label' => 'Auteurs']
+                ],
+                'reseaux' => [
+                    ['value' => 'guides', 'label' => 'Guides'],
+                    ['value' => 'kit_creation', 'label' => 'Kit création réseau']
+                ],
+                'outils' => [
+                    ['value' => 'coordination', 'label' => 'Coordination acteurs'],
+                    ['value' => 'prevention', 'label' => 'Prévention & sensibilisation']
+                ],
+                'conventions' => [
+                    ['value' => 'victimes', 'label' => 'Victimes'],
+                    ['value' => 'auteurs', 'label' => 'Auteurs']
+                ]
+            ];
+
+            return view('resources.edit', compact('resource', 'subCategoriesMap'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Ressource non trouvée');
         }
@@ -256,6 +284,7 @@ class ResourceController extends Controller
             'category' => 'required|string',
             'file' => 'nullable|file|max:51200|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
             'link_url' => 'nullable|url',
+            'sub_category' => 'nullable|string',
             'important' => 'nullable|boolean'
         ]);
         
@@ -270,12 +299,28 @@ class ResourceController extends Controller
             $resource->title = $request->title;
             $resource->description = $request->description;
             $resource->category = $request->category;
+            $resource->sub_category = $request->sub_category;
             $resource->important = $request->has('important') ? true : false;
-            // Gestion du fichier ou lien
+
+            // ==================================================================
+            // CORRECTION MAJEURE : Reset des champs liés au fichier/lien
+            // Permet de passer d'un fichier à un lien proprement
+            // ==================================================================
+            $resource->is_link = false;
+            $resource->link_url = null;
+            $resource->file_path = null;
+            $resource->file_name = null;
+            $resource->file_size = null;
+            $resource->file_type = null;
+            $resource->file_icon = null;
+            $resource->is_image = false;
+            $resource->is_video = false;
+
+            // Gestion du fichier
             if ($request->hasFile('file')) {
-                // Supprimer l'ancien fichier
-                if ($resource->file_path && Storage::disk('public')->exists($resource->file_path)) {
-                    Storage::disk('public')->delete($resource->file_path);
+                // Supprimer l'ancien fichier (logique améliorée)
+                if ($resource->getOriginal('file_path') && Storage::disk('public')->exists($resource->getOriginal('file_path'))) {
+                    Storage::disk('public')->delete($resource->getOriginal('file_path'));
                 }
                 
                 $file = $request->file('file');
@@ -290,24 +335,17 @@ class ResourceController extends Controller
                 $resource->file_icon = $this->getFileIcon($extension);
                 $resource->is_image = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
                 $resource->is_video = in_array($extension, ['mp4','webm','avi','mov','mkv']);
-                $resource->is_link = $request->filled('link_url');
-                $resource->link_url = null;
             }
             
+            // Gestion du lien (Si un lien est fourni, on écrase les données du fichier)
             if ($request->filled('link_url')) {
                 $resource->link_url = $request->link_url;
                 $resource->is_link = true;
-                $resource->is_image = false;
-                $resource->is_video = false;
             }
-            
             $resource->save();
-            
             ActivityLog::log('Modification de ressource', 'Ressource modifiée: ' . $resource->title, auth()->id());
-            
             return redirect()->route('resources.index')
-                ->with('success', 'Ressource modifiée avec succès');
-                
+                ->with('success', 'Ressource modifiée avec succès');   
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Erreur lors de la modification: ' . $e->getMessage());
@@ -327,8 +365,7 @@ class ResourceController extends Controller
                     'success' => true,
                     'message' => 'Ressource déplacée vers la corbeille'
                 ]);
-            }
-            
+            }    
             return redirect()->route('resources.index')
                 ->with('success', 'Ressource déplacée vers la corbeille');
 
@@ -339,12 +376,10 @@ class ResourceController extends Controller
                     'message' => 'Erreur lors de la suppression: ' . $e->getMessage()
                 ], 500);
             }
-
             return redirect()->back()
                 ->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
         }
     }
-
     /**
      * Restaurer une ressource depuis la corbeille
      */
@@ -361,8 +396,7 @@ class ResourceController extends Controller
                     'success' => true,
                     'message' => 'Ressource restaurée avec succès'
                 ]);
-            }
-            
+            }    
             return redirect()->route('resources.trash')->with('success', 'Ressource restaurée avec succès');
             
         } catch (\Exception $e) {
@@ -376,7 +410,6 @@ class ResourceController extends Controller
             return redirect()->back()->with('error', 'Erreur lors de la restauration: ' . $e->getMessage());
         }
     }
-
     /**
      * Supprimer définitivement une ressource
      */
