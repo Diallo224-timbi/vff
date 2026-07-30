@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
+use App\Models\Structures;
 use Illuminate\Http\Request;
 
 class DashboardUserController extends Controller
 {
     public function index()
     {
-        return view('dashboardUser');
+        $structures = Structures::all();
+        $agenda = Event::all();
+        return view('dashboardUser', compact('structures','agenda'));
     }
 }

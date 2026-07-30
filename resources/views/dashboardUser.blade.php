@@ -14,8 +14,7 @@
     <header class="vff-header">
         <div class="vff-hw">
             <div class="vff-brand">
-                <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet 06"
-                     onerror="this.style.display='none'">
+                <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfet 06" onerror="this.style.display='none'">
                 <div class="vff-brand-sep"></div>
                 <div>
                     <div class="vff-brand-name">Plateforme VFF 06 – Alpes-Maritimes</div>
@@ -24,9 +23,9 @@
             </div>
             @auth
             <div class="vff-user">
-                <div class="vff-user-av">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
+                <div class="vff-user-av">{{ strtoupper(substr(auth()->user()->prenom,0,1)) }}</div>
                 <div>
-                    <div class="vff-user-nm">{{ auth()->user()->name }}</div>
+                    <div class="vff-user-nm">{{ auth()->user()->prenom }}</div>
                     <div class="vff-user-rl">{{ ucfirst(auth()->user()->role ?? 'Partenaire') }}</div>
                 </div>
             </div>
@@ -34,168 +33,218 @@
         </div>
     </header>
 
-    {{-- ══════════ HERO + CARTE ══════════ --}}
+    {{-- ══════════ HERO SECTION ══════════ --}}
     <section class="vff-hero">
         <div class="vff-hero-mesh"></div>
-        <div class="vff-orb o1"></div>
-        <div class="vff-orb o2"></div>
-
         <div class="vff-hw vff-hero-inner">
             <div class="vff-hero-content">
-                <div class="vff-urgence">
-                    <i class='bx bx-phone-call'></i>
-                    Urgence <strong>3919</strong>
-                </div>
                 <h1 class="vff-hero-h1">
-                    Bienvenue sur la plateforme collaborative
-                    des acteurs engagés dans la lutte contre
-                    les violences faites aux femmes dans les
+                    <span class="vff-animated-welcome">Bienvenue sur la plateforme collaborative</span><br>
+                    des acteurs engagés dans la lutte contre les violences faites aux femmes dans les
                     <span class="vff-h1-loc">Alpes-Maritimes.</span>
                 </h1>
                 <p class="vff-hero-p">
-                    Accompagnement, ressources et mise en réseau pour les acteurs du territoire.
+                    Accompagnement, ressources et mise en réseau pour l'ensemble des acteurs du territoire.
                 </p>
-                <div class="vff-hero-ctas">
-                    @if(Route::has('resources.index'))
-                    <a href="{{ route('resources.index') }}" class="vff-cta vff-cta-primary">
-                        <i class='bx bx-book-open'></i> Se Former
-                    </a>
-                    @endif
-                    @if(Route::has('annuaire.index'))
-                    <a href="{{ route('annuaire.index') }}" class="vff-cta vff-cta-ghost">
-                        <i class='bx bx-search'></i> Explorer
-                    </a>
-                    @endif
-                </div>
-            </div>
-
-            {{-- CARTE DU DÉPARTEMENT 06 --}}
-            <div class="vff-hero-map">
-                <svg viewBox="0 0 400 460" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M200 40 C270 40 330 80 350 150 C370 220 360 300 330 350 
-                             C300 400 250 430 200 440 C150 430 100 400 70 350 
-                             C40 300 30 220 50 150 C70 80 130 40 200 40Z" 
-                          fill="rgba(255,255,255,0.08)" 
-                          stroke="rgba(255,255,255,0.3)" 
-                          stroke-width="2"/>
-                    <path d="M200 70 C255 70 300 105 315 160 C330 215 320 280 295 320 
-                             C270 360 230 385 200 395 C170 385 130 360 105 320 
-                             C80 280 70 215 85 160 C100 105 145 70 200 70Z" 
-                          fill="rgba(255,255,255,0.05)" 
-                          stroke="rgba(255,255,255,0.15)" 
-                          stroke-width="1.5"/>
-                    <circle cx="200" cy="160" r="6" fill="#fbbf24"/>
-                    <text x="210" y="155" fill="rgba(255,255,255,0.9)" font-size="11" font-weight="700">Nice</text>
-                    <circle cx="260" cy="240" r="4" fill="rgba(255,255,255,0.6)"/>
-                    <text x="268" y="237" fill="rgba(255,255,255,0.6)" font-size="9" font-weight="600">Grasse</text>
-                    <circle cx="160" cy="280" r="4" fill="rgba(255,255,255,0.5)"/>
-                    <text x="145" y="277" fill="rgba(255,255,255,0.5)" font-size="9" font-weight="600">Cannes</text>
-                    <circle cx="320" cy="195" r="3" fill="rgba(255,255,255,0.4)"/>
-                    <text x="310" y="190" fill="rgba(255,255,255,0.4)" font-size="8" font-weight="600">Antibes</text>
-                    <circle cx="140" cy="135" r="3" fill="rgba(255,255,255,0.4)"/>
-                    <text x="128" y="130" fill="rgba(255,255,255,0.4)" font-size="8" font-weight="600">Menton</text>
-                    <line x1="200" y1="160" x2="260" y2="240" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
-                    <line x1="200" y1="160" x2="160" y2="280" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
-                    <line x1="200" y1="160" x2="320" y2="195" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
-                    <line x1="200" y1="160" x2="140" y2="135" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4 4"/>
-                    <text x="200" y="210" fill="rgba(255,255,255,0.08)" font-size="45" font-weight="900" text-anchor="middle">06</text>
-                </svg>
             </div>
         </div>
     </section>
 
-    {{-- ══════════ CARTES NAVIGATION ══════════ --}}
-    <section class="vff-cards-wrap">
-        <div class="vff-hw">
-            <div class="vff-cards">
-                @php
-                    $navCards = [
-                        'annuaire.index'  => ['title' => 'Annuaire des Acteurs', 'icon' => 'bx-search-alt-2', 'color' => '#3b5bdb', 'bg' => '#e8edff'],
-                        'structures.map'  => ['title' => 'Cartographie Interactive', 'icon' => 'bx-map-pin', 'color' => '#7c3aed', 'bg' => '#ede9fe'],
-                        'events.index'    => ['title' => 'Agenda des Événements', 'icon' => 'bx-calendar-check', 'color' => '#0891b2', 'bg' => '#e0f5fa'],
-                        'forum.index'     => ['title' => 'Espace Forum', 'icon' => 'bx-message-dots', 'color' => '#059669', 'bg' => '#d1fae5'],
-                        'resources.index' => ['title' => 'Ressources & Outils', 'icon' => 'bx-download', 'color' => '#d97706', 'bg' => '#fef3c7'],
-                    ];
-                @endphp
-                @foreach($navCards as $routeName => $c)
-                    @if(Route::has($routeName))
-                    <a href="{{ route($routeName) }}" class="vff-card">
-                        <div class="vff-card-icon" style="background:{{ $c['bg'] }};color:{{ $c['color'] }};">
-                            <i class='bx {{ $c['icon'] }}'></i>
-                        </div>
-                        <div class="vff-card-content">
-                            <h3 class="vff-card-title">{{ $c['title'] }}</h3>
-                            <p class="vff-card-desc">{{ $c['desc'] ?? 'Accéder à la section' }}</p>
-                        </div>
-                        <span class="vff-card-arrow" style="color:{{ $c['color'] }};">→</span>
-                    </a>
-                    @endif
-                @endforeach
-                @auth
-                    @if(auth()->user()->role === 'admin' && Route::has('dashboard'))
-                    <a href="{{ route('dashboard') }}" class="vff-card">
-                        <div class="vff-card-icon" style="background:#f0f4f8;color:#475569;">
-                            <i class='bx bx-bar-chart-alt-2'></i>
-                        </div>
-                        <div class="vff-card-content">
-                            <h3 class="vff-card-title">Tableau de bord</h3>
-                            <p class="vff-card-desc">Statistiques et administration</p>
-                        </div>
-                        <span class="vff-card-arrow" style="color:#475569;">→</span>
-                    </a>
-                    @endif
-                @endauth
-            </div>
-        </div>
-    </section>
+    {{-- ══════════ CONTENU PRINCIPAL ══════════ --}}
+    <main class="vff-main-content">
+        
+        {{-- ══════════ CARTES NAVIGATION ══════════ --}}
+        @php
+            $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+        @endphp
 
-    {{-- ══════════ SINGULARITÉS ══════════ --}}
-    <section class="vff-sing-section">
-        <div class="vff-hw">
-            <div class="vff-sing-grid">
-                <div class="vff-sing">
-                    <div class="vff-sing-ic" style="background:#e8edff;color:#3b5bdb;"><i class='bx bx-map'></i></div>
-                    <div>
-                        <h4>Approche Territoriale</h4>
-                        <p>Adaptée aux spécificités des Alpes-Maritimes</p>
-                    </div>
+        <section class="vff-cards-wrap">
+            <div class="vff-hw">
+                <div class="vff-cards {{ $isAdmin ? 'is-admin' : 'is-user' }}">
+                    @php
+                        $navCards = [
+                            'annuaire.index'  => ['title' => 'Annuaire des Acteurs', 'desc' => 'Consulter les partenaires', 'icon' => 'bx-search-alt-2', 'color' => '#3b5bdb', 'bg' => '#e8edff'],
+                            'structures.map'  => ['title' => 'Cartographie Interactive', 'desc' => 'Géolocaliser les structures', 'icon' => 'bx-map-pin', 'color' => '#7c3aed', 'bg' => '#ede9fe'],
+                            'events.index'    => ['title' => 'Agenda des Événements', 'desc' => 'Découvrir les dates et rencontres', 'icon' => 'bx-calendar-check', 'color' => '#0891b2', 'bg' => '#e0f5fa'],
+                            'forum.index'     => ['title' => 'Espace Forum', 'desc' => 'Échanger avec les membres', 'icon' => 'bx-message-dots', 'color' => '#059669', 'bg' => '#d1fae5'],
+                            'resources.index' => ['title' => 'Ressources & Outils', 'desc' => 'Guides, outils et documentation', 'icon' => 'bx-download', 'color' => '#d97706', 'bg' => '#fef3c7'],
+                        ];
+                    @endphp
+
+                    {{-- Cartes publiques --}}
+                    @foreach($navCards as $routeName => $c)
+                        @if(Route::has($routeName))
+                        <a href="{{ route($routeName) }}" class="vff-card">
+                            <div class="vff-card-icon" style="background:{{ $c['bg'] }};color:{{ $c['color'] }};">
+                                <i class='bx {{ $c['icon'] }}'></i>
+                            </div>
+                            <div class="vff-card-content">
+                                <h3 class="vff-card-title">{{ $c['title'] }}</h3>
+                                <p class="vff-card-desc">{{ $c['desc'] }}</p>
+                                <span class="vff-card-more">En savoir plus →</span>
+                            </div>
+                        </a>
+                        @endif
+                    @endforeach
+
+                    {{-- Cartes réservées à l'ADMIN --}}
+                    @auth
+                        @if($isAdmin)
+                           
+                            <a href="" class="vff-card">
+                                <div class="vff-card-icon" style="background:#fce7f3;color:#db2777;">
+                                    <i class='bx bx-sitemap'></i>
+                                </div>
+                                <div class="vff-card-content">
+                                    <h3 class="vff-card-title">Schéma</h3>
+                                    <p class="vff-card-desc">Pilotage et orientations</p>
+                                    <span class="vff-card-more" style="color:#db2777;">En savoir plus →</span>
+                                </div>
+                            </a>
+                           
+
+                            @if(Route::has('dashboard'))
+                            <a href="{{ route('dashboard') }}" class="vff-card">
+                                <div class="vff-card-icon" style="background:#f0f4f8;color:#475569;">
+                                    <i class='bx bx-bar-chart-alt-2'></i>
+                                </div>
+                                <div class="vff-card-content">
+                                    <h3 class="vff-card-title">Tableau de bord</h3>
+                                    <p class="vff-card-desc">Statistiques et administration</p>
+                                    <span class="vff-card-more" style="color:#475569;">En savoir plus →</span>
+                                </div>
+                            </a>
+                            @endif
+
+                            {{-- BOUTON ADMIN AVEC NOUVELLE COULEUR INDIGO #4f46e5 --}}
+                            @if (Route::has('admin.users'))
+                            <a href="{{ route('admin.users') }}" class="vff-card">
+                                <div class="vff-card-icon" style="background:#e0e7ff;color:#4f46e5;">
+                                    <i class='bx bx-group'></i>
+                                </div>
+                                <div class="vff-card-content">
+                                    <h3 class="vff-card-title">Espace administration</h3>
+                                    <p class="vff-card-desc">Gestion des utilisateurs</p>
+                                    <span class="vff-card-more" style="color:#4f46e5;">En savoir plus →</span>
+                                </div>
+                            </a>    
+                            @endif
+                        @endif
+                    @endauth
                 </div>
-                <div class="vff-sing">
-                    <div class="vff-sing-ic" style="background:#ede9fe;color:#7c3aed;"><i class='bx bx-link'></i></div>
-                    <div>
-                        <h4>Parcours Coordonnés</h4>
-                        <p>Lien entre tous les acteurs pour une meilleure prise en charge</p>
+            </div>
+        </section>
+
+        {{-- ══════════ BANDEAU DÉFILANT ÉVÉNEMENTS ══════════ --}}
+        <section class="vff-ticker-wrap">
+            <div class="vff-hw">
+                <div class="vff-ticker-container {{ !$isAdmin ? 'is-user-large' : '' }}">
+                    <div class="vff-ticker-badge">
+                        <i class='bx bx-bell bx-tada'></i>
+                        <span>{{ !$isAdmin ? 'À LA UNE / AGENDA' : 'INFO / AGENDA' }}</span>
                     </div>
-                </div>
-                <div class="vff-sing">
-                    <div class="vff-sing-ic" style="background:#e0f5fa;color:#0891b2;"><i class='bx bx-award'></i></div>
-                    <div>
-                        <h4>Formations Partagées</h4>
-                        <p>Harmoniser les pratiques et monter en compétence</p>
-                    </div>
-                </div>
-                <div class="vff-sing">
-                    <div class="vff-sing-ic" style="background:#fef3c7;color:#d97706;"><i class='bx bx-bar-chart-alt'></i></div>
-                    <div>
-                        <h4>Outil d'Observation</h4>
-                        <p>Analyser les données pour mieux orienter les politiques</p>
+
+                    <div class="vff-ticker-content">
+                        <div class="vff-ticker-track">
+                            @php
+                                $futureEvents = $agenda->filter(function($event) {
+                                    return \Carbon\Carbon::parse($event->date_debut)->isFuture();
+                                });
+                            @endphp
+
+                            @forelse($futureEvents as $agen)
+                                @php
+                                    $date = \Carbon\Carbon::parse($agen->date_debut);
+                                    $isSpecial = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
+                                    $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
+                                @endphp
+
+                                <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}">
+                                    @if($isSpecial)
+                                        <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
+                                    @else
+                                        <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
+                                    @endif
+
+                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
+                                    
+                                    <span class="vff-ticker-date">
+                                        <i class='bx bx-time-five'></i> 
+                                        {{ $date->translatedFormat('d F Y à H\hi') }}
+                                    </span>
+
+                                    @if(!empty($agen->lieu))
+                                        <span class="vff-ticker-location">
+                                            <i class='bx bx-map'></i> {{ $agen->lieu }}
+                                        </span>
+                                    @endif
+                                        <a href="{{ route('events.index') }}" class="vff-ticker-action">
+                                            En savoir plus <i class='bx bx-right-arrow-alt'></i>
+                                        </a>
+                                  
+                                </div>
+                                <span class="vff-ticker-sep">•</span>
+                            @empty
+                                <div class="vff-ticker-item">
+                                    <span class="vff-ticker-tag"><i class="bx bx-info-circle"></i> Info</span>
+                                    <span>Aucun événement à venir pour le moment.</span>
+                                </div>
+                            @endforelse
+
+                            {{-- Duplication pour boucle infinie CSS --}}
+                            @foreach($futureEvents as $agen)
+                                @php
+                                    $date = \Carbon\Carbon::parse($agen->date_debut);
+                                    $isSpecial = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
+                                    $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
+                                @endphp
+
+                                <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}" aria-hidden="true">
+                                    @if($isSpecial)
+                                        <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
+                                    @else
+                                        <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
+                                    @endif
+
+                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
+                                    
+                                    <span class="vff-ticker-date">
+                                        <i class='bx bx-time-five'></i> 
+                                        {{ $date->translatedFormat('d F Y à H\hi') }}
+                                    </span>
+
+                                    @if(!empty($agen->lieu))
+                                        <span class="vff-ticker-location">
+                                            <i class='bx bx-map'></i> {{ $agen->lieu }}
+                                        </span>
+                                    @endif
+
+                                    @if(!$isAdmin && Route::has('events.index'))
+                                        <a href="{{ route('events.index') }}" class="vff-ticker-action">
+                                            En savoir plus <i class='bx bx-right-arrow-alt'></i>
+                                        </a>
+                                    @endif
+                                </div>
+                                <span class="vff-ticker-sep" aria-hidden="true">•</span>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+    </main>
 
     {{-- ══════════ FOOTER ══════════ --}}
     <footer class="vff-footer">
         <div class="vff-hw vff-footer-inner">
             <div class="vff-footer-logos">
-                <img src="{{ asset('img/logo_prefet.png') }}" alt="Préfecture" onerror="this.style.display='none'" style="height:32px;opacity:.7;filter:brightness(0) invert(1);">
-                <span class="vff-footer-org">Préfecture 06</span>
+                <span class="vff-footer-org">Préfecture Alpes Maritimes</span>
                 <span class="vff-footer-org">DDETS 06</span>
             </div>
             <div class="vff-footer-links">
                 @if(Route::has('charte'))
-                    <a href="{{ route('charte') }}">Mentions légales</a>
+                    <a href="{{ route('charte') }}">Charte de la plateforme</a>
                 @endif
                 <a href="https://www.arretonslesviolences.gouv.fr" target="_blank" rel="noopener">arretonslesviolences.gouv.fr</a>
                 <span class="vff-footer-copy">© {{ date('Y') }}</span>
@@ -207,7 +256,7 @@
 
 <style>
 /* ════════════════════════════════════════════════
-   VARIABLES
+   VARIABLES & GLOBAL LAYOUT
 ════════════════════════════════════════════════ */
 :root {
     --p:   #1a4a52;
@@ -218,34 +267,34 @@
     --txt: #0d1f22;
     --mu:  #5e7e83;
     --bdr: #dde6e8;
-    --r:   14px;
-    --rr:  20px;
+    --r:   16px;
     --ease: cubic-bezier(.4,0,.2,1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ════════════════════════════════════════════════
-   ROOT - PLEIN ÉCRAN
-════════════════════════════════════════════════ */
 .vff-root {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    height: 100dvh;
+    min-height: 100vh;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--txt);
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
-    min-height: 700px;
 }
 
 .vff-hw {
-    max-width: 1280px;
+    max-width: 1440px;
     margin: 0 auto;
     width: 100%;
     padding: 0 2rem;
+}
+
+.vff-main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
 }
 
 /* ════════════════════════════════════════════════
@@ -254,8 +303,7 @@
 .vff-header {
     background: var(--w);
     border-bottom: 3px solid var(--pl);
-    padding: 0.6rem 0;
-    flex-shrink: 0;
+    padding: 0.8rem 0;
     z-index: 50;
     box-shadow: 0 2px 12px rgba(0,0,0,.04);
 }
@@ -266,56 +314,20 @@
     justify-content: space-between;
 }
 
-.vff-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.vff-brand img { 
-    height: 44px; 
-    width: auto;
-    transition: transform 0.2s ease;
-}
-
-.vff-brand img:hover { transform: scale(1.05); }
-
-.vff-brand-sep {
-    width: 2px;
-    height: 34px;
-    background: var(--bdr);
-    flex-shrink: 0;
-}
-
-.vff-brand-name {
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: var(--pl);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-}
-
-.vff-brand-sub {
-    font-size: 0.6rem;
-    color: var(--mu);
-    font-style: italic;
-    margin-top: 0.05rem;
-}
+.vff-brand { display: flex; align-items: center; gap: 0.8rem; }
+.vff-brand img { height: 44px; width: auto; }
+.vff-brand-sep { width: 2px; height: 34px; background: var(--bdr); }
+.vff-brand-name { font-size: 0.85rem; font-weight: 800; color: var(--pl); text-transform: uppercase; }
+.vff-brand-sub { font-size: 0.65rem; color: var(--mu); font-style: italic; }
 
 .vff-user {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     background: #f0f6f7;
     border: 1px solid var(--bdr);
     border-radius: 50px;
-    padding: 0.2rem 0.8rem 0.2rem 0.2rem;
-    transition: all 0.2s ease;
-}
-
-.vff-user:hover {
-    background: #e8f0f1;
-    border-color: var(--pl);
+    padding: 0.25rem 0.9rem 0.25rem 0.25rem;
 }
 
 .vff-user-av {
@@ -328,108 +340,55 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(37,81,86,.25);
 }
 
-.vff-user-nm { font-size: 0.75rem; font-weight: 700; color: var(--txt); }
-.vff-user-rl { font-size: 0.55rem; color: var(--mu); }
+.vff-user-nm { font-size: 0.75rem; font-weight: 700; }
+.vff-user-rl { font-size: 0.6rem; color: var(--mu); }
 
 /* ════════════════════════════════════════════════
-   HERO + CARTE
+   HERO
 ════════════════════════════════════════════════ */
 .vff-hero {
     position: relative;
     overflow: hidden;
-    padding: 1.5rem 0 1.2rem;
-    flex-shrink: 0;
+    padding: 3rem 0;
     background: linear-gradient(135deg, #0d2b30 0%, #1a4a52 50%, #255156 100%);
-    min-height: 280px;
 }
 
 .vff-hero-mesh {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.03) 0%, transparent 60%);
-    pointer-events: none;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.04) 0%, transparent 60%);
 }
 
-.vff-orb {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    filter: blur(60px);
-}
-
-.o1 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(45,122,130,.3) 0%, transparent 70%);
-    top: -150px; right: -100px;
-    animation: float1 12s ease-in-out infinite alternate;
-}
-
-.o2 {
-    width: 250px; height: 250px;
-    background: radial-gradient(circle, rgba(201,162,39,.12) 0%, transparent 70%);
-    bottom: -80px; left: 5%;
-    animation: float2 15s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes float1 {
-    from { transform: translate(0,0) scale(1); }
-    to   { transform: translate(30px,-20px) scale(1.1); }
-}
-
-@keyframes float2 {
-    from { transform: translate(0,0) scale(1); }
-    to   { transform: translate(-20px,30px) scale(1.15); }
-}
-
-.vff-hero-inner {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 2.5rem;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-}
-
-.vff-hero-content {
-    animation: fadeUp 0.7s var(--ease);
-}
-
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.vff-urgence {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #dc2626;
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.9rem;
-    border-radius: 6px;
-    margin-bottom: 0.8rem;
-    box-shadow: 0 4px 14px rgba(220,38,38,.3);
-    animation: pulseUrgence 2s ease-in-out infinite;
-}
-
-@keyframes pulseUrgence {
-    0%, 100% { box-shadow: 0 4px 14px rgba(220,38,38,.3); }
-    50% { box-shadow: 0 4px 24px rgba(220,38,38,.5); }
-}
+.vff-hero-inner { position: relative; z-index: 2; }
 
 .vff-hero-h1 {
-    font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
     font-weight: 900;
-    line-height: 1.2;
+    line-height: 1.35;
     color: rgba(255,255,255,.95);
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
-    max-width: 600px;
+    margin-bottom: 0.8rem;
+}
+
+.vff-animated-welcome {
+    background: linear-gradient(90deg, #ffffff, #6ee7b7, #93c5fd, #ffffff);
+    background-size: 200% auto;
+    color: #fff;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textGradient 6s linear infinite, fadeSlideDown 0.8s ease-out;
+    display: inline-block;
+}
+
+@keyframes textGradient {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .vff-h1-loc {
@@ -437,227 +396,302 @@
     background: linear-gradient(90deg, #fbbf24, #f59e0b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
-.vff-hero-p {
-    font-size: clamp(0.75rem, 0.9vw, 0.9rem);
-    color: rgba(255,255,255,.55);
-    line-height: 1.5;
-    margin-bottom: 0.9rem;
-    max-width: 480px;
-}
-
-.vff-hero-ctas { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-
-.vff-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1.2rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.25s var(--ease);
-    cursor: pointer;
-}
-
-.vff-cta-primary {
-    background: var(--w);
-    color: var(--pl);
-    box-shadow: 0 4px 16px rgba(0,0,0,.15);
-}
-
-.vff-cta-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.2);
-}
-
-.vff-cta-ghost {
-    background: rgba(255,255,255,.08);
-    color: rgba(255,255,255,.9);
-    border: 1.5px solid rgba(255,255,255,.15);
-    backdrop-filter: blur(4px);
-}
-
-.vff-cta-ghost:hover {
-    background: rgba(255,255,255,.16);
-    transform: translateY(-2px);
-}
-
-/* ═══════ CARTE DÉPARTEMENT ═══════ */
-.vff-hero-map {
-    flex-shrink: 0;
-    width: 220px;
-    opacity: 0.85;
-    transition: opacity 0.3s ease;
-}
-
-.vff-hero-map:hover { opacity: 1; }
-
-.vff-hero-map svg {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: drop-shadow(0 4px 20px rgba(0,0,0,.2));
-}
+.vff-hero-p { font-size: 0.95rem; color: rgba(255,255,255,.75); }
 
 /* ════════════════════════════════════════════════
-   CARTES NAVIGATION
+   CARTES NAVIGATION (CORRECTIONS NATIVE OVERFLOW)
 ════════════════════════════════════════════════ */
 .vff-cards-wrap {
-    background: var(--w);
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--bdr);
-    flex-shrink: 0;
-    box-shadow: 0 2px 12px rgba(0,0,0,.02);
+    padding: 3rem 0 1.5rem 0;
 }
 
 .vff-cards {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.8rem;
+    gap: 1.5rem;
+}
+
+/* Grille Admin */
+.vff-cards.is-admin { 
+    grid-template-columns: repeat(4, 1fr); 
 }
 
 .vff-card {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 0.8rem;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
     border: 1.5px solid var(--bdr);
     border-radius: var(--r);
     background: var(--w);
     text-decoration: none;
     color: var(--txt);
     transition: all 0.25s var(--ease);
-    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,.03);
     overflow: hidden;
-}
-
-.vff-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.01));
-    pointer-events: none;
 }
 
 .vff-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     border-color: var(--pl);
-    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    box-shadow: 0 12px 25px rgba(0,0,0,.08);
 }
 
 .vff-card-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     flex-shrink: 0;
-    transition: transform 0.25s var(--ease);
 }
 
-.vff-card:hover .vff-card-icon { transform: scale(1.1) rotate(3deg); }
-
-.vff-card-content {
-    flex: 1;
-    min-width: 0;
+.vff-card-content { 
+    flex: 1; 
+    min-width: 0; 
+    display: flex;
+    flex-direction: column;
 }
 
 .vff-card-title {
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 800;
     color: var(--txt);
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.3;
 }
 
 .vff-card-desc {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     color: var(--mu);
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.vff-card-arrow {
-    font-size: 1rem;
-    opacity: 0.4;
-    transition: all 0.25s var(--ease);
-    flex-shrink: 0;
+.vff-card-more {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--pl);
+    margin-top: auto;
+    transition: transform 0.25s var(--ease);
+    display: inline-block;
 }
 
-.vff-card:hover .vff-card-arrow {
-    opacity: 1;
+.vff-card:hover .vff-card-more {
     transform: translateX(4px);
 }
 
+/* NON-ADMIN CARTES */
+.vff-cards.is-user { 
+    grid-template-columns: repeat(5, 1fr); 
+}
+
+.vff-cards.is-user .vff-card {
+    padding: 1.5rem 1.25rem;
+}
+
+.vff-cards.is-user .vff-card-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 1.8rem;
+}
+
+.vff-cards.is-user .vff-card-title {
+    font-size: 1.05rem;
+}
+
+.vff-cards.is-user .vff-card-desc {
+    font-size: 0.82rem;
+}
+
 /* ════════════════════════════════════════════════
-   SINGULARITÉS
+   BANDEAU ÉVÉNEMENTS DÉFILANT
 ════════════════════════════════════════════════ */
-.vff-sing-section {
-    padding: 0.8rem 0;
-    background: var(--bg);
-    flex-shrink: 0;
-    border-top: 1px solid var(--bdr);
+.vff-ticker-wrap {
+    padding: 1.5rem 0 3rem 0;
 }
 
-.vff-sing-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.8rem;
+.vff-ticker-container {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 2px solid #e11d48;
+    border-radius: var(--r);
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.1);
 }
 
-.vff-sing {
+.vff-ticker-badge {
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #ffffff;
+    padding: 1.1rem 1.6rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.5rem 0.8rem;
-    background: var(--w);
-    border: 1px solid var(--bdr);
-    border-radius: var(--r);
-    transition: all 0.25s var(--ease);
-}
-
-.vff-sing:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,.06);
-    border-color: var(--pl);
-}
-
-.vff-sing-ic {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
     flex-shrink: 0;
-    transition: transform 0.25s var(--ease);
+    z-index: 2;
+    box-shadow: 4px 0 15px rgba(190, 18, 60, 0.25);
 }
 
-.vff-sing:hover .vff-sing-ic { transform: scale(1.08); }
+.vff-ticker-badge i { font-size: 1.3rem; }
 
-.vff-sing h4 {
-    font-size: 0.7rem;
+.vff-ticker-content {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    padding: 0.85rem 0;
+}
+
+.vff-ticker-track {
+    display: inline-flex;
+    align-items: center;
+    animation: tickerMove 30s linear infinite;
+}
+
+.vff-ticker-container:hover .vff-ticker-track {
+    animation-play-state: paused;
+}
+
+.vff-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+}
+
+.vff-ticker-tag {
+    background: #ffe4e6;
+    color: #be123c;
+    font-size: 0.78rem;
     font-weight: 800;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
-    line-height: 1.1;
-    color: var(--txt);
 }
 
-.vff-sing p {
-    font-size: 0.6rem;
-    color: var(--mu);
-    line-height: 1.3;
+.vff-ticker-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.vff-ticker-date, 
+.vff-ticker-location {
+    font-size: 0.88rem;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 500;
+}
+
+.vff-ticker-date i, 
+.vff-ticker-location i {
+    color: #e11d48;
+    font-size: 1.1rem;
+}
+
+.vff-ticker-sep {
+    color: #fda4af;
+    margin: 0 1.4rem;
+    font-size: 1.4rem;
+}
+
+/* Version grand format non-admin */
+.vff-ticker-container.is-user-large {
+    border: 2px solid #be123c;
+    box-shadow: 0 10px 30px rgba(190, 18, 60, 0.18);
+}
+
+.vff-ticker-container.is-user-large .vff-ticker-badge {
+    padding: 1.4rem 2.2rem;
+    font-size: 1rem;
+}
+
+.vff-ticker-container.is-user-large .vff-ticker-badge i {
+    font-size: 1.6rem;
+}
+
+.vff-ticker-container.is-user-large .vff-ticker-content {
+    padding: 1.2rem 0;
+}
+
+.vff-ticker-container.is-user-large .vff-ticker-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.vff-ticker-container.is-user-large .vff-ticker-tag {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.9rem;
+}
+
+.vff-ticker-container.is-user-large .vff-ticker-date,
+.vff-ticker-container.is-user-large .vff-ticker-location {
+    font-size: 0.95rem;
+}
+
+.vff-ticker-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #e11d48;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 0.45rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    margin-left: 0.6rem;
+    box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
+    transition: all 0.2s ease;
+}
+
+.vff-ticker-action:hover {
+    background: #be123c;
+    transform: translateX(4px);
+    box-shadow: 0 6px 14px rgba(190, 18, 60, 0.35);
+}
+
+.vff-ticker-item.is-special-date {
+    background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+    border: 2px solid #e11d48;
+    padding-right: 1.4rem;
+}
+
+.vff-ticker-item.is-special-date .tag-special {
+    background: linear-gradient(135deg, #e11d48, #9f1239);
+    color: #ffffff;
+    font-weight: 900;
+    animation: pulse 2s infinite;
+}
+
+.vff-ticker-item.is-special-date .vff-ticker-title {
+    color: #881337;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+@keyframes tickerMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 /* ════════════════════════════════════════════════
@@ -665,124 +699,65 @@
 ════════════════════════════════════════════════ */
 .vff-footer {
     background: var(--pd);
-    padding: 0.5rem 0;
-    flex-shrink: 0;
+    padding: 1.4rem 0;
     margin-top: auto;
-    border-top: 1px solid rgba(255,255,255,.05);
+    border-top: 1px solid rgba(255,255,255,.1);
 }
 
 .vff-footer-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
 }
 
-.vff-footer-logos {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
+.vff-footer-logos { display: flex; align-items: center; gap: 0.8rem; }
 
 .vff-footer-org {
-    font-size: 0.6rem;
-    color: rgba(255,255,255,.35);
+    font-size: 0.7rem;
+    color: rgba(255,255,255,.5);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding-left: 0.6rem;
-    border-left: 1px solid rgba(255,255,255,.08);
+    padding-left: 0.8rem;
+    border-left: 1px solid rgba(255,255,255,.15);
 }
 
-.vff-footer-links {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.vff-footer-links a {
-    font-size: 0.65rem;
-    color: rgba(255,255,255,.45);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.vff-footer-links a:hover { color: rgba(255,255,255,.85); }
-
-.vff-footer-copy {
-    font-size: 0.6rem;
-    color: rgba(255,255,255,.25);
-}
+.vff-footer-links { display: flex; align-items: center; gap: 1.2rem; }
+.vff-footer-links a { font-size: 0.75rem; color: rgba(255,255,255,.6); text-decoration: none; }
+.vff-footer-links a:hover { color: #fff; }
+.vff-footer-copy { font-size: 0.7rem; color: rgba(255,255,255,.4); }
 
 /* ════════════════════════════════════════════════
-   RESPONSIVE - OPTIMISÉ POUR ORDINATEUR
+   RESPONSIVE
 ════════════════════════════════════════════════ */
-@media (max-width: 1024px) {
-    .vff-hero-inner { grid-template-columns: 1fr; gap: 0.8rem; }
-    .vff-hero-map { width: 160px; margin: 0 auto; opacity: 0.5; }
-    .vff-cards { grid-template-columns: repeat(3, 1fr); }
-    .vff-sing-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 1400px) {
+    .vff-cards.is-user { grid-template-columns: repeat(3, 1fr); }
+    .vff-cards.is-admin { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 768px) {
-    .vff-hw { padding: 0 1rem; }
-    .vff-cards { grid-template-columns: repeat(2, 1fr); }
-    .vff-sing-grid { grid-template-columns: 1fr; }
-    .vff-hero-map { width: 120px; }
-    .vff-hero-h1 { font-size: 1rem; max-width: 100%; }
-    .vff-brand-name { font-size: 0.65rem; }
-    .vff-brand img { height: 32px; }
-    .vff-user-nm { display: none; }
-    .vff-card-desc { display: none; }
-    .vff-footer-inner { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
-    .vff-footer-links { flex-wrap: wrap; }
+@media (max-width: 900px) {
+    .vff-cards.is-user,
+    .vff-cards.is-admin { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 480px) {
-    .vff-cards { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
-    .vff-card { padding: 0.4rem 0.5rem; }
-    .vff-card-title { font-size: 0.6rem; }
-    .vff-card-icon { width: 30px; height: 30px; font-size: 0.9rem; }
-    .vff-hero-h1 { font-size: 0.85rem; }
-    .vff-hero-map { width: 90px; }
-}
-
-@media (min-width: 1400px) {
-    .vff-hw { max-width: 1440px; padding: 0 3rem; }
-    .vff-hero-h1 { font-size: 2rem; }
-    .vff-hero-map { width: 260px; }
-    .vff-cards { gap: 1rem; }
-    .vff-card { padding: 0.8rem 1rem; }
+@media (max-width: 640px) {
+    .vff-cards.is-user,
+    .vff-cards.is-admin { grid-template-columns: 1fr; }
+    .vff-footer-inner { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+    .vff-ticker-badge span { display: none; }
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Animation d'entrée des cartes
-    document.querySelectorAll('.vff-card, .vff-sing').forEach((el, i) => {
+    document.querySelectorAll('.vff-card').forEach((el, i) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(10px)';
+        el.style.transform = 'translateY(15px)';
         setTimeout(() => {
-            el.style.transition = 'all 0.35s ease ' + (i * 50) + 'ms';
+            el.style.transition = 'all 0.4s ease ' + (i * 60) + 'ms';
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
-        }, 100);
+        }, 80);
     });
-
-    // Effet de survol sur la carte
-    document.querySelectorAll('.vff-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.borderColor = '#255156';
-        });
-        card.addEventListener('mouseleave', function() {
-            this.style.borderColor = '#dde6e8';
-        });
-    });
-
-    // Gestion des erreurs
-    window.addEventListener('error', e => {
-        if (['IMG','LINK'].includes(e.target?.tagName)) e.preventDefault();
-    }, true);
 });
 </script>
 @endsection

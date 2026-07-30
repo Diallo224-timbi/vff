@@ -154,6 +154,7 @@ class AuthController extends Controller
                         $query->where('id_organisme', $structure->id_organisme);
                     })
                     ->get();
+            
             } else {
                 // Si aucune structure n'est sélectionnée
                 session()->flash(

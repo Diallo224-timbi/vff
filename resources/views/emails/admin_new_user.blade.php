@@ -11,5 +11,8 @@
     <li><strong>Code postal :</strong> {{ $user->code_postal }}</li>
     <li><strong>Structure :</strong> {{ $user->structure->organisme->nom_organisme ?? 'Aucune' }} {{ $user->structure->ville ?? ' - ' }} {{ $user->structure->code_postal ?? ' - ' }} {{ $user->structure->adresse ?? ' - ' }}</li>
 </ul>
-
+<!-- lien vers le site -->
+<p>
+    <a href="{{ url('/login') }}">Se connecter</a>
+</p>
 <p>Cordialement,<br>Votre application</p>

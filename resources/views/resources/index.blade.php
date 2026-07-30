@@ -48,7 +48,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-
                     <!-- ============================================ -->
                     <!-- SECTION DOCUMENTS -->
                     <!-- ============================================ -->
@@ -61,7 +60,6 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="clearCategoryFilter()"></button>
                             </div>
                         </div>
-
                         @php
                             $allCount = $resources->count();
                             $guidesCount = $resources->where('category', 'guides_etudes')->count();
@@ -71,7 +69,6 @@
                             $outilsCount = $resources->where('category', 'outils')->count();
                             $conventionsCount = $resources->where('category', 'conventions')->count();
                         @endphp
-
                         <!-- FILTRES PAR CATÉGORIE PRINCIPALE -->
                         <div class="mb-3">
                             <label class="small fw-semibold text-secondary mb-1">Filtrer par catégorie</label>
@@ -141,7 +138,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- SOUS-CATÉGORIES -->
                         <div id="subCategoriesContainer" class="mb-2 d-none">
                             <label class="small fw-semibold text-secondary mb-1">Sous-catégorie</label>
@@ -149,14 +145,13 @@
                                 <!-- Rempli dynamiquement par JS -->
                             </div>
                         </div>
-
                         <!-- ============================================ -->
                         <!-- ZONE CORRIGÉE : BARRE DE RECHERCHE + BOUTONS -->
                         <!-- ============================================ -->
                         <div class="mb-3">
                             <div class="row g-2 align-items-end">
                                 <!-- Recherche -->
-                                <div class="col-md-4 col-lg-4">
+                                <div class="col-md-4 col-lg-3">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Rechercher</label>
                                     <div class="input-group" style="border-radius: 10px; overflow: hidden;">
                                         <span class="input-group-text bg-white border-end-0">
@@ -166,7 +161,6 @@
                                                placeholder="Rechercher...">
                                     </div>
                                 </div>
-
                                 <!-- Filtre Type -->
                                 <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Type</label>
@@ -177,8 +171,16 @@
                                         <option value="link">Liens</option>
                                     </select>
                                 </div>
-                                <!-- Vue Cartes / Liste (CORRIGÉ POUR LE ZOOM) -->
-                                <div class="col-md-3 col-lg-3">
+                                <!-- TRI PAR DATE (NOUVEAU) -->
+                                <div class="col-md-3 col-lg-2">
+                                    <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Trier par</label>
+                                    <select id="sortDate" class="form-select" style="font-size: 0.85rem; height: 38px;" onchange="sortResourcesByDate()">
+                                        <option value="recent">Plus récent</option>
+                                        <option value="oldest">Plus ancien</option>
+                                    </select>
+                                </div>
+                                <!-- Vue Cartes / Liste -->
+                                <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Affichage</label>
                                     <div class="btn-group w-100" role="group" style="height: 38px;">
                                         <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.85rem; white-space: nowrap;">
@@ -437,7 +439,7 @@
                                 <i class="fas fa-search fa-3x text-muted mb-3 opacity-50"></i>
                                 <h5 class="fw-semibold text-secondary">Aucun document trouvé</h5>
                                 <p class="text-muted small">Aucun document ne correspond à vos critères.</p>
-                                <button onclick="clearCategoryFilter(); document.getElementById('searchInput').value=''; document.getElementById('filterType').value=''; filterResourcesByCategory();" class="btn btn-sm btn-outline-secondary mt-2">
+                                <button onclick="clearCategoryFilter(); document.getElementById('searchInput').value=''; document.getElementById('filterType').value=''; document.getElementById('sortDate').value='recent'; filterResourcesByCategory(); sortResourcesByDate();" class="btn btn-sm btn-outline-secondary mt-2">
                                     <i class="fas fa-sync-alt me-1"></i> Réinitialiser
                                 </button>
                             </div>
@@ -876,24 +878,48 @@
     const subCategoriesMap = {
         'guides_etudes': [
             { value: 'national', label: 'National' },
-            { value: 'departemental', label: 'Départemental' }
+            { value: 'departemental', label: 'Départemental' },
+            { value: 'autres', label: 'Autres'}
         ],
         'affiches_flyers': [
             { value: 'victimes', label: 'Victimes' },
-            { value: 'auteurs', label: 'Auteurs' }
+            { value: 'auteurs', label: 'Auteurs' },
+            { value: 'autres', label: 'Autres'}
         ],
         'reseaux': [
             { value: 'guides', label: 'Guides' },
-            { value: 'kit_creation', label: 'Kit création réseau' }
+            { value: 'kit_creation', label: 'Kit création réseau' },
+            { value: 'autres', label: 'Autres'}
         ],
         'outils': [
             { value: 'coordination', label: 'Coordination acteurs' },
-            { value: 'prevention', label: 'Prévention & sensibilisation' }
+            { value: 'prevention', label: 'Prévention & sensibilisation' },
+            { value: 'autres', label: 'Autres'}
         ],
         'conventions': [
             { value: 'victimes', label: 'Victimes' },
-            { value: 'auteurs', label: 'Auteurs' }
+            { value: 'auteurs', label: 'Auteurs' },
+            { value: 'autres', label: 'Autres'}
         ]
+    };
+
+    // ============================================
+    // TRI PAR DATE (NOUVEAU)
+    // ============================================
+    window.sortResourcesByDate = function() {
+        const sortValue = document.getElementById('sortDate').value;
+        const grid = document.getElementById('resourcesGrid');
+        const cards = Array.from(grid.querySelectorAll('.resource-card'));
+
+        // Trier les cartes par date
+        cards.sort((a, b) => {
+            const dateA = parseInt(a.dataset.date);
+            const dateB = parseInt(b.dataset.date);
+            return sortValue === 'recent' ? dateB - dateA : dateA - dateB;
+        });
+
+        // Réorganiser les cartes dans le DOM
+        cards.forEach(card => grid.appendChild(card));
     };
 
     function filterResourcesByCategory() {
@@ -1054,6 +1080,9 @@
 
             // Exécution du filtre sur TOUS les documents
             filterResourcesByCategory();
+            
+            // Appliquer le tri après le filtrage
+            sortResourcesByDate();
         }
     };
 
@@ -1072,6 +1101,7 @@
             }
         });
         filterResourcesByCategory();
+        sortResourcesByDate();
     }
 
     window.clearCategoryFilter = function() {
@@ -1089,6 +1119,7 @@
         if (subContainer) subContainer.classList.add('d-none');
 
         filterResourcesByCategory();
+        sortResourcesByDate();
     };
 
     // ============================================
@@ -1106,6 +1137,7 @@
             tabDocs.classList.add('active');
             tabSchemas.classList.remove('active');
             setTimeout(filterResourcesByCategory, 100);
+            setTimeout(sortResourcesByDate, 150);
         } else {
             docsSection.style.display = 'none';
             schemasSection.style.display = 'block';
@@ -1375,14 +1407,21 @@
         const filterType = document.getElementById('filterType');
 
         if (searchInput) {
-            searchInput.addEventListener('input', filterResourcesByCategory);
+            searchInput.addEventListener('input', function() {
+                filterResourcesByCategory();
+                sortResourcesByDate();
+            });
         }
         if (filterType) {
-            filterType.addEventListener('change', filterResourcesByCategory);
+            filterType.addEventListener('change', function() {
+                filterResourcesByCategory();
+                sortResourcesByDate();
+            });
         }
 
-        // Lancer l'initialisation du filtre
+        // Lancer l'initialisation du filtre et du tri
         filterResourcesByCategory();
+        sortResourcesByDate();
         updateGtCounts();
 
         // Initialiser le mode d'affichage par défaut (grille)

@@ -106,12 +106,12 @@
                 <li><strong>Utilisateur simple :</strong> vous devez contacter votre responsable de structure afin qu’il procède à la validation.</li>
             </ul>
         </div>
-
+<!--
         <p>
             Pour toute question ou assistance, vous pouvez nous contacter à l’adresse suivante :
             <br><strong>contact@plateforme-vff.fr</strong>
         </p>
-
+-->
         <p>
             Nous vous remercions pour votre engagement et votre volonté de contribuer à cette cause essentielle. Votre participation est précieuse et nous sommes ravis de vous compter parmi nous.
         </p>

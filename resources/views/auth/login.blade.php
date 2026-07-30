@@ -116,7 +116,7 @@
             <div class="mb-3 sm:mb-4 lg:mb-6">
                 <span class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight block drop-shadow-lg">PLATEFORME</span>
                 <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">MULTI-ACTEURS</span>
-                <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">VFF 06</span>
+                <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">VIOLENCES FAITES AUX FEMMES 06</span>
             </div>
             
             <!-- Message inspirant -->
