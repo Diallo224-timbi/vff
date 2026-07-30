@@ -696,26 +696,49 @@
           e.stopPropagation();
           profileMenu.classList.toggle('show');
         });
+      }
 
-        // Fermer au clic extérieur
-        document.addEventListener('click', function(e) {
+      // ===== GESTION DES CLICS EN DEHORS (ESPACE VIDE) =====
+      document.addEventListener('click', function(e) {
+        // 1. Fermeture du profil dropdown s'il est ouvert
+        if (profileBtn && profileMenu) {
           if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
             profileMenu.classList.remove('show');
           }
-        });
+        }
 
-        // Fermer à l'échappement
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape') {
-            profileMenu.classList.remove('show');
+        // 2. Fermeture de la sidebar si cliquée à l'extérieur
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+
+        if (sidebar && toggleBtn) {
+          const isExpanded = !sidebar.classList.contains('collapsed');
+          // Si le menu est ouvert et le clic a lieu hors du menu et du bouton de bascule
+          if (isExpanded && !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+            sidebar.classList.add('collapsed');
+            localStorage.setItem('sidebarCollapsed', 'true');
           }
-        });
-      }
+        }
+      });
 
-      // ===== RESPONSIVE: Fermer sidebar sur mobile quand lien cliqué =====
+      // ===== TOUCHE ECHAP (ESCAPE) =====
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (profileMenu) profileMenu.classList.remove('show');
+          
+          const sidebar = document.getElementById('sidebar');
+          if (sidebar) {
+            sidebar.classList.add('collapsed');
+            localStorage.setItem('sidebarCollapsed', 'true');
+          }
+        }
+      });
+
+      // ===== RESPONSIVE: Fermer sidebar sur mobile quand un lien est cliqué =====
       if (window.innerWidth < 1024) {
         document.querySelectorAll('.sidebar-link').forEach(link => {
           link.addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
             if (sidebar && !sidebar.classList.contains('collapsed')) {
               sidebar.classList.add('collapsed');
             }
