@@ -1,15 +1,11 @@
 @extends('base')
-
 @section('title', 'Plateforme VFF 06 – Alpes-Maritimes')
-
 @section('head')
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 @endsection
-
 @section('content')
 <div class="vff-root">
-
     {{-- ══════════ HEADER ══════════ --}}
     <header class="vff-header">
         <div class="vff-hw">
@@ -32,7 +28,6 @@
             @endauth
         </div>
     </header>
-
     {{-- ══════════ HERO SECTION ══════════ --}}
     <section class="vff-hero">
         <div class="vff-hero-mesh"></div>
@@ -49,15 +44,12 @@
             </div>
         </div>
     </section>
-
     {{-- ══════════ CONTENU PRINCIPAL ══════════ --}}
-    <main class="vff-main-content">
-        
+    <main class="vff-main-content">   
         {{-- ══════════ CARTES NAVIGATION ══════════ --}}
         @php
             $isAdmin = auth()->check() && auth()->user()->role === 'admin';
         @endphp
-
         <section class="vff-cards-wrap">
             <div class="vff-hw">
                 <div class="vff-cards {{ $isAdmin ? 'is-admin' : 'is-user' }}">
@@ -70,7 +62,6 @@
                             'resources.index' => ['title' => 'Ressources & Outils', 'desc' => 'Guides, outils et documentation', 'icon' => 'bx-download', 'color' => '#d97706', 'bg' => '#fef3c7'],
                         ];
                     @endphp
-
                     {{-- Cartes publiques --}}
                     @foreach($navCards as $routeName => $c)
                         @if(Route::has($routeName))
@@ -86,11 +77,9 @@
                         </a>
                         @endif
                     @endforeach
-
                     {{-- Cartes réservées à l'ADMIN --}}
                     @auth
                         @if($isAdmin)
-                           
                             <a href="" class="vff-card">
                                 <div class="vff-card-icon" style="background:#fce7f3;color:#db2777;">
                                     <i class='bx bx-sitemap'></i>
@@ -101,8 +90,6 @@
                                     <span class="vff-card-more" style="color:#db2777;">En savoir plus →</span>
                                 </div>
                             </a>
-                           
-
                             @if(Route::has('dashboard'))
                             <a href="{{ route('dashboard') }}" class="vff-card">
                                 <div class="vff-card-icon" style="background:#f0f4f8;color:#475569;">
@@ -115,7 +102,6 @@
                                 </div>
                             </a>
                             @endif
-
                             {{-- BOUTON ADMIN AVEC NOUVELLE COULEUR INDIGO #4f46e5 --}}
                             @if (Route::has('admin.users'))
                             <a href="{{ route('admin.users') }}" class="vff-card">
@@ -134,7 +120,6 @@
                 </div>
             </div>
         </section>
-
         {{-- ══════════ BANDEAU DÉFILANT ÉVÉNEMENTS ══════════ --}}
         <section class="vff-ticker-wrap">
             <div class="vff-hw">
@@ -143,7 +128,6 @@
                         <i class='bx bx-bell bx-tada'></i>
                         <span>{{ !$isAdmin ? 'À LA UNE / AGENDA' : 'INFO / AGENDA' }}</span>
                     </div>
-
                     <div class="vff-ticker-content">
                         <div class="vff-ticker-track">
                             @php
@@ -151,23 +135,19 @@
                                     return \Carbon\Carbon::parse($event->date_debut)->isFuture();
                                 });
                             @endphp
-
                             @forelse($futureEvents as $agen)
                                 @php
                                     $date = \Carbon\Carbon::parse($agen->date_debut);
                                     $isSpecial = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
                                     $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
                                 @endphp
-
                                 <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}">
                                     @if($isSpecial)
                                         <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
                                     @else
                                         <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
                                     @endif
-
-                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
-                                    
+                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong> 
                                     <span class="vff-ticker-date">
                                         <i class='bx bx-time-five'></i> 
                                         {{ $date->translatedFormat('d F Y à H\hi') }}
@@ -181,7 +161,6 @@
                                         <a href="{{ route('events.index') }}" class="vff-ticker-action">
                                             En savoir plus <i class='bx bx-right-arrow-alt'></i>
                                         </a>
-                                  
                                 </div>
                                 <span class="vff-ticker-sep">•</span>
                             @empty
@@ -190,35 +169,28 @@
                                     <span>Aucun événement à venir pour le moment.</span>
                                 </div>
                             @endforelse
-
-                            {{-- Duplication pour boucle infinie CSS --}}
                             @foreach($futureEvents as $agen)
                                 @php
                                     $date = \Carbon\Carbon::parse($agen->date_debut);
-                                    $isSpecial = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
+                                    $isSpecial  = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
                                     $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
                                 @endphp
-
                                 <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}" aria-hidden="true">
                                     @if($isSpecial)
                                         <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
                                     @else
                                         <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
                                     @endif
-
                                     <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
-                                    
                                     <span class="vff-ticker-date">
                                         <i class='bx bx-time-five'></i> 
                                         {{ $date->translatedFormat('d F Y à H\hi') }}
                                     </span>
-
                                     @if(!empty($agen->lieu))
                                         <span class="vff-ticker-location">
                                             <i class='bx bx-map'></i> {{ $agen->lieu }}
                                         </span>
                                     @endif
-
                                     @if(!$isAdmin && Route::has('events.index'))
                                         <a href="{{ route('events.index') }}" class="vff-ticker-action">
                                             En savoir plus <i class='bx bx-right-arrow-alt'></i>
@@ -232,9 +204,7 @@
                 </div>
             </div>
         </section>
-
     </main>
-
     {{-- ══════════ FOOTER ══════════ --}}
     <footer class="vff-footer">
         <div class="vff-hw vff-footer-inner">
@@ -251,9 +221,7 @@
             </div>
         </div>
     </footer>
-
 </div>
-
 <style>
 /* ════════════════════════════════════════════════
    VARIABLES & GLOBAL LAYOUT

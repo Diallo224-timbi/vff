@@ -14,7 +14,6 @@
             </button>
         </div>
     @endif
-
     <!-- HEADER -->
     <div class="rounded-2xl p-4 shadow-xl text-white d-flex flex-wrap justify-content-between align-items-center gap-3"
          style="background: linear-gradient(135deg, #255156, #1e7c86);">
@@ -31,7 +30,6 @@
                 </small>
             </div>
         </div>
-
         <div class="d-flex flex-wrap gap-2 align-items-center">
             <span class="px-3 py-1.5 rounded-lg text-xs font-medium" style="background: rgba(255,255,255,0.15); color: white;">
                 <i class="fas fa-user-shield me-1"></i>
@@ -43,7 +41,6 @@
             </div>
         </div>
     </div>
-
     <!-- STATISTIQUES RAPIDES -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
         <div class="bg-white rounded-xl border p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1" 
@@ -68,7 +65,6 @@
                 </span>
             </div>
         </div>
-
         <div class="bg-white rounded-xl border p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1" 
              style="border-color: #e8f3f2;">
             <div class="flex justify-between items-start">
@@ -84,7 +80,6 @@
                 <span>{{ $villesCount ?? 0 }} villes</span>
             </div>
         </div>
-
         <div class="bg-white rounded-xl border p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1" 
              style="border-color: #e8f3f2;">
             <div class="flex justify-between items-start">
@@ -100,7 +95,6 @@
                 <span>Total organismes</span>
             </div>
         </div>
-
         <div class="bg-white rounded-xl border p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1" 
              style="border-color: #e8f3f2;">
             <div class="flex justify-between items-start">
@@ -116,7 +110,6 @@
                 <span>{{ $connexionsJour ?? 0 }} aujourd'hui</span>
             </div>
         </div>
-
         <div class="bg-white rounded-xl border p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1" 
              style="border-color: #e8f3f2;">
             <div class="flex justify-between items-start">
@@ -144,7 +137,6 @@
             </div>
         </div>
     </div>
-
     <!-- GRAPHIQUES PRINCIPAUX -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Graphique utilisateurs par rôle -->
@@ -157,7 +149,6 @@
                 <canvas id="usersChart"></canvas>
             </div>
         </div>
-
         <!-- Graphique Organismes par nombre de structures (barres verticales) -->
         <div class="bg-white rounded-xl border p-4" style="border-color: #e8f3f2;">
             <h3 class="text-sm font-semibold mb-4 flex items-center" style="color: #255156;">
@@ -169,7 +160,6 @@
             </div>
         </div>
     </div>
-
     <!-- GRAPHIQUES DOCUMENTS -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Graphique documents par type -->
@@ -193,7 +183,6 @@
             </div>
         </div>
     </div>
-
     <!-- ACTIVITÉ DES LOGS -->
     @if(auth()->user()->role === 'admin')
         <div class="bg-white rounded-xl border p-4" style="border-color: #e8f3f2;">
@@ -211,7 +200,6 @@
             </div>
         </div>
     @endif
-
     <!-- DERNIERS ÉLÉMENTS -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <!-- Derniers utilisateurs -->
@@ -268,7 +256,6 @@
                 @endforelse
             </div>
         </div>
-
         <!-- Derniers logs -->
         <div class="bg-white rounded-xl border p-4" style="border-color: #e8f3f2;">
             <h3 class="text-sm font-semibold mb-3 flex items-center" style="color: #255156;">
@@ -307,11 +294,9 @@
     </div>
 </div>
 @endsection
-
 @section('scripts')
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // ===== PALETTE DE COULEURS =====
@@ -327,7 +312,6 @@ document.addEventListener('DOMContentLoaded', function() {
         gray: '#e5e7eb',
         light: '#f8fcfc'
     };
-
     // ===== GRAPHIQUE UTILISATEURS PAR RÔLE =====
     const usersCtx = document.getElementById('usersChart')?.getContext('2d');
     if(usersCtx) {
@@ -360,21 +344,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // ===== GRAPHIQUE ORGANISMES PAR NOMBRE DE STRUCTURES (BARRES VERTICALES) =====
     const organismesCtx = document.getElementById('organismesChart')?.getContext('2d');
     if(organismesCtx) {
         const organismesLabels = {!! json_encode($organismes->pluck('nom_organisme')->toArray() ?? []) !!};
-        const organismesData = {!! json_encode($organismeStructures ?? []) !!};
-        
+        const organismesData = {!! json_encode($organismeStructures ?? []) !!}; 
         const colorPalette = [
             '#255156', '#4a8599', '#8bbdc3', '#10b981', '#f59e0b', 
             '#3b82f6', '#8b5cf6', '#ef4444', '#ec4899', '#14b8a6',
             '#f97316', '#6366f1', '#06b6d4', '#84cc16', '#a855f7'
-        ];
-        
-        const backgroundColors = organismesLabels.map((_, i) => colorPalette[i % colorPalette.length]);
-        
+        ]; 
+        const backgroundColors = organismesLabels.map((_, i) => colorPalette[i % colorPalette.length]);  
         new Chart(organismesCtx, {
             type: 'bar',
             data: {
@@ -432,7 +412,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // ===== GRAPHIQUE DOCUMENTS PAR TYPE =====
     const docTypeCtx = document.getElementById('documentsTypeChart')?.getContext('2d');
     if(docTypeCtx) {
@@ -465,7 +444,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // ===== GRAPHIQUE DOCUMENTS PAR CATÉGORIE =====
     const docCatCtx = document.getElementById('documentsCategoryChart')?.getContext('2d');
     if(docCatCtx) {
@@ -522,27 +500,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // ===== GRAPHIQUE ACTIVITÉ (admin) =====
     @if(auth()->user()->role === 'admin')
     const activityCtx = document.getElementById('activityChart')?.getContext('2d');
     if(activityCtx) {
         const gradient1 = activityCtx.createLinearGradient(0, 0, 0, 300);
         gradient1.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
-        gradient1.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
-        
+        gradient1.addColorStop(1, 'rgba(16, 185, 129, 0.02)');    
         const gradient2 = activityCtx.createLinearGradient(0, 0, 0, 300);
         gradient2.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
-        gradient2.addColorStop(1, 'rgba(59, 130, 246, 0.02)');
-        
+        gradient2.addColorStop(1, 'rgba(59, 130, 246, 0.02)');     
         const gradient3 = activityCtx.createLinearGradient(0, 0, 0, 300);
         gradient3.addColorStop(0, 'rgba(245, 158, 11, 0.3)');
-        gradient3.addColorStop(1, 'rgba(245, 158, 11, 0.02)');
-        
+        gradient3.addColorStop(1, 'rgba(245, 158, 11, 0.02)');     
         const gradient4 = activityCtx.createLinearGradient(0, 0, 0, 300);
         gradient4.addColorStop(0, 'rgba(239, 68, 68, 0.3)');
         gradient4.addColorStop(1, 'rgba(239, 68, 68, 0.02)');
-
         new Chart(activityCtx, {
             type: 'line',
             data: {
@@ -654,42 +627,34 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 </script>
-
 <style>
 /* Scrollbar */
 .overflow-y-auto {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 #f1f5f9;
 }
-
 .overflow-y-auto::-webkit-scrollbar {
     width: 4px;
 }
-
 .overflow-y-auto::-webkit-scrollbar-track {
     background: #f1f5f9;
 }
-
 .overflow-y-auto::-webkit-scrollbar-thumb {
     background-color: #cbd5e1;
     border-radius: 2px;
 }
-
 /* Cartes */
 .bg-white {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 /* Animation des graphiques */
 canvas {
     animation: fadeIn 0.6s ease-out;
 }
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 /* Hauteur des graphiques */
 #organismesChart, #usersChart, #activityChart {
     max-height: 280px;

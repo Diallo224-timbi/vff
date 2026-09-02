@@ -21,6 +21,7 @@ use App\Http\Controllers\DashboardUserController;
 use App\Models\Organisme;
 use App\Models\Structures;
 use App\Models\User;
+use Illuminate\Types\Relations\Role;
 
 Route::get('/', function () {
      $organismes = Organisme::orderBy('nom_organisme')->get();
@@ -109,7 +110,7 @@ Route::post('/send-verification-code', [AuthController::class, 'sendVerification
 // Route pour vérifier le code de vérification
 Route::post('/verify-code', [AuthController::class, 'verifyCode'])->name('verifyCode');
 // Route pour le tableau de bord admin
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','admin.structure'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'indexx'])->name('admin.users');
     Route::post('/admin/users/{id}/validate', [AdminController::class, 'validatedUser'])->name('admin.users.validate');
     Route::post('/admin/users/{id}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
@@ -124,7 +125,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('annuaire.list');
 });
 // Route pour les organismes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','admin.moderateur'])->group(function () {
     Route::get('/organismes', [OrganismeController::class, 'index'])->name('organismes.index');
     Route::get('/organismes/create', [OrganismeController::class, 'create'])->name('organismes.create');
     Route::post('/organismes', [OrganismeController::class, 'store'])->name('organismes.store');
@@ -189,7 +190,7 @@ Route::middleware(['auth'])->group(function () {
 //Route::post('/forum/{thread}/react', [ThreadController::class, 'react'])->name('forum.react');
 
 // Routes pour la gestion des structures
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','structure.access'])->group(function () {
     Route::get('/structures', [StructureController::class, 'index'])->name('structures.index');
     Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
     Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
@@ -211,7 +212,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/annuaire/membre/{structureId}', [StructureMembreController::class, 'show'])->name('annuaire.membre_structure');
     });
 // Routes pour les logs d'activité
-Route::middleware(['auth'])->prefix('activity-logs')->name('activity_logs.')->group(function () {
+Route::middleware(['auth','admin'])->prefix('activity-logs')->name('activity_logs.')->group(function () {
     Route::get('/', [ActivityLogController::class, 'index'])->name('index');
     Route::get('/stats', [ActivityLogController::class, 'stats'])->name('stats');
     Route::get('/export', [ActivityLogController::class, 'export'])->name('export');

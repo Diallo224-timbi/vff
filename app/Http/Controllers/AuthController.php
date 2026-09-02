@@ -17,7 +17,6 @@ use App\Models\Structures;
 use App\Models\ActivityLog;
 use App\Mail\AdminNewUserEmail;
 
-
 class AuthController extends Controller
 {
     // fonction pour renvoyer l'utilisateur vers la page de connexion
@@ -149,12 +148,21 @@ class AuthController extends Controller
                 $respStructure = User::where('id_structure', $user->id_structure)
                     ->where('role', 'moderateur_classique')
                     ->first();
+                    if($respStructure){
+                        // Envoyer un email au responsable de la structure
+                        Mail::to($respStructure->email)->send(new StructureNewUserEmail($user, $respStructure));
+                    }
                 $respOrganismes = User::where('role', 'moderateur')
                     ->whereHas('structure', function ($query) use ($structure) {
                         $query->where('id_organisme', $structure->id_organisme);
                     })
                     ->get();
-            
+                if ($respOrganismes->isNotEmpty()) {
+                    foreach ($respOrganismes as $respOrganisme) {
+                        // Envoyer un email au responsable de l'organisme
+                        Mail::to($respOrganisme->email)->send(new OrganismeNewUserEmail($user, $respOrganisme));
+                    }
+                }
             } else {
                 // Si aucune structure n'est sélectionnée
                 session()->flash(
@@ -167,8 +175,7 @@ class AuthController extends Controller
             // Redirige avec les erreurs de validation
             return back()->withErrors($e->errors());
         } 
-    }
-   
+    } 
     // fonction pour déconnecter l'utilisateur
     public function logout(){
         // Enregistrer le log de déconnexion avant de se déconnecter

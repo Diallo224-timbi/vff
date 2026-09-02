@@ -14,20 +14,14 @@ use App\Models\Schema;
 
 class ResourceController extends Controller
 {
-    /**
-     * Afficher la liste des ressources (hors corbeille)
-     */
     public function index()
     {
         $resources = Resource::latest()->paginate(12);
-        
         // Récupérer toutes les ressources non supprimées pour les statistiques
         $allResources = Resource::all();
-        
         // Types de fichiers
         $imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
         $videoTypes = ['mp4', 'webm', 'avi', 'mov', 'mkv'];
-        
         // Compter avec filter()
         $stats = [
             'images' => $allResources->filter(fn($r) => in_array($r->file_type, $imageTypes))->count(),
@@ -40,7 +34,6 @@ class ResourceController extends Controller
                 'ressource' => $allResources->where('category', 'ressource')->count(),
             ]
         ];
-        
          $schemas = Schema::where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -277,78 +270,166 @@ class ResourceController extends Controller
     public function update(Request $request, $id)
     {
         $resource = Resource::findOrFail($id);
-        
+
+        // ============================================================
+        // VALIDATION
+        // ============================================================
+
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'category' => 'required|string',
-            'file' => 'nullable|file|max:51200|mimes:jpg,jpeg,png,gif,webp,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt',
-            'link_url' => 'nullable|url',
             'sub_category' => 'nullable|string',
-            'important' => 'nullable|boolean'
+            'file' => 'nullable|file|max:51200|mimes:jpg,jpeg,png,gif,webp,svg,webm,pdf,doc,odt,docx,xls,xlsx,csv,ppt,pptx,txt,mp4,avi,mov,mkv',
+            'link_url' => 'nullable|url',
+            'important' => 'nullable|boolean',
         ]);
-        
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Veuillez corriger les erreurs du formulaire.');
+                ->withInput();
         }
-        
+
         try {
+
+            // ============================================================
+            // INFORMATIONS GÉNÉRALES
+            // ============================================================
+
             $resource->title = $request->title;
             $resource->description = $request->description;
             $resource->category = $request->category;
             $resource->sub_category = $request->sub_category;
-            $resource->important = $request->has('important') ? true : false;
+            $resource->important = $request->has('important');
 
-            // ==================================================================
-            // CORRECTION MAJEURE : Reset des champs liés au fichier/lien
-            // Permet de passer d'un fichier à un lien proprement
-            // ==================================================================
-            $resource->is_link = false;
-            $resource->link_url = null;
-            $resource->file_path = null;
-            $resource->file_name = null;
-            $resource->file_size = null;
-            $resource->file_type = null;
-            $resource->file_icon = null;
-            $resource->is_image = false;
-            $resource->is_video = false;
 
-            // Gestion du fichier
+            // ============================================================
+            // CAS 1 : NOUVEAU FICHIER
+            // ============================================================
+
             if ($request->hasFile('file')) {
-                // Supprimer l'ancien fichier (logique améliorée)
-                if ($resource->getOriginal('file_path') && Storage::disk('public')->exists($resource->getOriginal('file_path'))) {
-                    Storage::disk('public')->delete($resource->getOriginal('file_path'));
+
+                // Supprimer l'ancien fichier s'il existe
+                $oldPath = $resource->getOriginal('file_path');
+
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 }
-                
+
+                // Nouveau fichier
                 $file = $request->file('file');
-                $extension = strtolower($file->getClientOriginalExtension());
+
+                $extension = strtolower(
+                    $file->getClientOriginalExtension()
+                );
+
                 $fileName = time() . '_' . uniqid() . '.' . $extension;
-                $path = $file->storeAs('resources', $fileName, 'public');
-                
-                $resource->file_path = $path;
+
+                $path = $file->storeAs(
+                    'resources',
+                    $fileName,
+                    'public'
+                );
+
+                // Déterminer le type
+                $isImage = in_array($extension, [
+                    'jpg',
+                    'jpeg',
+                    'png',
+                    'gif',
+                    'webp',
+                    'svg'
+                ]);
+
+                $isVideo = in_array($extension, [
+                    'mp4',
+                    'webm',
+                    'avi',
+                    'mov',
+                    'mkv'
+                ]);
+
+
+                // Mettre à jour les informations du fichier
                 $resource->file_name = $file->getClientOriginalName();
+                $resource->file_path = $path;
                 $resource->file_size = $file->getSize();
                 $resource->file_type = $extension;
                 $resource->file_icon = $this->getFileIcon($extension);
-                $resource->is_image = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
-                $resource->is_video = in_array($extension, ['mp4','webm','avi','mov','mkv']);
+                $resource->is_image = $isImage;
+                $resource->is_video = $isVideo;
+                // Ce n'est plus un lien
+                $resource->is_link = false;
+                $resource->link_url = null;
             }
-            
-            // Gestion du lien (Si un lien est fourni, on écrase les données du fichier)
-            if ($request->filled('link_url')) {
+            // ============================================================
+            // CAS 2 : NOUVEAU LIEN
+            // ============================================================
+
+            elseif ($request->filled('link_url')) {
+
+                // Supprimer l'ancien fichier s'il existe
+                $oldPath = $resource->getOriginal('file_path');
+
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+
+                // Configuration du lien
                 $resource->link_url = $request->link_url;
                 $resource->is_link = true;
+
+                // Nettoyer les informations du fichier
+                $resource->file_path = null;
+                $resource->file_name = null;
+                $resource->file_size = null;
+                $resource->file_type = null;
+                $resource->file_icon = 'fas fa-link';
+                $resource->is_image = false;
+                $resource->is_video = false;
             }
+
+
+            // ============================================================
+            // SAUVEGARDE
+            // ============================================================
+
             $resource->save();
-            ActivityLog::log('Modification de ressource', 'Ressource modifiée: ' . $resource->title, auth()->id());
-            return redirect()->route('resources.index')
-                ->with('success', 'Ressource modifiée avec succès');   
+
+
+            // ============================================================
+            // LOG
+            // ============================================================
+
+            ActivityLog::log(
+                'Modification de ressource',
+                'Ressource modifiée : ' . $resource->title,
+                auth()->id()
+            );
+
+
+            // ============================================================
+            // REDIRECTION
+            // ============================================================
+
+            return redirect()
+                ->route('resources.index')
+                ->with(
+                    'success',
+                    'Ressource modifiée avec succès'
+                );
+
+
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Erreur lors de la modification: ' . $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'Erreur lors de la modification : ' . $e->getMessage()
+                );
         }
     }
 
