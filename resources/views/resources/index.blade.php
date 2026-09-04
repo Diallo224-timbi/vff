@@ -135,13 +135,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- SOUS-CATÉGORIES -->
-                        <div id="subCategoriesContainer" class="mb-2 d-none">
-                            <label class="small fw-semibold text-secondary mb-1">Sous-catégorie</label>
-                            <div class="d-flex flex-wrap gap-1" id="subCategoriesList">
-                                <!-- Rempli dynamiquement par JS -->
-                            </div>
-                        </div>
+
                         <!-- ============================================ -->
                         <!-- ZONE CORRIGÉE : BARRE DE RECHERCHE + BOUTONS -->
                         <!-- ============================================ -->
@@ -864,36 +858,8 @@
     let currentSubCategoryFilter = null;
     let currentViewMode = 'grid'; // 'grid' ou 'list'
 
-    const subCategoriesMap = {
-        'guides_etudes': [
-            { value: 'national', label: 'National' },
-            { value: 'departemental', label: 'Départemental' },
-            { value: 'autres', label: 'Autres'}
-        ],
-        'affiches_flyers': [
-            { value: 'victimes', label: 'Victimes' },
-            { value: 'auteurs', label: 'Auteurs' },
-            { value: 'autres', label: 'Autres'}
-        ],
-        'reseaux': [
-            { value: 'guides', label: 'Guides' },
-            { value: 'kit_creation', label: 'Kit création réseau' },
-            { value: 'autres', label: 'Autres'}
-        ],
-        'outils': [
-            { value: 'coordination', label: 'Coordination acteurs' },
-            { value: 'prevention', label: 'Prévention & sensibilisation' },
-            { value: 'autres', label: 'Autres'}
-        ],
-        'conventions': [
-            { value: 'victimes', label: 'Victimes' },
-            { value: 'auteurs', label: 'Auteurs' },
-            { value: 'autres', label: 'Autres'}
-        ]
-    };
-
     // ============================================
-    // TRI PAR DATE (NOUVEAU)
+    // TRI PAR DATE
     // ============================================
     window.sortResourcesByDate = function() {
         const sortValue = document.getElementById('sortDate').value;
@@ -920,7 +886,6 @@
 
         allCards.forEach(card => {
             const category = card.dataset.category || '';
-            const subCategory = card.dataset.subCategory || '';
             const title = card.dataset.title || '';
             const description = card.dataset.description || '';
             const type = card.dataset.type || '';
@@ -929,11 +894,6 @@
 
             // Filtre par catégorie principale
             if (currentCategoryFilter && currentCategoryFilter !== 'all' && category !== currentCategoryFilter) {
-                show = false;
-            }
-
-            // Filtre par sous-catégorie
-            if (show && currentSubCategoryFilter && subCategory !== currentSubCategoryFilter) {
                 show = false;
             }
 
@@ -1036,37 +996,6 @@
                 if (activeFilter) activeFilter.classList.add('d-none');
             }
 
-            // Génération des sous-catégories
-            const subContainer = document.getElementById('subCategoriesContainer');
-            const subList = document.getElementById('subCategoriesList');
-            subList.innerHTML = '';
-            
-            if (category && subCategoriesMap[category]) {
-                subContainer.classList.remove('d-none');
-                
-                const allBtn = document.createElement('span');
-                allBtn.className = 'badge bg-success p-2 cursor-pointer me-1';
-                allBtn.style.cursor = 'pointer';
-                allBtn.style.fontSize = '0.75rem';
-                allBtn.textContent = 'Toutes';
-                allBtn.dataset.value = 'all';
-                allBtn.onclick = function() { filterBySubCategory('all', 'Toutes'); };
-                subList.appendChild(allBtn);
-
-                subCategoriesMap[category].forEach(sub => {
-                    const btn = document.createElement('span');
-                    btn.className = 'badge bg-primary p-2 cursor-pointer me-1';
-                    btn.style.cursor = 'pointer';
-                    btn.style.fontSize = '0.75rem';
-                    btn.textContent = sub.label;
-                    btn.dataset.value = sub.value;
-                    btn.onclick = function() { filterBySubCategory(sub.value, sub.label); };
-                    subList.appendChild(btn);
-                });
-            } else {
-                subContainer.classList.add('d-none');
-            }
-
             // Exécution du filtre sur TOUS les documents
             filterResourcesByCategory();
             
@@ -1074,24 +1003,6 @@
             sortResourcesByDate();
         }
     };
-
-    function filterBySubCategory(subCategory, label) {
-        currentSubCategoryFilter = subCategory === 'all' ? null : subCategory;
-        document.querySelectorAll('#subCategoriesList .badge').forEach(el => {
-            if (el.dataset.value === subCategory) {
-                el.className = 'badge bg-success p-2 cursor-pointer me-1';
-                el.style.fontSize = '0.75rem';
-            } else if (el.dataset.value === 'all' && subCategory === 'all') {
-                el.className = 'badge bg-success p-2 cursor-pointer me-1';
-                el.style.fontSize = '0.75rem';
-            } else {
-                el.className = 'badge bg-primary p-2 cursor-pointer me-1';
-                el.style.fontSize = '0.75rem';
-            }
-        });
-        filterResourcesByCategory();
-        sortResourcesByDate();
-    }
 
     window.clearCategoryFilter = function() {
         currentCategoryFilter = 'all';
@@ -1103,9 +1014,6 @@
 
         const activeFilter = document.getElementById('activeFilter');
         if (activeFilter) activeFilter.classList.add('d-none');
-        
-        const subContainer = document.getElementById('subCategoriesContainer');
-        if (subContainer) subContainer.classList.add('d-none');
 
         filterResourcesByCategory();
         sortResourcesByDate();
@@ -1135,6 +1043,37 @@
             setTimeout(updateGtCounts, 300);
         }
     }
+
+    // ============================================
+    // SOUS-CATÉGORIES POUR LE FORMULAIRE SEULEMENT
+    // ============================================
+    const subCategoriesMap = {
+        'guides_etudes': [
+            { value: 'national', label: 'National' },
+            { value: 'departemental', label: 'Départemental' },
+            { value: 'autres', label: 'Autres'}
+        ],
+        'affiches_flyers': [
+            { value: 'victimes', label: 'Victimes' },
+            { value: 'auteurs', label: 'Auteurs' },
+            { value: 'autres', label: 'Autres'}
+        ],
+        'reseaux': [
+            { value: 'guides', label: 'Guides' },
+            { value: 'kit_creation', label: 'Kit création réseau' },
+            { value: 'autres', label: 'Autres'}
+        ],
+        'outils': [
+            { value: 'coordination', label: 'Coordination acteurs' },
+            { value: 'prevention', label: 'Prévention & sensibilisation' },
+            { value: 'autres', label: 'Autres'}
+        ],
+        'conventions': [
+            { value: 'victimes', label: 'Victimes' },
+            { value: 'auteurs', label: 'Auteurs' },
+            { value: 'autres', label: 'Autres'}
+        ]
+    };
 
     function updateSubCategories(category) {
         const subSelect = document.getElementById('subCategory');
