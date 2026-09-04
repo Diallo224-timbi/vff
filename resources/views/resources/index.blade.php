@@ -1,7 +1,5 @@
 @extends('base')
-
 @section('title', 'Espace documentaire & Schéma violences')
-
 @section('content')
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -16,7 +14,7 @@
                             <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire & Schéma violences</h4>
                             <div class="alert alert-light mt-3 shadow-sm border-0">
                                 <i class="fas fa-info-circle text-primary me-2"></i>
-                                <strong>Rappel :</strong>
+                                <strong>Rappel:</strong>
                                 Partagez des ressources professionnelles dans un esprit de bienveillance et de collaboration,
                                 tout en respectant les dispositions de la charte de la plateforme.
                             </div>
@@ -34,7 +32,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body p-4">
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -213,7 +210,6 @@
                                 </small>
                             </div>
                         </div>
-
                         <!-- GRILLE / LISTE DES CARTES -->
                         <div class="mt-2">
                             <div class="row g-3" id="resourcesGrid">
@@ -255,7 +251,6 @@
                                                     <i class="fas fa-file text-secondary" style="font-size: 3.2rem;"></i>
                                                 @endif
                                             @endif
-
                                             <!-- Badges superposés -->
                                             <div style="position: absolute; top: 6px; right: 6px; display: flex; flex-direction: column; gap: 3px;">
                                                 @if($resource->is_link)
@@ -271,7 +266,6 @@
                                                         <i class="fas fa-file me-1"></i>{{ strtoupper($resource->file_type) }}
                                                     </span>
                                                 @endif
-
                                                 @if($resource->category == 'guides_etudes')
                                                     <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.55rem;">Guide</span>
                                                 @elseif($resource->category == 'affiches_flyers')
@@ -287,7 +281,6 @@
                                                 @endif
                                             </div>
                                         </div>
-
                                         <!-- Corps de la carte -->
                                         <div class="card-body p-2">
                                             <h6 class="card-title fw-semibold mb-1" style="font-size: 0.85rem;" title="{{ $resource->title }}">{{ Str::limit($resource->title, 22) }}</h6>
@@ -301,7 +294,6 @@
                                                 <span><i class="fas fa-calendar me-1"></i> {{ $resource->created_at->format('d/m/Y') }}</span>
                                             </div>
                                         </div>
-
                                         <!-- Pied de carte avec actions -->
                                         <div class="card-footer bg-transparent border-0 pt-0 pb-2">
                                             <div class="d-flex gap-1 justify-content-end flex-wrap">
@@ -310,13 +302,11 @@
                                                         <i class="fas fa-link"></i>
                                                     </a>
                                                 @endif
-
                                                 @if($resource->is_image)
                                                     <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 2px 8px; font-size: 0.7rem;" title="Voir l'image">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
-
                                                 @if(!$resource->is_link)
                                                     <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-sm" style="background: #e5e7eb; color: #4b5563; padding: 2px 8px; font-size: 0.7rem;" title="Ouvrir le fichier">
                                                         <i class="fas fa-external-link-alt"></i>
@@ -325,7 +315,6 @@
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 @endif
-
                                                 @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
                                                     <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3; padding: 2px 8px; font-size: 0.7rem;" title="Modifier">
                                                         <i class="fas fa-edit"></i>

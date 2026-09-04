@@ -21,7 +21,6 @@ use App\Http\Controllers\DashboardUserController;
 use App\Models\Organisme;
 use App\Models\Structures;
 use App\Models\User;
-use Illuminate\Types\Relations\Role;
 
 Route::get('/', function () {
      $organismes = Organisme::orderBy('nom_organisme')->get();
@@ -85,7 +84,7 @@ Route::get('/sitemap.xml', function () {
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
     ->middleware(['auth'])->name('dashboardUser');
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth'])
+    ->middleware(['auth','admin'])
     ->name('dashboard');
 // Routes pour l'authentification pour l'inscription et la connexion
 Route::get('/register',[AuthController::class, 'showSignUp'])->name('register');
@@ -125,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('annuaire.list');
 });
 // Route pour les organismes
-Route::middleware(['auth','admin.moderateur'])->group(function () {
+Route::middleware(['auth','organisme.access'])->group(function () {
     Route::get('/organismes', [OrganismeController::class, 'index'])->name('organismes.index');
     Route::get('/organismes/create', [OrganismeController::class, 'create'])->name('organismes.create');
     Route::post('/organismes', [OrganismeController::class, 'store'])->name('organismes.store');
@@ -177,6 +176,11 @@ Route::middleware(['auth'])->group(function () {
 });
 });
 
+//espace shema 
+Route::middleware(['auth','admin'])->group(function () {
+    Route::get('/espace-schema', [SchemaController::class, 'index'])
+        ->name('schemas.index');
+});  
 // Routes pour la gestion des catégories du forum
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -240,11 +244,16 @@ Route::middleware(['auth'])->group(function () {
     // Téléchargement
     Route::get('/ressources/{resource}/telecharger', [ResourceController::class, 'download'])->name('resources.download');
     // Routes pour la corbeille
-    Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
+    
     Route::post('/resources/{id}/restore', [ResourceController::class, 'restore'])->name('resources.restore');
     Route::delete('/resources/{id}/force-delete', [ResourceController::class, 'forceDelete'])->name('resources.force-delete');
     //route vider la corbeille
     Route::delete('/resources/trash/empty', [ResourceController::class, 'emptyTrash'])->name('resources.trash.empty');
+});
+
+//securite route corbeille
+Route::middleware(['auth','admin'])->group(function () {
+    Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
 });
 
 // Route de test pour vérifier (à supprimer après test)

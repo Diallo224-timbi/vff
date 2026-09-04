@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +14,7 @@ class ResourceController extends Controller
 {
     public function index()
     {
-        $resources = Resource::latest()->paginate(12);
+        $resources = Resource::get()->sortByDesc('created_at');
         // Récupérer toutes les ressources non supprimées pour les statistiques
         $allResources = Resource::all();
         // Types de fichiers
@@ -40,7 +38,6 @@ class ResourceController extends Controller
         
         return view('resources.index', compact('resources', 'stats', 'schemas'));
     }
-
     /**
      * Afficher la corbeille
      */
@@ -49,7 +46,6 @@ class ResourceController extends Controller
         $resources = Resource::onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(10);
         return view('resources.trash', compact('resources'));
     }
-
     /**
      * Ajouter une nouvelle ressource
      */
@@ -72,7 +68,6 @@ class ResourceController extends Controller
             'title.required' => 'Le titre est obligatoire.',
             'category.required' => 'La catégorie est obligatoire.',
         ]);
-
         if ($validator->fails()) {
             return $isAjax
                 ? response()->json([
@@ -85,7 +80,6 @@ class ResourceController extends Controller
                     ->withInput()
                     ->with('error', 'Veuillez corriger les erreurs du formulaire.');
         }
-
         try {
             // Obligation : fichier OU lien
             if (!$request->hasFile('file') && !$request->filled('link_url')) {
@@ -98,7 +92,6 @@ class ResourceController extends Controller
                         ->with('error', 'Ajoutez un fichier ou un lien')
                         ->withInput();
             }
-
             // =========================
             // VÉRIFICATION DES DOUBLONS
             // =========================

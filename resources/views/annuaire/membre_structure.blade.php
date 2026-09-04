@@ -20,7 +20,6 @@
             Retour à l'annuaire
         </a>
     </div>
-
     <!-- Carte principale -->
     <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
         <div class="card-header text-white py-3" style="background: #145f68; border: none;">
@@ -36,7 +35,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card-body p-0">
             <!-- Barre de recherche et filtres -->
             <div class="p-3 border-bottom" style="background: #f8f9fa;">
@@ -52,7 +50,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Tableau responsive -->
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="membersTable" style="border-radius: 10px; overflow: hidden;">
@@ -118,7 +115,6 @@
                     </tbody>
                 </table>
             </div>
-
             <!-- Pied de tableau -->
             <div class="p-3 border-top d-flex justify-content-between align-items-center flex-wrap" style="background: #f8f9fa;">
                 <span class="text-muted small">
@@ -132,7 +128,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal pour le profil du membre -->
 <div id="memberModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">

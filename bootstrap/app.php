@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.structure' => \App\Http\Middleware\AdminStructure::class,
             'log.user.login' => \App\Http\Middleware\LogUserLogin::class,
             'structure.access' => \App\Http\Middleware\StructureAccessMiddleware::class,
+            'organisme.access' => \App\Http\Middleware\OrganismeAccessMiddleware::class,
         ]);
 
     })
