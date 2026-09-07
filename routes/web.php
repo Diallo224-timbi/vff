@@ -72,13 +72,25 @@ Route::get('/sitemap.xml', function () {
         $xml .= '</url>';
 
     }
-
     $xml .= '</urlset>';
-
     return response($xml)
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
 
+//shéma route
+// routes/web.php
+
+Route::middleware(['auth'])->group(function () {
+    // Routes pour les schémas
+    Route::get('/schemas', [SchemaController::class, 'index'])->name('schemas.index');
+    Route::get('/schemas/{id}', [SchemaController::class, 'show'])->name('schemas.show');
+    Route::post('/schemas', [SchemaController::class, 'store'])->name('schemas.store');
+    Route::delete('/schemas/{id}', [SchemaController::class, 'destroy'])->name('schemas.destroy');
+    
+    // Routes API
+    Route::get('/schemas/filter/{gt?}', [SchemaController::class, 'filterByGt'])->name('schemas.filter');
+    Route::get('/schemas/counts', [SchemaController::class, 'getCounts'])->name('schemas.counts');
+});
 
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
@@ -165,22 +177,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{comment}/react', [CommentController::class, 'react'])->name('react');
     }); 
 });
-
-Route::middleware(['auth'])->group(function () {
-    Route::prefix('schemas')->name('schemas.')->group(function () {
-    Route::get('/', [SchemaController::class, 'index'])->name('index');
-    Route::post('/', [SchemaController::class, 'store'])->name('store');
-    Route::get('/{schema}', [SchemaController::class, 'show'])->name('show');
-    Route::put('/{schema}', [SchemaController::class, 'update'])->name('update');
-    Route::delete('/{schema}', [SchemaController::class, 'destroy'])->name('destroy');
-});
-});
-
-//espace shema 
-Route::middleware(['auth','admin'])->group(function () {
-    Route::get('/espace-schema', [SchemaController::class, 'index'])
-        ->name('schemas.index');
-});  
+ 
 // Routes pour la gestion des catégories du forum
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -190,8 +187,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
-// Route pour réagir à un fil de discussion
-//Route::post('/forum/{thread}/react', [ThreadController::class, 'react'])->name('forum.react');
 
 // Routes pour la gestion des structures
 Route::middleware(['auth','structure.access'])->group(function () {
@@ -207,7 +202,6 @@ Route::middleware(['auth','structure.access'])->group(function () {
 });
 // Routes pour l'annuaire
 Route::middleware('auth')->group(function () {
-     
         Route::get('/annuaire', [AnnuaireController::class, 'index'])->name('annuaire.index');
         // route pour afficher les membres d'une structure spécifique
         Route::get('/annuaire/membres', [AnnuaireController::class, 'showByStructure'])->name('annuaire.membre');
@@ -244,7 +238,6 @@ Route::middleware(['auth'])->group(function () {
     // Téléchargement
     Route::get('/ressources/{resource}/telecharger', [ResourceController::class, 'download'])->name('resources.download');
     // Routes pour la corbeille
-    
     Route::post('/resources/{id}/restore', [ResourceController::class, 'restore'])->name('resources.restore');
     Route::delete('/resources/{id}/force-delete', [ResourceController::class, 'forceDelete'])->name('resources.force-delete');
     //route vider la corbeille
@@ -255,7 +248,6 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
 });
-
 // Route de test pour vérifier (à supprimer après test)
 Route::get('/test-routes', function() {
     return [
@@ -283,9 +275,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
 });
 
-
 // Routes pour le formulaire d'inscription avec génération de PDF
-
 Route::get('/formulaire/inscription', [StructureController::class, 'createPDF'])->name('auth.create');
 Route::post('/formulaire/inscription/pdf', [StructureController::class, 'generatePDF'])->name('auth.pdf');
 

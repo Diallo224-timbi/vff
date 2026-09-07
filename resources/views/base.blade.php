@@ -546,7 +546,7 @@
           <span title="Explorer et partager des ressources">Ressources</span>
         </a>
         @if (Auth::user()->role === 'admin')
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('schemas.index') }}" class="sidebar-link">
               <i class='bx bx-book'></i>
               <span title="Explorer et partager des documents schèma">Schéma</span>
             </a>
