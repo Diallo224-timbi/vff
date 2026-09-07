@@ -1,34 +1,23 @@
 @extends('base')
-@section('title', 'Espace documentaire & Schéma violences')
+@section('title', 'Espace documentaire')
 @section('content')
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <!-- Carte principale -->
             <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
-                <!-- En-tête avec onglets -->
+                <!-- En-tête -->
                 <div class="card-header text-white py-3" style="background: #145f68; border: none;">
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div>
                             <i class="fas fa-folder-open me-2"></i>
-                            <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire & Schéma violences</h4>
+                            <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire</h4>
                             <div class="alert alert-light mt-3 shadow-sm border-0">
                                 <i class="fas fa-info-circle text-primary me-2"></i>
                                 <strong>Rappel:</strong>
                                 Partagez des ressources professionnelles dans un esprit de bienveillance et de collaboration,
                                 tout en respectant les dispositions de la charte de la plateforme.
                             </div>
-                        </div>
-                        <!-- Onglets de navigation -->
-                        <div class="btn-group mt-2 mt-sm-0" role="group">
-                            <button type="button" class="btn btn-light active" id="tabDocs" onclick="switchTab('docs')">
-                                <i class="fas fa-file-alt me-1"></i> Documents
-                            </button>
-                            @if(auth()->user()->role === 'admin')
-                                <button type="button" class="btn btn-light" id="tabSchemas" onclick="switchTab('schemas')">
-                                    <i class="fas fa-project-diagram me-1"></i> Schéma violences
-                                </button>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -137,7 +126,7 @@
                         </div>
 
                         <!-- ============================================ -->
-                        <!-- ZONE CORRIGÉE : BARRE DE RECHERCHE + BOUTONS -->
+                        <!-- BARRE DE RECHERCHE + BOUTONS -->
                         <!-- ============================================ -->
                         <div class="mb-3">
                             <div class="row g-2 align-items-end">
@@ -162,7 +151,7 @@
                                         <option value="link">Liens</option>
                                     </select>
                                 </div>
-                                <!-- TRI PAR DATE (NOUVEAU) -->
+                                <!-- TRI PAR DATE -->
                                 <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Trier par</label>
                                     <select id="sortDate" class="form-select" style="font-size: 0.85rem; height: 38px;" onchange="sortResourcesByDate()">
@@ -428,155 +417,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- ============================================ -->
-                    <!-- SECTION SCHÉMA VIOLENCES -->
-                    <!-- ============================================ -->
-                    <div id="schemasSection" style="display: none;">
-                        <div class="row">
-                            <!-- Colonne de gauche : Arborescence des GT -->
-                            <div class="col-lg-4 mb-4">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="mb-0 fw-bold">
-                                        <i class="fas fa-sitemap text-primary me-2"></i>
-                                        Groupes de travail
-                                    </h5>
-                                    <button onclick="openCreateSchemaModal()" class="btn btn-sm" style="background: #145f68; color: white;">
-                                        <i class="fas fa-plus me-1"></i> Nouveau
-                                    </button>
-                                </div>
-                                <!-- Arborescence des GT -->
-                                <div class="list-group">
-                                    <!-- GT1 avec sous-groupes -->
-                                    <div class="list-group-item p-0 border-0 mb-2" style="border-radius: 10px; overflow: hidden; border: 1px solid #e5e7eb;">
-                                        <div class="p-3" style="background: #f8f9fa; cursor: pointer;" onclick="toggleSubGroups('subGroupGT1')">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div>
-                                                    <i class="fas fa-folder text-primary me-2"></i>
-                                                    <span class="fw-semibold" style="font-size: 0.9rem;">GT1 - Réseau VIF-VC</span>
-                                                </div>
-                                                <span>
-                                                    <i class="fas fa-chevron-down" id="iconSubGroupGT1"></i>
-                                                    <span class="badge bg-secondary ms-2" id="countGT1">0</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div id="subGroupGT1" class="p-2" style="background: #fff; border-top: 1px solid #e5e7eb; display: block;">
-                                            <!-- SGT1 -->
-                                            <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT1')">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span style="font-size: 0.85rem;">SGT1 - Sensibilisation</span>
-                                                </div>
-                                                <span class="badge bg-info" id="countSGT1">0</span>
-                                            </div>
-                                            <!-- SGT2 -->
-                                            <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT2')">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span style="font-size: 0.85rem;">SGT2 - Coordination</span>
-                                                </div>
-                                                <span class="badge bg-info" id="countSGT2">0</span>
-                                            </div>
-                                            <!-- SGT3 -->
-                                            <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT3')">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span style="font-size: 0.85rem;">SGT3 - Outils pro</span>
-                                                </div>
-                                                <span class="badge bg-info" id="countSGT3">0</span>
-                                            </div>
-                                            <!-- SGT4 -->
-                                            <div class="d-flex align-items-center justify-content-between p-2 rounded mb-1" style="background: #f1f5f9; cursor: pointer;" onclick="filterSchemasByGT('SGT4')">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <i class="fas fa-chevron-right text-secondary" style="font-size: 0.7rem;"></i>
-                                                    <span style="font-size: 0.85rem;">SGT4 - Parcours</span>
-                                                </div>
-                                                <span class="badge bg-info" id="countSGT4">0</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- GT2 -->
-                                    <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT2')">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <i class="fas fa-folder text-primary me-2"></i>
-                                                <span style="font-size: 0.9rem;">GT2 - Force de l'ordre, justice et santé</span>
-                                            </div>
-                                            <span class="badge bg-secondary" id="countGT2">0</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- GT3 -->
-                                    <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT3')">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <i class="fas fa-folder text-primary me-2"></i>
-                                                <span style="font-size: 0.9rem;">GT3 - Auteurs de violences</span>
-                                            </div>
-                                            <span class="badge bg-secondary" id="countGT3">0</span>
-                                        </div>
-                                    </div>
-                                    <!-- GT4 -->
-                                    <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT4')">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <i class="fas fa-folder text-primary me-2"></i>
-                                                <span style="font-size: 0.9rem;">GT4 - Cellule familiale</span>
-                                            </div>
-                                            <span class="badge bg-secondary" id="countGT4">0</span>
-                                        </div>
-                                    </div>
-                                    <!-- GT5 -->
-                                    <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT5')">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <i class="fas fa-folder text-primary me-2"></i>
-                                                <span style="font-size: 0.9rem;">GT5 - Hébergement - logement</span>
-                                            </div>
-                                            <span class="badge bg-secondary" id="countGT5">0</span>
-                                        </div>
-                                    </div>
-                                    <!-- GT6 -->
-                                    <div class="list-group-item p-3 border-0 mb-2" style="border-radius: 10px; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer;" onclick="filterSchemasByGT('GT6')">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <i class="fas fa-folder text-primary me-2"></i>
-                                                <span style="font-size: 0.9rem;">GT6 - Pilotage du schéma</span>
-                                            </div>
-                                            <span class="badge bg-secondary" id="countGT6">0</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Colonne de droite : Détails du GT sélectionné -->
-                            <div class="col-lg-8">
-                                <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
-                                    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap">
-                                        <div>
-                                            <i class="fas fa-file-alt text-primary me-2"></i>
-                                            <span id="currentGtTitle" class="fw-semibold" style="font-size: 1rem;">Sélectionnez un groupe de travail</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-body p-3" style="max-height: 500px; overflow-y: auto;">
-                                        <!-- Liste des CR de réunion -->
-                                        <div id="meetingReportsList">
-                                            <div class="text-center py-5 text-muted">
-                                                <i class="fas fa-file-pdf fa-3x mb-3 opacity-25"></i>
-                                                <p style="font-size: 0.95rem;">Sélectionnez un GT pour voir les comptes rendus</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- MODAL IMAGE -->
 <div id="imageModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -588,6 +434,7 @@
         </div>
     </div>
 </div>
+
 <!-- MODAL CRÉATION DOCUMENT -->
 <div id="resourceModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -665,71 +512,6 @@
     </div>
 </div>
 
-<!-- MODAL CRÉATION SCHÉMA / GT -->
-<div id="createSchemaModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header" style="background: #145f68; color: white; border-radius: 15px 15px 0 0;">
-                <h5 class="modal-title">
-                    <i class="fas fa-plus me-2"></i> <span id="schemaModalTitle">Nouveau compte rendu</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="createSchemaForm" method="POST" action="{{ route('schemas.store') }}" enctype="multipart/form-data">
-                <div class="modal-body">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">GT / SGT <span class="text-danger">*</span></label>
-                        <select id="schemaCategory" name="category" required class="form-select">
-                            <option value="">Sélectionner un GT</option>
-                            <option value="GT1">GT1 - Réseau VIF-VC & coordination entre acteurs</option>
-                            <option value="GT2">GT2 - Force de l'ordre, justice et santé</option>
-                            <option value="GT3">GT3 - Auteurs de violences</option>
-                            <option value="GT4">GT4 - Cellule familiale</option>
-                            <option value="GT5">GT5 - Hébergement - logement FVVC et auteurs</option>
-                            <option value="GT6">GT6 - Pilotage du schéma</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3" id="schemaSubCategoryContainer">
-                        <label class="form-label fw-semibold">Sous-groupe (SGT)</label>
-                        <select id="schemaSubCategory" name="sub_category" class="form-select">
-                            <option value="">Aucun</option>
-                            <option value="SGT1">SGT1 - Sensibilisation & formations et information grand public</option>
-                            <option value="SGT2">SGT2 - Coordination acteurs / Outils professionnels</option>
-                            <option value="SGT3">SGT3 - Coordination acteurs / Outils professionnels</option>
-                            <option value="SGT4">SGT4 - Parcours</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Titre du CR / Document <span class="text-danger">*</span></label>
-                        <input type="text" id="schemaTitle" name="title" required class="form-control" placeholder="Ex: CR réunion GT1 du 15/04/2025">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea id="schemaDescription" name="description" rows="2" class="form-control" placeholder="Résumé de la réunion..."></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Compte rendu (PDF) <span class="text-danger">*</span></label>
-                        <input type="file" id="schemaFile" name="file" class="form-control" accept=".pdf">
-                        <small class="text-muted">Formats acceptés: PDF uniquement, Max 20Mo</small>
-                    </div>
-
-                    <input type="hidden" id="schemaData" name="data" value='{"elements":[],"appState":[],"files":[]}'>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn" style="background: #145f68; color: white;">
-                        <i class="fas fa-save me-1"></i> Enregistrer
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('scripts')
@@ -1020,31 +802,6 @@
     };
 
     // ============================================
-    // GESTION DES ONGLETS
-    // ============================================
-    function switchTab(tab) {
-        const docsSection = document.getElementById('docsSection');
-        const schemasSection = document.getElementById('schemasSection');
-        const tabDocs = document.getElementById('tabDocs');
-        const tabSchemas = document.getElementById('tabSchemas');
-
-        if (tab === 'docs') {
-            docsSection.style.display = 'block';
-            schemasSection.style.display = 'none';
-            tabDocs.classList.add('active');
-            tabSchemas.classList.remove('active');
-            setTimeout(filterResourcesByCategory, 100);
-            setTimeout(sortResourcesByDate, 150);
-        } else {
-            docsSection.style.display = 'none';
-            schemasSection.style.display = 'block';
-            tabDocs.classList.remove('active');
-            tabSchemas.classList.add('active');
-            setTimeout(updateGtCounts, 300);
-        }
-    }
-
-    // ============================================
     // SOUS-CATÉGORIES POUR LE FORMULAIRE SEULEMENT
     // ============================================
     const subCategoriesMap = {
@@ -1120,7 +877,7 @@
         }
     };
 
-    let imageModal, resourceModal, createSchemaModal;
+    let imageModal, resourceModal;
 
     window.openCreateModal = function() {
         document.getElementById('resourceForm').reset();
@@ -1166,169 +923,14 @@
     };
 
     // ============================================
-    // GESTION DES SCHÉMAS (GT)
-    // ============================================
-    window.allSchemas = [];
-
-    function toggleSubGroups(id) {
-        const subGroup = document.getElementById(id);
-        const icon = document.getElementById('icon' + id);
-        if (subGroup) {
-            if (subGroup.style.display === 'none') {
-                subGroup.style.display = 'block';
-                if (icon) icon.classList.remove('rotated');
-            } else {
-                subGroup.style.display = 'none';
-                if (icon) icon.classList.add('rotated');
-            }
-        }
-    }
-
-    window.openCreateSchemaModal = function(gt) {
-        document.getElementById('createSchemaForm').reset();
-        document.getElementById('schemaData').value = '{"elements":[],"appState":[],"files":[]}';
-        document.getElementById('schemaModalTitle').textContent = 'Ajouter un CR de réunion';
-        
-        if (gt) {
-            document.getElementById('schemaCategory').value = gt;
-            if (gt === 'GT1') {
-                document.getElementById('schemaSubCategoryContainer').style.display = 'block';
-            } else {
-                document.getElementById('schemaSubCategoryContainer').style.display = 'none';
-            }
-        }
-        
-        if (createSchemaModal) createSchemaModal.show();
-    };
-
-    window.filterSchemasByGT = function(gt) {
-        const labels = {
-            'GT1': 'GT1 - Réseau VIF-VC & coordination entre acteurs',
-            'GT2': 'GT2 - Force de l\'ordre, justice et santé',
-            'GT3': 'GT3 - Auteurs de violences',
-            'GT4': 'GT4 - Cellule familiale',
-            'GT5': 'GT5 - Hébergement - logement FVVC et auteurs',
-            'GT6': 'GT6 - Pilotage du schéma',
-            'SGT1': 'SGT1 - Sensibilisation & formations et information grand public',
-            'SGT2': 'SGT2 - Coordination acteurs / Outils professionnels',
-            'SGT3': 'SGT3 - Coordination acteurs / Outils professionnels',
-            'SGT4': 'SGT4 - Parcours'
-        };
-        const label = labels[gt] || gt;
-        document.getElementById('currentGtTitle').textContent = label;
-        
-        const filteredSchemas = window.allSchemas.filter(s => {
-            return s.category === gt || s.sub_category === gt;
-        });
-        
-        const container = document.getElementById('meetingReportsList');
-        if (filteredSchemas.length === 0) {
-            container.innerHTML = `
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-file-pdf fa-3x mb-3 opacity-25"></i>
-                    <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
-                    <button onclick="openCreateSchemaModal('${gt}')" class="btn btn-sm" style="background: #145f68; color: white;">
-                        <i class="fas fa-plus me-1"></i> Nouveau
-                    </button>
-                </div>
-            `;
-            return;
-        }
-        container.innerHTML = filteredSchemas.map(schema => `
-            <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded" style="background: #f8f9fa; border-left: 4px solid #145f68;">
-                <div class="d-flex align-items-center gap-3">
-                    <i class="fas fa-file-pdf text-danger fa-2x"></i>
-                    <div>
-                        <h6 class="mb-0 fw-semibold" style="font-size: 0.95rem;">${schema.title}</h6>
-                        ${schema.description ? `<small class="text-muted" style="font-size: 0.85rem;">${schema.description}</small>` : ''}
-                        <div>
-                            <small class="text-muted" style="font-size: 0.8rem;">
-                                <i class="fas fa-calendar me-1"></i> ${new Date(schema.created_at).toLocaleDateString('fr-FR')}
-                            </small>
-                            ${schema.sub_category ? `
-                                <span class="badge bg-info ms-2" style="font-size: 0.7rem;">${schema.sub_category}</span>
-                            ` : ''}
-                            ${schema.category ? `
-                                <span class="badge bg-secondary ms-1" style="font-size: 0.7rem;">${schema.category}</span>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-group btn-group-sm">
-                    ${schema.file_path ? `
-                        <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-outline-primary" title="Voir le PDF" style="padding: 2px 8px; font-size: 0.7rem;">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="${'/storage/' + schema.file_path}" download class="btn btn-outline-secondary" title="Télécharger" style="padding: 2px 8px; font-size: 0.7rem;">
-                            <i class="fas fa-download"></i>
-                        </a>
-                    ` : `
-                        <span class="badge bg-warning text-dark" style="font-size: 0.7rem;">Sans PDF</span>
-                    `}
-                    <button onclick="deleteSchema(${schema.id})" class="btn btn-outline-danger" title="Supprimer" style="padding: 2px 8px; font-size: 0.7rem;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    };
-
-    window.deleteSchema = function(id) {
-        if (!confirm('Supprimer ce compte rendu définitivement ?')) return;
-        fetch(`/schemas/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
-        }).then(r => r.json()).then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Erreur lors de la suppression');
-            }
-        }).catch(console.error);
-    };
-
-    function updateGtCounts() {
-        const counts = {
-            GT1: 0, SGT1: 0, SGT2: 0, SGT3: 0, SGT4: 0,
-            GT2: 0, GT3: 0, GT4: 0, GT5: 0, GT6: 0
-        };
-        
-        if (window.allSchemas && window.allSchemas.length > 0) {
-            window.allSchemas.forEach(s => {
-                if (s.category && counts[s.category] !== undefined) {
-                    counts[s.category]++;
-                }
-                if (s.sub_category && counts[s.sub_category] !== undefined) {
-                    counts[s.sub_category]++;
-                }
-            });
-        }
-        
-        document.querySelectorAll('[id^="count"]').forEach(el => {
-            const id = el.id.replace('count', '');
-            if (counts[id] !== undefined) {
-                el.textContent = counts[id];
-            }
-        });
-    }
-
-    // ============================================
     // INITIALISATION DOM
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
         const imageModalEl = document.getElementById('imageModal');
         const resourceModalEl = document.getElementById('resourceModal');
-        const createSchemaModalEl = document.getElementById('createSchemaModal');
 
         if (imageModalEl) imageModal = new bootstrap.Modal(imageModalEl);
         if (resourceModalEl) resourceModal = new bootstrap.Modal(resourceModalEl);
-        if (createSchemaModalEl) createSchemaModal = new bootstrap.Modal(createSchemaModalEl);
-
-        // Charger tous les schémas
-        window.allSchemas = @json($schemas ?? []);
 
         // Événements d'écoute en temps réel pour le filtre et la recherche
         const searchInput = document.getElementById('searchInput');
@@ -1350,20 +952,9 @@
         // Lancer l'initialisation du filtre et du tri
         filterResourcesByCategory();
         sortResourcesByDate();
-        updateGtCounts();
 
         // Initialiser le mode d'affichage par défaut (grille)
         setViewMode('grid');
-
-        // Formulaires
-        document.getElementById('createSchemaForm')?.addEventListener('submit', function(e) {
-            const fileInput = document.getElementById('schemaFile');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                e.preventDefault();
-                alert('Veuillez sélectionner un fichier PDF');
-                return false;
-            }
-        });
 
         document.getElementById('resourceForm')?.addEventListener('submit', function(e) {
             if (selectedResourceType === 'file') {
