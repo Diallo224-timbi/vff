@@ -80,7 +80,7 @@ Route::get('/sitemap.xml', function () {
 //shéma route
 // routes/web.php
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','admin'])->group(function () {
     // Routes pour les schémas
     Route::get('/schemas', [SchemaController::class, 'index'])->name('schemas.index');
     Route::get('/schemas/{id}', [SchemaController::class, 'show'])->name('schemas.show');
