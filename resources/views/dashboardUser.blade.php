@@ -28,6 +28,7 @@
             @endauth
         </div>
     </header>
+
     {{-- ══════════ HERO SECTION ══════════ --}}
     <section class="vff-hero">
         <div class="vff-hero-mesh"></div>
@@ -44,12 +45,15 @@
             </div>
         </div>
     </section>
+
     {{-- ══════════ CONTENU PRINCIPAL ══════════ --}}
-    <main class="vff-main-content">   
+    <main class="vff-main-content">
+
         {{-- ══════════ CARTES NAVIGATION ══════════ --}}
         @php
             $isAdmin = auth()->check() && auth()->user()->role === 'admin';
         @endphp
+
         <section class="vff-cards-wrap">
             <div class="vff-hw">
                 <div class="vff-cards {{ $isAdmin ? 'is-admin' : 'is-user' }}">
@@ -62,6 +66,7 @@
                             'resources.index' => ['title' => 'Ressources & Outils', 'desc' => 'Guides, outils et documentation', 'icon' => 'bx-download', 'color' => '#d97706', 'bg' => '#fef3c7'],
                         ];
                     @endphp
+
                     {{-- Cartes publiques --}}
                     @foreach($navCards as $routeName => $c)
                         @if(Route::has($routeName))
@@ -77,6 +82,7 @@
                         </a>
                         @endif
                     @endforeach
+
                     {{-- Cartes réservées à l'ADMIN --}}
                     @auth
                         @if($isAdmin)
@@ -102,7 +108,6 @@
                                 </div>
                             </a>
                             @endif
-                            {{-- BOUTON ADMIN AVEC NOUVELLE COULEUR INDIGO #4f46e5 --}}
                             @if (Route::has('admin.users'))
                             <a href="{{ route('admin.users') }}" class="vff-card">
                                 <div class="vff-card-icon" style="background:#e0e7ff;color:#4f46e5;">
@@ -113,13 +118,14 @@
                                     <p class="vff-card-desc">Gestion des utilisateurs</p>
                                     <span class="vff-card-more" style="color:#4f46e5;">En savoir plus →</span>
                                 </div>
-                            </a>    
+                            </a>
                             @endif
                         @endif
                     @endauth
                 </div>
             </div>
         </section>
+
         {{-- ══════════ BANDEAU DÉFILANT ÉVÉNEMENTS ══════════ --}}
         <section class="vff-ticker-wrap">
             <div class="vff-hw">
@@ -147,20 +153,19 @@
                                     @else
                                         <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
                                     @endif
-                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong> 
+                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
                                     <span class="vff-ticker-date">
-                                        <i class='bx bx-time-five'></i> 
+                                        <i class='bx bx-time-five'></i>
                                         {{ $date->translatedFormat('d F Y à H\hi') }}
                                     </span>
-
                                     @if(!empty($agen->lieu))
                                         <span class="vff-ticker-location">
                                             <i class='bx bx-map'></i> {{ $agen->lieu }}
                                         </span>
                                     @endif
-                                        <a href="{{ route('events.index') }}" class="vff-ticker-action">
-                                            En savoir plus <i class='bx bx-right-arrow-alt'></i>
-                                        </a>
+                                    <a href="{{ route('events.index') }}" class="vff-ticker-action">
+                                        En savoir plus <i class='bx bx-right-arrow-alt'></i>
+                                    </a>
                                 </div>
                                 <span class="vff-ticker-sep">•</span>
                             @empty
@@ -183,7 +188,7 @@
                                     @endif
                                     <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
                                     <span class="vff-ticker-date">
-                                        <i class='bx bx-time-five'></i> 
+                                        <i class='bx bx-time-five'></i>
                                         {{ $date->translatedFormat('d F Y à H\hi') }}
                                     </span>
                                     @if(!empty($agen->lieu))
@@ -205,6 +210,7 @@
             </div>
         </section>
     </main>
+
     {{-- ══════════ FOOTER ══════════ --}}
     <footer class="vff-footer">
         <div class="vff-hw vff-footer-inner">
@@ -222,6 +228,7 @@
         </div>
     </footer>
 </div>
+
 <style>
 /* ════════════════════════════════════════════════
    VARIABLES & GLOBAL LAYOUT
@@ -235,12 +242,13 @@
     --txt: #0d1f22;
     --mu:  #5e7e83;
     --bdr: #dde6e8;
-    --r:   16px;
+    --r:   14px;
     --ease: cubic-bezier(.4,0,.2,1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ✅ Root : prend au minimum toute la hauteur de la fenêtre */
 .vff-root {
     display: flex;
     flex-direction: column;
@@ -258,10 +266,11 @@
     padding: 0 2rem;
 }
 
+/* ✅ Main : grandit pour pousser le footer en bas */
 .vff-main-content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-grow: 1;
 }
 
@@ -271,9 +280,10 @@
 .vff-header {
     background: var(--w);
     border-bottom: 3px solid var(--pl);
-    padding: 0.8rem 0;
+    padding: 0.65rem 0;
     z-index: 50;
     box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    flex-shrink: 0;
 }
 
 .vff-header .vff-hw {
@@ -283,10 +293,10 @@
 }
 
 .vff-brand { display: flex; align-items: center; gap: 0.8rem; }
-.vff-brand img { height: 44px; width: auto; }
-.vff-brand-sep { width: 2px; height: 34px; background: var(--bdr); }
-.vff-brand-name { font-size: 0.85rem; font-weight: 800; color: var(--pl); text-transform: uppercase; }
-.vff-brand-sub { font-size: 0.65rem; color: var(--mu); font-style: italic; }
+.vff-brand img { height: 40px; width: auto; }
+.vff-brand-sep { width: 2px; height: 30px; background: var(--bdr); }
+.vff-brand-name { font-size: 0.82rem; font-weight: 800; color: var(--pl); text-transform: uppercase; }
+.vff-brand-sub { font-size: 0.62rem; color: var(--mu); font-style: italic; }
 
 .vff-user {
     display: flex;
@@ -295,23 +305,23 @@
     background: #f0f6f7;
     border: 1px solid var(--bdr);
     border-radius: 50px;
-    padding: 0.25rem 0.9rem 0.25rem 0.25rem;
+    padding: 0.22rem 0.9rem 0.22rem 0.22rem;
 }
 
 .vff-user-av {
-    width: 32px; height: 32px;
+    width: 30px; height: 30px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--pl), #2d7a82);
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.vff-user-nm { font-size: 0.75rem; font-weight: 700; }
-.vff-user-rl { font-size: 0.6rem; color: var(--mu); }
+.vff-user-nm { font-size: 0.73rem; font-weight: 700; }
+.vff-user-rl { font-size: 0.58rem; color: var(--mu); }
 
 /* ════════════════════════════════════════════════
    HERO
@@ -319,8 +329,9 @@
 .vff-hero {
     position: relative;
     overflow: hidden;
-    padding: 3rem 0;
+    padding: 2rem 0;
     background: linear-gradient(135deg, #0d2b30 0%, #1a4a52 50%, #255156 100%);
+    flex-shrink: 0;
 }
 
 .vff-hero-mesh {
@@ -332,11 +343,11 @@
 .vff-hero-inner { position: relative; z-index: 2; }
 
 .vff-hero-h1 {
-    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    font-size: clamp(1.25rem, 1.8vw, 1.75rem);
     font-weight: 900;
-    line-height: 1.35;
+    line-height: 1.32;
     color: rgba(255,255,255,.95);
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
 }
 
 .vff-animated-welcome {
@@ -366,30 +377,32 @@
     -webkit-text-fill-color: transparent;
 }
 
-.vff-hero-p { font-size: 0.95rem; color: rgba(255,255,255,.75); }
+.vff-hero-p { font-size: 0.9rem; color: rgba(255,255,255,.75); }
 
 /* ════════════════════════════════════════════════
-   CARTES NAVIGATION (CORRECTIONS NATIVE OVERFLOW)
+   CARTES NAVIGATION
 ════════════════════════════════════════════════ */
 .vff-cards-wrap {
-    padding: 3rem 0 1.5rem 0;
+    flex: 0 0 auto;
+    padding: 1rem 0 0.5rem 0;
+    overflow: visible;
 }
 
 .vff-cards {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.15rem;
 }
 
 /* Grille Admin */
-.vff-cards.is-admin { 
-    grid-template-columns: repeat(4, 1fr); 
+.vff-cards.is-admin {
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .vff-card {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
+    gap: 0.9rem;
+    padding: 1.1rem;
     border: 1.5px solid var(--bdr);
     border-radius: var(--r);
     background: var(--w);
@@ -401,48 +414,48 @@
 }
 
 .vff-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     border-color: var(--pl);
     box-shadow: 0 12px 25px rgba(0,0,0,.08);
 }
 
 .vff-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     flex-shrink: 0;
 }
 
-.vff-card-content { 
-    flex: 1; 
-    min-width: 0; 
+.vff-card-content {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
 }
 
 .vff-card-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 800;
     color: var(--txt);
     line-height: 1.3;
 }
 
 .vff-card-desc {
-    font-size: 0.75rem;
+    font-size: 0.73rem;
     color: var(--mu);
-    margin-top: 0.25rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .vff-card-more {
-    font-size: 0.75rem;
+    font-size: 0.73rem;
     font-weight: 700;
     color: var(--pl);
     margin-top: auto;
@@ -455,33 +468,34 @@
 }
 
 /* NON-ADMIN CARTES */
-.vff-cards.is-user { 
-    grid-template-columns: repeat(5, 1fr); 
+.vff-cards.is-user {
+    grid-template-columns: repeat(5, 1fr);
 }
 
 .vff-cards.is-user .vff-card {
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem 1.1rem;
 }
 
 .vff-cards.is-user .vff-card-icon {
-    width: 56px;
-    height: 56px;
-    font-size: 1.8rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.6rem;
 }
 
 .vff-cards.is-user .vff-card-title {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
 }
 
 .vff-cards.is-user .vff-card-desc {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
 }
 
 /* ════════════════════════════════════════════════
    BANDEAU ÉVÉNEMENTS DÉFILANT
 ════════════════════════════════════════════════ */
 .vff-ticker-wrap {
-    padding: 1.5rem 0 3rem 0;
+    flex: 0 0 auto;
+    padding: 0.4rem 0 0.5rem 0;
 }
 
 .vff-ticker-container {
@@ -497,26 +511,26 @@
 .vff-ticker-badge {
     background: linear-gradient(135deg, #e11d48, #be123c);
     color: #ffffff;
-    padding: 1.1rem 1.6rem;
-    font-size: 0.85rem;
+    padding: 0.9rem 1.4rem;
+    font-size: 0.82rem;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.55rem;
     flex-shrink: 0;
     z-index: 2;
     box-shadow: 4px 0 15px rgba(190, 18, 60, 0.25);
 }
 
-.vff-ticker-badge i { font-size: 1.3rem; }
+.vff-ticker-badge i { font-size: 1.2rem; }
 
 .vff-ticker-content {
     overflow: hidden;
     white-space: nowrap;
     position: relative;
     width: 100%;
-    padding: 0.85rem 0;
+    padding: 0.75rem 0;
 }
 
 .vff-ticker-track {
@@ -532,33 +546,33 @@
 .vff-ticker-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.85rem;
-    padding: 0.4rem 1.2rem;
+    gap: 0.75rem;
+    padding: 0.35rem 1rem;
     border-radius: 30px;
 }
 
 .vff-ticker-tag {
     background: #ffe4e6;
     color: #be123c;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    padding: 0.35rem 0.75rem;
+    padding: 0.3rem 0.7rem;
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
     text-transform: uppercase;
 }
 
 .vff-ticker-title {
-    font-size: 0.98rem;
+    font-size: 0.93rem;
     font-weight: 800;
     color: #0f172a;
 }
 
-.vff-ticker-date, 
+.vff-ticker-date,
 .vff-ticker-location {
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     color: #475569;
     display: inline-flex;
     align-items: center;
@@ -566,16 +580,16 @@
     font-weight: 500;
 }
 
-.vff-ticker-date i, 
+.vff-ticker-date i,
 .vff-ticker-location i {
     color: #e11d48;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
 .vff-ticker-sep {
     color: #fda4af;
-    margin: 0 1.4rem;
-    font-size: 1.4rem;
+    margin: 0 1.2rem;
+    font-size: 1.3rem;
 }
 
 /* Version grand format non-admin */
@@ -585,31 +599,31 @@
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-badge {
-    padding: 1.4rem 2.2rem;
-    font-size: 1rem;
+    padding: 1.15rem 1.9rem;
+    font-size: 0.95rem;
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-badge i {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-content {
-    padding: 1.2rem 0;
+    padding: 1rem 0;
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-title {
-    font-size: 1.15rem;
+    font-size: 1.08rem;
     font-weight: 800;
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-tag {
-    font-size: 0.85rem;
-    padding: 0.45rem 0.9rem;
+    font-size: 0.82rem;
+    padding: 0.4rem 0.85rem;
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-date,
 .vff-ticker-container.is-user-large .vff-ticker-location {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .vff-ticker-action {
@@ -618,12 +632,12 @@
     gap: 0.4rem;
     background: #e11d48;
     color: #ffffff;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 800;
-    padding: 0.45rem 1rem;
+    padding: 0.4rem 0.9rem;
     border-radius: 20px;
     text-decoration: none;
-    margin-left: 0.6rem;
+    margin-left: 0.55rem;
     box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
     transition: all 0.2s ease;
 }
@@ -637,7 +651,7 @@
 .vff-ticker-item.is-special-date {
     background: linear-gradient(135deg, #fff1f2, #ffe4e6);
     border: 2px solid #e11d48;
-    padding-right: 1.4rem;
+    padding-right: 1.25rem;
 }
 
 .vff-ticker-item.is-special-date .tag-special {
@@ -667,8 +681,9 @@
 ════════════════════════════════════════════════ */
 .vff-footer {
     background: var(--pd);
-    padding: 1.4rem 0;
+    padding: 1.1rem 0;
     margin-top: auto;
+    flex-shrink: 0;
     border-top: 1px solid rgba(255,255,255,.1);
 }
 
@@ -681,7 +696,7 @@
 .vff-footer-logos { display: flex; align-items: center; gap: 0.8rem; }
 
 .vff-footer-org {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: rgba(255,255,255,.5);
     font-weight: 600;
     text-transform: uppercase;
@@ -689,10 +704,10 @@
     border-left: 1px solid rgba(255,255,255,.15);
 }
 
-.vff-footer-links { display: flex; align-items: center; gap: 1.2rem; }
-.vff-footer-links a { font-size: 0.75rem; color: rgba(255,255,255,.6); text-decoration: none; }
+.vff-footer-links { display: flex; align-items: center; gap: 1.1rem; }
+.vff-footer-links a { font-size: 0.73rem; color: rgba(255,255,255,.6); text-decoration: none; }
 .vff-footer-links a:hover { color: #fff; }
-.vff-footer-copy { font-size: 0.7rem; color: rgba(255,255,255,.4); }
+.vff-footer-copy { font-size: 0.68rem; color: rgba(255,255,255,.4); }
 
 /* ════════════════════════════════════════════════
    RESPONSIVE
@@ -705,6 +720,7 @@
 @media (max-width: 900px) {
     .vff-cards.is-user,
     .vff-cards.is-admin { grid-template-columns: repeat(2, 1fr); }
+    .vff-hw { padding: 0 1.25rem; }
 }
 
 @media (max-width: 640px) {
@@ -712,6 +728,140 @@
     .vff-cards.is-admin { grid-template-columns: 1fr; }
     .vff-footer-inner { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
     .vff-ticker-badge span { display: none; }
+}
+
+/* ════════════════════════════════════════════════
+   FIX SPÉCIAL 1920×1080 @125% (≈ 1536×864 CSS)
+════════════════════════════════════════════════ */
+@media (min-width: 1400px) and (max-height: 900px) {
+    .vff-header {
+        padding: 0.5rem 0;
+    }
+    .vff-brand img { height: 36px; }
+    .vff-brand-sep { height: 26px; }
+    .vff-brand-name { font-size: 0.78rem; }
+    .vff-brand-sub { font-size: 0.58rem; }
+
+    .vff-hero {
+        padding: 1.5rem 0;
+    }
+    .vff-hero-h1 {
+        font-size: clamp(1.15rem, 1.6vw, 1.55rem);
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+    }
+    .vff-hero-p { font-size: 0.85rem; }
+
+    .vff-cards-wrap {
+        padding: 0.9rem 0 0.5rem 0;
+    }
+    .vff-cards {
+        gap: 0.95rem;
+    }
+    .vff-card {
+        padding: 0.95rem;
+        gap: 0.75rem;
+    }
+    .vff-card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+        border-radius: 10px;
+    }
+    .vff-card-title { font-size: 0.85rem; }
+    .vff-card-desc { font-size: 0.68rem; margin-bottom: 0.3rem; }
+    .vff-card-more { font-size: 0.68rem; }
+
+    .vff-cards.is-user .vff-card { padding: 1.05rem 0.95rem; }
+    .vff-cards.is-user .vff-card-icon { width: 44px; height: 44px; font-size: 1.4rem; }
+    .vff-cards.is-user .vff-card-title { font-size: 0.9rem; }
+    .vff-cards.is-user .vff-card-desc { font-size: 0.73rem; }
+
+    .vff-ticker-wrap {
+        padding: 0.3rem 0 0.4rem 0;
+    }
+    .vff-ticker-badge {
+        padding: 0.75rem 1.2rem;
+        font-size: 0.78rem;
+    }
+    .vff-ticker-badge i { font-size: 1.05rem; }
+    .vff-ticker-content { padding: 0.6rem 0; }
+    .vff-ticker-title { font-size: 0.88rem; }
+    .vff-ticker-date,
+    .vff-ticker-location { font-size: 0.8rem; }
+    .vff-ticker-action {
+        padding: 0.35rem 0.8rem;
+        font-size: 0.78rem;
+    }
+
+    .vff-ticker-container.is-user-large .vff-ticker-badge {
+        padding: 0.95rem 1.5rem;
+        font-size: 0.88rem;
+    }
+    .vff-ticker-container.is-user-large .vff-ticker-content {
+        padding: 0.8rem 0;
+    }
+    .vff-ticker-container.is-user-large .vff-ticker-title {
+        font-size: 1rem;
+    }
+
+    .vff-footer {
+        padding: 0.85rem 0;
+    }
+    .vff-footer-org { font-size: 0.62rem; }
+    .vff-footer-links a { font-size: 0.68rem; }
+    .vff-footer-copy { font-size: 0.62rem; }
+}
+
+/* ════════════════════════════════════════════════
+   ✅ FOOTER STICKY BOTTOM
+   Le footer reste toujours collé en bas de la fenêtre,
+   même si le contenu est plus court que la page.
+   (1920×1080 @ 125% ≈ 1536×864 CSS)
+════════════════════════════════════════════════ */
+.vff-root {
+    min-height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.vff-main-content {
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.vff-cards-wrap {
+    padding-bottom: 0.5rem !important;
+    margin-bottom: 0 !important;
+}
+
+.vff-ticker-wrap {
+    padding-top: 0.3rem !important;
+    padding-bottom: 0.4rem !important;
+    margin-bottom: 0 !important;
+}
+
+.vff-footer {
+    margin-top: auto !important;
+    flex-shrink: 0 !important;
+    padding-top: 0.85rem !important;
+    padding-bottom: 0.85rem !important;
+}
+
+/* Au cas où le body parent aurait des contraintes */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body > main,
+body > .container,
+body > .container-fluid {
+    flex-grow: 1;
 }
 </style>
 

@@ -3,22 +3,22 @@
 @section('title', 'Schéma violences - Gestion des GT')
 @section('content')
 
-<div class="container-fluid mt-4">
+<div class="container-fluid px-4 mt-3">
     <div class="row">
         <div class="col-12">
             <!-- En-tête -->
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                 <div>
-                    <h2 class="mb-0 fw-bold" style="color: #145f68;">
+                    <h4 class="mb-0 fw-bold" style="color: #145f68;">
                         <i class="fas fa-project-diagram me-2"></i>Schéma violences
-                    </h2>
-                    <p class="text-muted mb-0">Gestion des groupes de travail et comptes rendus</p>
+                    </h4>
+                    <p class="text-muted mb-0" style="font-size: 0.85rem;">Gestion des groupes de travail et comptes rendus</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <button onclick="openCreateSchemaModal()" class="btn" style="background: #145f68; color: white;">
+                    <button onclick="openCreateSchemaModal()" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
                         <i class="fas fa-plus me-1"></i> Nouveau CR
                     </button>
-                    <a href="{{ route('resources.index') }}" class="btn btn-outline-secondary">
+                    <a href="{{ route('resources.index') }}" class="btn btn-sm btn-outline-secondary" style="padding: 4px 10px; font-size: 0.8rem;">
                         <i class="fas fa-arrow-left me-1"></i> Retour
                     </a>
                 </div>
@@ -26,12 +26,12 @@
 
             <!-- ============ MESSAGES DE SUCCÈS / ERREUR ============ -->
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-left: 5px solid #28a745; border-radius: 10px; background: #f0fff4;">
+                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-3 py-2" role="alert" style="border-left: 5px solid #28a745; border-radius: 10px; background: #f0fff4; font-size: 0.85rem;">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle fa-2x me-3" style="color: #28a745;"></i>
+                        <i class="fas fa-check-circle fa-lg me-3" style="color: #28a745;"></i>
                         <div>
-                            <h5 class="mb-0 fw-bold" style="color: #155724;">✅ Succès !</h5>
-                            <p class="mb-0" style="color: #155724;">{{ session('success') }}</p>
+                            <h6 class="mb-0 fw-bold" style="color: #155724;">✅ Succès !</h6>
+                            <p class="mb-0" style="color: #155724; font-size: 0.8rem;">{{ session('success') }}</p>
                         </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -39,12 +39,12 @@
             @endif
 
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-left: 5px solid #dc3545; border-radius: 10px; background: #fff5f5;">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3 py-2" role="alert" style="border-left: 5px solid #dc3545; border-radius: 10px; background: #fff5f5; font-size: 0.85rem;">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-exclamation-circle fa-2x me-3" style="color: #dc3545;"></i>
+                        <i class="fas fa-exclamation-circle fa-lg me-3" style="color: #dc3545;"></i>
                         <div>
-                            <h5 class="mb-0 fw-bold" style="color: #721c24;">❌ Erreur !</h5>
-                            <p class="mb-0" style="color: #721c24;">{{ session('error') }}</p>
+                            <h6 class="mb-0 fw-bold" style="color: #721c24;">❌ Erreur !</h6>
+                            <p class="mb-0" style="color: #721c24; font-size: 0.8rem;">{{ session('error') }}</p>
                         </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -52,12 +52,12 @@
             @endif
 
             @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-left: 5px solid #dc3545; border-radius: 10px; background: #fff5f5;">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3 py-2" role="alert" style="border-left: 5px solid #dc3545; border-radius: 10px; background: #fff5f5; font-size: 0.85rem;">
                     <div class="d-flex align-items-start">
-                        <i class="fas fa-exclamation-circle fa-2x me-3 mt-1" style="color: #dc3545;"></i>
+                        <i class="fas fa-exclamation-circle fa-lg me-3 mt-1" style="color: #dc3545;"></i>
                         <div>
-                            <h5 class="mb-1 fw-bold" style="color: #721c24;">❌ Veuillez corriger les erreurs :</h5>
-                            <ul class="mb-0 ps-3" style="color: #721c24;">
+                            <h6 class="mb-1 fw-bold" style="color: #721c24;">❌ Veuillez corriger les erreurs :</h6>
+                            <ul class="mb-0 ps-3" style="color: #721c24; font-size: 0.8rem;">
                                 @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
@@ -70,14 +70,14 @@
             <!-- ============================================= -->
 
             <!-- Vue principale -->
-            <div class="row g-4">
+            <div class="row g-3">
                 <!-- Colonne de gauche : Arborescence -->
                 <div class="col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
-                        <div class="card-header" style="background: #145f68; color: white;">
-                            <h5 class="mb-0"><i class="fas fa-sitemap me-2"></i>Groupes de travail</h5>
+                    <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                        <div class="card-header py-2" style="background: #145f68; color: white;">
+                            <h6 class="mb-0"><i class="fas fa-sitemap me-2"></i>Groupes de travail</h6>
                         </div>
-                        <div class="card-body p-0" style="max-height: 600px; overflow-y: auto;">
+                        <div class="card-body p-0" style="max-height: 520px; overflow-y: auto;">
                             <div id="gtTree" class="p-2"></div>
                         </div>
                     </div>
@@ -85,27 +85,27 @@
 
                 <!-- Colonne de droite : Contenu -->
                 <div class="col-lg-8 col-xl-9">
-                    <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
-                        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                        <div class="card-header bg-white py-2 border-bottom d-flex justify-content-between align-items-center flex-wrap">
                             <div>
                                 <i class="fas fa-file-alt text-primary me-2"></i>
-                                <span id="currentGtTitle" class="fw-semibold" style="font-size: 1.1rem;">Sélectionnez un groupe</span>
+                                <span id="currentGtTitle" class="fw-semibold" style="font-size: 0.95rem;">Sélectionnez un groupe</span>
                             </div>
                             <div class="d-flex gap-2">
-                                <button onclick="toggleView()" class="btn btn-sm btn-outline-secondary" id="toggleViewBtn">
+                                <button onclick="toggleView()" class="btn btn-sm btn-outline-secondary" id="toggleViewBtn" style="padding: 2px 8px; font-size: 0.75rem;">
                                     <i class="fas fa-th-large me-1"></i> Vue carte
                                 </button>
                             </div>
                         </div>
-                        <div class="card-body p-3">
+                        <div class="card-body p-2">
                             <!-- Barre d'outils -->
-                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                                 <div class="d-flex gap-2 flex-wrap">
-                                    <div class="input-group" style="width: 250px;">
+                                    <div class="input-group input-group-sm" style="width: 200px;">
                                         <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
-                                        <input type="text" id="schemaSearch" class="form-control" placeholder="Rechercher...">
+                                        <input type="text" id="schemaSearch" class="form-control" placeholder="Rechercher..." style="font-size: 0.8rem; height: 30px;">
                                     </div>
-                                    <select id="schemaFilter" class="form-select" style="width: 150px;">
+                                    <select id="schemaFilter" class="form-select form-select-sm" style="width: 120px; font-size: 0.8rem; height: 30px;">
                                         <option value="all">Tous les types</option>
                                         <option value="pdf">PDF</option>
                                         <option value="doc">Word</option>
@@ -114,16 +114,16 @@
                                         <option value="txt">TXT</option>
                                     </select>
                                 </div>
-                                <div class="text-muted small">
+                                <div class="text-muted" style="font-size: 0.75rem;">
                                     <span id="visibleSchemasCount">0</span> documents
                                 </div>
                             </div>
 
                             <!-- Zone de contenu -->
-                            <div id="schemasContent" style="min-height: 400px;">
+                            <div id="schemasContent" style="min-height: 380px;">
                                 <div class="text-center py-5 text-muted">
                                     <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
-                                    <p style="font-size: 1rem;">Sélectionnez un groupe de travail pour voir les comptes rendus</p>
+                                    <p style="font-size: 0.95rem;">Sélectionnez un groupe de travail pour voir les comptes rendus</p>
                                 </div>
                             </div>
                         </div>
@@ -139,21 +139,21 @@
 <!-- ============================================ -->
 <div id="createSchemaModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header" style="background: #145f68; color: white; border-radius: 15px 15px 0 0;">
-                <h5 class="modal-title">
+        <div class="modal-content" style="border-radius: 12px;">
+            <div class="modal-header py-2" style="background: #145f68; color: white; border-radius: 12px 12px 0 0;">
+                <h6 class="modal-title">
                     <i class="fas fa-plus me-2"></i> <span id="schemaModalTitle">Nouveau compte rendu</span>
-                </h5>
+                </h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form id="createSchemaForm" method="POST" action="{{ route('schemas.store') }}" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body py-2" style="font-size: 0.85rem;">
                     <div class="row">
                         <div class="col-md-6" id="categoryColumn">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Groupe de travail <span class="text-danger">*</span></label>
-                                <select id="schemaCategory" name="category" required class="form-select" onchange="toggleSubCategory()">
+                            <div class="mb-2">
+                                <label class="form-label fw-semibold mb-1">Groupe de travail <span class="text-danger">*</span></label>
+                                <select id="schemaCategory" name="category" required class="form-select form-select-sm" onchange="toggleSubCategory()">
                                     <option value="">Sélectionner</option>
                                     <option value="GT1">GT1 - Réseau VIF-VC</option>
                                     <option value="GT2">GT2 - Force/Justice/Santé</option>
@@ -166,9 +166,9 @@
                         </div>
 
                         <div class="col-md-6" id="subCategoryColumn">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Sous-groupe</label>
-                                <select id="schemaSubCategory" name="sub_category" class="form-select">
+                            <div class="mb-2">
+                                <label class="form-label fw-semibold mb-1">Sous-groupe</label>
+                                <select id="schemaSubCategory" name="sub_category" class="form-select form-select-sm">
                                     <option value="">Aucun</option>
                                     <option value="SGT1">SGT1 - Sensibilisation & formations</option>
                                     <option value="SGT2">SGT2 - Coordination acteurs</option>
@@ -179,27 +179,27 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Titre du CR <span class="text-danger">*</span></label>
-                        <input type="text" id="schemaTitle" name="title" required class="form-control" placeholder="Ex: CR réunion GT1 du 15/04/2025">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Titre du CR <span class="text-danger">*</span></label>
+                        <input type="text" id="schemaTitle" name="title" required class="form-control form-control-sm" placeholder="Ex: CR réunion GT1 du 15/04/2025">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea id="schemaDescription" name="description" rows="2" class="form-control" placeholder="Résumé de la réunion..."></textarea>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Description</label>
+                        <textarea id="schemaDescription" name="description" rows="2" class="form-control form-control-sm" placeholder="Résumé de la réunion..."></textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
-                        <input type="file" id="schemaFile" name="file" class="form-control" accept=".pdf,.doc,.docx,.odt,.rtf,.txt" required>
-                        <small class="text-muted">Formats acceptés: PDF, DOC, DOCX, ODT, RTF, TXT - Max 20Mo</small>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Fichier <span class="text-danger">*</span></label>
+                        <input type="file" id="schemaFile" name="file" class="form-control form-control-sm" accept=".pdf,.doc,.docx,.odt,.rtf,.txt" required>
+                        <small class="text-muted" style="font-size: 0.72rem;">Formats acceptés: PDF, DOC, DOCX, ODT, RTF, TXT - Max 20Mo</small>
                     </div>
 
                     <input type="hidden" id="schemaData" name="data" value='{"elements":[],"appState":[],"files":[]}'>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn" style="background: #145f68; color: white;">
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm" style="background: #145f68; color: white;">
                         <i class="fas fa-save me-1"></i> Enregistrer
                     </button>
                 </div>
@@ -213,12 +213,12 @@
 <!-- ============================================ -->
 <div id="schemaViewModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header" style="background: #145f68; color: white;">
-                <h5 class="modal-title" id="viewModalTitle">Compte rendu</h5>
+        <div class="modal-content" style="border-radius: 12px;">
+            <div class="modal-header py-2" style="background: #145f68; color: white;">
+                <h6 class="modal-title" id="viewModalTitle">Compte rendu</h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" id="viewModalBody"></div>
+            <div class="modal-body p-2" id="viewModalBody"></div>
         </div>
     </div>
 </div>
@@ -231,7 +231,8 @@
         cursor: pointer;
         transition: all 0.2s ease;
         border-radius: 8px;
-        padding: 8px 12px;
+        padding: 5px 10px;
+        font-size: 0.85rem;
     }
     .gt-node:hover {
         background: #f0f7f7;
@@ -241,12 +242,12 @@
         border-left: 3px solid #145f68;
     }
     .gt-node .badge {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     .gt-children {
-        margin-left: 20px;
+        margin-left: 12px;
         border-left: 2px solid #e5e7eb;
-        padding-left: 15px;
+        padding-left: 10px;
     }
     
     .schema-card {
@@ -258,15 +259,28 @@
         transform: translateY(-3px);
         box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
     }
+    .schema-card .card-body {
+        padding: 0.6rem !important;
+    }
     .schema-card .card-footer {
         background: transparent;
         border-top: 1px solid #f0f0f0;
+        padding: 0.3rem 0.6rem 0.4rem 0.6rem !important;
+    }
+    .schema-card .card-title,
+    .schema-card h6 {
+        font-size: 0.82rem !important;
+        line-height: 1.2;
+    }
+    .schema-card p {
+        font-size: 0.72rem;
+        line-height: 1.2;
     }
     
     .timeline-item {
         position: relative;
-        padding-left: 30px;
-        padding-bottom: 20px;
+        padding-left: 24px;
+        padding-bottom: 12px;
         border-left: 2px solid #e5e7eb;
     }
     .timeline-item:last-child {
@@ -277,8 +291,8 @@
         position: absolute;
         left: -6px;
         top: 0;
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         background: #145f68;
     }
@@ -323,31 +337,72 @@
     .badge-txt { background: #f3f4f6; color: #6c757d; }
     .badge-other { background: #f3f4f6; color: #6c757d; }
     
+    /* Réduction des icônes de fichiers */
     .file-icon-box {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        font-size: 2rem;
-    }
-    .file-icon-box-sm {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+    }
+    .file-icon-box-sm {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.1rem;
+    }
+    
+    /* ============================================
+       COMPACTAGE POUR 1920x1080 @ 125% (~1536x864 CSS)
+       ============================================ */
+    .form-select-sm,
+    .form-control-sm,
+    .input-group-sm > .form-control,
+    .input-group-sm > .input-group-text {
+        height: 30px !important;
+        padding: 2px 8px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .btn-sm {
+        padding: 3px 8px !important;
+        font-size: 0.75rem !important;
     }
     
     @media (max-width: 768px) {
         .gt-children {
-            margin-left: 10px;
-            padding-left: 10px;
+            margin-left: 8px;
+            padding-left: 8px;
+        }
+    }
+
+    /* Ciblage précis 1920x1080 @ 125% */
+    @media screen and (min-width: 1500px) and (max-width: 1600px)
+                  and (min-height: 850px) and (max-height: 900px) {
+
+        #schemaFilter,
+        #schemaSearch {
+            height: 28px !important;
+        }
+
+        .card-body.p-2 {
+            padding: 0.5rem !important;
+        }
+
+        .schema-card .card-body {
+            padding: 0.5rem !important;
+        }
+
+        .gt-node {
+            padding: 4px 8px;
+            font-size: 0.82rem;
         }
     }
 </style>
@@ -452,7 +507,7 @@ class SchemaManager {
                          onclick="schemaManager.selectGt('${gtKey}')">
                         <div class="d-flex align-items-center gap-2">
                             <i class="fas ${gt.icon} text-primary"></i>
-                            <span style="font-size: 0.9rem;">${gt.label}</span>
+                            <span>${gt.label}</span>
                         </div>
                         <span class="badge bg-secondary">${count}</span>
                     </div>
@@ -461,10 +516,10 @@ class SchemaManager {
                             ${gt.children.map(childKey => `
                                 <div class="gt-node d-flex align-items-center justify-content-between ps-3" 
                                      data-gt="${childKey}"
-                                     style="font-size: 0.85rem;"
+                                     style="font-size: 0.8rem;"
                                      onclick="schemaManager.selectGt('${childKey}')">
                                     <div class="d-flex align-items-center gap-2">
-                                        <i class="fas fa-chevron-right text-muted" style="font-size: 0.6rem;"></i>
+                                        <i class="fas fa-chevron-right text-muted" style="font-size: 0.55rem;"></i>
                                         <span>${this.sgtLabels[childKey] || childKey}</span>
                                     </div>
                                     <span class="badge bg-info">${this.getSchemaCount(childKey)}</span>
@@ -600,8 +655,8 @@ class SchemaManager {
             container.innerHTML = `
                 <div class="text-center py-5 text-muted">
                     <i class=""bx bxs-file-pdf fa-3x mb-3 opacity-25"></i>
-                    <p style="font-size: 1rem;">Aucun compte rendu pour ce groupe</p>
-                    <button onclick="openCreateSchemaModal('${this.currentGt}')" class="btn" style="background: #145f68; color: white;">
+                    <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
+                    <button onclick="openCreateSchemaModal('${this.currentGt}')" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
                         <i class="fas fa-plus me-1"></i> Ajouter un CR
                     </button>
                 </div>
@@ -621,44 +676,44 @@ class SchemaManager {
     // ============================================ //
     renderGridView(schemas) {
         const container = document.getElementById('schemasContent');
-        let html = '<div class="row g-3">';
+        let html = '<div class="row g-2">';
         
         schemas.forEach(schema => {
             const fileInfo = this.getFileInfo(schema.file_type);
             
             html += `
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="card schema-card border-0 shadow-sm h-100">
                         <div class="card-body">
-                            <div class="d-flex align-items-start gap-3">
+                            <div class="d-flex align-items-start gap-2">
                                 <div class="file-icon-box" style="background: ${fileInfo.bg};">
                                     <i class="fas ${fileInfo.icon} ${fileInfo.iconClass}" style="color: ${fileInfo.color};"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-0 fw-semibold" style="font-size: 0.9rem;">${this.escapeHtml(schema.title)}</h6>
+                                    <h6 class="mb-0 fw-semibold">${this.escapeHtml(schema.title)}</h6>
                                     <div class="d-flex gap-1 flex-wrap mt-1">
-                                        <span class="badge ${fileInfo.badgeClass}">
+                                        <span class="badge ${fileInfo.badgeClass}" style="font-size: 0.65rem;">
                                             <i class="fas ${fileInfo.icon} me-1"></i> ${fileInfo.label}
                                         </span>
-                                        ${schema.category ? `<span class="badge bg-secondary">${schema.category}</span>` : ''}
+                                        ${schema.category ? `<span class="badge bg-secondary" style="font-size: 0.65rem;">${schema.category}</span>` : ''}
                                     </div>
-                                    <small class="text-muted d-block mt-1">
+                                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
                                         <i class="fas fa-calendar me-1"></i> ${new Date(schema.created_at).toLocaleDateString('fr-FR')}
                                     </small>
                                 </div>
                             </div>
-                            ${schema.description ? `<p class="text-muted small mt-2 mb-0">${this.escapeHtml(schema.description)}</p>` : ''}
+                            ${schema.description ? `<p class="text-muted mt-2 mb-0">${this.escapeHtml(schema.description)}</p>` : ''}
                         </div>
                         <div class="card-footer d-flex justify-content-end gap-1">
                             ${schema.file_path ? `
-                                <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-sm btn-outline-primary" style="padding: 1px 6px; font-size: 0.65rem;">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="${'/storage/' + schema.file_path}" download class="btn btn-sm btn-outline-secondary">
+                                <a href="${'/storage/' + schema.file_path}" download class="btn btn-sm btn-outline-secondary" style="padding: 1px 6px; font-size: 0.65rem;">
                                     <i class="fas fa-download"></i>
                                 </a>
                             ` : ''}
-                            <button onclick="schemaManager.deleteSchema(${schema.id})" class="btn btn-sm btn-outline-danger">
+                            <button onclick="schemaManager.deleteSchema(${schema.id})" class="btn btn-sm btn-outline-danger" style="padding: 1px 6px; font-size: 0.65rem;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -683,40 +738,40 @@ class SchemaManager {
             
             html += `
                 <div class="timeline-item">
-                    <div class="d-flex align-items-start gap-3">
+                    <div class="d-flex align-items-start gap-2">
                         <div class="file-icon-box-sm" style="background: ${fileInfo.bg};">
                             <i class="fas ${fileInfo.icon} ${fileInfo.iconClass}" style="color: ${fileInfo.color};"></i>
                         </div>
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between align-items-start flex-wrap">
                                 <div>
-                                    <h6 class="mb-0 fw-semibold">${this.escapeHtml(schema.title)}</h6>
-                                    <small class="text-muted">
+                                    <h6 class="mb-0 fw-semibold" style="font-size: 0.85rem;">${this.escapeHtml(schema.title)}</h6>
+                                    <small class="text-muted" style="font-size: 0.72rem;">
                                         <i class="fas fa-calendar me-1"></i> ${new Date(schema.created_at).toLocaleDateString('fr-FR')}
                                         ${schema.user_name ? `• <i class="fas fa-user me-1"></i>${this.escapeHtml(schema.user_name)}` : ''}
-                                        <span class="ms-2 badge ${fileInfo.badgeClass}">
+                                        <span class="ms-2 badge ${fileInfo.badgeClass}" style="font-size: 0.65rem;">
                                             <i class="fas ${fileInfo.icon} me-1"></i> ${fileInfo.label}
                                         </span>
                                     </small>
                                 </div>
                                 <div class="d-flex gap-1">
                                     ${schema.file_path ? `
-                                        <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <a href="${'/storage/' + schema.file_path}" target="_blank" class="btn btn-sm btn-outline-primary" style="padding: 1px 6px; font-size: 0.65rem;">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="${'/storage/' + schema.file_path}" download class="btn btn-sm btn-outline-secondary">
+                                        <a href="${'/storage/' + schema.file_path}" download class="btn btn-sm btn-outline-secondary" style="padding: 1px 6px; font-size: 0.65rem;">
                                             <i class="fas fa-download"></i>
                                         </a>
                                     ` : ''}
-                                    <button onclick="schemaManager.deleteSchema(${schema.id})" class="btn btn-sm btn-outline-danger">
+                                    <button onclick="schemaManager.deleteSchema(${schema.id})" class="btn btn-sm btn-outline-danger" style="padding: 1px 6px; font-size: 0.65rem;">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
-                            ${schema.description ? `<p class="text-muted small mt-1 mb-0">${this.escapeHtml(schema.description)}</p>` : ''}
+                            ${schema.description ? `<p class="text-muted mt-1 mb-0" style="font-size: 0.72rem;">${this.escapeHtml(schema.description)}</p>` : ''}
                             <div class="d-flex gap-1 mt-1">
-                                ${schema.category ? `<span class="badge bg-secondary">${schema.category}</span>` : ''}
-                                ${schema.sub_category ? `<span class="badge bg-info">${schema.sub_category}</span>` : ''}
+                                ${schema.category ? `<span class="badge bg-secondary" style="font-size: 0.65rem;">${schema.category}</span>` : ''}
+                                ${schema.sub_category ? `<span class="badge bg-info" style="font-size: 0.65rem;">${schema.sub_category}</span>` : ''}
                             </div>
                         </div>
                     </div>

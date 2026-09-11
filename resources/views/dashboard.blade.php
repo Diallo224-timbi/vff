@@ -160,29 +160,6 @@
             </div>
         </div>
     </div>
-    <!-- GRAPHIQUES DOCUMENTS -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Graphique documents par type -->
-        <div class="bg-white rounded-xl border p-4" style="border-color: #e8f3f2;">
-            <h3 class="text-sm font-semibold mb-4 flex items-center" style="color: #255156;">
-                <i class="fas fa-file-alt mr-2"></i>
-                Documents par type
-            </h3>
-            <div style="height: 250px;">
-                <canvas id="documentsTypeChart"></canvas>
-            </div>
-        </div>
-        <!-- Graphique documents par catégorie -->
-        <div class="bg-white rounded-xl border p-4" style="border-color: #e8f3f2;">
-            <h3 class="text-sm font-semibold mb-4 flex items-center" style="color: #255156;">
-                <i class="fas fa-tags mr-2"></i>
-                Documents par catégorie
-            </h3>
-            <div style="height: 250px;">
-                <canvas id="documentsCategoryChart"></canvas>
-            </div>
-        </div>
-    </div>
     <!-- ACTIVITÉ DES LOGS -->
     @if(auth()->user()->role === 'admin')
         <div class="bg-white rounded-xl border p-4" style="border-color: #e8f3f2;">
@@ -412,94 +389,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    // ===== GRAPHIQUE DOCUMENTS PAR TYPE =====
-    const docTypeCtx = document.getElementById('documentsTypeChart')?.getContext('2d');
-    if(docTypeCtx) {
-        new Chart(docTypeCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Images', 'Documents', 'Liens'],
-                datasets: [{
-                    data: [{{ $stats['images'] ?? 0 }}, {{ $stats['documents'] ?? 0 }}, {{ $stats['liens'] ?? 0 }}],
-                    backgroundColor: [colors.purple, colors.primary, colors.success],
-                    borderWidth: 0,
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { 
-                        position: 'bottom',
-                        labels: { 
-                            padding: 12,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: { size: 10 }
-                        }
-                    }
-                },
-                cutout: '65%'
-            }
-        });
-    }
-    // ===== GRAPHIQUE DOCUMENTS PAR CATÉGORIE =====
-    const docCatCtx = document.getElementById('documentsCategoryChart')?.getContext('2d');
-    if(docCatCtx) {
-        const catLabels = ['Procédures', 'Outils', 'Fiches réflexes', 'Ressources'];
-        const catData = [
-            {{ $stats['categories']['procedure'] ?? 0 }},
-            {{ $stats['categories']['outil'] ?? 0 }},
-            {{ $stats['categories']['fiche_reflexe'] ?? 0 }},
-            {{ $stats['categories']['ressource'] ?? 0 }}
-        ];
-        const catColors = [colors.primary, colors.secondary, colors.warning, colors.success];
-        
-        new Chart(docCatCtx, {
-            type: 'bar',
-            data: {
-                labels: catLabels,
-                datasets: [{
-                    label: 'Nombre de documents',
-                    data: catData,
-                    backgroundColor: catColors,
-                    borderRadius: 6,
-                    borderSkipped: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'white',
-                        titleColor: '#1a3c40',
-                        bodyColor: '#255156',
-                        borderColor: '#e8f3f2',
-                        borderWidth: 1,
-                        cornerRadius: 8
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { 
-                            stepSize: 1, 
-                            precision: 0,
-                            font: { size: 10 }
-                        },
-                        grid: { color: 'rgba(0,0,0,0.05)' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { size: 10 } }
-                    }
-                }
-            }
-        });
-    }
     // ===== GRAPHIQUE ACTIVITÉ (admin) =====
     @if(auth()->user()->role === 'admin')
     const activityCtx = document.getElementById('activityChart')?.getContext('2d');
@@ -658,6 +547,76 @@ canvas {
 /* Hauteur des graphiques */
 #organismesChart, #usersChart, #activityChart {
     max-height: 280px;
+}
+
+/* ════════════════════════════════════════════════
+   ADAPTATION 1920×1080 @125% → fenêtre CSS ≈ 1536×864
+   Réduction ciblée des espacements et tailles
+════════════════════════════════════════════════ */
+@media (min-width: 1200px) and (max-height: 900px) {
+    .max-w-10xl {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+    .space-y-2 > * + * {
+        margin-top: 0.4rem !important;
+    }
+    .rounded-2xl.p-4 {
+        padding: 0.75rem 1rem !important;
+    }
+    .rounded-2xl h5 {
+        font-size: 0.95rem !important;
+    }
+    .rounded-2xl small {
+        font-size: 0.7rem !important;
+    }
+    .rounded-2xl .p-2 {
+        padding: 0.4rem !important;
+    }
+    .rounded-2xl .p-2 i {
+        font-size: 1.1rem !important;
+    }
+    .grid .bg-white.rounded-xl.p-4 {
+        padding: 0.7rem !important;
+    }
+    .grid .bg-white .text-2xl {
+        font-size: 1.35rem !important;
+    }
+    .grid .bg-white .text-xs {
+        font-size: 0.68rem !important;
+    }
+    .grid .bg-white .w-10.h-10 {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    .bg-white.rounded-xl.border.p-4 {
+        padding: 0.7rem !important;
+    }
+    .bg-white.rounded-xl.border.p-4 h3 {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .bg-white.rounded-xl.border.p-4 > div[style*="height"] {
+        height: 200px !important;
+    }
+    #organismesChart, #usersChart, #activityChart {
+        max-height: 200px !important;
+    }
+    .grid.gap-4 {
+        gap: 0.6rem !important;
+    }
+    .grid.gap-3 {
+        gap: 0.5rem !important;
+    }
+    .max-h-60 {
+        max-height: 150px !important;
+    }
+    .max-h-60 .text-xs {
+        font-size: 0.68rem !important;
+    }
+    .max-h-60 .text-\[10px\] {
+        font-size: 0.6rem !important;
+    }
 }
 </style>
 @endsection

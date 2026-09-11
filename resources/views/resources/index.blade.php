@@ -1,18 +1,18 @@
 @extends('base')
 @section('title', 'Espace documentaire')
 @section('content')
-<div class="container mt-4">
+<div class="container-fluid px-4 mt-3">
     <div class="row justify-content-center">
-        <div class="col-lg-12">
+        <div class="col-12">
             <!-- Carte principale -->
             <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
                 <!-- En-tête -->
-                <div class="card-header text-white py-3" style="background: #145f68; border: none;">
+                <div class="card-header text-white py-1" style="background: #145f68; border: none;">
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div>
                             <i class="fas fa-folder-open me-2"></i>
                             <h4 class="d-inline-block mb-0 fw-bold">Espace documentaire</h4>
-                            <div class="alert alert-light mt-3 shadow-sm border-0">
+                            <div class="alert alert-light mt-2 mb-0 shadow-sm border-0 py-1">
                                 <i class="fas fa-info-circle text-primary me-2"></i>
                                 <strong>Rappel:</strong>
                                 Partagez des ressources professionnelles dans un esprit de bienveillance et de collaboration,
@@ -21,15 +21,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-3">
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="alert alert-success alert-dismissible fade show py-2 mb-2" role="alert">
                             {{ session('success') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
                     @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show py-2 mb-2" role="alert">
                             {{ session('error') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -39,8 +39,8 @@
                     <!-- ============================================ -->
                     <div id="docsSection">
                         <!-- Indicateur de filtre actif -->
-                        <div id="activeFilter" class="mb-3 d-none">
-                            <div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
+                        <div id="activeFilter" class="mb-2 d-none">
+                            <div class="alert alert-info alert-dismissible fade show mb-0 py-1" role="alert">
                                 <i class="fas fa-filter me-2"></i>
                                 <span id="filterLabel">Filtre actif : </span>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="clearCategoryFilter()"></button>
@@ -56,69 +56,69 @@
                             $conventionsCount = $resources->where('category', 'conventions')->count();
                         @endphp
                         <!-- FILTRES PAR CATÉGORIE PRINCIPALE -->
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label class="small fw-semibold text-secondary mb-1">Filtrer par catégorie</label>
-                            <div class="d-flex flex-nowrap gap-2 overflow-auto" style="padding-bottom: 5px;">
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category active" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
+                            <div class="d-flex flex-nowrap gap-2 overflow-auto" style="padding-bottom: 3px;">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category active" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-folder-open text-secondary fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-secondary mb-0 small" style="font-size: 0.75rem;">Toutes</p>
-                                            <small class="text-secondary" style="font-size: 0.7rem;" id="countAll">{{ $allCount }}</small>
+                                            <i class="fas fa-folder-open text-secondary mb-1"></i>
+                                            <p class="fw-semibold text-secondary mb-0 small" style="font-size: 0.7rem;">Toutes</p>
+                                            <small class="text-secondary" style="font-size: 0.65rem;" id="countAll">{{ $allCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="guides_etudes" onclick="filterByCategory('guides_etudes', 'Guides & Études')">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="guides_etudes" onclick="filterByCategory('guides_etudes', 'Guides & Études')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-book text-primary fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-primary mb-0 small" style="font-size: 0.75rem;">Guides</p>
-                                            <small class="text-primary" style="font-size: 0.7rem;" id="countGuidesEtudes">{{ $guidesCount }}</small>
+                                            <i class="fas fa-book text-primary mb-1"></i>
+                                            <p class="fw-semibold text-primary mb-0 small" style="font-size: 0.7rem;">Guides</p>
+                                            <small class="text-primary" style="font-size: 0.65rem;" id="countGuidesEtudes">{{ $guidesCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="affiches_flyers" onclick="filterByCategory('affiches_flyers', 'Affiches & Flyers')">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="affiches_flyers" onclick="filterByCategory('affiches_flyers', 'Affiches & Flyers')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-poster text-success fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-success mb-0 small" style="font-size: 0.75rem;">Affiches et flyer</p>
-                                            <small class="text-success" style="font-size: 0.7rem;" id="countAffichesFlyers">{{ $affichesCount }}</small>
+                                            <i class="fas fa-poster text-success mb-1"></i>
+                                            <p class="fw-semibold text-success mb-0 small" style="font-size: 0.7rem;">Affiches et flyer</p>
+                                            <small class="text-success" style="font-size: 0.65rem;" id="countAffichesFlyers">{{ $affichesCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="reseaux" onclick="filterByCategory('reseaux', 'Réseaux')">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="reseaux" onclick="filterByCategory('reseaux', 'Réseaux')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-network-wired text-warning fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-warning mb-0 small" style="font-size: 0.75rem;">Réseaux</p>
-                                            <small class="text-warning" style="font-size: 0.7rem;" id="countReseaux">{{ $reseauxCount }}</small>
+                                            <i class="fas fa-network-wired text-warning mb-1"></i>
+                                            <p class="fw-semibold text-warning mb-0 small" style="font-size: 0.7rem;">Réseaux</p>
+                                            <small class="text-warning" style="font-size: 0.65rem;" id="countReseaux">{{ $reseauxCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="sensibilisation" onclick="filterByCategory('sensibilisation', 'Sensibilisation & Formations')">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="sensibilisation" onclick="filterByCategory('sensibilisation', 'Sensibilisation & Formations')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-graduation-cap text-info fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-info mb-0 small" style="font-size: 0.75rem;">Sensibilisation</p>
-                                            <small class="text-info" style="font-size: 0.7rem;" id="countSensibilisation">{{ $sensibilisationCount }}</small>
+                                            <i class="fas fa-graduation-cap text-info mb-1"></i>
+                                            <p class="fw-semibold text-info mb-0 small" style="font-size: 0.7rem;">Sensibilisation</p>
+                                            <small class="text-info" style="font-size: 0.65rem;" id="countSensibilisation">{{ $sensibilisationCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="outils" onclick="filterByCategory('outils', 'Outils')">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="outils" onclick="filterByCategory('outils', 'Outils')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-tools text-danger fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-danger mb-0 small" style="font-size: 0.75rem;">Outils</p>
-                                            <small class="text-danger" style="font-size: 0.7rem;" id="countOutils">{{ $outilsCount }}</small>
+                                            <i class="fas fa-tools text-danger mb-1"></i>
+                                            <p class="fw-semibold text-danger mb-0 small" style="font-size: 0.7rem;">Outils</p>
+                                            <small class="text-danger" style="font-size: 0.65rem;" id="countOutils">{{ $outilsCount }}</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 95px;">
-                                    <div class="cursor-pointer rounded-lg p-2 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="conventions" onclick="filterByCategory('conventions', 'Conventions & Protocoles')">
+                                <div class="flex-shrink-0" style="min-width: 80px;">
+                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="conventions" onclick="filterByCategory('conventions', 'Conventions & Protocoles')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
-                                            <i class="fas fa-file-signature text-purple fa-lg mb-1"></i>
-                                            <p class="fw-semibold text-purple mb-0 small" style="font-size: 0.75rem;">Conventions</p>
-                                            <small class="text-purple" style="font-size: 0.7rem;" id="countConventions">{{ $conventionsCount }}</small>
+                                            <i class="fas fa-file-signature text-purple mb-1"></i>
+                                            <p class="fw-semibold text-purple mb-0 small" style="font-size: 0.7rem;">Conventions</p>
+                                            <small class="text-purple" style="font-size: 0.65rem;" id="countConventions">{{ $conventionsCount }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -128,23 +128,23 @@
                         <!-- ============================================ -->
                         <!-- BARRE DE RECHERCHE + BOUTONS -->
                         <!-- ============================================ -->
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <div class="row g-2 align-items-end">
                                 <!-- Recherche -->
                                 <div class="col-md-4 col-lg-3">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Rechercher</label>
-                                    <div class="input-group" style="border-radius: 10px; overflow: hidden;">
+                                    <div class="input-group input-group-sm" style="border-radius: 10px; overflow: hidden;">
                                         <span class="input-group-text bg-white border-end-0">
                                             <i class="fas fa-search text-muted"></i>
                                         </span>
-                                        <input type="text" id="searchInput" class="form-control border-start-0" style="font-size: 0.9rem;"
+                                        <input type="text" id="searchInput" class="form-control border-start-0" style="font-size: 0.85rem; height: 32px;"
                                                placeholder="Rechercher...">
                                     </div>
                                 </div>
                                 <!-- Filtre Type -->
                                 <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Type</label>
-                                    <select id="filterType" class="form-select" style="font-size: 0.85rem; height: 38px;">
+                                    <select id="filterType" class="form-select form-select-sm" style="font-size: 0.8rem; height: 32px;">
                                         <option value="">Tous les types</option>
                                         <option value="image">Images</option>
                                         <option value="document">Documents</option>
@@ -154,7 +154,7 @@
                                 <!-- TRI PAR DATE -->
                                 <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Trier par</label>
-                                    <select id="sortDate" class="form-select" style="font-size: 0.85rem; height: 38px;" onchange="sortResourcesByDate()">
+                                    <select id="sortDate" class="form-select form-select-sm" style="font-size: 0.8rem; height: 32px;" onchange="sortResourcesByDate()">
                                         <option value="recent">Plus récent</option>
                                         <option value="oldest">Plus ancien</option>
                                     </select>
@@ -162,11 +162,11 @@
                                 <!-- Vue Cartes / Liste -->
                                 <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Affichage</label>
-                                    <div class="btn-group w-100" role="group" style="height: 38px;">
-                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.85rem; white-space: nowrap;">
+                                    <div class="btn-group btn-group-sm w-100" role="group" style="height: 32px;">
+                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.8rem; white-space: nowrap; padding: 2px 6px;">
                                             <i class="fas fa-th-large me-1"></i> Cartes
                                         </button>
-                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary" onclick="setViewMode('list')" style="font-size: 0.85rem; white-space: nowrap;">
+                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary" onclick="setViewMode('list')" style="font-size: 0.8rem; white-space: nowrap; padding: 2px 6px;">
                                             <i class="fas fa-list me-1"></i> Liste
                                         </button>
                                     </div>
@@ -174,11 +174,11 @@
                                 <!-- Boutons Actions -->
                                 <div class="col-md-2 col-lg-3">
                                     <div class="d-flex gap-1 justify-content-end flex-wrap">
-                                        <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white; padding: 6px 14px; font-size: 0.85rem; white-space: nowrap;">
+                                        <button onclick="openCreateModal()" class="btn btn-sm" style="background: #255156; color: white; padding: 4px 10px; font-size: 0.8rem; white-space: nowrap;">
                                             <i class="fas fa-upload me-1"></i> Ajouter
                                         </button>
                                         @if(auth()->user()->role === 'admin')
-                                        <a href="{{ route('resources.trash') }}" class="btn" style="background: #255156; color: white; padding: 6px 12px; font-size: 0.85rem; white-space: nowrap;">
+                                        <a href="{{ route('resources.trash') }}" class="btn btn-sm" style="background: #255156; color: white; padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">
                                             <i class="fa fa-trash me-1"></i> Corbeille
                                         </a>
                                         @endif
@@ -187,7 +187,7 @@
                             </div>
                             <!-- Compteur de ressources -->
                             <div class="mt-1 text-end">
-                                <small class="text-muted" style="font-size: 0.8rem;">
+                                <small class="text-muted" style="font-size: 0.75rem;">
                                     <i class="fas fa-database me-1"></i>
                                     <span id="visibleResourcesCount">{{ $allCount }}</span> / <span id="totalResourcesCount">{{ $allCount }}</span> ressources
                                 </small>
@@ -195,7 +195,7 @@
                         </div>
                         <!-- GRILLE / LISTE DES CARTES -->
                         <div class="mt-2">
-                            <div class="row g-3" id="resourcesGrid">
+                            <div class="row g-2" id="resourcesGrid">
                                 @forelse($resources as $resource)
                                 <div class="col-md-6 col-lg-2 col-xl-2 resource-card"
                                      data-id="{{ $resource->id }}"
@@ -207,70 +207,70 @@
                                      data-title="{{ strtolower($resource->title) }}"
                                      data-description="{{ strtolower($resource->description ?? '') }}">
                                     <!-- Mode Carte (par défaut) -->
-                                    <div class="card h-100 border-0 shadow-sm card-view" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s;">
+                                    <div class="card h-100 border-0 shadow-sm card-view" style="border-radius: 12px; overflow: hidden; transition: transform 0.2s;">
                                         <!-- Zone image / icône -->
-                                        <div style="height: 130px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
+                                        <div style="height: 95px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
                                             @if($resource->is_image)
                                                 <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
                                             @elseif($resource->is_link)
-                                                <i class="fas fa-link" style="font-size: 3.2rem; color: #0d6efd;"></i>
+                                                <i class="fas fa-link" style="font-size: 2.4rem; color: #0d6efd;"></i>
                                             @else
                                                 @php
                                                     $extension = strtolower($resource->file_type);
                                                 @endphp
                                                 @if(in_array($extension, ['pdf']))
-                                                    <i class="bx bxs-file-pdf text-danger" style="font-size: 3.2rem;"></i>
+                                                    <i class="bx bxs-file-pdf text-danger" style="font-size: 2.4rem;"></i>
                                                 @elseif(in_array($extension, ['doc', 'docx', 'odt']))
-                                                    <i class="fas fa-file-word text-primary" style="font-size: 3.2rem;"></i>
+                                                    <i class="fas fa-file-word text-primary" style="font-size: 2.4rem;"></i>
                                                 @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                    <i class="fas fa-file-excel text-success" style="font-size: 3.2rem;"></i>
+                                                    <i class="fas fa-file-excel text-success" style="font-size: 2.4rem;"></i>
                                                 @elseif(in_array($extension, ['ppt', 'pptx']))
-                                                    <i class="fas fa-file-powerpoint text-warning" style="font-size: 3.2rem;"></i>
+                                                    <i class="fas fa-file-powerpoint text-warning" style="font-size: 2.4rem;"></i>
                                                 @elseif(in_array($extension, ['txt']))
-                                                    <i class="fas fa-file-alt text-secondary" style="font-size: 3.2rem;"></i>
+                                                    <i class="fas fa-file-alt text-secondary" style="font-size: 2.4rem;"></i>
                                                 @elseif(in_array($extension, ['webm', 'avi', 'mov']))
-                                                    <i class="fas fa-file-video text-danger" style="font-size: 3.2rem;"></i>
+                                                    <i class="fas fa-file-video text-danger" style="font-size: 2.4rem;"></i>
                                                 @else
-                                                    <i class="fas fa-file text-secondary" style="font-size: 3.2rem;"></i>
+                                                    <i class="fas fa-file text-secondary" style="font-size: 2.4rem;"></i>
                                                 @endif
                                             @endif
                                             <!-- Badges superposés -->
-                                            <div style="position: absolute; top: 6px; right: 6px; display: flex; flex-direction: column; gap: 3px;">
+                                            <div style="position: absolute; top: 4px; right: 4px; display: flex; flex-direction: column; gap: 2px;">
                                                 @if($resource->is_link)
-                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.6rem;">
+                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.55rem; padding: 2px 5px;">
                                                         <i class="fas fa-link"></i> Lien
                                                     </span>
                                                 @elseif($resource->is_image)
-                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.6rem;">
+                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.55rem; padding: 2px 5px;">
                                                         <i class="fas fa-image me-1"></i>Image
                                                     </span>
                                                 @else
-                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.6rem;">
+                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.55rem; padding: 2px 5px;">
                                                         <i class="fas fa-file me-1"></i>{{ strtoupper($resource->file_type) }}
                                                     </span>
                                                 @endif
                                                 @if($resource->category == 'guides_etudes')
-                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.55rem;">Guide</span>
+                                                    <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.5rem; padding: 2px 4px;">Guide</span>
                                                 @elseif($resource->category == 'affiches_flyers')
-                                                    <span class="badge" style="background: #dcfce7; color: #16a34a; font-size: 0.55rem;">Affiche</span>
+                                                    <span class="badge" style="background: #dcfce7; color: #16a34a; font-size: 0.5rem; padding: 2px 4px;">Affiche</span>
                                                 @elseif($resource->category == 'reseaux')
-                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-size: 0.55rem;">Réseau</span>
+                                                    <span class="badge" style="background: #fef3c7; color: #d97706; font-size: 0.5rem; padding: 2px 4px;">Réseau</span>
                                                 @elseif($resource->category == 'sensibilisation')
-                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.55rem;">Sensib.</span>
+                                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.5rem; padding: 2px 4px;">Sensib.</span>
                                                 @elseif($resource->category == 'outils')
-                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.55rem;">Outil</span>
+                                                    <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.5rem; padding: 2px 4px;">Outil</span>
                                                 @elseif($resource->category == 'conventions')
-                                                    <span class="badge" style="background: #fce7f3; color: #be185d; font-size: 0.55rem;">Convent.</span>
+                                                    <span class="badge" style="background: #fce7f3; color: #be185d; font-size: 0.5rem; padding: 2px 4px;">Convent.</span>
                                                 @endif
                                             </div>
                                         </div>
                                         <!-- Corps de la carte -->
                                         <div class="card-body p-2">
-                                            <h6 class="card-title fw-semibold mb-1" style="font-size: 0.85rem;" title="{{ $resource->title }}">{{ Str::limit($resource->title, 22) }}</h6>
+                                            <h6 class="card-title fw-semibold mb-1" style="font-size: 0.8rem; line-height: 1.2;" title="{{ $resource->title }}">{{ Str::limit($resource->title, 22) }}</h6>
                                             @if($resource->description)
-                                                <p class="card-text text-muted mb-1" style="font-size: 0.75rem;">{{ Str::limit($resource->description, 45) }}</p>
+                                                <p class="card-text text-muted mb-1" style="font-size: 0.7rem; line-height: 1.2;">{{ Str::limit($resource->description, 40) }}</p>
                                             @endif
-                                            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.7rem;">
+                                            <div class="d-flex flex-wrap gap-2 text-muted" style="font-size: 0.65rem;">
                                                 @if(!$resource->is_link)
                                                     <span><i class="fas fa-download me-1"></i> {{ $resource->download_count }}</span>
                                                 @endif
@@ -278,31 +278,31 @@
                                             </div>
                                         </div>
                                         <!-- Pied de carte avec actions -->
-                                        <div class="card-footer bg-transparent border-0 pt-0 pb-2">
+                                        <div class="card-footer bg-transparent border-0 pt-0 pb-1 px-2">
                                             <div class="d-flex gap-1 justify-content-end flex-wrap">
                                                 @if($resource->is_link)
-                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-sm" style="background: #e0f2fe; color: #0284c7; padding: 2px 8px; font-size: 0.7rem;" title="Ouvrir le lien">
+                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-sm" style="background: #e0f2fe; color: #0284c7; padding: 1px 6px; font-size: 0.65rem;" title="Ouvrir le lien">
                                                         <i class="fas fa-link"></i>
                                                     </a>
                                                 @endif
                                                 @if($resource->is_image)
-                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 2px 8px; font-size: 0.7rem;" title="Voir l'image">
+                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 1px 6px; font-size: 0.65rem;" title="Voir l'image">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
                                                 @if(!$resource->is_link)
-                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-sm" style="background: #e5e7eb; color: #4b5563; padding: 2px 8px; font-size: 0.7rem;" title="Ouvrir le fichier">
+                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-sm" style="background: #e5e7eb; color: #4b5563; padding: 1px 6px; font-size: 0.65rem;" title="Ouvrir le fichier">
                                                         <i class="fas fa-external-link-alt"></i>
                                                     </a>
-                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-sm" style="background: #dbeafe; color: #2563eb; padding: 2px 8px; font-size: 0.7rem;" title="Télécharger">
+                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-sm" style="background: #dbeafe; color: #2563eb; padding: 1px 6px; font-size: 0.65rem;" title="Télécharger">
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 @endif
                                                 @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
-                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3; padding: 2px 8px; font-size: 0.7rem;" title="Modifier">
+                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3; padding: 1px 6px; font-size: 0.65rem;" title="Modifier">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626; padding: 2px 8px; font-size: 0.7rem;" title="Supprimer">
+                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626; padding: 1px 6px; font-size: 0.65rem;" title="Supprimer">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 @endif
@@ -312,82 +312,82 @@
 
                                     <!-- Mode Liste (caché par défaut) -->
                                     <div class="list-view w-100" style="display: none;">
-                                        <div class="d-flex align-items-center justify-content-between p-3 mb-2 rounded" style="background: #f8f9fa; border-left: 4px solid #145f68;">
+                                        <div class="d-flex align-items-center justify-content-between p-2 mb-1 rounded" style="background: #f8f9fa; border-left: 4px solid #145f68;">
                                             <div class="d-flex align-items-center gap-3 flex-wrap flex-grow-1">
-                                                <div style="width: 50px; height: 50px; background: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                                <div style="width: 40px; height: 40px; background: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
                                                     @if($resource->is_image)
-                                                        <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
+                                                        <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 34px; height: 34px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
                                                     @elseif($resource->is_link)
-                                                        <i class="fas fa-link" style="font-size: 1.5rem; color: #0d6efd;"></i>
+                                                        <i class="fas fa-link" style="font-size: 1.2rem; color: #0d6efd;"></i>
                                                     @else
                                                         @php
                                                             $extension = strtolower($resource->file_type);
                                                         @endphp
                                                         @if(in_array($extension, ['pdf']))
-                                                            <i class="bx bxs-file-pdf text-danger" style="font-size: 1.5rem;"></i>
+                                                            <i class="bx bxs-file-pdf text-danger" style="font-size: 1.2rem;"></i>
                                                         @elseif(in_array($extension, ['doc', 'docx', 'odt']))
-                                                            <i class="fas fa-file-word text-primary" style="font-size: 1.5rem;"></i>
+                                                            <i class="fas fa-file-word text-primary" style="font-size: 1.2rem;"></i>
                                                         @elseif(in_array($extension, ['xls', 'xlsx', 'csv']))
-                                                            <i class="fas fa-file-excel text-success" style="font-size: 1.5rem;"></i>
+                                                            <i class="fas fa-file-excel text-success" style="font-size: 1.2rem;"></i>
                                                         @elseif(in_array($extension, ['ppt', 'pptx']))
-                                                            <i class="fas fa-file-powerpoint text-warning" style="font-size: 1.5rem;"></i>
+                                                            <i class="fas fa-file-powerpoint text-warning" style="font-size: 1.2rem;"></i>
                                                         @else
-                                                            <i class="fas fa-file text-secondary" style="font-size: 1.5rem;"></i>
+                                                            <i class="fas fa-file text-secondary" style="font-size: 1.2rem;"></i>
                                                         @endif
                                                     @endif
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0 fw-semibold" style="font-size: 0.95rem;">{{ $resource->title }}</h6>
+                                                    <h6 class="mb-0 fw-semibold" style="font-size: 0.85rem;">{{ $resource->title }}</h6>
                                                     @if($resource->description)
-                                                        <small class="text-muted" style="font-size: 0.8rem;">{{ Str::limit($resource->description, 100) }}</small>
+                                                        <small class="text-muted" style="font-size: 0.75rem;">{{ Str::limit($resource->description, 100) }}</small>
                                                     @endif
                                                     <div>
-                                                        <small class="text-muted" style="font-size: 0.75rem;">
+                                                        <small class="text-muted" style="font-size: 0.7rem;">
                                                             <i class="fas fa-calendar me-1"></i> {{ $resource->created_at->format('d/m/Y') }}
                                                             @if(!$resource->is_link)
                                                                 <i class="fas fa-download ms-2 me-1"></i> {{ $resource->download_count }}
                                                             @endif
                                                         </small>
                                                         @if($resource->is_link)
-                                                            <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.65rem;">Lien</span>
+                                                            <span class="badge" style="background: #e0f2fe; color: #0284c7; font-size: 0.6rem;">Lien</span>
                                                         @elseif($resource->is_image)
-                                                            <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.65rem;">Image</span>
+                                                            <span class="badge" style="background: #f3e8ff; color: #9333ea; font-size: 0.6rem;">Image</span>
                                                         @else
-                                                            <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.65rem;">{{ strtoupper($resource->file_type) }}</span>
+                                                            <span class="badge" style="background: #dbeafe; color: #2563eb; font-size: 0.6rem;">{{ strtoupper($resource->file_type) }}</span>
                                                         @endif
                                                         @if($resource->category)
-                                                            <span class="badge" style="background: #e5e7eb; color: #374151; font-size: 0.65rem;">{{ $resource->category }}</span>
+                                                            <span class="badge" style="background: #e5e7eb; color: #374151; font-size: 0.6rem;">{{ $resource->category }}</span>
                                                         @endif
                                                         @if($resource->sub_category)
-                                                            <span class="badge" style="background: #e5e7eb; color: #374151; font-size: 0.65rem;">{{ $resource->sub_category }}</span>
+                                                            <span class="badge" style="background: #e5e7eb; color: #374151; font-size: 0.6rem;">{{ $resource->sub_category }}</span>
                                                         @endif
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="btn-group btn-group-sm flex-shrink-0">
                                                 @if($resource->is_link)
-                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-outline-primary" title="Ouvrir le lien" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                    <a href="{{ $resource->link_url }}" target="_blank" class="btn btn-outline-primary" title="Ouvrir le lien" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-link"></i>
                                                     </a>
                                                 @endif
                                                 @if($resource->is_image)
-                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-outline-primary" title="Voir l'image" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-outline-primary" title="Voir l'image" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
                                                 @if(!$resource->is_link)
-                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-outline-secondary" title="Ouvrir" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                    <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="btn btn-outline-secondary" title="Ouvrir" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-external-link-alt"></i>
                                                     </a>
-                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-outline-success" title="Télécharger" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                    <a href="{{ route('resources.download', $resource) }}" class="btn btn-outline-success" title="Télécharger" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 @endif
                                                 @if(auth()->user()->role === 'admin' || auth()->user()->id === $resource->user_id)
-                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-outline-warning" title="Modifier" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                    <a href="{{ route('resources.edit', $resource) }}" class="btn btn-outline-warning" title="Modifier" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-outline-danger" title="Supprimer" style="padding: 2px 8px; font-size: 0.7rem;">
+                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-outline-danger" title="Supprimer" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 @endif
@@ -603,8 +603,8 @@
 
     /* Mode Liste */
     .list-view .btn-group .btn {
-        padding: 2px 8px;
-        font-size: 0.7rem;
+        padding: 1px 6px;
+        font-size: 0.65rem;
     }
     .list-view .btn-group .btn:hover {
         z-index: 2;
@@ -629,6 +629,79 @@
     }
     .overflow-auto::-webkit-scrollbar-thumb:hover {
         background: #555;
+    }
+
+    /* ============================================
+       COMPACTAGE POUR 1920x1080 @ 125% (~1536x864 CSS)
+       ============================================ */
+
+    /* Réduction générale des hauteurs de contrôles */
+    .form-select-sm,
+    .form-control-sm,
+    .input-group-sm > .form-control,
+    .input-group-sm > .input-group-text {
+        height: 32px !important;
+        padding: 2px 8px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .btn-sm {
+        padding: 3px 8px !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* Cartes : réduction du padding et des espacements */
+    .resource-card .card-body {
+        padding: 0.5rem !important;
+    }
+
+    .resource-card .card-footer {
+        padding: 0.15rem 0.4rem 0.3rem 0.4rem !important;
+    }
+
+    /* Grille un peu plus serrée */
+    #resourcesGrid.row {
+        --bs-gutter-x: 0.6rem;
+        --bs-gutter-y: 0.6rem;
+    }
+
+    /* Ciblage précis 1920x1080 @ 125% */
+    @media screen and (min-width: 1500px) and (max-width: 1600px)
+                  and (min-height: 850px) and (max-height: 900px) {
+
+        /* Barre de recherche / sélecteurs : hauteur encore plus réduite */
+        #filterType,
+        #sortDate,
+        .btn-group[role="group"] {
+            height: 30px !important;
+        }
+
+        #searchInput {
+            height: 30px !important;
+        }
+
+        /* Boutons d'action principaux (Ajouter / Corbeille) */
+        button[onclick="openCreateModal()"],
+        a[href*="resources/trash"] {
+            padding: 3px 8px !important;
+            font-size: 0.75rem !important;
+        }
+
+        /* Filtres catégories : largeur et padding réduits */
+        .filter-category {
+            padding: 0.35rem !important;
+        }
+
+        /* Header h4 */
+        .card-header h4 {
+            font-size: 1.15rem;
+        }
+
+        /* Alertes réduites */
+        .alert {
+            padding: 0.4rem 0.75rem !important;
+            font-size: 0.85rem;
+        }
     }
 </style>
 

@@ -3,10 +3,10 @@
 @section('title', 'Forum')
 
 @section('content')
-<div class="max-w-10xl mx-auto px-0 sm:px-6 lg:px-4 py-2 space-y-2">
+<div class="max-w-10xl mx-auto px-4 py-2 space-y-2">
     <!-- message de succès avec fermeture -->
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded relative text-sm" role="alert">
             <strong class="font-bold">Succès !</strong>
             <span class="block sm:inline">{{ session('success') }}</span>
             <button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
@@ -15,16 +15,16 @@
         </div>
     @endif
     <!-- Header -->
-    <div class="rounded-2xl p-3 shadow-xl text-white d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3"
+    <div class="rounded-2xl p-2 shadow-xl text-white d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2"
      style="background: linear-gradient(135deg, #255156, #1e7c86);">
 
         <!-- Titre + rappel -->
         <div class="grow">
-            <div class="d-flex align-items-center mb-2">
+            <div class="d-flex align-items-center mb-1">
                 <i class="fas fa-comments me-2"></i>
-                <h6 class="mb-0 fw-bold">Forum professionnel</h6>
+                <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">Forum professionnel</h6>
             </div>
-            <div class="bg-white text-dark rounded p-2 small">
+            <div class="bg-white text-dark rounded p-2" style="font-size: 0.75rem; line-height: 1.3;">
                 <i class="fas fa-info-circle me-1"></i>
                 <strong>Rappel :</strong>
                 Ce forum est un espace d'échange entre professionnels. Merci de privilégier des discussions respectueuses et conformes à la charte.<br> Aucune information permettant d'identifier une victime ne doit être publiée.
@@ -37,28 +37,28 @@
                 id="search"
                 placeholder="Rechercher..."
                 class="form-control form-control-sm"
-                style="width: 180px;"
+                style="width: 160px;"
             >
             <button
                 onclick="openNewThreadModal()"
-                class="btn btn-light btn-sm fw-semibold">
+                class="btn btn-light btn-sm fw-semibold" style="padding: 4px 10px; font-size: 0.78rem;">
                 <i class="fas fa-plus-circle me-1"></i>
                 Nouveau sujet
             </button>
             <a href="{{ route('categories.index') }}"
-            class="btn btn-outline-light btn-sm fw-semibold">
+            class="btn btn-outline-light btn-sm fw-semibold" style="padding: 4px 10px; font-size: 0.78rem;">
                 <i class="fas fa-folder-plus me-1"></i>
                 Catégories
             </a>
         </div>
     </div>
     <!-- Résultat de recherche info -->
-    <div id="searchResultInfo" class="bg-blue-50 border-l-4 border-[#255156] p-4 rounded-r-lg hidden">
+    <div id="searchResultInfo" class="bg-blue-50 border-l-4 border-[#255156] p-2 rounded-r-lg hidden text-sm">
         <div class="flex items-center justify-between">
             <div>
                 <i class="fas fa-search text-[#255156] mr-2"></i>
                 <span class="text-gray-700">Résultats pour : <strong id="searchQuery"></strong></span>
-                <span class="text-gray-500 text-sm ml-2">(<span id="resultCount">0</span> résultats)</span>
+                <span class="text-gray-500 text-xs ml-2">(<span id="resultCount">0</span> résultats)</span>
             </div>
             <button onclick="clearSearch()" class="text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times"></i>
@@ -66,42 +66,42 @@
         </div>
     </div>
     <!-- Main content -->
-    <div class="flex flex-col lg:flex-row gap-6">
+    <div class="flex flex-col lg:flex-row gap-3">
         <!-- Sidebar gauche - Liste des catégories -->
-        <div class="lg:w-80 space-y-4">
+        <div class="lg:w-80 space-y-3">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div class="p-4" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-                    <h3 class="font-bold text-white flex items-center gap-2">
+                <div class="p-3" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+                    <h3 class="font-bold text-white flex items-center gap-2" style="font-size: 0.95rem;">
                         <i class="fas fa-folder-tree"></i>
                         Catégories
                     </h3>
-                    <p class="text-white/80 text-xs mt-1">Filtrer les sujets par catégorie</p>
+                    <p class="text-white/80 text-xs mt-0.5">Filtrer les sujets par catégorie</p>
                 </div> 
                 <!-- Barre de recherche des catégories -->
-                <div class="p-3 border-b border-gray-200 bg-gray-50">
+                <div class="p-2 border-b border-gray-200 bg-gray-50">
                     <div class="relative">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                         <input type="text" id="categorySearch" placeholder="Rechercher une catégorie..." 
-                               class="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent">
+                               class="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent">
                         <button id="clearCategorySearch" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
                             <i class="fas fa-times-circle text-sm"></i>
                         </button>
                     </div>
                 </div>            
                 <!-- Liste des catégories -->
-                <div class="max-h-96 overflow-y-auto" id="categoriesList">
+                <div class="max-h-80 overflow-y-auto" id="categoriesList">
                     <div class="category-item border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer" data-category-name="all" data-category-id="all">
-                        <div class="p-3 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center">
-                                    <i class="fas fa-th-large text-white text-sm"></i>
+                        <div class="p-2 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center">
+                                    <i class="fas fa-th-large text-white" style="font-size: 0.7rem;"></i>
                                 </div>
                                 <div>   
-                                    <p class="font-semibold text-gray-800">Tous les sujets</p>
+                                    <p class="font-semibold text-gray-800" style="font-size: 0.82rem;">Tous les sujets</p>
                                     <p class="text-xs text-gray-500">{{ $threads->total() }} sujets</p>
                                 </div>
                             </div>
-                            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                            <i class="fas fa-chevron-right text-gray-400" style="font-size: 0.65rem;"></i>
                         </div>
                     </div>   
                     @foreach($categories as $category)
@@ -112,30 +112,30 @@
                              data-category-name="{{ strtolower($category->name) }}" 
                              data-category-id="{{ $category->id }}"
                              data-category-display="{{ $category->name }}">
-                            <div class="p-3 flex items-center justify-between">
-                                <div class="flex items-center gap-3">
+                            <div class="p-2 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
                                     <div>
-                                        <p class="font-semibold text-gray-800"><i class="fas fa-plus-circle me-1"></i>{{ $category->name }}</p>
+                                        <p class="font-semibold text-gray-800" style="font-size: 0.82rem;"><i class="fas fa-plus-circle me-1"></i>{{ $category->name }}</p>
                                         <p class="text-xs text-gray-500">{{ $categoryThreadCount }} sujet(s)</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     @if($category->description)
                                         <div class="group relative">
-                                            <i class="fas fa-info-circle text-gray-400 text-xs cursor-help" title="{{ $category->description }}"></i> 
+                                            <i class="fas fa-info-circle text-gray-400 cursor-help" style="font-size: 0.7rem;" title="{{ $category->description }}"></i> 
                                         </div>
                                     @endif
-                                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                                    <i class="fas fa-chevron-right text-gray-400" style="font-size: 0.65rem;"></i>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div> 
-                <div id="noCategoryResult" class="hidden p-4 text-center text-gray-500">
+                <div id="noCategoryResult" class="hidden p-3 text-center text-gray-500">
                     <i class="fas fa-search text-3xl mb-2 text-gray-300"></i>
                     <p class="text-sm">Aucune catégorie trouvée</p>
                 </div>
-                <div class="p-3 bg-gray-50 border-t border-gray-200">
+                <div class="p-2 bg-gray-50 border-t border-gray-200">
                     <div class="flex justify-between text-xs text-gray-600">
                         <a href="{{ route('categories.index') }}" class="hover:underline">Voir toutes les catégories</a>
                         <span>{{ $categories->count() }} catégories</span>
@@ -144,30 +144,30 @@
             </div>
         </div>
         <!-- Colonne droite - Liste des sujets -->
-        <div class="flex-1 space-y-6">
+        <div class="flex-1 space-y-3">
             <div>
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
-                    <h2 class="text-xl font-bold text-[#2D2926] flex items-center gap-2">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-2">
+                    <h2 class="text-lg font-bold text-[#2D2926] flex items-center gap-2">
                         <i class="fas fa-stream text-[#255156]"></i> Sujets
                         <span id="visibleCount" class="text-sm font-normal text-gray-500"></span>
-                        <span id="selectedCategoryBadge" class="hidden ml-2 text-xs bg-[#255156] text-white px-2 py-1 rounded-full"></span>
+                        <span id="selectedCategoryBadge" class="hidden ml-2 text-xs bg-[#255156] text-white px-2 py-0.5 rounded-full"></span>
                     </h2>
-                    <div class="flex gap-2 text-sm">
-                        <button class="filter-btn px-3 py-1 rounded-xl bg-[#255156] text-white font-medium transition" data-sort="recent">
+                    <div class="flex gap-2 text-xs">
+                        <button class="filter-btn px-2.5 py-1 rounded-xl bg-[#255156] text-white font-medium transition" data-sort="recent" style="font-size: 0.72rem;">
                             <i class="fas fa-clock"></i> Récents
                         </button>
-                        <button class="filter-btn px-3 py-1 rounded-xl bg-gray-200 text-gray-700 font-medium transition" data-sort="oldest">
+                        <button class="filter-btn px-2.5 py-1 rounded-xl bg-gray-200 text-gray-700 font-medium transition" data-sort="oldest" style="font-size: 0.72rem;">
                             <i class="fas fa-history"></i> Anciens
                         </button>
-                        <button class="filter-btn px-3 py-1 rounded-xl bg-gray-200 text-gray-700 font-medium transition" data-sort="popular">
+                        <button class="filter-btn px-2.5 py-1 rounded-xl bg-gray-200 text-gray-700 font-medium transition" data-sort="popular" style="font-size: 0.72rem;">
                             <i class="fas fa-fire"></i> Populaires
                         </button>
                     </div>
                 </div>
                 <!-- Threads container -->
-                <div class="grid grid-cols-1 gap-4" id="threadsContainer">
+                <div class="grid grid-cols-1 gap-3" id="threadsContainer">
                     @forelse($threads as $thread)
-                        <div class="thread-item rounded-xl shadow-sm hover:shadow-md transition p-4 border 
+                        <div class="thread-item rounded-xl shadow-sm hover:shadow-md transition p-3 border 
                             @if($thread->is_resolved) bg-green-100 border-green-400 
                             @else bg-white border-gray-200 @endif" 
                              data-created="{{ $thread->created_at }}" 
@@ -180,14 +180,14 @@
                              data-thread-title="{{ addslashes($thread->title) }}"
                              data-thread-body="{{ addslashes(strip_tags($thread->body)) }}"
                              data-category-id-edit="{{ $thread->category_id }}">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="flex justify-between items-start mb-1">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2 flex-wrap">
                                         <a href="{{ route('forum.show', $thread) }}" class="flex-1">
-                                            <h3 class="thread-title font-bold text-gray-800 text-lg">
+                                            <h3 class="thread-title font-bold text-gray-800" style="font-size: 0.95rem;">
                                                 {{ $thread->title }}
                                                 @if($thread->is_resolved)
-                                                    <span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">Résolu</span>
+                                                    <span class="ml-2 text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Résolu</span>
                                                 @endif
                                             </h3>
                                         </a>
@@ -195,29 +195,29 @@
                                         @if(auth()->id() === $thread->user_id || (auth()->user()->role ?? '') === 'admin')
                                             <div class="flex gap-1">
                                                 <button type="button" 
-                                                        class="edit-thread-btn p-1.5 rounded-lg transition-all duration-300 hover:bg-[#255156] hover:text-white group/tooltip relative"
-                                                        style="background: rgba(37, 81, 86, 0.1); color: #255156;"
+                                                        class="edit-thread-btn p-1 rounded-lg transition-all duration-300 hover:bg-[#255156] hover:text-white group/tooltip relative"
+                                                        style="background: rgba(37, 81, 86, 0.1); color: #255156; font-size: 0.72rem;"
                                                         data-thread-id="{{ $thread->id }}"
                                                         data-thread-title="{{ addslashes($thread->title) }}"
                                                         data-thread-body="{{ addslashes($thread->body) }}"
                                                         data-category-id="{{ $thread->category_id }}"
                                                         title="Modifier le sujet">
-                                                    <i class="fas fa-edit text-sm"></i>
+                                                    <i class="fas fa-edit"></i>
                                                     <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">Modifier</span>
                                                 </button>
                                                 <button type="button" 
-                                                        class="delete-thread-btn p-1.5 rounded-lg transition-all duration-300 hover:bg-red-600 hover:text-white group/tooltip relative"
-                                                        style="background: rgba(199, 150, 116, 0.1); color: #fa0606;"
+                                                        class="delete-thread-btn p-1 rounded-lg transition-all duration-300 hover:bg-red-600 hover:text-white group/tooltip relative"
+                                                        style="background: rgba(199, 150, 116, 0.1); color: #fa0606; font-size: 0.72rem;"
                                                         data-thread-id="{{ $thread->id }}"
                                                         data-thread-title="{{ addslashes($thread->title) }}"
                                                         title="Supprimer le sujet">
-                                                    <i class="fas fa-trash text-sm"></i>
+                                                    <i class="fas fa-trash"></i>
                                                     <span class="absolute top-full right-0 mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">Supprimer</span>
                                                 </button>
                                             </div>
                                         @endif
                                     </div>
-                                    <p class="mt-2 text-xs text-gray-400">
+                                    <p class="mt-1 text-xs text-gray-400">
                                         Catégorie : 
                                         <span class="thread-category font-medium text-[#255156]">{{ $thread->category->name }}</span>
                                     </p>
@@ -227,9 +227,9 @@
                                 </div>
                                 <span class="text-xs text-gray-400 whitespace-nowrap ml-2">{{ $thread->created_at->diffForHumans() }}</span>
                             </div>
-                            <div class="flex items-center justify-between mt-2 text-gray-500">
+                            <div class="flex items-center justify-between mt-1 text-gray-500">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-sm" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+                                    <div class="w-7 h-7 rounded-full text-white flex items-center justify-center font-bold" style="background: linear-gradient(135deg, #255156, #1e7c86); font-size: 0.7rem;">
                                         {{ strtoupper(substr($thread->user->prenom, 0, 1)) }}
                                     </div>
                                     <a href="{{ route('annuaire.membre') }}">
@@ -237,7 +237,7 @@
                                     </a>
                                 </div>
                                 <div class="flex items-center gap-4">
-                                    <span class="flex items-center gap-1">
+                                    <span class="flex items-center gap-1 text-sm">
                                         <i class="far fa-comment"></i> {{ $thread->commentsCount() ?? 0 }}
                                     </span>
 
@@ -251,18 +251,18 @@
                             </div>
                         </div>
                     @empty
-                        <div class="text-center py-12" id="emptyState">
+                        <div class="text-center py-10" id="emptyState">
                             <i class="fas fa-comments text-gray-300 text-6xl mb-4"></i>
-                            <h3 class="text-xl font-bold text-gray-700 mb-2">Aucun sujet pour le moment</h3>
-                            <p class="text-gray-500 mb-6">Soyez le premier à créer un sujet !</p>
-                            <button onclick="openNewThreadModal()" class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition font-semibold flex items-center gap-2 justify-center mx-auto">
+                            <h3 class="text-lg font-bold text-gray-700 mb-2">Aucun sujet pour le moment</h3>
+                            <p class="text-gray-500 mb-4">Soyez le premier à créer un sujet !</p>
+                            <button onclick="openNewThreadModal()" class="px-4 py-2 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition font-semibold flex items-center gap-2 justify-center mx-auto text-sm">
                                 <i class="fas fa-plus"></i> Créer un sujet
                             </button>
                         </div>
                     @endforelse
                 </div>
                 @if($threads->hasPages())
-                    <div class="mt-4">
+                    <div class="mt-3">
                         {{ $threads->links('vendor.pagination.tailwind') }}
                     </div>
                 @endif
@@ -274,17 +274,17 @@
 <div class="modal fade" id="newThreadModal">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <div class="modal-header" style="background: linear-gradient(135deg, #255156, #1e7c86);">
-        <h5 class="modal-title text-white">Nouveau sujet</h5>
+      <div class="modal-header py-2" style="background: linear-gradient(135deg, #255156, #1e7c86);">
+        <h5 class="modal-title text-white" style="font-size: 1rem;">Nouveau sujet</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <form action="{{ route('forum.store') }}" method="POST">
         @csrf
-        <div class="modal-body">
-            <input type="text" name="title" class="form-control mb-3" placeholder="Titre" required>
-            <textarea name="body" class="form-control mb-3" placeholder="Message" required></textarea>
-            <label for="category_id" class="form-label">Catégorie: <a href="{{ route('categories.create') }}" target="_blank" style="color: blue"><i> créer une catégorie si elle n'existe pas.</i></a></label>
-            <select name="category_id" id="category_id" class="form-select" required>
+        <div class="modal-body py-2">
+            <input type="text" name="title" class="form-control form-control-sm mb-2" placeholder="Titre" required>
+            <textarea name="body" class="form-control form-control-sm mb-2" rows="4" placeholder="Message" required></textarea>
+            <label for="category_id" class="form-label mb-1" style="font-size: 0.85rem;">Catégorie: <a href="{{ route('categories.create') }}" target="_blank" style="color: blue"><i> créer une catégorie si elle n'existe pas.</i></a></label>
+            <select name="category_id" id="category_id" class="form-select form-select-sm" required>
               <option value="">Sélectionnez une catégorie</option>
               @foreach($categories as $category)
                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -293,8 +293,8 @@
               @endforeach
             </select>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn px-4 py-2 rounded-lg transition hover:scale-105" style="background: linear-gradient(135deg, #255156, #1e7c86); color: white;">
+        <div class="modal-footer py-2">
+          <button type="submit" class="btn btn-sm px-3 py-1.5 rounded-lg transition hover:scale-105" style="background: linear-gradient(135deg, #255156, #1e7c86); color: white; font-size: 0.8rem;">
             Publier
           </button>
         </div>
@@ -409,12 +409,12 @@ function showNoResultsMessage(visibleCount) {
         
         const noResultsDiv = document.createElement('div');
         noResultsDiv.id = 'noResultsMessage';
-        noResultsDiv.className = 'text-center py-12 col-span-full';
+        noResultsDiv.className = 'text-center py-10 col-span-full';
         noResultsDiv.innerHTML = `
             <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
-            <h3 class="text-xl font-bold text-gray-700 mb-2">Aucun résultat trouvé</h3>
-            <p class="text-gray-500 mb-6">Aucun sujet ne correspond à vos critères</p>
-            <button onclick="resetAllFilters()" class="px-6 py-3 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition font-semibold flex items-center gap-2 justify-center mx-auto">
+            <h3 class="text-lg font-bold text-gray-700 mb-2">Aucun résultat trouvé</h3>
+            <p class="text-gray-500 mb-4">Aucun sujet ne correspond à vos critères</p>
+            <button onclick="resetAllFilters()" class="px-4 py-2 bg-[#255156] text-white rounded-xl hover:bg-[#1e7c86] transition font-semibold flex items-center gap-2 justify-center mx-auto text-sm">
                 <i class="fas fa-arrow-left"></i> Voir tous les sujets
             </button>
         `;
@@ -431,17 +431,17 @@ function resetAllFilters() {
     filterThreads();
     document.querySelectorAll('.category-item').forEach(item => {
         item.classList.remove('active-category', 'bg-[#255156]/10');
-        const iconDiv = item.querySelector('.w-8.h-8');
+        const iconDiv = item.querySelector('.w-7.h-7');
         if (iconDiv && item.dataset.categoryId !== 'all') {
-            iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
+            iconDiv.className = 'w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
         }
     });
     const allCategoryItem = document.querySelector('.category-item[data-category-id="all"]');
     if (allCategoryItem) {
         allCategoryItem.classList.add('active-category', 'bg-[#255156]/10');
-        const iconDiv = allCategoryItem.querySelector('.w-8.h-8');
+        const iconDiv = allCategoryItem.querySelector('.w-7.h-7');
         if (iconDiv) {
-            iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
+            iconDiv.className = 'w-7 h-7 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
         }
     }
 }
@@ -462,16 +462,16 @@ document.querySelectorAll('.edit-thread-btn').forEach(button => {
             title: '<i class="fas fa-edit mr-2"></i>Modifier le sujet',
             html: `
                 <div class="text-left">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2 text-left">Titre</label>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 font-semibold mb-1 text-left text-sm">Titre</label>
                         <input type="text" id="swal-thread-title" class="swal2-input w-full" placeholder="Titre du sujet" value="${escapeHtml(currentTitle)}" style="width: 100%; margin: 0;">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2 text-left">Contenu</label>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 font-semibold mb-1 text-left text-sm">Contenu</label>
                         <textarea id="swal-thread-body" class="swal2-textarea w-full" placeholder="Contenu du sujet" rows="6" style="width: 100%; margin: 0; resize: vertical;">${escapeHtml(currentBody)}</textarea>
                     </div>
                     <div class="mb-2">
-                        <label class="block text-gray-700 font-semibold mb-2 text-left">Catégorie</label>
+                        <label class="block text-gray-700 font-semibold mb-1 text-left text-sm">Catégorie</label>
                         <select id="swal-thread-category" class="swal2-select w-full" style="width: 100%; margin: 0; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
                             ${categoriesOptions}
                         </select>
@@ -488,9 +488,9 @@ document.querySelectorAll('.edit-thread-btn').forEach(button => {
             background: '#fff',
             customClass: {
                 popup: 'rounded-2xl',
-                title: 'text-2xl font-bold',
-                confirmButton: 'px-5 py-2.5 rounded-lg font-semibold text-white',
-                cancelButton: 'px-5 py-2.5 rounded-lg font-semibold'
+                title: 'text-xl font-bold',
+                confirmButton: 'px-4 py-2 rounded-lg font-semibold text-white',
+                cancelButton: 'px-4 py-2 rounded-lg font-semibold'
             },
             preConfirm: () => {
                 const newTitle = document.getElementById('swal-thread-title').value.trim();
@@ -595,9 +595,9 @@ document.querySelectorAll('.delete-thread-btn').forEach(button => {
             background: '#fff',
             customClass: {
                 popup: 'rounded-2xl',
-                title: 'text-2xl font-bold',
-                confirmButton: 'px-5 py-2.5 rounded-lg font-semibold text-white',
-                cancelButton: 'px-5 py-2.5 rounded-lg font-semibold'
+                title: 'text-xl font-bold',
+                confirmButton: 'px-4 py-2 rounded-lg font-semibold text-white',
+                cancelButton: 'px-4 py-2 rounded-lg font-semibold'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -696,16 +696,16 @@ document.querySelectorAll('.category-item').forEach(function(categoryItem) {
         
         document.querySelectorAll('.category-item').forEach(function(item) {
             item.classList.remove('active-category', 'bg-[#255156]/10');
-            var iconDiv = item.querySelector('.w-8.h-8');
+            var iconDiv = item.querySelector('.w-7.h-7');
             if (iconDiv && item.dataset.categoryId !== 'all') {
-                iconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
+                iconDiv.className = 'w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center';
             }
         });
         
         this.classList.add('active-category', 'bg-[#255156]/10');
-        var activeIconDiv = this.querySelector('.w-8.h-8');
+        var activeIconDiv = this.querySelector('.w-7.h-7');
         if (activeIconDiv) {
-            activeIconDiv.className = 'w-8 h-8 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
+            activeIconDiv.className = 'w-7 h-7 rounded-full bg-gradient-to-r from-[#255156] to-[#1e7c86] flex items-center justify-center';
         }
         
         currentCategoryId = categoryId;
@@ -888,8 +888,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .resolve-checkbox {
     accent-color: #255156;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
 }
 
@@ -940,13 +940,54 @@ document.addEventListener('DOMContentLoaded', function() {
 .swal2-input, .swal2-textarea, .swal2-select {
     border-radius: 0.5rem !important;
     border: 1px solid #e2e8f0 !important;
-    padding: 0.5rem 0.75rem !important;
-    font-size: 0.875rem !important;
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.85rem !important;
 }
 .swal2-input:focus, .swal2-textarea:focus, .swal2-select:focus {
     border-color: #255156 !important;
     box-shadow: 0 0 0 3px rgba(37, 81, 86, 0.1) !important;
     outline: none !important;
+}
+
+/* ============================================
+   COMPACTAGE POUR 1920x1080 @ 125% (~1536x864 CSS)
+   ============================================ */
+
+/* Réduction des contrôles de formulaire Bootstrap */
+.form-control-sm,
+.form-select-sm {
+    height: 30px !important;
+    padding: 2px 8px !important;
+    font-size: 0.8rem !important;
+}
+
+textarea.form-control-sm {
+    height: auto !important;
+    min-height: 60px;
+}
+
+/* Ciblage précis 1920x1080 @ 125% */
+@media screen and (min-width: 1500px) and (max-width: 1600px)
+              and (min-height: 850px) and (max-height: 900px) {
+
+    #search,
+    #categorySearch {
+        height: 28px !important;
+        font-size: 0.78rem !important;
+    }
+
+    .thread-item {
+        padding: 0.6rem !important;
+    }
+
+    .category-item .p-2 {
+        padding: 0.4rem 0.5rem !important;
+    }
+
+    /* Modales */
+    #newThreadModal .modal-body {
+        padding: 0.6rem !important;
+    }
 }
 </style>
 @endsection
