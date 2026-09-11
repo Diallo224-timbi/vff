@@ -385,6 +385,125 @@
         transform: translateX(0);
         transition: all 0.3s ease;
     }
+
+    /* ============================================
+       OPTIMISATION 1920x1080 @ 125%
+       Viewport CSS cible : 1536 x 864 (plage exacte)
+       ============================================ */
+    @media screen and (min-width: 1500px) and (max-width: 1560px)
+       and (min-height: 840px) and (max-height: 890px) {
+
+        /* Container : marges réduites */
+        .container.mt-5 {
+            margin-top: 1rem !important;
+            max-width: 1480px;
+        }
+
+        /* En-tête : compacté */
+        .row.mb-4 {
+            margin-bottom: 0.85rem !important;
+        }
+        h1.display-5 {
+            font-size: 1.75rem !important;
+            margin-bottom: 0.2rem !important;
+        }
+        h1.display-5 i {
+            font-size: 1.4rem;
+        }
+        p.lead {
+            font-size: 0.9rem !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Bouton principal */
+        .btn-lg {
+            padding: 8px 20px !important;
+            font-size: 0.85rem !important;
+        }
+
+        /* Cartes filtres + stats */
+        .card-body {
+            padding: 0.65rem 0.9rem !important;
+        }
+        #organismCount {
+            font-size: 1.4rem !important;
+        }
+        .card-body i.fa-2x {
+            font-size: 1.4em !important;
+        }
+
+        /* Cartes organismes : hauteur réduite */
+        .organism-card .card-body {
+            padding: 0.6rem 0.9rem !important;
+        }
+        .logo-container {
+            width: 70px !important;
+            height: 70px !important;
+        }
+        .organism-card .col-md-3.col-lg-2 {
+            padding: 0.5rem !important;
+        }
+        .no-logo i.fa-4x {
+            font-size: 2em !important;
+        }
+        .no-logo p.small {
+            font-size: 0.65rem !important;
+            margin-top: 0.25rem !important;
+        }
+        .organism-card h3.card-title {
+            font-size: 1rem !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .organism-card .badge {
+            padding: 4px 8px !important;
+            font-size: 0.7rem !important;
+        }
+        .organism-card .d-flex.flex-wrap.gap-3 {
+            gap: 0.4rem !important;
+            margin-bottom: 0.3rem !important;
+        }
+        .organism-card .card-text {
+            font-size: 0.78rem !important;
+            margin-bottom: 0.3rem !important;
+            line-height: 1.3 !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .organism-card .row.mt-2 {
+            margin-top: 0.2rem !important;
+        }
+        .organism-card small {
+            font-size: 0.7rem !important;
+            line-height: 1.25 !important;
+        }
+        .organism-card .col-md-2.col-lg-2 {
+            padding: 0.5rem !important;
+        }
+        .organism-card .btn-sm {
+            padding: 3px 6px !important;
+            font-size: 0.68rem !important;
+            line-height: 1.2 !important;
+        }
+        .organism-card .d-flex.flex-column.gap-2 {
+            gap: 0.3rem !important;
+        }
+        .organism-card.mb-3 {
+            margin-bottom: 0.45rem !important;
+        }
+
+        /* Recherche */
+        #search, #sortBy {
+            padding: 5px 12px !important;
+            font-size: 0.82rem !important;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+    }
 </style>
 
 <!-- Scripts -->

@@ -2,141 +2,97 @@
 @section('title', 'Ajouter un organisme')
 @section('content')
 
-<div class="container mt-5">
+<div class="container form-container mt-3">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- Carte principale avec animation -->
-            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 20px; overflow: hidden;">
+        <div class="col-lg-8 col-xl-7">
+            <!-- Carte principale -->
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
                 
-                <!-- En-tête avec dégradé -->
-                <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #255156 0%, #255156 100%); border: none;">
+                <!-- En-tête sobre -->
+                <div class="card-header text-white py-3 px-4" style="background: #255156; border: none;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <i class="fas fa-building fa-2x me-2"></i>
-                            <h1 class="d-inline-block mb-0 fw-bold">Ajouter un Organisme</h1>
-                            <p class="mt-2 mb-0 opacity-75">Remplissez les informations ci-dessous</p>
+                            <h1 class="h5 mb-0 fw-bold">
+                                <i class="fas fa-building me-2"></i>Ajouter un Organisme
+                            </h1>
                         </div>
-                        <div class="text-end">
-                            <i class="fas fa-hand-holding-heart fa-3x opacity-50"></i>
-                        </div>
+                        <i class="fas fa-hand-holding-heart fa-lg opacity-50"></i>
                     </div>
                 </div>
-                <!-- Corps du formulaire -->
-                <div class="card-body p-5">
-                    <form action="{{ route('organismes.store') }}" method="POST" id="organismeForm" enctype="multipart/form-data" >
+
+                <!-- Corps du formulaire compact -->
+                <div class="card-body form-body">
+                    <form action="{{ route('organismes.store') }}" method="POST" id="organismeForm" enctype="multipart/form-data">
                         @csrf
                     
-                        <!-- charger un logo ou une image de l'organisme -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="logo" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-image me-2" style="color: #255156;"></i>Logo de l'organisme
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-upload text-muted"></i>
-                                </span>
-                                <input type="file" class="form-control border-start-0 ps-0" id="logo" name="logo" accept="image/*">
+                        <!-- Ligne 1 : Logo + Nom -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-5">
+                                <label for="logo" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-image me-1" style="color: #255156;"></i>Logo
+                                </label>
+                                <input type="file" class="form-control form-control-sm" id="logo" name="logo" accept="image/*">
                             </div>
-                            <small class="text-muted mt-1"><i class="fas fa-info-circle"></i> Optionnel - Formats acceptés : JPG, PNG, GIF,JPEG</small>
-                        </div>
-                        <!-- Champ Nom avec icône -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="nom" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-building me-2" style="color: #255156;"></i>Nom de l'organisme
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-tag text-muted"></i>
-                                </span>
-                                <input type="text" class="form-control border-start-0 ps-0" id="nom" name="nom_organisme" 
+                            <div class="col-md-7">
+                                <label for="nom" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-tag me-1" style="color: #255156;"></i>Nom de l'organisme *
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="nom" name="nom_organisme" 
                                        placeholder="Ex: Association Culturelle" required>
                             </div>
-                            <div class="invalid-feedback">Veuillez saisir le nom de l'organisme</div>
                         </div>
 
-                        <!-- Champ Description avec éditeur amélioré -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="signification" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-align-left me-2" style="color: #255156;"></i>Description
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="signification" class="form-label fw-semibold mb-1">
+                                <i class="fas fa-align-left me-1" style="color: #255156;"></i>Description *
                             </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light align-items-start pt-3">
-                                    <i class="fas fa-file-alt text-muted"></i>
-                                </span>
-                                <textarea class="form-control" id="signification" name="signification" rows="4" 
-                                          placeholder="Décrivez la mission et les activités de l'organisme..." required></textarea>
-                            </div>
+                            <textarea class="form-control form-control-sm" id="signification" name="signification" rows="3" 
+                                      placeholder="Décrivez la mission et les activités de l'organisme..." required></textarea>
                         </div>
 
-                        <!-- Adresse avec autocomplétion (dynamique) -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="adresse" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-location-dot me-2" style="color: #255156;"></i>Adresse
+                        <!-- Adresse -->
+                        <div class="mb-3">
+                            <label for="adresse" class="form-label fw-semibold mb-1">
+                                <i class="fas fa-map-marker-alt me-1" style="color: #255156;"></i>Adresse *
                             </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-map-marker-alt text-muted"></i>
-                                </span>
-                                <input type="text" class="form-control border-start-0 ps-0" id="adresse" name="adresse" 
-                                       placeholder="Numéro et nom de rue" required>
-                            </div>
+                            <input type="text" class="form-control form-control-sm" id="adresse" name="adresse" 
+                                   placeholder="Numéro et nom de rue" required>
                         </div>
 
-                        <div class="row">
-                            <!-- Code Postal -->
-                            <div class="col-md-4 mb-4 form-group-animate">
-                                <label for="code_postal" class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-mail-bulk me-2" style="color: #255156;"></i>Code postal
+                        <!-- Ligne : Code postal + Ville + Site web -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <label for="code_postal" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-hashtag me-1" style="color: #255156;"></i>Code postal *
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="fas fa-hashtag text-muted"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-start-0 ps-0" id="code_postal" name="code_postal" 
-                                           placeholder="06000" maxlength="5" required>
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="code_postal" name="code_postal" 
+                                       placeholder="06000" maxlength="5" required>
                             </div>
-
-                            <!-- Ville -->
-                            <div class="col-md-8 mb-4 form-group-animate">
-                                <label for="ville" class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-city me-2" style="color: #255156;"></i>Ville
+                            <div class="col-md-4">
+                                <label for="ville" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-city me-1" style="color: #255156;"></i>Ville *
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="fas fa-map-pin text-muted"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-start-0 ps-0" id="ville" name="ville" 
-                                           placeholder="Nice" required>
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="ville" name="ville" 
+                                       placeholder="Nice" required>
                             </div>
-                        </div>
-
-                        <!-- Site Web avec validation en temps réel -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="site_web" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-globe me-2" style="color: #255156;"></i>Site web
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-link text-muted"></i>
-                                </span>
-                                <input type="url" class="form-control border-start-0 ps-0" id="site_web" name="site_web" 
+                            <div class="col-md-5">
+                                <label for="site_web" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-globe me-1" style="color: #255156;"></i>Site web
+                                </label>
+                                <input type="url" class="form-control form-control-sm" id="site_web" name="site_web" 
                                        placeholder="https://exemple.org">
                             </div>
-                            <small class="text-muted mt-1"><i class="fas fa-info-circle"></i> Optionnel - Format URL valide recommandé</small>
                         </div>
 
-                        <!-- Séparateur -->
-                        <hr class="my-4" style="border-top: 2px dashed #e0e0e0;">
-
                         <!-- Boutons d'action -->
-                        <div class="d-flex gap-3 justify-content-end">
-                            <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary btn-lg px-4">
-                                <i class="fas fa-times me-2"></i>Annuler
+                        <div class="d-flex gap-2 justify-content-end pt-3 border-top">
+                            <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary btn-sm px-4">
+                                <i class="fas fa-times me-1"></i>Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn" style="background: linear-gradient(135deg, #255160 0%, #106f8f 100%); border: none;">
-                                <i class="fas fa-save me-2"></i>Ajouter l'organisme
+                            <button type="submit" class="btn btn-sm px-4 text-white" id="submitBtn" 
+                                    style="background: #255156; border: none;">
+                                <i class="fas fa-save me-1"></i>Ajouter
                             </button>
                         </div>
                     </form>
@@ -146,99 +102,155 @@
     </div>
 </div>
 
-<!-- Styles CSS supplémentaires pour les animations -->
+<!-- Styles CSS -->
 <style>
-    /* Animation d'apparition des champs */
-    .form-group-animate {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: slideInUp 0.5s forwards;
+    /* ============================================
+       BASE
+       ============================================ */
+    .form-container {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        align-items: center;
     }
-    
-    @keyframes slideInUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .form-container .row {
+        width: 100%;
     }
-    
-    /* Délais d'animation pour chaque champ */
-    .form-group-animate:nth-child(1) { animation-delay: 0.1s; }
-    .form-group-animate:nth-child(2) { animation-delay: 0.2s; }
-    .form-group-animate:nth-child(3) { animation-delay: 0.3s; }
-    .form-group-animate:nth-child(4) { animation-delay: 0.4s; }
-    .form-group-animate:nth-child(5) { animation-delay: 0.5s; }
-    .form-group-animate:nth-child(6) { animation-delay: 0.6s; }
-    
-    /* Effet focus sur les inputs */
+
+    /* Taille de base des écritures (légèrement augmentée) */
+    .form-label {
+        font-size: 0.95rem;
+        color: #333;
+    }
+    .form-control-sm {
+        font-size: 0.92rem;
+    }
+    .form-control::placeholder {
+        font-size: 0.9rem;
+        color: #adb5bd;
+    }
+
+    /* Focus */
     .form-control:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    }
-    
-    /* Effet hover sur le bouton */
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        transition: all 0.3s ease;
-    }
-    
-    /* Animation du curseur dans les inputs */
-    .form-control {
-        transition: all 0.3s ease;
-    }
-    
-    /* Style des input group au focus */
-    .input-group:focus-within .input-group-text {
         border-color: #255156;
-        background-color: #255170;
+        box-shadow: 0 0 0 0.15rem rgba(37, 81, 86, 0.15);
     }
-    
-    /* Card hover effect */
-    .card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* Hover bouton principal */
+    #submitBtn:hover {
+        background: #1a3a3f !important;
+        transition: background 0.2s ease;
     }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+
+    /* ============================================
+       OPTIMISATION RÉSOLUTION 1920x1080 @ 125%
+       Viewport CSS cible : ~1536 x 864
+       ============================================ */
+    @media screen and (min-width: 1400px) and (max-width: 1600px)
+       and (min-height: 800px) and (max-height: 900px) {
+
+        /* Container centré verticalement */
+        .form-container {
+            min-height: calc(100vh - 60px) !important;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            margin-top: 0 !important;
+        }
+
+        /* Carte : largeur optimale */
+        .form-container .col-lg-8.col-xl-7 {
+            max-width: 760px;
+            flex: 0 0 auto;
+        }
+
+        /* En-tête : lisible mais compact */
+        .card-header {
+            padding: 0.7rem 1rem !important;
+        }
+        .card-header h1.h5 {
+            font-size: 1.1rem !important;      /* AVANT: 0.92rem */
+            margin: 0 !important;
+        }
+        .card-header .fa-lg {
+            font-size: 1.2em !important;
+        }
+
+        /* Corps : padding confortable */
+        .form-body {
+            padding: 1.1rem 1.25rem !important; /* AVANT: 0.85rem */
+        }
+
+        /* Labels : taille augmentée */
+        .form-label {
+            font-size: 0.92rem !important;      /* AVANT: 0.75rem */
+            margin-bottom: 0.2rem !important;
+        }
+
+        /* Champs : taille augmentée */
+        .form-control-sm {
+            padding: 0.4rem 0.7rem !important;  /* AVANT: 0.28rem */
+            font-size: 0.9rem !important;       /* AVANT: 0.8rem */
+            height: calc(1.6em + 0.8rem) !important;
+        }
+
+        /* Placeholder : taille augmentée */
+        .form-control::placeholder {
+            font-size: 0.88rem !important;
+        }
+
+        /* Espacements verticaux : légèrement augmentés mais contenus */
+        .mb-2 { margin-bottom: 0.55rem !important; }
+        .mb-3 { margin-bottom: 0.75rem !important; }   /* AVANT: 0.45-0.6rem */
+        .mb-4 { margin-bottom: 0.9rem !important; }
+        .row.g-3 { --bs-gutter-x: 0.7rem; --bs-gutter-y: 0.7rem; }
+
+        /* Textarea : plus confortable */
+        textarea.form-control-sm {
+            min-height: 70px !important;               /* AVANT: 50px */
+            resize: vertical;
+        }
+
+        /* Boutons : taille augmentée */
+        .btn-sm {
+            padding: 0.42rem 1rem !important;          /* AVANT: 0.3rem */
+            font-size: 0.88rem !important;             /* AVANT: 0.78rem */
+        }
+
+        /* Séparateur boutons */
+        .border-top.pt-3 {
+            padding-top: 0.65rem !important;
+            margin-top: 0.25rem !important;
+        }
+
+        /* Icônes inline dans les labels */
+        .form-label i {
+            font-size: 0.85rem;
+        }
     }
 </style>
 
 <!-- Script pour la validation en temps réel -->
 <script>
-    // Validation du code postal (uniquement chiffres, 5 caractères)
-    document.getElementById('code_postal').addEventListener('input', function(e) {
+    document.getElementById('code_postal').addEventListener('input', function() {
         this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);
     });
     
-    // Validation URL en temps réel
-    document.getElementById('site_web').addEventListener('input', function(e) {
+    document.getElementById('site_web').addEventListener('input', function() {
         const url = this.value;
-        if(url && !url.match(/^https?:\/\/.+/)) {
+        if (url && !url.match(/^https?:\/\/.+/)) {
             this.setCustomValidity('Veuillez saisir une URL valide commençant par http:// ou https://');
         } else {
             this.setCustomValidity('');
         }
     });
     
-    // Animation au submit
-    document.getElementById('organismeForm').addEventListener('submit', function(e) {
+    document.getElementById('organismeForm').addEventListener('submit', function() {
         const btn = document.getElementById('submitBtn');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Ajout en cours...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Ajout...';
         btn.disabled = true;
-    });
-    
-    // Effet de placeholder flottant simplifié
-    const inputs = document.querySelectorAll('.form-control');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.parentElement.classList.add('focused');
-        });
     });
 </script>
 
-<!-- Ajouter Font Awesome si pas déjà présent dans base -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 @endsection
