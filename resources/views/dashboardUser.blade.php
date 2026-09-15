@@ -17,18 +17,8 @@
                     <div class="vff-brand-sub">Schéma Départemental · DDETS 06</div>
                 </div>
             </div>
-            @auth
-            <div class="vff-user">
-                <div class="vff-user-av">{{ strtoupper(substr(auth()->user()->prenom,0,1)) }}</div>
-                <div>
-                    <div class="vff-user-nm">{{ auth()->user()->prenom }}</div>
-                    <div class="vff-user-rl">{{ ucfirst(auth()->user()->role ?? 'Partenaire') }}</div>
-                </div>
-            </div>
-            @endauth
         </div>
     </header>
-
     {{-- ══════════ HERO SECTION ══════════ --}}
     <section class="vff-hero">
         <div class="vff-hero-mesh"></div>
@@ -45,15 +35,12 @@
             </div>
         </div>
     </section>
-
     {{-- ══════════ CONTENU PRINCIPAL ══════════ --}}
     <main class="vff-main-content">
-
         {{-- ══════════ CARTES NAVIGATION ══════════ --}}
         @php
             $isAdmin = auth()->check() && auth()->user()->role === 'admin';
         @endphp
-
         <section class="vff-cards-wrap">
             <div class="vff-hw">
                 <div class="vff-cards {{ $isAdmin ? 'is-admin' : 'is-user' }}">
@@ -66,7 +53,6 @@
                             'resources.index' => ['title' => 'Ressources & Outils', 'desc' => 'Guides, outils et documentation', 'icon' => 'bx-download', 'color' => '#d97706', 'bg' => '#fef3c7'],
                         ];
                     @endphp
-
                     {{-- Cartes publiques --}}
                     @foreach($navCards as $routeName => $c)
                         @if(Route::has($routeName))
@@ -82,17 +68,16 @@
                         </a>
                         @endif
                     @endforeach
-
                     {{-- Cartes réservées à l'ADMIN --}}
                     @auth
                         @if($isAdmin)
-                            <a href="" class="vff-card">
+                            <a href="{{ route('schemas.index') }}" class="vff-card">
                                 <div class="vff-card-icon" style="background:#fce7f3;color:#db2777;">
                                     <i class='bx bx-sitemap'></i>
                                 </div>
                                 <div class="vff-card-content">
                                     <h3 class="vff-card-title">Schéma</h3>
-                                    <p class="vff-card-desc">Pilotage et orientations</p>
+                                    <p class="vff-card-desc">Compte rendu des GT</p>
                                     <span class="vff-card-more" style="color:#db2777;">En savoir plus →</span>
                                 </div>
                             </a>
@@ -125,91 +110,89 @@
                 </div>
             </div>
         </section>
+    </main>
 
-        {{-- ══════════ BANDEAU DÉFILANT ÉVÉNEMENTS ══════════ --}}
-        <section class="vff-ticker-wrap">
-            <div class="vff-hw">
-                <div class="vff-ticker-container {{ !$isAdmin ? 'is-user-large' : '' }}">
-                    <div class="vff-ticker-badge">
-                        <i class='bx bx-bell bx-tada'></i>
-                        <span>{{ !$isAdmin ? 'À LA UNE / AGENDA' : 'INFO / AGENDA' }}</span>
-                    </div>
-                    <div class="vff-ticker-content">
-                        <div class="vff-ticker-track">
-                            @php
-                                $futureEvents = $agenda->filter(function($event) {
-                                    return \Carbon\Carbon::parse($event->date_debut)->isFuture();
-                                });
-                            @endphp
-                            @forelse($futureEvents as $agen)
-                                @php
-                                    $date = \Carbon\Carbon::parse($agen->date_debut);
-                                    $isSpecial = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
-                                    $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
-                                @endphp
-                                <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}">
-                                    @if($isSpecial)
-                                        <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
-                                    @else
-                                        <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
-                                    @endif
-                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
-                                    <span class="vff-ticker-date">
-                                        <i class='bx bx-time-five'></i>
-                                        {{ $date->translatedFormat('d F Y à H\hi') }}
-                                    </span>
-                                    @if(!empty($agen->lieu))
-                                        <span class="vff-ticker-location">
-                                            <i class='bx bx-map'></i> {{ $agen->lieu }}
-                                        </span>
-                                    @endif
-                                    <a href="{{ route('events.index') }}" class="vff-ticker-action">
-                                        En savoir plus <i class='bx bx-right-arrow-alt'></i>
-                                    </a>
-                                </div>
-                                <span class="vff-ticker-sep">•</span>
-                            @empty
-                                <div class="vff-ticker-item">
-                                    <span class="vff-ticker-tag"><i class="bx bx-info-circle"></i> Info</span>
-                                    <span>Aucun événement à venir pour le moment.</span>
-                                </div>
-                            @endforelse
-                            @foreach($futureEvents as $agen)
-                                @php
-                                    $date = \Carbon\Carbon::parse($agen->date_debut);
-                                    $isSpecial  = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
-                                    $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
-                                @endphp
-                                <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}" aria-hidden="true">
-                                    @if($isSpecial)
-                                        <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
-                                    @else
-                                        <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
-                                    @endif
-                                    <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
-                                    <span class="vff-ticker-date">
-                                        <i class='bx bx-time-five'></i>
-                                        {{ $date->translatedFormat('d F Y à H\hi') }}
-                                    </span>
-                                    @if(!empty($agen->lieu))
-                                        <span class="vff-ticker-location">
-                                            <i class='bx bx-map'></i> {{ $agen->lieu }}
-                                        </span>
-                                    @endif
-                                    @if(!$isAdmin && Route::has('events.index'))
-                                        <a href="{{ route('events.index') }}" class="vff-ticker-action">
-                                            En savoir plus <i class='bx bx-right-arrow-alt'></i>
-                                        </a>
-                                    @endif
-                                </div>
-                                <span class="vff-ticker-sep" aria-hidden="true">•</span>
-                            @endforeach
+    {{-- ══════════ BANDEAU DÉFILANT ÉVÉNEMENTS — FIXÉ EN BAS (STYLE TV) ══════════ --}}
+    <section class="vff-ticker-wrap">
+        <div class="vff-ticker-container {{ !$isAdmin ? 'is-user-large' : '' }}">
+            <div class="vff-ticker-badge">
+                <i class='bx bx-bell bx-tada'></i>
+                <span>{{ !$isAdmin ? 'À LA UNE / AGENDA' : 'INFO / AGENDA' }}</span>
+            </div>
+            <div class="vff-ticker-content">
+                <div class="vff-ticker-track">
+                    @php
+                        $futureEvents = $agenda->filter(function($event) {
+                            return \Carbon\Carbon::parse($event->date_debut)->isFuture();
+                        });
+                    @endphp
+                    @forelse($futureEvents as $agen)
+                        @php
+                            $date = \Carbon\Carbon::parse($agen->date_debut);
+                            $isSpecial = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
+                            $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
+                        @endphp
+                        <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}">
+                            @if($isSpecial)
+                                <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
+                            @else
+                                <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
+                            @endif
+                            <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
+                            <span class="vff-ticker-date">
+                                <i class='bx bx-time-five'></i>
+                                {{ $date->translatedFormat('d F Y à H\hi') }}
+                            </span>
+                            @if(!empty($agen->lieu))
+                                <span class="vff-ticker-location">
+                                    <i class='bx bx-map'></i> {{ $agen->lieu }}
+                                </span>
+                            @endif
+                            <a href="{{ route('events.index') }}" class="vff-ticker-action">
+                                En savoir plus <i class='bx bx-right-arrow-alt'></i>
+                            </a>
                         </div>
-                    </div>
+                        <span class="vff-ticker-sep">•</span>
+                    @empty
+                        <div class="vff-ticker-item">
+                            <span class="vff-ticker-tag"><i class="bx bx-info-circle"></i> Info</span>
+                            <span>Aucun événement à venir pour le moment.</span>
+                        </div>
+                    @endforelse
+                    @foreach($futureEvents as $agen)
+                        @php
+                            $date = \Carbon\Carbon::parse($agen->date_debut);
+                            $isSpecial  = ($date->day === 25 && $date->month === 11) || ($date->day === 8 && $date->month === 3);
+                            $specialTag = ($date->day === 25 && $date->month === 11) ? '🔥 25 NOVEMBRE - JOURNÉE INTERNATIONALE' : '🌟 8 MARS - DROITS DES FEMMES';
+                        @endphp
+                        <div class="vff-ticker-item {{ $isSpecial ? 'is-special-date' : '' }}" aria-hidden="true">
+                            @if($isSpecial)
+                                <span class="vff-ticker-tag tag-special"><i class="bx bx-star"></i> {{ $specialTag }}</span>
+                            @else
+                                <span class="vff-ticker-tag"><i class="bx bx-calendar-event"></i> Événement à venir</span>
+                            @endif
+                            <strong class="vff-ticker-title">{{ $agen->titre }}</strong>
+                            <span class="vff-ticker-date">
+                                <i class='bx bx-time-five'></i>
+                                {{ $date->translatedFormat('d F Y à H\hi') }}
+                            </span>
+                            @if(!empty($agen->lieu))
+                                <span class="vff-ticker-location">
+                                    <i class='bx bx-map'></i> {{ $agen->lieu }}
+                                </span>
+                            @endif
+                            @if(!$isAdmin && Route::has('events.index'))
+                                <a href="{{ route('events.index') }}" class="vff-ticker-action">
+                                    En savoir plus <i class='bx bx-right-arrow-alt'></i>
+                                </a>
+                            @endif
+                        </div>
+                        <span class="vff-ticker-sep" aria-hidden="true">•</span>
+                    @endforeach
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     {{-- ══════════ FOOTER ══════════ --}}
     <footer class="vff-footer">
@@ -244,11 +227,11 @@
     --bdr: #dde6e8;
     --r:   14px;
     --ease: cubic-bezier(.4,0,.2,1);
+    --ticker-h: 56px; /* hauteur du bandeau TV */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ✅ Root : prend au minimum toute la hauteur de la fenêtre */
 .vff-root {
     display: flex;
     flex-direction: column;
@@ -257,6 +240,8 @@
     background: var(--bg);
     color: var(--txt);
     -webkit-font-smoothing: antialiased;
+    /* ✅ Espace réservé en bas pour que le bandeau TV ne masque pas le footer */
+    padding-bottom: var(--ticker-h);
 }
 
 .vff-hw {
@@ -266,7 +251,6 @@
     padding: 0 2rem;
 }
 
-/* ✅ Main : grandit pour pousser le footer en bas */
 .vff-main-content {
     display: flex;
     flex-direction: column;
@@ -297,31 +281,6 @@
 .vff-brand-sep { width: 2px; height: 30px; background: var(--bdr); }
 .vff-brand-name { font-size: 0.82rem; font-weight: 800; color: var(--pl); text-transform: uppercase; }
 .vff-brand-sub { font-size: 0.62rem; color: var(--mu); font-style: italic; }
-
-.vff-user {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: #f0f6f7;
-    border: 1px solid var(--bdr);
-    border-radius: 50px;
-    padding: 0.22rem 0.9rem 0.22rem 0.22rem;
-}
-
-.vff-user-av {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--pl), #2d7a82);
-    color: #fff;
-    font-size: 0.78rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.vff-user-nm { font-size: 0.73rem; font-weight: 700; }
-.vff-user-rl { font-size: 0.58rem; color: var(--mu); }
 
 /* ════════════════════════════════════════════════
    HERO
@@ -393,7 +352,6 @@
     gap: 1.15rem;
 }
 
-/* Grille Admin */
 .vff-cards.is-admin {
     grid-template-columns: repeat(4, 1fr);
 }
@@ -467,7 +425,6 @@
     transform: translateX(4px);
 }
 
-/* NON-ADMIN CARTES */
 .vff-cards.is-user {
     grid-template-columns: repeat(5, 1fr);
 }
@@ -491,27 +448,34 @@
 }
 
 /* ════════════════════════════════════════════════
-   BANDEAU ÉVÉNEMENTS DÉFILANT
+   BANDEAU ÉVÉNEMENTS DÉFILANT — FIXÉ EN BAS (STYLE TV)
 ════════════════════════════════════════════════ */
 .vff-ticker-wrap {
-    flex: 0 0 auto;
-    padding: 0.4rem 0 0.5rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
 .vff-ticker-container {
     display: flex;
     align-items: center;
-    background: #ffffff;
-    border: 2px solid #e11d48;
-    border-radius: var(--r);
+    background: #0d1f22;
+    border-top: 2px solid #e11d48;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.1);
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.35);
+    width: 100%;
 }
 
 .vff-ticker-badge {
     background: linear-gradient(135deg, #e11d48, #be123c);
     color: #ffffff;
-    padding: 0.9rem 1.4rem;
+    padding: 0.85rem 1.4rem;
     font-size: 0.82rem;
     font-weight: 800;
     letter-spacing: 0.4px;
@@ -520,7 +484,7 @@
     gap: 0.55rem;
     flex-shrink: 0;
     z-index: 2;
-    box-shadow: 4px 0 15px rgba(190, 18, 60, 0.25);
+    box-shadow: 4px 0 15px rgba(190, 18, 60, 0.4);
 }
 
 .vff-ticker-badge i { font-size: 1.2rem; }
@@ -567,13 +531,13 @@
 .vff-ticker-title {
     font-size: 0.93rem;
     font-weight: 800;
-    color: #0f172a;
+    color: #ffffff;
 }
 
 .vff-ticker-date,
 .vff-ticker-location {
     font-size: 0.84rem;
-    color: #475569;
+    color: #cbd5e1;
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -594,12 +558,12 @@
 
 /* Version grand format non-admin */
 .vff-ticker-container.is-user-large {
-    border: 2px solid #be123c;
-    box-shadow: 0 10px 30px rgba(190, 18, 60, 0.18);
+    border-top: 3px solid #be123c;
+    box-shadow: 0 -10px 30px rgba(190, 18, 60, 0.35);
 }
 
 .vff-ticker-container.is-user-large .vff-ticker-badge {
-    padding: 1.15rem 1.9rem;
+    padding: 1rem 1.9rem;
     font-size: 0.95rem;
 }
 
@@ -649,7 +613,7 @@
 }
 
 .vff-ticker-item.is-special-date {
-    background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+    background: linear-gradient(135deg, rgba(255, 241, 242, 0.15), rgba(255, 228, 230, 0.15));
     border: 2px solid #e11d48;
     padding-right: 1.25rem;
 }
@@ -662,7 +626,7 @@
 }
 
 .vff-ticker-item.is-special-date .vff-ticker-title {
-    color: #881337;
+    color: #fecdd3;
 }
 
 @keyframes pulse {
@@ -728,23 +692,25 @@
     .vff-cards.is-admin { grid-template-columns: 1fr; }
     .vff-footer-inner { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
     .vff-ticker-badge span { display: none; }
+    .vff-ticker-container.is-user-large .vff-ticker-badge {
+        padding: 0.75rem 1rem;
+    }
+    :root { --ticker-h: 52px; }
 }
 
 /* ════════════════════════════════════════════════
    FIX SPÉCIAL 1920×1080 @125% (≈ 1536×864 CSS)
 ════════════════════════════════════════════════ */
 @media (min-width: 1400px) and (max-height: 900px) {
-    .vff-header {
-        padding: 0.5rem 0;
-    }
+    :root { --ticker-h: 52px; }
+
+    .vff-header { padding: 0.5rem 0; }
     .vff-brand img { height: 36px; }
     .vff-brand-sep { height: 26px; }
     .vff-brand-name { font-size: 0.78rem; }
     .vff-brand-sub { font-size: 0.58rem; }
 
-    .vff-hero {
-        padding: 1.5rem 0;
-    }
+    .vff-hero { padding: 1.5rem 0; }
     .vff-hero-h1 {
         font-size: clamp(1.15rem, 1.6vw, 1.55rem);
         line-height: 1.3;
@@ -752,16 +718,9 @@
     }
     .vff-hero-p { font-size: 0.85rem; }
 
-    .vff-cards-wrap {
-        padding: 0.9rem 0 0.5rem 0;
-    }
-    .vff-cards {
-        gap: 0.95rem;
-    }
-    .vff-card {
-        padding: 0.95rem;
-        gap: 0.75rem;
-    }
+    .vff-cards-wrap { padding: 0.9rem 0 0.5rem 0; }
+    .vff-cards { gap: 0.95rem; }
+    .vff-card { padding: 0.95rem; gap: 0.75rem; }
     .vff-card-icon {
         width: 40px;
         height: 40px;
@@ -777,48 +736,28 @@
     .vff-cards.is-user .vff-card-title { font-size: 0.9rem; }
     .vff-cards.is-user .vff-card-desc { font-size: 0.73rem; }
 
-    .vff-ticker-wrap {
-        padding: 0.3rem 0 0.4rem 0;
-    }
-    .vff-ticker-badge {
-        padding: 0.75rem 1.2rem;
-        font-size: 0.78rem;
-    }
+    .vff-ticker-badge { padding: 0.7rem 1.2rem; font-size: 0.78rem; }
     .vff-ticker-badge i { font-size: 1.05rem; }
-    .vff-ticker-content { padding: 0.6rem 0; }
+    .vff-ticker-content { padding: 0.55rem 0; }
     .vff-ticker-title { font-size: 0.88rem; }
     .vff-ticker-date,
     .vff-ticker-location { font-size: 0.8rem; }
-    .vff-ticker-action {
-        padding: 0.35rem 0.8rem;
-        font-size: 0.78rem;
-    }
+    .vff-ticker-action { padding: 0.35rem 0.8rem; font-size: 0.78rem; }
 
     .vff-ticker-container.is-user-large .vff-ticker-badge {
-        padding: 0.95rem 1.5rem;
+        padding: 0.85rem 1.5rem;
         font-size: 0.88rem;
     }
-    .vff-ticker-container.is-user-large .vff-ticker-content {
-        padding: 0.8rem 0;
-    }
-    .vff-ticker-container.is-user-large .vff-ticker-title {
-        font-size: 1rem;
-    }
+    .vff-ticker-container.is-user-large .vff-ticker-content { padding: 0.7rem 0; }
+    .vff-ticker-container.is-user-large .vff-ticker-title { font-size: 1rem; }
 
-    .vff-footer {
-        padding: 0.85rem 0;
-    }
+    .vff-footer { padding: 0.85rem 0; }
     .vff-footer-org { font-size: 0.62rem; }
     .vff-footer-links a { font-size: 0.68rem; }
     .vff-footer-copy { font-size: 0.62rem; }
 }
 
-/* ════════════════════════════════════════════════
-   ✅ FOOTER STICKY BOTTOM
-   Le footer reste toujours collé en bas de la fenêtre,
-   même si le contenu est plus court que la page.
-   (1920×1080 @ 125% ≈ 1536×864 CSS)
-════════════════════════════════════════════════ */
+/* ✅ Footer sticky bottom */
 .vff-root {
     min-height: 100vh !important;
     display: flex !important;
@@ -833,38 +772,21 @@
     margin-bottom: 0 !important;
 }
 
-.vff-cards-wrap {
-    padding-bottom: 0.5rem !important;
-    margin-bottom: 0 !important;
-}
-
-.vff-ticker-wrap {
-    padding-top: 0.3rem !important;
-    padding-bottom: 0.4rem !important;
-    margin-bottom: 0 !important;
-}
-
 .vff-footer {
     margin-top: auto !important;
     flex-shrink: 0 !important;
-    padding-top: 0.85rem !important;
-    padding-bottom: 0.85rem !important;
 }
-
-/* Au cas où le body parent aurait des contraintes */
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
-
 body > main,
 body > .container,
 body > .container-fluid {
     flex-grow: 1;
 }
 </style>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.vff-card').forEach((el, i) => {

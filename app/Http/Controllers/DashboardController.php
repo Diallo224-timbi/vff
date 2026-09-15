@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Structures;
 use App\Models\Resource;
 use App\Models\ActivityLog;
-use Illuminate\Http\Request;
 use App\Models\Organisme;
 
 class DashboardController extends Controller
@@ -30,38 +29,24 @@ class DashboardController extends Controller
             $count = Structures::where('id_organisme', $organisme->id)->count();
             $organismeStructures[] = $count;
         }
-       
         // ===== STATISTIQUES STRUCTURES =====
         $totalStructures = Structures::count();
-       // $typesCount = Structures::whereNotNull('type_structure')->distinct('type_structure')->count('type_structure');
         $villesCount = Structures::whereNotNull('ville')->distinct('ville')->count('ville');
         
-        /* Types de structures pour le graphique
-        $typeLabels = Structures::whereNotNull('type_structure')
-            ->distinct('type_structure')
-            ->pluck('type_structure')
-            ->take(5)
-            ->toArray();
-            
-        $typeData = [];
-        foreach($typeLabels as $type) {
-            $typeData[] = Structures::where('type_structure', $type)->count();
-        }
-*/
         // ===== STATISTIQUES DOCUMENTS =====
         $totalDocuments = Resource::count();
         $totalDownloads = Resource::sum('download_count');
         
         // Types de fichiers
         $imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
-        $videoTypes = ['mp4', 'webm', 'avi', 'mov', 'mkv'];
+        // $videoTypes = ['mp4', 'webm', 'avi', 'mov', 'mkv'];
         $liens  = ['lien'];
         
         $stats = [
             'images' => Resource::whereIn('file_type', $imageTypes)->count(),
             'liens' => Resource::where('file_type', 'lien')->count(),
-            'videos' => Resource::whereIn('file_type', $videoTypes)->count(),
-            'documents' => Resource::whereNotIn('file_type', array_merge($imageTypes, $videoTypes))->count(),
+            //'videos' => Resource::whereIn('file_type', $videoTypes)->count(),
+            'documents' => Resource::whereNotIn('file_type', array_merge($imageTypes))->count(),
             'categories' => [
                 'procedure' => Resource::where('category', 'procedure')->count(),
                 'outil' => Resource::where('category', 'outil')->count(),
@@ -69,7 +54,6 @@ class DashboardController extends Controller
                 'ressource' => Resource::where('category', 'ressource')->count(),
             ]
         ];
-
        // ===== STATISTIQUES LOGS =====
 $totalConnexions = ActivityLog::where('action', 'Connexion')->count();
 $connexionsJour = ActivityLog::where('action', 'Connexion')
@@ -94,24 +78,24 @@ for($i = 6; $i >= 0; $i--) {
     
     // Créations (recherche dans action et description)
     $activityCreations[] = ActivityLog::where(function($q) {
-            $q->where('action', 'like', '%création%')
-              ->orWhere('action', 'like', '%create%')
-              ->orWhere('action', 'create')
-              ->orWhere('action', 'Création%')
-              ->orWhere('description', 'like', '%créé%')
-              ->orWhere('description', 'like', '%ajouté%');
+        $q->where('action', 'like', '%création%')
+            ->orWhere('action', 'like', '%create%')
+            ->orWhere('action', 'create')
+            ->orWhere('action', 'Création%')
+            ->orWhere('description', 'like', '%créé%')
+            ->orWhere('description', 'like', '%ajouté%');
         })
         ->whereDate('created_at', $date)
         ->count();
     
     // Modifications
     $activityUpdates[] = ActivityLog::where(function($q) {
-            $q->where('action', 'like', '%modification%')
-              ->orWhere('action', 'like', '%update%')
-              ->orWhere('action', 'update')
-              ->orWhere('action', 'edit')
-              ->orWhere('description', 'like', '%modifié%')
-              ->orWhere('description', 'like', '%mis à jour%');
+        $q->where('action', 'like', '%modification%')
+            ->orWhere('action', 'like', '%update%')
+            ->orWhere('action', 'update')
+            ->orWhere('action', 'edit')
+            ->orWhere('description', 'like', '%modifié%')
+            ->orWhere('description', 'like', '%mis à jour%');
         })
         ->whereDate('created_at', $date)
         ->count();
@@ -119,23 +103,22 @@ for($i = 6; $i >= 0; $i--) {
     // Suppressions
     $activityDeletes[] = ActivityLog::where(function($q) {
             $q->where('action', 'like', '%suppression%')
-              ->orWhere('action', 'like', '%delete%')
-              ->orWhere('action', 'delete')
-              ->orWhere('description', 'like', '%supprimé%')
-              ->orWhere('description', 'like', '%effacé%');
-        })
-        ->whereDate('created_at', $date)
-        ->count();
-    // deconnexions
-    $activityDeconnexions[] = ActivityLog::where('action', 'Déconnexion')
-        ->whereDate('created_at', $date)
-        ->count();
-}
+                ->orWhere('action', 'like', '%delete%')
+                ->orWhere('action', 'delete')
+                ->orWhere('description', 'like', '%supprimé%')
+                ->orWhere('description', 'like', '%effacé%');
+            })
+            ->whereDate('created_at', $date)
+            ->count();
+        // deconnexions
+        $activityDeconnexions[] = ActivityLog::where('action', 'Déconnexion')
+            ->whereDate('created_at', $date)
+            ->count();
+    }
         // ===== ÉLÉMENTS RÉCENTS =====
         $recentUsers = User::latest()->take(5)->get();
         $recentDocuments = Resource::latest()->take(5)->get();
         $recentLogs = ActivityLog::with('user')->latest()->take(5)->get();
-
         return view('dashboard', compact(
             'totalUsers',
             'validatedUsers',
@@ -145,10 +128,7 @@ for($i = 6; $i >= 0; $i--) {
             'moderateur_classique',
             'usersCount',
             'totalStructures',
-            //'typesCount',
             'villesCount',
-            //'typeLabels',
-            //'typeData',
             'totalDocuments',
             'totalDownloads',
             'stats',

@@ -120,9 +120,9 @@
                     <div class="flex items-center gap-2 mb-1 flex-wrap">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium
                             @if($event->type == 'réunion') bg-blue-100 text-blue-700
-                            @elseif($event->type == 'formation') bg-purple-100 text-purple-700
-                            @elseif($event->type == 'atelier') bg-orange-100 text-orange-700
-                            @else bg-gray-100 text-gray-700 @endif">
+                            @elseif($event->type == 'formation')
+                            @elseif($event->type == 'atelier')
+                            @else @endif">
                             {{ ucfirst($event->type) }}
                         </span>
                         @if($event->date_debut >= now())
@@ -194,10 +194,10 @@
 <div id="showModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 p-4 overflow-y-auto" style="display: none;">
     <!-- Wrapper pour espace sous navbar + centrage horizontal -->
     <div class="flex justify-center pt-24 pb-8 min-h-full">
-        <div id="showModalBox" class="bg-white rounded-xl shadow-2xl flex flex-col resize overflow-auto min-w-[400px] min-h-[320px] max-w-[95vw] max-h-[75vh] w-[520px] h-auto">
+        <div id="showModalBox" class="bg-white rounded-xl shadow-2xl flex flex-col resize overflow-auto min-w-[400px] min-h-80 max-w-[95vw] max-h-[75vh] w-[520px] h-auto">
             
             <!-- Header unifié : Type + Titre + Fermer -->
-            <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-start gap-3 shrink-0 bg-gradient-to-r from-[#255156] to-[#1a3a3f]">
+            <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-start gap-3 shrink-0 bg-linear-to-r from-[#255156] to-[#1a3a3f]">
                 <div class="flex-1 min-w-0">
                     <span id="show_type" class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1 bg-white/20 text-white"></span>
                     <h2 id="show_titre" class="text-base font-bold text-white leading-snug"></h2>
