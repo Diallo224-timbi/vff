@@ -113,7 +113,7 @@
                 <span><i class="fas fa-image" style="color:#9B7EA4;"></i> {{ $stats['images'] ?? 0 }}</span>
                 <span><i class="fas fa-file-pdf" style="color:#008C95;"></i> {{ $stats['documents'] ?? 0 }}</span>
                 <!-- lien -->
-                <span><i class="fas fa-link" style="color:#59BEC9;"></i> {{ abs($stats['images'] - $stats['documents']) ?? 0 }}</span>
+                <span><i class="fas fa-link" style="color:#59BEC9;"></i> {{ $totalDocuments-($stats['images'] + $stats['documents']) ?? 0 }}</span>
             </div>
         </article>
     </section>
