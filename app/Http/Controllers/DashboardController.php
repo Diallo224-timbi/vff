@@ -15,7 +15,7 @@ class DashboardController extends Controller
         // ===== STATISTIQUES UTILISATEURS =====
         $totalUsers = User::count();
         $validatedUsers = User::where('etatV', 'valider')->count();
-        $pendingUsers = User::where('etatV', 'attente')->count();
+        $pendingUsers = User::where('etatV', 'En cours')->count();
         $admins = User::where('role', 'admin')->count();
         $moderateurs = User::where('role', 'moderateur')->count();
         $moderateur_classique = User::where('role', 'moderateur_classique')->count();

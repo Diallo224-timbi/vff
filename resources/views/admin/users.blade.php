@@ -108,9 +108,23 @@
                     <i class="bx bx-info-circle text-xs"></i>
                 </button>
                 @endif
-                <button type="button" onclick="openEditModal({{ $user->id }}, '{{ addslashes($user->prenom) }}', '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->adresse }}', '{{ $user->ville }}', '{{ $user->code_postal }}', {{ $user->id_structure ?? 'null' }}, {{ $user->structure->id_organisme ?? 'null' }}, '{{ $user->role }}')"
-                        class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Modifier">
-                    <i class="bx bx-edit text-xs"></i>
+                <button type="button"
+                        onclick="openEditModal(
+                        {{ $user->id }},
+                        '{{ addslashes($user->prenom) }}',
+                        '{{ addslashes($user->name) }}',
+                        '{{ addslashes($user->email) }}',
+                        '{{ addslashes($user->phone) }}',
+                        '{{ addslashes($user->adresse) }}',
+                        '{{ addslashes($user->ville) }}',
+                        '{{ addslashes($user->code_postal) }}',
+                        {{ $user->id_structure ?? 'null' }},
+                        {{ $user->structure->id_organisme ?? 'null' }},
+                        '{{ addslashes($user->role) }}'
+                        )"
+                        class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center"
+                        title="Modifier">
+                            <i class="bx bx-edit text-xs"></i>
                 </button>
                 @if($user->etatV !== 'bloqué')
                 <button type="button" onclick="openBlockModal({{ $user->id }}, '{{ addslashes($user->prenom) }} {{ addslashes($user->name) }}')"
@@ -339,14 +353,12 @@
                 option.setAttribute('data-organisme-id', structure.id_organisme);
                 structureSelect.appendChild(option);
             });
-        }
-        
+        } 
         // Restaurer la sélection si une structure est spécifiée
         if (selectedStructureId) {
             structureSelect.value = selectedStructureId;
         }
     }
-
     // MODAL MODIFICATION (avec tous les champs et gestion dynamique des structures)
     function openEditModal(id, prenom, nom, email, phone, adresse, ville, codePostal, structureId, organismeId, role) {
         document.getElementById('editPrenom').value = prenom;
