@@ -9,7 +9,7 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
                     <h1 class="display-5 fw-bold mb-2" style="color: #255156;">
-                        <i class="fas fa-building me-3"></i>Espace des Organismes PACA
+                        <i class="fas fa-building me-3"></i>Espace des Organismes
                     </h1>
                     <p class="text-muted lead">Gérez l'ensemble des organismes partenaires</p>
                 </div>
