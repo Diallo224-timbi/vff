@@ -120,9 +120,9 @@
                     <div class="flex items-center gap-2 mb-1 flex-wrap">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium
                             @if($event->type == 'réunion') bg-blue-100 text-blue-700
-                            @elseif($event->type == 'formation')
-                            @elseif($event->type == 'atelier')
-                            @else @endif">
+                            @elseif($event->type == 'formation') bg-emerald-100 text-emerald-700
+                            @elseif($event->type == 'atelier') bg-amber-100 text-amber-700
+                            @else bg-gray-100 text-gray-700 @endif">
                             {{ ucfirst($event->type) }}
                         </span>
                         @if($event->date_debut >= now())
@@ -189,47 +189,53 @@
 </div>
 
 <!-- ============================================ -->
-<!-- MODALE SHOW (AFFICHAGE) - COMPACTE + REDIMENSIONNABLE -->
+<!-- MODALE SHOW (AFFICHAGE) - CENTRÉE + REDIMENSIONNABLE -->
 <!-- ============================================ -->
-<div id="showModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 p-4 overflow-y-auto" style="display: none;">
-    <!-- Wrapper pour espace sous navbar + centrage horizontal -->
-    <div class="flex justify-center pt-24 pb-8 min-h-full">
-        <div id="showModalBox" class="bg-white rounded-xl shadow-2xl flex flex-col resize overflow-auto min-w-[400px] min-h-80 max-w-[95vw] max-h-[75vh] w-[520px] h-auto">
-            
+<div id="showModal" class="fixed inset-0 bg-black/50 hidden z-50 overflow-y-auto" style="display: none;">
+    <div class="flex items-center justify-center min-h-full p-4 pt-20">
+        <div id="showModalBox"
+             class="bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden resize
+                    w-[520px] min-w-[360px] max-w-[95vw]
+                    h-auto min-h-[320px] max-h-[80vh] my-auto">
+
             <!-- Header unifié : Type + Titre + Fermer -->
-            <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-start gap-3 shrink-0 bg-linear-to-r from-[#255156] to-[#1a3a3f]">
+            <div class="px-4 py-3 flex justify-between items-start gap-3 shrink-0
+                        bg-gradient-to-r from-[#255156] to-[#1a3a3f]">
                 <div class="flex-1 min-w-0">
-                    <span id="show_type" class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1 bg-white/20 text-white"></span>
-                    <h2 id="show_titre" class="text-base font-bold text-white leading-snug"></h2>
+                    <span id="show_type"
+                          class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1
+                                 bg-white/20 text-white"></span>
+                    <h2 id="show_titre" class="text-base font-bold text-white leading-snug break-words"></h2>
                 </div>
-                <button onclick="closeShowModal()" class="text-white/70 hover:text-white transition shrink-0 mt-0.5">
+                <button type="button" onclick="closeShowModal()"
+                        class="text-white/70 hover:text-white transition shrink-0 mt-0.5">
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
 
-            <!-- Corps compact -->
-            <div class="p-4 space-y-3 flex-1 overflow-y-auto">
-                
+            <!-- Corps compact (scrollable si redimensionné) -->
+            <div class="p-4 space-y-3 flex-1 min-h-0 overflow-y-auto">
+
                 <!-- Infos en 2 colonnes -->
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <!-- Colonne gauche : Dates -->
                     <div class="space-y-2.5">
                         <div class="flex items-start gap-2">
                             <div class="w-7 h-7 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                                 <i class="fas fa-play text-[10px]"></i>
                             </div>
-                            <div>
+                            <div class="min-w-0">
                                 <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Début</p>
-                                <p id="show_date_debut" class="text-sm font-semibold text-gray-800 leading-tight"></p>
+                                <p id="show_date_debut" class="text-sm font-semibold text-gray-800 leading-tight break-words"></p>
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
                             <div class="w-7 h-7 rounded-md bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
                                 <i class="fas fa-stop text-[10px]"></i>
                             </div>
-                            <div>
+                            <div class="min-w-0">
                                 <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Fin</p>
-                                <p id="show_date_fin" class="text-sm font-semibold text-gray-800 leading-tight"></p>
+                                <p id="show_date_fin" class="text-sm font-semibold text-gray-800 leading-tight break-words"></p>
                             </div>
                         </div>
                     </div>
@@ -242,7 +248,7 @@
                             </div>
                             <div class="min-w-0">
                                 <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lieu</p>
-                                <p id="show_lieu" class="text-sm text-gray-800 leading-tight"></p>
+                                <p id="show_lieu" class="text-sm text-gray-800 leading-tight break-words"></p>
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
@@ -251,7 +257,7 @@
                             </div>
                             <div class="min-w-0">
                                 <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Organisateur</p>
-                                <p id="show_organisateur" class="text-sm text-gray-800 leading-tight"></p>
+                                <p id="show_organisateur" class="text-sm text-gray-800 leading-tight break-words"></p>
                             </div>
                         </div>
                     </div>
@@ -260,7 +266,7 @@
                 <!-- Description dans un encadré discret -->
                 <div class="bg-gray-50 rounded-lg border border-gray-100 p-3">
                     <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Description</p>
-                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed" id="show_description"></div>
+                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed break-words" id="show_description"></div>
                 </div>
             </div>
 
@@ -276,7 +282,9 @@
                         <span id="show_created_at" class="font-medium text-gray-700"></span>
                     </span>
                 </div>
-                <button onclick="closeShowModal()" class="px-3 py-1.5 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f] text-xs font-semibold transition shrink-0">
+                <button type="button" onclick="closeShowModal()"
+                        class="px-3 py-1.5 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f]
+                               text-xs font-semibold transition shrink-0">
                     Fermer
                 </button>
             </div>
@@ -287,7 +295,7 @@
 <!-- ============================================ -->
 <!-- MODALE CRÉATION -->
 <!-- ============================================ -->
-<div id="createModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4" style="display: none;">
+<div id="createModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" style="display: none;">
     <div class="bg-white rounded-xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto">
         <div class="p-4">
             <div class="flex justify-between items-center mb-3">
@@ -359,7 +367,7 @@
 <!-- ============================================ -->
 <!-- MODALE ÉDITION -->
 <!-- ============================================ -->
-<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4" style="display: none;">
+<div id="editModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" style="display: none;">
     <div class="bg-white rounded-xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto">
         <div class="p-4">
             <div class="flex justify-between items-center mb-3">
@@ -432,7 +440,7 @@
 <!-- ============================================ -->
 <!-- MODALE SUPPRESSION -->
 <!-- ============================================ -->
-<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4" style="display: none;">
+<div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" style="display: none;">
     <div class="bg-white rounded-xl w-full max-w-md mx-auto">
         <div class="p-4 text-center">
             <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -471,9 +479,13 @@
 /* Poignée de redimensionnement visible sur la modale Show */
 #showModalBox {
     resize: both;
+    overflow: hidden;
 }
 #showModalBox::-webkit-resizer {
-    background: linear-gradient(135deg, transparent 45%, #255156 45%, #255156 55%, transparent 55%, transparent 70%, #255156 70%, #255156 80%, transparent 80%);
+    background: linear-gradient(135deg,
+        transparent 45%, #255156 45%, #255156 55%,
+        transparent 55%, transparent 70%,
+        #255156 70%, #255156 80%, transparent 80%);
     border-bottom-right-radius: 12px;
     width: 18px;
     height: 18px;
@@ -500,16 +512,27 @@ function openShowModal(eventId, eventData) {
     document.getElementById('show_organisateur').textContent = eventData.organisateur || 'Non précisé';
     document.getElementById('show_cree_par').textContent = eventData.cree_par || 'Inconnu';
     document.getElementById('show_created_at').textContent = eventData.created_at || '';
-    
-    // Badge Type
+
+    // Badge Type avec couleur dynamique
     const typeBadge = document.getElementById('show_type');
-    typeBadge.textContent = eventData.type || 'autre';
-    
-    // Réinitialiser la taille à l'ouverture
+    const type = (eventData.type || 'autre').toLowerCase();
+    typeBadge.textContent = type;
+
+    const typeColors = {
+        'réunion':   'bg-blue-500/30 text-white',
+        'formation': 'bg-emerald-500/30 text-white',
+        'atelier':   'bg-amber-500/30 text-white',
+        'autre':     'bg-gray-500/30 text-white',
+    };
+    typeBadge.className = 'inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1 '
+                        + (typeColors[type] || typeColors['autre']);
+
+    // Reset taille à l'ouverture (sans casser le resize)
     const box = document.getElementById('showModalBox');
     box.style.width = '520px';
     box.style.height = 'auto';
-    
+    box.style.maxHeight = '80vh';
+
     document.getElementById('showModal').style.display = 'block';
     document.body.classList.add('modal-open');
 }
