@@ -5,7 +5,7 @@
     <!-- Messages de succès -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
-             role="alert" style="z-index: 9999; min-width: 300px;">
+            role="alert" style="z-index: 9999; min-width: 300px;">
             <div class="d-flex align-items-center">
                 <i class="fas fa-check-circle me-2"></i>
                 <div>{{ session('success') }}</div>
@@ -19,11 +19,10 @@
             }, 5000);
         </script>
     @endif
-
     <!-- Messages d'erreur -->
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
-             role="alert" style="z-index: 9999; min-width: 300px;">
+            role="alert" style="z-index: 9999; min-width: 300px;">
             <div class="d-flex align-items-center">
                 <i class="fas fa-exclamation-circle me-2"></i>
                 <div>{{ session('error') }}</div>
@@ -37,7 +36,6 @@
             }, 5000);
         </script>
     @endif
-
     <!-- Messages de validation -->
     @if($errors->any())
         <div class="position-fixed top-0 end-0 m-3" style="z-index: 9999; max-width: 400px;">
@@ -60,7 +58,6 @@
             }, 8000);
         </script>
     @endif
-
     <!-- Header -->
     <div class="flex justify-between items-center mb-3">
         <h1 class="text-xl font-bold text-gray-800">
@@ -68,9 +65,11 @@
             Agenda partagé
         </h1>
         <div class="flex items-center gap-2">
-            <a href="{{ route('events.calendrier') }}" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
+        <!--
+            <a href="" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
                 <i class="fas fa-calendar-week mr-1"></i>Vue calendrier
             </a>
+        -->
             @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'user')
             <button onclick="openCreateModal()" class="bg-[#255156] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#1a3a3f]">
                 <i class="fas fa-plus mr-1"></i>Nouvel événement
@@ -78,7 +77,6 @@
             @endif
         </div>
     </div>
-
     <!-- Filtres avec auto-submit -->
     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-3">
         <form method="GET" action="{{ route('events.index') }}" class="flex flex-wrap gap-2" id="filterForm">
@@ -100,7 +98,6 @@
             <a href="{{ route('events.index') }}" class="text-gray-500 text-sm px-3 py-1.5">Réinitialiser</a>
         </form>
     </div>
-
     <!-- Liste des événements -->
     <div class="grid gap-3">
         @forelse($events as $event)
@@ -111,8 +108,8 @@
                         <i class="bx bx-calendar-day"></i>
                     </div>
                     <div>
-                        <div class="font-semibold text-sm">du {{ $event->date_debut->format('d/m/Y') }}</div>
-                        <div class="text-xs text-gray-500">au {{ $event->date_fin->format('d/m/Y') }}</div>
+                        <div class="font-semibold text-sm">Du {{ $event->date_debut->format('d/m/Y') }}</div>
+                        <div class="text-xs text-gray-500">Au {{ $event->date_fin->format('d/m/Y') }}</div>
                         <div class="text-xs text-gray-500">{{ $event->date_debut->format('H:i') }} - {{ $event->date_fin->format('H:i') }}</div>
                     </div>
                 </div>
@@ -187,118 +184,104 @@
         <div class="mt-3">{{ $events->links() }}</div>
     </div>
 </div>
-
 <!-- ============================================ -->
-<!-- MODALE SHOW (AFFICHAGE) - CENTRÉE + REDIMENSIONNABLE -->
+<!-- MODALE SHOW (AFFICHAGE) - DESIGN AÉRÉ ET CENTRÉ -->
 <!-- ============================================ -->
-<div id="showModal" class="fixed inset-0 bg-black/50 hidden z-50 overflow-y-auto" style="display: none;">
-    <div class="flex items-center justify-center min-h-full p-4 pt-20">
+<div id="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 overflow-y-auto" style="display: none;">
+    <div class="flex items-center justify-center min-h-screen p-4">
         <div id="showModalBox"
-             class="bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden resize
-                    w-[520px] min-w-[360px] max-w-[95vw]
-                    h-auto min-h-[320px] max-h-[80vh] my-auto">
+            class="bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden resize
+                    w-[600px] min-w-[380px] max-w-[95vw]
+                    h-auto min-h-[400px] max-h-[85vh] my-auto">
 
-            <!-- Header unifié : Type + Titre + Fermer -->
-            <div class="px-4 py-3 flex justify-between items-start gap-3 shrink-0
+            <!-- Header : Type + Titre + Fermer -->
+            <div class="px-6 py-5 flex justify-between items-start gap-4 shrink-0
                         bg-gradient-to-r from-[#255156] to-[#1a3a3f]">
                 <div class="flex-1 min-w-0">
                     <span id="show_type"
-                          class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1
-                                 bg-white/20 text-white"></span>
-                    <h2 id="show_titre" class="text-base font-bold text-white leading-snug break-words"></h2>
+                        class="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2
+                        bg-white/20 text-white"></span>
+                    <h2 id="show_titre" class="text-lg font-bold text-white leading-snug break-words"></h2>
                 </div>
                 <button type="button" onclick="closeShowModal()"
-                        class="text-white/70 hover:text-white transition shrink-0 mt-0.5">
+                        class="text-white/70 hover:text-white hover:bg-white/10 rounded-lg p-1.5 transition shrink-0 mt-0.5">
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
-
-            <!-- Corps compact (scrollable si redimensionné) -->
-            <div class="p-4 space-y-3 flex-1 min-h-0 overflow-y-auto">
-
-                <!-- Infos en 2 colonnes -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <!-- Colonne gauche : Dates -->
-                    <div class="space-y-2.5">
-                        <div class="flex items-start gap-2">
-                            <div class="w-7 h-7 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fas fa-play text-[10px]"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Début</p>
-                                <p id="show_date_debut" class="text-sm font-semibold text-gray-800 leading-tight break-words"></p>
-                            </div>
+            <!-- Corps -->
+            <div class="p-6 space-y-5 flex-1 min-h-0 overflow-y-auto">
+                <!-- Dates -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-3.5">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <i class="fas fa-play text-blue-500 text-[11px]"></i>
+                            <p class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Date de début</p>
                         </div>
-                        <div class="flex items-start gap-2">
-                            <div class="w-7 h-7 rounded-md bg-red-50 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fas fa-stop text-[10px]"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Fin</p>
-                                <p id="show_date_fin" class="text-sm font-semibold text-gray-800 leading-tight break-words"></p>
-                            </div>
-                        </div>
+                        <p id="show_date_debut" class="text-base font-bold text-gray-800 leading-tight break-words"></p>
                     </div>
-
-                    <!-- Colonne droite : Lieu + Organisateur -->
-                    <div class="space-y-2.5">
-                        <div class="flex items-start gap-2">
-                            <div class="w-7 h-7 rounded-md bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fas fa-map-marker-alt text-[11px]"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lieu</p>
-                                <p id="show_lieu" class="text-sm text-gray-800 leading-tight break-words"></p>
-                            </div>
+                    <div class="bg-red-50/50 border border-red-100 rounded-xl p-3.5">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <i class="fas fa-stop text-red-500 text-[11px]"></i>
+                            <p class="text-[10px] font-bold text-red-600 uppercase tracking-wider">Date de fin</p>
                         </div>
-                        <div class="flex items-start gap-2">
-                            <div class="w-7 h-7 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fas fa-user text-[11px]"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Organisateur</p>
-                                <p id="show_organisateur" class="text-sm text-gray-800 leading-tight break-words"></p>
-                            </div>
-                        </div>
+                        <p id="show_date_fin" class="text-base font-bold text-gray-800 leading-tight break-words"></p>
                     </div>
                 </div>
-
-                <!-- Description dans un encadré discret -->
-                <div class="bg-gray-50 rounded-lg border border-gray-100 p-3">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Description</p>
-                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed break-words" id="show_description"></div>
+                <!-- Lieu -->
+                <div class="bg-orange-50/50 border border-orange-100 rounded-xl p-3.5">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <i class="fas fa-map-marker-alt text-orange-500 text-[12px]"></i>
+                        <p class="text-[10px] font-bold text-orange-600 uppercase tracking-wider">Lieu</p>
+                    </div>
+                    <p id="show_lieu" class="text-sm font-semibold text-gray-800 leading-snug wrap-break-word"></p>
+                </div>
+                <!-- Organisateur -->
+                <div class="bg-purple-50/50 border border-purple-100 rounded-xl p-3.5">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <i class="fas fa-user text-purple-500 text-[12px]"></i>
+                        <p class="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Organisateur</p>
+                    </div>
+                    <p id="show_organisateur" class="text-sm font-semibold text-gray-800 leading-snug wrap-break-word"></p>
+                </div>
+                <!-- Description -->
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-align-left text-gray-500 text-[12px]"></i>
+                        <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Description</p>
+                    </div>
+                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed wrap-break-word"
+                        id="show_description">
+                    </div>
                 </div>
             </div>
-
-            <!-- Footer ultra compact -->
-            <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
-                <div class="flex items-center gap-3 text-[11px] text-gray-500 min-w-0">
-                    <span class="flex items-center gap-1 truncate">
-                        <i class="fas fa-user-circle"></i>
+            <!-- Footer -->
+            <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
+                <div class="flex items-center gap-4 text-[11px] text-gray-500 min-w-0">
+                    <span class="flex items-center gap-1.5 truncate">
+                        <i class="fas fa-user-circle text-gray-400"></i>
                         <span id="show_cree_par" class="font-medium text-gray-700 truncate"></span>
                     </span>
-                    <span class="flex items-center gap-1 shrink-0">
-                        <i class="far fa-calendar-alt"></i>
+                    <span class="flex items-center gap-1.5 shrink-0">
+                        <i class="far fa-calendar-alt text-gray-400"></i>
                         <span id="show_created_at" class="font-medium text-gray-700"></span>
                     </span>
                 </div>
                 <button type="button" onclick="closeShowModal()"
-                        class="px-3 py-1.5 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f]
-                               text-xs font-semibold transition shrink-0">
+                        class="px-4 py-2 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f]
+                            text-xs font-semibold transition shrink-0">
                     Fermer
                 </button>
             </div>
         </div>
     </div>
 </div>
-
 <!-- ============================================ -->
 <!-- MODALE CRÉATION -->
 <!-- ============================================ -->
-<div id="createModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" style="display: none;">
-    <div class="bg-white rounded-xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto">
-        <div class="p-4">
-            <div class="flex justify-between items-center mb-3">
+<div id="createModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" style="display: none;">
+    <div class="bg-white rounded-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold text-gray-800">
                     <i class="fas fa-plus-circle text-[#255156] mr-2"></i>Nouvel événement
                 </h3>
@@ -349,7 +332,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pièce jointe</label>
                         <input type="file" name="piece_jointe" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                               class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
+                            class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
                         <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, PNG, JPG (Max 5MB)</p>
                     </div>
                 </div>
@@ -363,14 +346,13 @@
         </div>
     </div>
 </div>
-
 <!-- ============================================ -->
 <!-- MODALE ÉDITION -->
 <!-- ============================================ -->
-<div id="editModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" style="display: none;">
-    <div class="bg-white rounded-xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto">
-        <div class="p-4">
-            <div class="flex justify-between items-center mb-3">
+<div id="editModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" style="display: none;">
+    <div class="bg-white rounded-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold text-gray-800">
                     <i class="fas fa-edit text-[#255156] mr-2"></i>Modifier l'événement
                 </h3>
@@ -422,7 +404,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pièce jointe</label>
                         <input type="file" name="piece_jointe" id="edit_piece_jointe" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                               class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
+                            class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
                         <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, PNG, JPG (Max 5MB)</p>
                     </div>
                 </div>
@@ -436,13 +418,12 @@
         </div>
     </div>
 </div>
-
 <!-- ============================================ -->
 <!-- MODALE SUPPRESSION -->
 <!-- ============================================ -->
-<div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" style="display: none;">
-    <div class="bg-white rounded-xl w-full max-w-md mx-auto">
-        <div class="p-4 text-center">
+<div id="deleteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" style="display: none;">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-auto shadow-2xl">
+        <div class="p-5 text-center">
             <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <i class="fas fa-trash text-red-500 text-xl"></i>
             </div>
@@ -465,7 +446,6 @@
         </div>
     </div>
 </div>
-
 <style>
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
@@ -524,14 +504,14 @@ function openShowModal(eventId, eventData) {
         'atelier':   'bg-amber-500/30 text-white',
         'autre':     'bg-gray-500/30 text-white',
     };
-    typeBadge.className = 'inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1 '
+    typeBadge.className = 'inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2 '
                         + (typeColors[type] || typeColors['autre']);
 
     // Reset taille à l'ouverture (sans casser le resize)
     const box = document.getElementById('showModalBox');
-    box.style.width = '520px';
+    box.style.width = '600px';
     box.style.height = 'auto';
-    box.style.maxHeight = '80vh';
+    box.style.maxHeight = '85vh';
 
     document.getElementById('showModal').style.display = 'block';
     document.body.classList.add('modal-open');

@@ -185,43 +185,43 @@
                 <div class="grid grid-cols-2 gap-2 mb-3">
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">Prénom</label>
-                        <input type="text" name="prenom" id="editPrenom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                        <input type="text" name="prenom" id="editPrenom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required readonly>
                     </div>
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">Nom</label>
-                        <input type="text" name="name" id="editNom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                        <input type="text" name="name" id="editNom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required readonly>
                     </div>
                 </div>
                 <!-- Contact -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Email</label>
-                    <input type="email" name="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required>
+                    <input type="email" name="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required readonly>
                 </div>  
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Téléphone</label>
-                    <input type="text" name="phone" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <input type="text" name="phone" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
                 </div>
                 <!-- Adresse -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Adresse</label>
-                    <input type="text" name="adresse" id="editAdresse" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <input type="text" name="adresse" id="editAdresse" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-2 mb-3">
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">Ville</label>
-                        <input type="text" name="ville" id="editVille" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <input type="text" name="ville" id="editVille" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
                     </div>
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">Code postal</label>
-                        <input type="text" name="code_postal" id="editCodePostal" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <input type="text" name="code_postal" id="editCodePostal" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
                     </div>
                 </div>
                 <!-- Structure de rattachement -->
                 <div class="mb-3">
                     <label class="block text-xs text-gray-600 mb-1">Structure de rattachement</label>
                     <!-- liste deroulante des organismes parents -->
-                    <select name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
+                    <select required name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
                         <option value="">Aucun organisme</option>
                         @foreach($organismes as $organisme)
                             <option value="{{ $organisme->id }}" >
@@ -229,7 +229,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <select name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <select  required name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                         <option value="">Aucune structure</option>
                         @foreach($structures as $structure)
                             <option value="{{ $structure->id}}" 

@@ -1,7 +1,5 @@
 @extends('base')
-
 @section('title', 'Modifier la ressource')
-
 @section('content')
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -14,33 +12,30 @@
                 </div>
                 <div class="card-body p-4">
                     <form action="{{ route('resources.update', $resource) }}" 
-                          method="POST" 
-                          enctype="multipart/form-data">
+                        method="POST" 
+                        enctype="multipart/form-data">
                         @csrf
-                        @method('PUT')
-                        
+                        @method('PUT')   
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
                             <input type="text" 
-                                   name="title" 
-                                   value="{{ old('title', $resource->title) }}" 
-                                   required 
-                                   class="form-control @error('title') is-invalid @enderror">
+                                name="title" 
+                                value="{{ old('title', $resource->title) }}" 
+                                required 
+                                class="form-control @error('title') is-invalid @enderror">
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                        </div>
-                        
+                        </div> 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Description</label>
                             <textarea name="description" 
-                                      rows="3" 
-                                      class="form-control @error('description') is-invalid @enderror">{{ old('description', $resource->description) }}</textarea>
+                                    rows="3" 
+                                    class="form-control @error('description') is-invalid @enderror">{{ old('description', $resource->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
                             <div class="btn-group w-100" role="group">
@@ -52,7 +47,6 @@
                                 </button>
                             </div>
                         </div>
-
                         <!-- Section Fichier -->
                         <div id="editFileUploadSection" class="mb-3 {{ $resource->is_link ? 'd-none' : '' }}">
                             @if(!$resource->is_link && $resource->file_path)
@@ -67,8 +61,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
-                            
+                            @endif                        
                             <label class="form-label fw-semibold">
                                 {{ !$resource->is_link && $resource->file_path ? 'Remplacer le fichier' : 'Fichier' }}
                                 @if(!$resource->file_path) <span class="text-danger">*</span> @endif
@@ -76,14 +69,12 @@
                             <input type="file" id="editFile" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
                             <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
                         </div>
-
                         <!-- Section Lien -->
                         <div id="editLinkSection" class="mb-3 {{ !$resource->is_link ? 'd-none' : '' }}">
                             <label class="form-label fw-semibold">URL du lien <span class="text-danger">*</span></label>
                             <input type="url" id="edit_link_url" name="link_url" class="form-control" placeholder="https://exemple.com/document" value="{{ old('link_url', $resource->link_url) }}">
                             <small class="text-muted">Entrez l'URL complète du lien externe</small>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
                             <select name="category" required class="form-select @error('category') is-invalid @enderror">
@@ -99,21 +90,18 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <div class="mb-3" id="editSubCategoryContainer">
                             <label class="form-label fw-semibold">Sous-catégorie</label>
                             <select id="editSubCategory" name="sub_category" class="form-select">
                                 <option value="">Aucune</option>
                             </select>
                         </div>
-
                         @if(auth()->user()->role === 'admin')
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editImportant" name="important" value="1" {{ old('important', $resource->important) ? 'checked' : '' }}>
                             <label class="form-check-label fw-semibold" for="editImportant">Marquer comme ressource importante</label>
                         </div>
-                        @endif
-                        
+                        @endif                    
                         <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
                             <a href="{{ route('resources.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-times me-1"></i> Annuler
@@ -128,7 +116,6 @@
         </div>
     </div>
 </div>
-
 <script>
 // Map des sous-catégories (reprise exacte du formulaire d'ajout)
 const subCategoriesMap = {

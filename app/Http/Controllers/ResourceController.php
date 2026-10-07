@@ -154,7 +154,6 @@ class ResourceController extends Controller
                             ->with('error', 'Fichier trop volumineux (max 50 Mo)')
                             ->withInput();
                 }
-
                 $extension = strtolower($file->getClientOriginalExtension());
                 $isImage = in_array($extension, ['jpg','jpeg','png','gif','webp','svg']);
                 $isVideo = in_array($extension, ['mp4','webm','avi','mov','mkv']);

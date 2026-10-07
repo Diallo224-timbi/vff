@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\SchemaController;
 use App\Http\Controllers\StructureMembreController;
 use Illuminate\Support\Facades\Route;
@@ -23,15 +22,12 @@ use App\Models\Structures;
 use App\Models\User;
 
 Route::get('/', function () {
-     $organismes = Organisme::orderBy('nom_organisme')->get();
-     $structures = Structures::all();
-     $user = User::all();
+    $organismes = Organisme::orderBy('nom_organisme')->get();
+    $structures = Structures::all();
+    $user = User::all();
     return view('welcome', compact('organismes', 'structures', 'user'));
 });
-
-
 Route::get('/sitemap.xml', function () {
-
     $urls = [
         [
             'loc' => url('/'),
@@ -59,18 +55,14 @@ Route::get('/sitemap.xml', function () {
             'priority' => '0.6',
         ],
     ];
-
     $xml = '<?xml version="1.0" encoding="UTF-8"?>';
     $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
     foreach ($urls as $page) {
-
         $xml .= '<url>';
         $xml .= '<loc>'.$page['loc'].'</loc>';
         $xml .= '<changefreq>'.$page['changefreq'].'</changefreq>';
         $xml .= '<priority>'.$page['priority'].'</priority>';
         $xml .= '</url>';
-
     }
     $xml .= '</urlset>';
     return response($xml)
@@ -79,19 +71,16 @@ Route::get('/sitemap.xml', function () {
 
 //shéma route
 // routes/web.php
-
 Route::middleware(['auth','admin'])->group(function () {
     // Routes pour les schémas
     Route::get('/schemas', [SchemaController::class, 'index'])->name('schemas.index');
     Route::get('/schemas/{id}', [SchemaController::class, 'show'])->name('schemas.show');
     Route::post('/schemas', [SchemaController::class, 'store'])->name('schemas.store');
-    Route::delete('/schemas/{id}', [SchemaController::class, 'destroy'])->name('schemas.destroy');
-    
+    Route::delete('/schemas/{id}', [SchemaController::class, 'destroy'])->name('schemas.destroy');  
     // Routes API
     Route::get('/schemas/filter/{gt?}', [SchemaController::class, 'filterByGt'])->name('schemas.filter');
     Route::get('/schemas/counts', [SchemaController::class, 'getCounts'])->name('schemas.counts');
 });
-
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
     ->middleware(['auth'])->name('dashboardUser');
@@ -117,7 +106,7 @@ Route::get('reset-password/{token}', [PasswordResetController::class, 'showReset
 Route::post('reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
 // Route pour envoyer le code de vérification
 Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode'])
-     ->name('sendVerificationCode');
+    ->name('sendVerificationCode');
 // Route pour vérifier le code de vérification
 Route::post('/verify-code', [AuthController::class, 'verifyCode'])->name('verifyCode');
 // Route pour le tableau de bord admin
@@ -138,11 +127,11 @@ Route::middleware(['auth'])->group(function () {
 // Route pour les organismes
 Route::middleware(['auth','organisme.access'])->group(function () {
     Route::get('/organismes', [OrganismeController::class, 'index'])->name('organismes.index');
-    Route::get('/organismes/create', [OrganismeController::class, 'create'])->name('organismes.create');
+    Route::get('/organismes/create',[OrganismeController::class, 'create'])->name('organismes.create');
     Route::post('/organismes', [OrganismeController::class, 'store'])->name('organismes.store');
-    Route::get('/organismes/{id}/edit', [OrganismeController::class, 'edit'])->name('organismes.edit');
+    Route::get('/organismes/{id}/edit',[OrganismeController::class, 'edit'])->name('organismes.edit');
     Route::put('/organismes/{id}', [OrganismeController::class, 'update'])->name('organismes.update');
-    Route::delete('/organismes/{id}', [OrganismeController::class, 'destroy'])->name('organismes.destroy');
+    Route::delete('/organismes/{id}',[OrganismeController::class, 'destroy'])->name('organismes.destroy');
     Route::get('/organismes/{id}', [OrganismeController::class, 'show'])->name('organismes.show');
 });
 // Route pour le profil utilisateur
@@ -154,7 +143,6 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/charte', function () {
     return view('auth.charte');
 })->name('charte');
-
 // Routes pour le forum et les commentaires
 Route::middleware(['auth'])->group(function () {
     Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
@@ -177,7 +165,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{comment}/react', [CommentController::class, 'react'])->name('react');
     }); 
 });
- 
+
 // Routes pour la gestion des catégories du forum
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -187,7 +175,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
-
 // Routes pour la gestion des structures
 Route::middleware(['auth','structure.access'])->group(function () {
     Route::get('/structures', [StructureController::class, 'index'])->name('structures.index');
@@ -196,13 +183,14 @@ Route::middleware(['auth','structure.access'])->group(function () {
     Route::get('/structures/{structure}/edit', [StructureController::class, 'edit'])->name('structures.edit');
     Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');
-    Route::get('/structures/map', [StructureController::class, 'map'])->name('structures.map');
     // Route pour afficher le details d'une structure dans la carte
     Route::get('/structures/{structure}/details', [StructureController::class, 'details'])->name('annuaire.details');
 });
+//route pour structure map
 // Routes pour l'annuaire
 Route::middleware('auth')->group(function () {
         Route::get('/annuaire', [AnnuaireController::class, 'index'])->name('annuaire.index');
+        Route::get('/structures/map', [StructureController::class, 'map'])->name('structures.map');
         // route pour afficher les membres d'une structure spécifique
         Route::get('/annuaire/membres', [AnnuaireController::class, 'showByStructure'])->name('annuaire.membre');
         Route::get('/annuaire/export/csv', [AnnuaireController::class, 'exportCsv'])->name('annuaire.export.csv');
@@ -219,7 +207,6 @@ Route::middleware(['auth','admin'])->prefix('activity-logs')->name('activity_log
     Route::get('/{id}', [ActivityLogController::class, 'show'])->name('show');
     Route::delete('/{id}', [ActivityLogController::class, 'destroy'])->name('destroy');
 });
-
 // Routes pour la gestion des ressources
 Route::middleware(['auth'])->group(function () {
     // ===== ROUTES RESSOURCES =====
@@ -243,7 +230,6 @@ Route::middleware(['auth'])->group(function () {
     //route vider la corbeille
     Route::delete('/resources/trash/empty', [ResourceController::class, 'emptyTrash'])->name('resources.trash.empty');
 });
-
 //securite route corbeille
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
@@ -256,7 +242,6 @@ Route::get('/test-routes', function() {
         'resources.store' => route('resources.store', [], false),
     ];
 });
-
 //route pour events
 Route::middleware(['auth'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
@@ -274,7 +259,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
     Route::delete('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
 });
-
 // Routes pour le formulaire d'inscription avec génération de PDF
 Route::get('/formulaire/inscription', [StructureController::class, 'createPDF'])->name('auth.create');
 Route::post('/formulaire/inscription/pdf', [StructureController::class, 'generatePDF'])->name('auth.pdf');

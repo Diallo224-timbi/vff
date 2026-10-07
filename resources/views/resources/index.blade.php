@@ -60,67 +60,67 @@
                             <label class="small fw-semibold text-secondary mb-1">Filtrer par catégorie</label>
                             <div class="d-flex flex-nowrap gap-2 overflow-auto" style="padding-bottom: 3px;">
                                 <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category active" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category active w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="all" onclick="filterByCategory('all', 'Toutes les ressources')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-folder-open text-secondary mb-1"></i>
                                             <p class="fw-semibold text-secondary mb-0 small" style="font-size: 0.7rem;">Toutes</p>
                                             <small class="text-secondary" style="font-size: 0.65rem;" id="countAll">{{ $allCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                                 <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="guides_etudes" onclick="filterByCategory('guides_etudes', 'Guides & Études')">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="guides_etudes" onclick="filterByCategory('guides_etudes', 'Guides & Études')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-book text-primary mb-1"></i>
                                             <p class="fw-semibold text-primary mb-0 small" style="font-size: 0.7rem;">Guides</p>
                                             <small class="text-primary" style="font-size: 0.65rem;" id="countGuidesEtudes">{{ $guidesCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
-                                <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="affiches_flyers" onclick="filterByCategory('affiches_flyers', 'Affiches & Flyers')">
+                                <div class="shrink-0" style="min-width: 80px;">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="affiches_flyers" onclick="filterByCategory('affiches_flyers', 'Affiches & Flyers')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-poster text-success mb-1"></i>
                                             <p class="fw-semibold text-success mb-0 small" style="font-size: 0.7rem;">Affiches et flyer</p>
                                             <small class="text-success" style="font-size: 0.65rem;" id="countAffichesFlyers">{{ $affichesCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                                 <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="reseaux" onclick="filterByCategory('reseaux', 'Réseaux')">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="reseaux" onclick="filterByCategory('reseaux', 'Réseaux')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-network-wired text-warning mb-1"></i>
                                             <p class="fw-semibold text-warning mb-0 small" style="font-size: 0.7rem;">Réseaux</p>
                                             <small class="text-warning" style="font-size: 0.65rem;" id="countReseaux">{{ $reseauxCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                                 <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="sensibilisation" onclick="filterByCategory('sensibilisation', 'Sensibilisation & Formations')">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="sensibilisation" onclick="filterByCategory('sensibilisation', 'Sensibilisation & Formations')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-graduation-cap text-info mb-1"></i>
                                             <p class="fw-semibold text-info mb-0 small" style="font-size: 0.7rem;">Sensibilisation</p>
                                             <small class="text-info" style="font-size: 0.65rem;" id="countSensibilisation">{{ $sensibilisationCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                                 <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="outils" onclick="filterByCategory('outils', 'Outils')">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="outils" onclick="filterByCategory('outils', 'Outils')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-tools text-danger mb-1"></i>
                                             <p class="fw-semibold text-danger mb-0 small" style="font-size: 0.7rem;">Outils</p>
                                             <small class="text-danger" style="font-size: 0.65rem;" id="countOutils">{{ $outilsCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                                 <div class="flex-shrink-0" style="min-width: 80px;">
-                                    <div class="cursor-pointer rounded-lg p-1 text-center border filter-category" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer;" data-category="conventions" onclick="filterByCategory('conventions', 'Conventions & Protocoles')">
+                                    <button type="button" class="cursor-pointer rounded-lg p-1 text-center border filter-category w-100" style="border-radius: 10px; border-color: #e5e7eb; cursor: pointer; background: transparent;" data-category="conventions" onclick="filterByCategory('conventions', 'Conventions & Protocoles')">
                                         <div class="rounded-lg p-1" style="background: #f8f9fa;">
                                             <i class="fas fa-file-signature text-purple mb-1"></i>
                                             <p class="fw-semibold text-purple mb-0 small" style="font-size: 0.7rem;">Conventions</p>
                                             <small class="text-purple" style="font-size: 0.65rem;" id="countConventions">{{ $conventionsCount }}</small>
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                                 <!-- Boutons Actions -->
                                 <div class="col-md-2 col-lg-3">
                                     <div class="d-flex gap-1 justify-content-end flex-wrap">
-                                        <button onclick="openCreateModal()" class="btn btn-sm" style="background: #255156; color: white; padding: 4px 10px; font-size: 0.8rem; white-space: nowrap;">
+                                        <button type="button" onclick="openCreateModal()" class="btn btn-sm" style="background: #255156; color: white; padding: 4px 10px; font-size: 0.8rem; white-space: nowrap;">
                                             <i class="fas fa-upload me-1"></i> Ajouter
                                         </button>
                                         @if(auth()->user()->role === 'admin')
@@ -211,7 +211,9 @@
                                         <!-- Zone image / icône -->
                                         <div style="height: 95px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
                                             @if($resource->is_image)
-                                                <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
+                                                <button type="button" class="p-0 border-0 bg-transparent w-100 h-100" style="cursor: pointer;" aria-label="Voir l'image {{ $resource->title }}" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
+                                                    <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                </button>
                                             @elseif($resource->is_link)
                                                 <i class="fas fa-link" style="font-size: 2.4rem; color: #0d6efd;"></i>
                                             @else
@@ -286,7 +288,7 @@
                                                     </a>
                                                 @endif
                                                 @if($resource->is_image)
-                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 1px 6px; font-size: 0.65rem;" title="Voir l'image">
+                                                    <button type="button" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-sm" style="background: #f3e8ff; color: #9333ea; padding: 1px 6px; font-size: 0.65rem;" title="Voir l'image">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
@@ -302,7 +304,7 @@
                                                     <a href="{{ route('resources.edit', $resource) }}" class="btn btn-sm" style="background: #c7d2fe; color: #3730a3; padding: 1px 6px; font-size: 0.65rem;" title="Modifier">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626; padding: 1px 6px; font-size: 0.65rem;" title="Supprimer">
+                                                    <button type="button" onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-sm" style="background: #fee2e2; color: #dc2626; padding: 1px 6px; font-size: 0.65rem;" title="Supprimer">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 @endif
@@ -316,7 +318,9 @@
                                             <div class="d-flex align-items-center gap-3 flex-wrap flex-grow-1">
                                                 <div style="width: 40px; height: 40px; background: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
                                                     @if($resource->is_image)
-                                                        <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 34px; height: 34px; object-fit: cover; border-radius: 4px; cursor: pointer;" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
+                                                        <button type="button" class="p-0 border-0 bg-transparent" style="cursor: pointer; line-height: 0;" aria-label="Voir l'image {{ $resource->title }}" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')">
+                                                            <img src="{{ Storage::url($resource->file_path) }}" alt="{{ $resource->title }}" style="width: 34px; height: 34px; object-fit: cover; border-radius: 4px;">
+                                                        </button>
                                                     @elseif($resource->is_link)
                                                         <i class="fas fa-link" style="font-size: 1.2rem; color: #0d6efd;"></i>
                                                     @else
@@ -371,7 +375,7 @@
                                                     </a>
                                                 @endif
                                                 @if($resource->is_image)
-                                                    <button onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-outline-primary" title="Voir l'image" style="padding: 1px 6px; font-size: 0.65rem;">
+                                                    <button type="button" onclick="openImageModal('{{ Storage::url($resource->file_path) }}', '{{ $resource->title }}')" class="btn btn-outline-primary" title="Voir l'image" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
                                                 @endif
@@ -387,7 +391,7 @@
                                                     <a href="{{ route('resources.edit', $resource) }}" class="btn btn-outline-warning" title="Modifier" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-outline-danger" title="Supprimer" style="padding: 1px 6px; font-size: 0.65rem;">
+                                                    <button type="button" onclick="deleteResource({{ $resource->id }}, this)" class="btn btn-outline-danger" title="Supprimer" style="padding: 1px 6px; font-size: 0.65rem;">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 @endif
@@ -399,7 +403,7 @@
                                 <div class="col-12 text-center py-5">
                                     <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
                                     <p class="text-muted">Aucune ressource disponible</p>
-                                    <button onclick="openCreateModal()" class="btn" style="background: #255156; color: white;">
+                                    <button type="button" onclick="openCreateModal()" class="btn" style="background: #255156; color: white;">
                                         <i class="fas fa-upload me-1"></i>Ajouter la première ressource
                                     </button>
                                 </div>
@@ -411,7 +415,7 @@
                                 <i class="fas fa-search fa-3x text-muted mb-3 opacity-50"></i>
                                 <h5 class="fw-semibold text-secondary">Aucun document trouvé</h5>
                                 <p class="text-muted small">Aucun document ne correspond à vos critères.</p>
-                                <button onclick="clearCategoryFilter(); document.getElementById('searchInput').value=''; document.getElementById('filterType').value=''; document.getElementById('sortDate').value='recent'; filterResourcesByCategory(); sortResourcesByDate();" class="btn btn-sm btn-outline-secondary mt-2">
+                                <button type="button" onclick="clearCategoryFilter(); document.getElementById('searchInput').value=''; document.getElementById('filterType').value=''; document.getElementById('sortDate').value='recent'; filterResourcesByCategory(); sortResourcesByDate();" class="btn btn-sm btn-outline-secondary mt-2">
                                     <i class="fas fa-sync-alt me-1"></i> Réinitialiser
                                 </button>
                             </div>
@@ -536,6 +540,20 @@
     .filter-category:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Correctifs pour les boutons de filtre (ex-div) */
+    button.filter-category {
+        background: transparent;
+        font-family: inherit;
+        text-align: center;
+        appearance: none;
+        -webkit-appearance: none;
+        color: inherit;
+    }
+    button.filter-category:focus-visible {
+        outline: 2px solid #255156;
+        outline-offset: 2px;
     }
 
     .text-purple {
@@ -902,7 +920,12 @@
             { value: 'victimes', label: 'Victimes' },
             { value: 'auteurs', label: 'Auteurs' },
             { value: 'autres', label: 'Autres'}
-        ]
+        ],
+        'sensibilisation': [
+            { value: 'catalogues', label: 'Catalogues' },
+            { value: 'formations', label: 'Formations' },
+            { value: 'autres', label: 'Autres'}
+        ]   
     };
 
     function updateSubCategories(category) {

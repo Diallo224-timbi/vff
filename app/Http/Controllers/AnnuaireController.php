@@ -18,22 +18,21 @@ class AnnuaireController extends Controller
     // Recherche côté serveur
     if ($request->filled('search')) {
         $search = $request->input('search');
-
         $query->where(function ($q) use ($search) {
             $q->where('organisme', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%")
-              ->orWhere('siege_ville', 'like', "%{$search}%")
-              ->orWhere('siege_adresse', 'like', "%{$search}%")
-              ->orWhere('categories', 'like', "%{$search}%")
-              ->orWhere('public_cible', 'like', "%{$search}%")
-              ->orWhere('zone', 'like', "%{$search}%")
-              ->orWhere('type_structure', 'like', "%{$search}%")
-              ->orWhere('details', 'like', "%{$search}%")
-              ->orWhere('hebergement', 'like', "%{$search}%")
-              ->orWhere('ville', 'like', "%{$search}%")
-              ->orWhere('code_postal', 'like', "%{$search}%")
-              ->orWhere('adresse', 'like', "%{$search}%")
-              ->orWhere('site', 'like', "%{$search}%");
+            ->orWhere('description', 'like', "%{$search}%")
+            ->orWhere('siege_ville', 'like', "%{$search}%")
+            ->orWhere('siege_adresse', 'like', "%{$search}%")
+            ->orWhere('categories', 'like', "%{$search}%")
+            ->orWhere('public_cible', 'like', "%{$search}%")
+            ->orWhere('zone', 'like', "%{$search}%")
+            ->orWhere('type_structure', 'like', "%{$search}%")
+            ->orWhere('details', 'like', "%{$search}%")
+            ->orWhere('hebergement', 'like', "%{$search}%")
+            ->orWhere('ville', 'like', "%{$search}%")
+            ->orWhere('code_postal', 'like', "%{$search}%")
+            ->orWhere('adresse', 'like', "%{$search}%")
+            ->orWhere('site', 'like', "%{$search}%");
         });
     }
     // Pagination (toujours après la construction de la requête)
@@ -50,7 +49,6 @@ class AnnuaireController extends Controller
         $groupes = $structures->groupBy(function($item) {
             return $item->organisme->nom_organisme ?? 'Non spécifié';
         })->sortKeys();
-        
         // Créer une adresse complète pour chaque structure
         foreach ($structures as $structure) {
             $adresse_complete = trim($structure->adresse ?? '');
@@ -76,11 +74,9 @@ class AnnuaireController extends Controller
     {
         // Récupération de toutes les structures avec leur organisme, triées
         $structures = Structures::with('organisme')->orderBy('organisme')->get();
-
         // Génération du PDF avec orientation paysage
         $pdf = Pdf::loadView('annuaire.pdf', compact('structures'))
                 ->setPaper('a4', 'landscape');
-
         return $pdf->download('annuaire_structures.pdf');
     }
 }
