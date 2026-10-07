@@ -23,28 +23,64 @@ class AdminController extends Controller
     // Liste des utilisateurs (tous ou filtrés selon rôle)
     public function indexx()
     {
-        $authUser = auth()->user();
+    $authUser = auth()->user();
 
-        $query = User::query()
-            ->whereIn('role', ['user', 'moderateur', 'admin', 'moderateur_classique'])
-            ->orderBy('created_at', 'desc');
+    $query = User::query()
+        ->whereIn('role', ['user', 'moderateur', 'admin', 'moderateur_classique'])
+        ->orderBy('created_at', 'desc');
 
-        // Si modérateur, limiter à sa structure 
-        if ($authUser->role === 'moderateur_classique') {
-            $query->where('id_structure', $authUser->id_structure);
+    // Si modérateur classique, limiter à sa structure
+    if ($authUser->role === 'moderateur_classique') {
+
+        if (!$authUser->id_structure) {
+            $users = collect();
+            $structures = Structures::orderBy('id_organisme')->get();
+            $organismes = Organisme::orderBy('nom_organisme')->get();
+
+            return view('admin.users', compact(
+                'users',
+                'structures',
+                'organismes'
+            ))->with('noStructure', true);
         }
-        // Si modérateur global, limiter aux structures de son organisme
-        elseif ($authUser->role === 'moderateur') {
-            $query->whereHas('structure', function ($q) use ($authUser) {
-                $q->where('id_organisme', $authUser->structure->id_organisme);
-            });
-        }
-        $users = $query->get();
-        $structures = Structures::orderBy('id_organisme')->get();
-        $organismes = Organisme::orderBy('nom_organisme')->get();
-        return view('admin.users', compact('users', 'structures', 'organismes'));
+
+        $query->where('id_structure', $authUser->id_structure);
     }
 
+    // Si modérateur global, limiter aux structures de son organisme
+    elseif ($authUser->role === 'moderateur') {
+
+        if (!$authUser->structure) {
+            $users = collect();
+            $structures = Structures::orderBy('id_organisme')->get();
+            $organismes = Organisme::orderBy('nom_organisme')->get();
+
+            return view('admin.users', compact(
+                'users',
+                'structures',
+                'organismes'
+            ))->with('noStructure', true);
+        }
+
+        $query->whereHas('structure', function ($q) use ($authUser) {
+            $q->where(
+                'id_organisme',
+                $authUser->structure->id_organisme
+            );
+        });
+    }
+
+    $users = $query->get();
+
+    $structures = Structures::orderBy('id_organisme')->get();
+    $organismes = Organisme::orderBy('nom_organisme')->get();
+
+    return view('admin.users', compact(
+        'users',
+        'structures',
+        'organismes'
+    ));
+}
     // Filtrer les utilisateurs par structure
     public function getAllUsersByStructure($structureId)
     {
