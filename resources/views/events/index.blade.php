@@ -65,11 +65,11 @@
             Agenda partagé
         </h1>
         <div class="flex items-center gap-2">
-        <!--
+        
             <a href="" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
                 <i class="fas fa-calendar-week mr-1"></i>Vue calendrier
             </a>
-        -->
+        
             @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'user')
             <button onclick="openCreateModal()" class="bg-[#255156] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#1a3a3f]">
                 <i class="fas fa-plus mr-1"></i>Nouvel événement

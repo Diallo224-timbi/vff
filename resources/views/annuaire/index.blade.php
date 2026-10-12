@@ -6,8 +6,8 @@
     <div class="container-fluid px-1 py-1">
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
-             role="alert" 
-             style="z-index: 9999; min-width: 300px; border-left: 4px solid #4caf50;">
+            role="alert" 
+            style="z-index: 9999; min-width: 300px; border-left: 4px solid #4caf50;">
             <div class="d-flex align-items-center">
                 <i class="fas fa-check-circle me-2" style="color: #4caf50;"></i>
                 <div>{{ session('success') }}</div>
@@ -26,8 +26,8 @@
     @endif
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg" 
-             role="alert" 
-             style="z-index: 9999; min-width: 300px; border-left: 4px solid #ef5350;">
+            role="alert" 
+            style="z-index: 9999; min-width: 300px; border-left: 4px solid #ef5350;">
             <div class="d-flex align-items-center">
                 <i class="fas fa-exclamation-circle me-2" style="color: #ef5350;"></i>
                 <div>{{ session('error') }}</div>
@@ -91,18 +91,18 @@
             @endif  
             <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('structures.map') }}" 
-                   class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
-                   style="border: 2px solid #255156; color: #255156;"
-                   onmouseover="this.style.background='#255156'; this.style.color='white';"
-                   onmouseout="this.style.background='transparent'; this.style.color='#255156';">
+                class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
+                style="border: 2px solid #255156; color: #255156;"
+                onmouseover="this.style.background='#255156'; this.style.color='white';"
+                onmouseout="this.style.background='transparent'; this.style.color='#255156';">
                     <i class="fas fa-map-marked-alt"></i>
                     Voir la carte
                 </a>
                 <a href="{{ route('annuaire.list') }}" 
-                   class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
-                   style="border: 2px solid #255156; color: #255156;"
-                   onmouseover="this.style.background='#255156'; this.style.color='white';"
-                   onmouseout="this.style.background='transparent'; this.style.color='#255156';">
+                class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
+                style="border: 2px solid #255156; color: #255156;"
+                onmouseover="this.style.background='#255156'; this.style.color='white';"
+                onmouseout="this.style.background='transparent'; this.style.color='#255156';">
                     <i class="fas fa-list"></i>
                     Voir fiche structure
                 </a>
@@ -122,12 +122,12 @@
                     <label class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-search mr-2"></i>Recherche globale</label>
                     <div class="relative">
                         <input type="text" id="searchInput" 
-                               placeholder="Rechercher par nom, ville, catégorie..."
-                               class="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all"
-                               style="border: 1px solid #dceeec; background: #f8fcfc; color: #255156;"
-                               onfocus="this.style.borderColor='#2d6268'; this.style.boxShadow='0 0 0 4px rgba(45,98,104,0.08)';"
-                               onblur="this.style.borderColor='#dceeec'; this.style.boxShadow='none';">
-                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #7fa8ac;"></i>
+                            placeholder="Rechercher par nom, ville, catégorie..."
+                            class="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all"
+                            style="border: 1px solid #dceeec; background: #f8fcfc; color: #255156;"
+                            onfocus="this.style.borderColor='#2d6268'; this.style.boxShadow='0 0 0 4px rgba(45,98,104,0.08)';"
+                            onblur="this.style.borderColor='#dceeec'; this.style.boxShadow='none';">
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #7fa8ac;"></i>
                     </div>
                 </div>   
                 <div>
@@ -187,9 +187,9 @@
                     <div class="organisme-group" data-organisme="{{ $organismeNom }}">
                         <!-- En-tête de l'organisme -->
                         <div class="organisme-header cursor-pointer transition-colors duration-200"
-                             style="background: linear-gradient(90deg, #f8fcfc, #f0f6f5);"
-                             onmouseover="this.style.background='linear-gradient(90deg, #f0f6f5, #e8f3f2)';"
-                             onmouseout="this.style.background='linear-gradient(90deg, #f8fcfc, #f0f6f5)';">
+                            style="background: linear-gradient(90deg, #f8fcfc, #f0f6f5);"
+                            onmouseover="this.style.background='linear-gradient(90deg, #f0f6f5, #e8f3f2)';"
+                            onmouseout="this.style.background='linear-gradient(90deg, #f8fcfc, #f0f6f5)';">
                             <div class="px-4 py-3 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="flex-shrink-0">
@@ -197,7 +197,7 @@
                                     </div>
                                     <!-- LOGO AVEC OBJECT-FIT POUR BIEN TENIR DANS LA CASE -->
                                     <div class="flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden flex items-center justify-center font-bold text-white"
-                                         style="background: white; box-shadow: 0 2px 8px rgba(37,81,86,0.2); font-size: 1.1rem; min-width: 3rem; min-height: 3rem;">
+                                        style="background: white; box-shadow: 0 2px 8px rgba(37,81,86,0.2); font-size: 1.1rem; min-width: 3rem; min-height: 3rem;">
                                         @php
                                             $firstStructure = $structuresByOrganisme->first();
                                             $logoPath = $firstStructure && $firstStructure->organisme ? $firstStructure->organisme->logo_path : null;
@@ -287,10 +287,10 @@
                                                 <td class="px-3 py-2">
                                                     @if($structure->organisme && $structure->organisme->site_web)
                                                         <a href="{{ $structure->organisme->site_web }}" target="_blank" 
-                                                           class="hover:underline text-sm font-medium truncate max-w-[120px] block"
-                                                           style="color: #255156;"
-                                                           title="{{ $structure->organisme->site_web }}">
-                                                            {{ Str::limit($structure->organisme->site_web, 25) }}
+                                                        class="hover:underline text-sm font-medium truncate max-w-[120px] block"
+                                                        style="color: #255156;"
+                                                        title="{{ $structure->organisme->site_web }}">
+                                                        {{ Str::limit($structure->organisme->site_web, 25) }}
                                                         </a>
                                                     @else
                                                         <span class="text-gray-400 text-sm">-</span>
@@ -298,7 +298,7 @@
                                                 </td>    
                                                 <td class="px-3 py-2">
                                                     <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium" 
-                                                          style="background: #e8f3f2; color: #255156;">
+                                                        style="background: #e8f3f2; color: #255156;">
                                                         {{ $structure->categories ?? '-' }}
                                                     </span>
                                                 </td>
@@ -326,17 +326,17 @@
                                                         </button>
                                                         @if(auth()->user()->role === 'admin')
                                                             <a href="{{ route('structures.edit', $structure) }}" 
-                                                               class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
-                                                               style="background: #fff3cd; color: #856404;"
-                                                               title="Modifier"
-                                                               onmouseover="this.style.background='#ffc107'; this.style.color='white';"
-                                                               onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
-                                                                <i class="fas fa-edit text-xs"></i>
+                                                            class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                                                            style="background: #fff3cd; color: #856404;"
+                                                            title="Modifier"
+                                                            onmouseover="this.style.background='#ffc107'; this.style.color='white';"
+                                                            onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
+                                                            <i class="fas fa-edit text-xs"></i>
                                                             </a>
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
-                                                                  method="POST" 
-                                                                  class="inline"
-                                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure ?')">
+                                                                method="POST" 
+                                                                class="inline"
+                                                                onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure ?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="p-2 rounded-lg transition-colors" 
@@ -350,17 +350,17 @@
                                                             </form>
                                                         @elseif(str_contains(auth()->user()->role, 'moderateur') && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
                                                             <a href="{{ route('structures.edit', $structure) }}" 
-                                                               class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
-                                                               style="background: #fff3cd; color: #856404;"
-                                                               title="Modifier ma structure"
-                                                               onmouseover="this.style.background='#ffc107'; this.style.color='white';"
-                                                               onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
+                                                            class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                                                            style="background: #fff3cd; color: #856404;"
+                                                            title="Modifier ma structure"
+                                                            onmouseover="this.style.background='#ffc107'; this.style.color='white';"
+                                                            onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
                                                                 <i class="fas fa-edit text-xs"></i>
                                                             </a>
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
-                                                                  method="POST" 
-                                                                  class="inline"
-                                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer votre structure ?')">
+                                                                method="POST" 
+                                                                class="inline"
+                                                                onsubmit="return confirm('Voulez-vous vraiment supprimer votre structure ?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="p-2 rounded-lg transition-colors" 
@@ -378,17 +378,17 @@
                                                                 && $structure->organisme
                                                                 && auth()->user()->structure->id_organisme === $structure->organisme->id)
                                                             <a href="{{ route('structures.edit', $structure) }}" 
-                                                               class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
-                                                               style="background: #fff3cd; color: #856404;"
-                                                               title="Modifier une structure de mon organisme"
-                                                               onmouseover="this.style.background='#ffc107'; this.style.color='white';"
-                                                               onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
+                                                            class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                                                            style="background: #fff3cd; color: #856404;"
+                                                            title="Modifier une structure de mon organisme"
+                                                            onmouseover="this.style.background='#ffc107'; this.style.color='white';"
+                                                            onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
                                                                 <i class="fas fa-edit text-xs"></i>
                                                             </a>
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
-                                                                  method="POST" 
-                                                                  class="inline"
-                                                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure de votre organisme ?')">
+                                                                method="POST" 
+                                                                class="inline"
+                                                                onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure de votre organisme ?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button class="p-2 rounded-lg transition-colors" 
@@ -460,10 +460,10 @@
                         <div id="modal-logo-container" class="w-full h-full flex items-center justify-center">
                             <i class=" text-white text-xl" id="modal-logo-icon"></i>
                             <img id="modal-logo-img" 
-                                 src="" 
-                                 alt="Logo" 
-                                 class="w-full h-full object-contain hidden logo-clickable"
-                                 title="Cliquez pour agrandir le logo">
+                                src="" 
+                                alt="Logo" 
+                                class="w-full h-full object-contain hidden logo-clickable"
+                                title="Cliquez pour agrandir le logo">
                         </div>
                     </div>
                     <div>
@@ -550,7 +550,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <!-- Contact -->
                 <div class="bg-white p-3 rounded-lg border mb-3" style="border-color: #dceeec; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
                     <h6 class="font-semibold mb-2 text-sm" style="color: #255156;">
