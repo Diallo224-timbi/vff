@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Mail\UserValidatedMail;
@@ -13,7 +11,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Organisme;
 class AdminController extends Controller
 {
-
     public function __construct()
     {
        //$this->middleware("auth");
@@ -23,45 +20,36 @@ class AdminController extends Controller
     // Liste des utilisateurs (tous ou filtrés selon rôle)
     public function indexx()
     {
-    $authUser = auth()->user();
-
-    $query = User::query()
-        ->whereIn('role', ['user', 'moderateur', 'admin', 'moderateur_classique'])
-        ->orderBy('created_at', 'desc');
-
-    // Si modérateur classique, limiter à sa structure
-    if ($authUser->role === 'moderateur_classique') {
-
-        if (!$authUser->id_structure) {
-            $users = collect();
-            $structures = Structures::orderBy('id_organisme')->get();
-            $organismes = Organisme::orderBy('nom_organisme')->get();
-
-            return view('admin.users', compact(
-                'users',
-                'structures',
-                'organismes'
-            ))->with('noStructure', true);
-        }
-
-        $query->where('id_structure', $authUser->id_structure);
+        $authUser = auth()->user();
+        $query = User::query()
+            ->whereIn('role', ['user','moderateur','admin','moderateur_classique'])
+            ->orderBy('created_at', 'desc');
+        // Si modérateur classique, limiter à sa structure
+        if ($authUser->role === 'moderateur_classique') {
+            if (!$authUser->id_structure) {
+                $users = collect();
+                $structures = Structures::orderBy('id_organisme')->get();
+                $organismes = Organisme::orderBy('nom_organisme')->get();
+                return view('admin.users', compact(
+                    'users',
+                    'structures',
+                    'organismes'
+                ))->with('noStructure', true);
+            }
+            $query->where('id_structure', $authUser->id_structure);
     }
-
     // Si modérateur global, limiter aux structures de son organisme
     elseif ($authUser->role === 'moderateur') {
-
         if (!$authUser->structure) {
             $users = collect();
             $structures = Structures::orderBy('id_organisme')->get();
             $organismes = Organisme::orderBy('nom_organisme')->get();
-
             return view('admin.users', compact(
                 'users',
                 'structures',
                 'organismes'
             ))->with('noStructure', true);
         }
-
         $query->whereHas('structure', function ($q) use ($authUser) {
             $q->where(
                 'id_organisme',
@@ -69,12 +57,9 @@ class AdminController extends Controller
             );
         });
     }
-
     $users = $query->get();
-
     $structures = Structures::orderBy('id_organisme')->get();
     $organismes = Organisme::orderBy('nom_organisme')->get();
-
     return view('admin.users', compact(
         'users',
         'structures',
@@ -85,12 +70,10 @@ class AdminController extends Controller
     public function getAllUsersByStructure($structureId)
     {
         $users = User::where('id_structure', $structureId)
-                     ->whereIn('role', ['user', 'moderateur', 'admin','moderateur_classique'])
-                     ->orderBy('created_at', 'desc')
-                     ->get();
-
+                    ->whereIn('role', ['user', 'moderateur', 'admin','moderateur_classique'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
         $structures = Structures::orderBy('organisme')->get();
-
         return view('admin.users', compact('users', 'structures'));
     }
     // Filtrer les utilisateurs par organisme
@@ -102,10 +85,8 @@ class AdminController extends Controller
         ->whereIn('role', ['user', 'moderateur', 'admin','moderateur_classique'])
         ->orderBy('created_at', 'desc')
         ->get();
-
         $structures = Structures::orderBy('organisme')->get();
         $organismes = Organisme::orderBy('nom_organisme')->get();
-
         return view('admin.users', compact('users', 'structures', 'organismes'));
     }
     // Validation d'un utilisateur
@@ -113,16 +94,13 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $user->update(['etatV' => 'valider']);
-
         Mail::to($user->email)->send(new UserValidatedMail($user));
-
         $currentUser = auth()->user();
         ActivityLog::log(
             'Validation utilisateur',
             "Utilisateur validé: {$user->name} par {$currentUser->name} (Rôle: {$currentUser->role})",
             $currentUser->id
         );
-
         return redirect()->back()->with('success', 'Utilisateur validé avec succès.');
     }
 // supprimer un utilisateur
@@ -145,29 +123,22 @@ class AdminController extends Controller
         $request->validate([
             'reason' => 'required|string|min:5',
         ]);
-
         $user = User::findOrFail($id);
-
         if ($user->etatV !== 'valider') {
             return back()->withErrors(['error' => 'Impossible de bloquer un compte non validé.']);
         }
-
         $user->etatV = 'bloqué';
         $user->block_reason = $request->reason;
         $user->save();
-
         Mail::to($user->email)->send(new UserBlockedMail($user));
-
         $currentUser = auth()->user();
         ActivityLog::log(
             'Blocage utilisateur',
             "Utilisateur bloqué: {$user->name} par {$currentUser->name} (Rôle: {$currentUser->role})",
             $currentUser->id
         );
-
         return back()->with('success', 'Utilisateur bloqué avec succès.');
     }
-
     // Déblocage d'un utilisateur
     public function dblockUser($id)
     {
@@ -182,10 +153,8 @@ class AdminController extends Controller
             "Utilisateur débloqué: {$user->name} par {$currentUser->name} (Rôle: {$currentUser->role})",
             $currentUser->id
         );
-
         return redirect()->back()->with('success', 'Utilisateur débloqué avec succès.');
     }
-
     // Suppression d'un utilisateur
     public function destroy($id)
     {
@@ -199,15 +168,12 @@ class AdminController extends Controller
             "Utilisateur supprimé: {$userName} par {$currentUser->name}",
             $currentUser->id
         );
-
         return redirect()->back()->with('success', 'Utilisateur supprimé avec succès.');
     }
-
     // Modification d'un utilisateur
     public function updateUser(Request $request, $id)
     {
         $userToUpdate = User::findOrFail($id);
-
         $request->validate([
             'name' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -219,10 +185,8 @@ class AdminController extends Controller
             'ville' => 'nullable|string|max:255',
             'code_postal' => 'nullable|string|max:10',
             'role' => 'required|string|in:user,moderateur,admin,moderateur_classique',
-            'notification' => 'nullable|boolean'
-            
+            'notification' => 'nullable|boolean' 
         ]);
-
         $userToUpdate->update([
             'name' => $request->name,
             'prenom' => $request->prenom,
@@ -234,14 +198,12 @@ class AdminController extends Controller
             'code_postal' => $request->code_postal,
             'role' => $request->role
         ]);
-
         $currentUser = auth()->user();
         ActivityLog::log(
             'Modification d\'un utilisateur',
             "Utilisateur modifié: {$userToUpdate->name} par {$currentUser->name}",
             $currentUser->id
         );
-
         return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
     }
 }

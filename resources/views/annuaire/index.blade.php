@@ -844,32 +844,82 @@
         });
     }
     
-    function filterAndSearch() {
-        const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || '';
-        const organismeFilter = document.getElementById('filterOrganisme')?.value.toLowerCase() || '';
-        const cityFilter = document.getElementById('filterCity')?.value.toLowerCase() || '';
+    
+function filterAndSearch() {
+        const searchQuery = (
+            document.getElementById('searchInput')?.value || ''
+        ).trim().toLowerCase();
+
+        const organismeFilter = (
+            document.getElementById('filterOrganisme')?.value || ''
+        ).trim().toLowerCase();
+
+        const cityFilter = (
+            document.getElementById('filterCity')?.value || ''
+        ).trim().toLowerCase();
+
         const groups = document.querySelectorAll('.organisme-group');
         let totalVisible = 0;
+
         groups.forEach(group => {
             const rows = group.querySelectorAll('.structure-row');
             let groupVisible = false;
+
             rows.forEach(row => {
-                const rowText = row.textContent.toLowerCase();
-                const rowCity = (row.dataset.city || '').toLowerCase();
-                const rowOrganisme = (row.dataset.organisme || '').toLowerCase();
-                const matchesSearch = searchQuery === '' || rowText.includes(searchQuery);
-                const matchesOrganisme = organismeFilter === '' || rowOrganisme.includes(organismeFilter);
-                const matchesCity = cityFilter === '' || rowCity.includes(cityFilter);
-                const isVisible = matchesSearch && matchesOrganisme && matchesCity;
+                // Texte visible dans la ligne du tableau
+                const rowText = (row.textContent || '').toLowerCase();
+
+                // Informations provenant des attributs data-* du HTML
+                const rowCity = (row.dataset.city || '').trim().toLowerCase();
+                const rowOrganisme = (row.dataset.organisme || '').trim().toLowerCase();
+
+                // Recherche globale : ligne, organisme ou ville
+                const matchesSearch =
+                    searchQuery === '' ||
+                    rowText.includes(searchQuery) ||
+                    rowOrganisme.includes(searchQuery) ||
+                    rowCity.includes(searchQuery);
+
+                // Filtre par organisme
+                const matchesOrganisme =
+                    organismeFilter === '' ||
+                    rowOrganisme === organismeFilter;
+
+                // Filtre par ville
+                const matchesCity =
+                    cityFilter === '' ||
+                    rowCity === cityFilter;
+
+                // Une ligne doit respecter tous les critères actifs
+                const isVisible =
+                    matchesSearch &&
+                    matchesOrganisme &&
+                    matchesCity;
+
                 row.style.display = isVisible ? '' : 'none';
-                if(isVisible) { groupVisible = true; totalVisible++; }
+
+                if (isVisible) {
+                    groupVisible = true;
+                    totalVisible++;
+                }
             });
+
+            // Masquer les groupes sans aucune structure correspondante
             group.style.display = groupVisible ? '' : 'none';
         });
+
+        // Actualiser le nombre de résultats
         const resultCount = document.getElementById('resultCount');
         const totalRows = document.querySelectorAll('.structure-row').length;
-        if(resultCount) resultCount.textContent = totalVisible === totalRows ? `${totalRows} structures` : `${totalVisible} structures (sur ${totalRows})`;
+
+        if (resultCount) {
+            resultCount.textContent =
+                totalVisible === totalRows
+                    ? `${totalRows} structures`
+                    : `${totalVisible} structures (sur ${totalRows})`;
+        }
     }
+
     
     document.addEventListener('DOMContentLoaded', function() {
         initAccordion();
