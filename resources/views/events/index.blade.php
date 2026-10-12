@@ -65,8 +65,9 @@
             Agenda partagé
         </h1>
         <div class="flex items-center gap-2">
-        
-            <a href="" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
+            {{-- ✅ CORRECTION : lien vers la vue calendrier avec conservation des filtres --}}
+            <a href="{{ route('events.calendar', request()->only(['type', 'periode'])) }}" 
+               class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
                 <i class="fas fa-calendar-week mr-1"></i>Vue calendrier
             </a>
         
