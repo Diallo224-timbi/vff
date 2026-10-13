@@ -174,12 +174,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
 });
 // Routes pour la gestion des structures
 Route::middleware(['auth','structure.access'])->group(function () {
     Route::get('/structures', [StructureController::class, 'index'])->name('structures.index');
-    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
-    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
+    //Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+    //Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
     Route::get('/structures/{structure}/edit', [StructureController::class, 'edit'])->name('structures.edit');
     Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');

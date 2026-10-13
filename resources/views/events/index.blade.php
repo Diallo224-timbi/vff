@@ -58,6 +58,7 @@
             }, 8000);
         </script>
     @endif
+    
     <!-- Header -->
     <div class="flex justify-between items-center mb-3">
         <h1 class="text-xl font-bold text-gray-800">
@@ -65,19 +66,19 @@
             Agenda partagé
         </h1>
         <div class="flex items-center gap-2">
-            {{-- ✅ CORRECTION : lien vers la vue calendrier avec conservation des filtres --}}
-            <a href="{{ route('events.calendar', request()->only(['type', 'periode'])) }}" 
-               class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
+            <a href="{{ route('events.calendrier', request()->only(['type', 'periode'])) }}" 
+               class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200 transition">
                 <i class="fas fa-calendar-week mr-1"></i>Vue calendrier
             </a>
         
             @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'user')
-            <button onclick="openCreateModal()" class="bg-[#255156] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#1a3a3f]">
+            <button onclick="openCreateModal()" class="bg-[#255156] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#1a3a3f] transition">
                 <i class="fas fa-plus mr-1"></i>Nouvel événement
             </button>
             @endif
         </div>
     </div>
+    
     <!-- Filtres avec auto-submit -->
     <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm mb-3">
         <form method="GET" action="{{ route('events.index') }}" class="flex flex-wrap gap-2" id="filterForm">
@@ -93,15 +94,44 @@
                 <option value="a_venir" {{ request('periode') == 'a_venir' ? 'selected' : '' }}>À venir</option>
                 <option value="passes" {{ request('periode') == 'passes' ? 'selected' : '' }}>Passés</option>
             </select>
-            <button type="submit" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200">
+            <button type="submit" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200 transition">
                 <i class="fas fa-filter mr-1"></i>Filtrer
             </button>
             <a href="{{ route('events.index') }}" class="text-gray-500 text-sm px-3 py-1.5">Réinitialiser</a>
         </form>
     </div>
+    
     <!-- Liste des événements -->
     <div class="grid gap-3">
         @forelse($events as $event)
+        @php
+            $canEdit = auth()->user()->role === 'admin' 
+                    || auth()->user()->role === 'moderateur'
+                    || auth()->user()->id === $event->cree_par;
+
+            $eventShowData = [
+                'titre'         => $event->titre,
+                'description'   => $event->description,
+                'date_debut'    => $event->date_debut->format('d/m/Y H:i'),
+                'date_fin'      => $event->date_fin->format('d/m/Y H:i'),
+                'type'          => $event->type,
+                'lieu'          => $event->lieu,
+                'organisateur'  => $event->organisateur,
+                'created_at'    => $event->created_at->format('d/m/Y'),
+                'cree_par'      => $event->createur->name ?? 'Inconnu',
+                'piece_jointe'  => $event->piece_jointe ? asset('storage/' . $event->piece_jointe) : null,
+            ];
+
+            $eventEditData = [
+                'titre'         => $event->titre,
+                'description'   => $event->description,
+                'date_debut'    => $event->date_debut->format('Y-m-d\TH:i'),
+                'date_fin'      => $event->date_fin->format('Y-m-d\TH:i'),
+                'type'          => $event->type,
+                'lieu'          => $event->lieu,
+                'organisateur'  => $event->organisateur,
+            ];
+        @endphp
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition p-3" id="event-{{ $event->id }}">
             <div class="flex flex-col md:flex-row md:items-center gap-3">
                 <div class="flex items-center gap-2 md:w-44">
@@ -136,35 +166,27 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <button onclick='openShowModal({{ $event->id }}, {{ json_encode([
-                        "titre" => $event->titre,
-                        "description" => $event->description,
-                        "date_debut" => $event->date_debut->format("d/m/Y H:i"),
-                        "date_fin" => $event->date_fin->format("d/m/Y H:i"),
-                        "type" => $event->type,
-                        "lieu" => $event->lieu,
-                        "organisateur" => $event->organisateur,
-                        "created_at" => $event->created_at->format("d/m/Y"),
-                        "cree_par" => $event->createur->name ?? "Inconnu"
-                    ]) }})' 
-                            class="bg-[#255156] text-white px-2.5 py-1.5 rounded-lg text-sm hover:bg-[#1a3a3f]">
+                    {{-- Bouton Voir --}}
+                    <button type="button"
+                            onclick="openShowModal({{ $event->id }}, {{ Js::from($eventShowData) }})"
+                            class="bg-[#255156] text-white px-2.5 py-1.5 rounded-lg text-sm hover:bg-[#1a3a3f] transition"
+                            title="Voir les détails">
                         <i class="fas fa-eye"></i>
                     </button>                   
-                    @if(auth()->user()->role === 'admin' || auth()->user()->id === $event->cree_par)
-                        <button onclick='openEditModal({{ $event->id }}, {{ json_encode([
-                            "titre" => $event->titre,
-                            "description" => $event->description,
-                            "date_debut" => $event->date_debut->format("Y-m-d\TH:i"),
-                            "date_fin" => $event->date_fin->format("Y-m-d\TH:i"),
-                            "type" => $event->type,
-                            "lieu" => $event->lieu,
-                            "organisateur" => $event->organisateur
-                        ]) }})' 
-                                class="bg-yellow-500 text-white px-2.5 py-1.5 rounded-lg text-sm hover:bg-yellow-600">
+                    
+                    @if($canEdit)
+                        {{-- Bouton Modifier --}}
+                        <button type="button"
+                                onclick="openEditModal({{ $event->id }}, {{ Js::from($eventEditData) }}, '{{ route('events.update', $event->id) }}')"
+                                class="bg-yellow-500 text-white px-2.5 py-1.5 rounded-lg text-sm hover:bg-yellow-600 transition"
+                                title="Modifier">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick='openDeleteModal({{ $event->id }}, "{{ $event->titre }}")' 
-                                class="bg-red-500 text-white px-2.5 py-1.5 rounded-lg text-sm hover:bg-red-600">
+                        {{-- Bouton Supprimer --}}
+                        <button type="button"
+                                onclick="openDeleteModal({{ $event->id }}, {{ Js::from($event->titre) }}, '{{ route('events.destroy', $event->id) }}')"
+                                class="bg-red-500 text-white px-2.5 py-1.5 rounded-lg text-sm hover:bg-red-600 transition"
+                                title="Supprimer">
                             <i class="fas fa-trash"></i>
                         </button>
                     @endif
@@ -185,8 +207,9 @@
         <div class="mt-3">{{ $events->links() }}</div>
     </div>
 </div>
+
 <!-- ============================================ -->
-<!-- MODALE SHOW (AFFICHAGE) - DESIGN AÉRÉ ET CENTRÉ -->
+<!-- MODALE SHOW (AFFICHAGE) -->
 <!-- ============================================ -->
 <div id="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 overflow-y-auto" style="display: none;">
     <div class="flex items-center justify-center min-h-screen p-4">
@@ -209,6 +232,7 @@
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
+            
             <!-- Corps -->
             <div class="p-6 space-y-5 flex-1 min-h-0 overflow-y-auto">
                 <!-- Dates -->
@@ -227,34 +251,59 @@
                         </div>
                         <p id="show_date_fin" class="text-base font-bold text-gray-800 leading-tight break-words"></p>
                     </div>
-                </div>
-                <!-- Lieu -->
-                <div class="bg-orange-50/50 border border-orange-100 rounded-xl p-3.5">
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <i class="fas fa-map-marker-alt text-orange-500 text-[12px]"></i>
-                        <p class="text-[10px] font-bold text-orange-600 uppercase tracking-wider">Lieu</p>
+                    <!-- description -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-align-left text-gray-500 text-[12px]"></i>
+                            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Description</p>
+                        </div>
+                        <p id="show_description" class="text-sm text-gray-800 leading-relaxed"></p>
                     </div>
-                    <p id="show_lieu" class="text-sm font-semibold text-gray-800 leading-snug wrap-break-word"></p>
                 </div>
-                <!-- Organisateur -->
-                <div class="bg-purple-50/50 border border-purple-100 rounded-xl p-3.5">
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <i class="fas fa-user text-purple-500 text-[12px]"></i>
-                        <p class="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Organisateur</p>
+                
+                <!-- Lieu + Organisateur -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-orange-50/50 border border-orange-100 rounded-xl p-3.5">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <i class="fas fa-map-marker-alt text-orange-500 text-[12px]"></i>
+                            <p class="text-[10px] font-bold text-orange-600 uppercase tracking-wider">Lieu</p>
+                        </div>
+                        <p id="show_lieu" class="text-sm font-semibold text-gray-800 leading-snug break-words"></p>
                     </div>
-                    <p id="show_organisateur" class="text-sm font-semibold text-gray-800 leading-snug wrap-break-word"></p>
+                    <div class="bg-purple-50/50 border border-purple-100 rounded-xl p-3.5">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <i class="fas fa-user text-purple-500 text-[12px]"></i>
+                            <p class="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Organisateur</p>
+                        </div>
+                        <p id="show_organisateur" class="text-sm font-semibold text-gray-800 leading-snug break-words"></p>
+                    </div>
                 </div>
+                
                 <!-- Description -->
                 <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
                     <div class="flex items-center gap-2 mb-2">
                         <i class="fas fa-align-left text-gray-500 text-[12px]"></i>
                         <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Description</p>
                     </div>
-                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed wrap-break-word"
+                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed break-words"
                         id="show_description">
                     </div>
                 </div>
+                
+                <!-- Pièce jointe -->
+                <div id="show_piece_jointe_wrapper" class="hidden bg-emerald-50/50 border border-emerald-100 rounded-xl p-3.5">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <i class="fas fa-paperclip text-emerald-500 text-[12px]"></i>
+                        <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Pièce jointe</p>
+                    </div>
+                    <a id="show_piece_jointe" href="#" target="_blank"
+                       class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">
+                        <i class="fas fa-download"></i>
+                        <span>Télécharger la pièce jointe</span>
+                    </a>
+                </div>
             </div>
+            
             <!-- Footer -->
             <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
                 <div class="flex items-center gap-4 text-[11px] text-gray-500 min-w-0">
@@ -276,6 +325,7 @@
         </div>
     </div>
 </div>
+
 <!-- ============================================ -->
 <!-- MODALE CRÉATION -->
 <!-- ============================================ -->
@@ -347,6 +397,7 @@
         </div>
     </div>
 </div>
+
 <!-- ============================================ -->
 <!-- MODALE ÉDITION -->
 <!-- ============================================ -->
@@ -406,7 +457,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pièce jointe</label>
                         <input type="file" name="piece_jointe" id="edit_piece_jointe" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
                             class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
-                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, PNG, JPG (Max 5MB)</p>
+                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, PNG, JPG (Max 5MB) — Laisser vide pour conserver l'actuelle</p>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row justify-end gap-2 mt-4 pt-3 border-t">
@@ -419,6 +470,7 @@
         </div>
     </div>
 </div>
+
 <!-- ============================================ -->
 <!-- MODALE SUPPRESSION -->
 <!-- ============================================ -->
@@ -447,6 +499,7 @@
         </div>
     </div>
 </div>
+
 <style>
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
@@ -457,7 +510,6 @@
 }
 .modal-open { overflow: hidden; }
 
-/* Poignée de redimensionnement visible sur la modale Show */
 #showModalBox {
     resize: both;
     overflow: hidden;
@@ -485,14 +537,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // === MODALE SHOW (AFFICHAGE) ===
 function openShowModal(eventId, eventData) {
+    // Titre
     document.getElementById('show_titre').textContent = eventData.titre || '';
-    document.getElementById('show_description').textContent = eventData.description || 'Aucune description fournie.';
+
+    // Description
+    const descriptionEl = document.getElementById('show_description');
+    if (eventData.description && eventData.description.trim() !== '') {
+        descriptionEl.textContent = eventData.description;
+        descriptionEl.classList.remove('italic', 'text-gray-400');
+        descriptionEl.classList.add('text-gray-700');
+    } else {
+        descriptionEl.textContent = 'Aucune description fournie.';
+        descriptionEl.classList.add('italic', 'text-gray-400');
+        descriptionEl.classList.remove('text-gray-700');
+    }
+
+    // Dates
     document.getElementById('show_date_debut').textContent = eventData.date_debut || '';
     document.getElementById('show_date_fin').textContent = eventData.date_fin || '';
     document.getElementById('show_lieu').textContent = eventData.lieu || 'Non précisé';
     document.getElementById('show_organisateur').textContent = eventData.organisateur || 'Non précisé';
     document.getElementById('show_cree_par').textContent = eventData.cree_par || 'Inconnu';
     document.getElementById('show_created_at').textContent = eventData.created_at || '';
+
+    // Pièce jointe
+    const pjWrapper = document.getElementById('show_piece_jointe_wrapper');
+    const pjLink = document.getElementById('show_piece_jointe');
+    if (eventData.piece_jointe) {
+        pjWrapper.classList.remove('hidden');
+        pjLink.href = eventData.piece_jointe;
+    } else {
+        pjWrapper.classList.add('hidden');
+        pjLink.href = '#';
+    }
 
     // Badge Type avec couleur dynamique
     const typeBadge = document.getElementById('show_type');
@@ -508,7 +585,7 @@ function openShowModal(eventId, eventData) {
     typeBadge.className = 'inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2 '
                         + (typeColors[type] || typeColors['autre']);
 
-    // Reset taille à l'ouverture (sans casser le resize)
+    // Reset taille
     const box = document.getElementById('showModalBox');
     box.style.width = '600px';
     box.style.height = 'auto';
@@ -535,7 +612,7 @@ function closeCreateModal() {
 }
 
 // === MODALE ÉDITION ===
-function openEditModal(eventId, eventData) {
+function openEditModal(eventId, eventData, updateUrl) {
     document.getElementById('edit_titre').value = eventData.titre || '';
     document.getElementById('edit_description').value = eventData.description || '';
     document.getElementById('edit_date_debut').value = eventData.date_debut || '';
@@ -543,7 +620,13 @@ function openEditModal(eventId, eventData) {
     document.getElementById('edit_type').value = eventData.type || 'réunion';
     document.getElementById('edit_lieu').value = eventData.lieu || '';
     document.getElementById('edit_organisateur').value = eventData.organisateur || '';
-    document.getElementById('editForm').action = `/events/${eventId}`;
+    
+    const form = document.getElementById('editForm');
+    form.action = updateUrl || `/events/${eventId}`;
+    
+    // Reset du champ fichier
+    document.getElementById('edit_piece_jointe').value = '';
+    
     document.getElementById('editModal').style.display = 'flex';
     document.body.classList.add('modal-open');
 }
@@ -553,9 +636,9 @@ function closeEditModal() {
 }
 
 // === MODALE SUPPRESSION ===
-function openDeleteModal(eventId, titre) {
+function openDeleteModal(eventId, titre, deleteUrl) {
     document.getElementById('delete_titre').textContent = titre || '';
-    document.getElementById('deleteForm').action = `/events/${eventId}`;
+    document.getElementById('deleteForm').action = deleteUrl || `/events/${eventId}`;
     document.getElementById('deleteModal').style.display = 'flex';
     document.body.classList.add('modal-open');
 }
