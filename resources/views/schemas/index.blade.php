@@ -13,11 +13,14 @@
                     <p class="text-muted mb-0" style="font-size: 0.85rem;">Gestion des groupes de travail et comptes rendus</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <button onclick="openCreateSchemaModal()" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
-                        <i class="fas fa-plus me-1"></i> Nouveau CR
-                    </button>
+                    <!-- accessible que pour l'administrateur -->
+                    @if(auth()->user()->role === 'admin')
+                        <button onclick="openCreateSchemaModal()" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
+                            <i class="fas fa-plus me-1"></i> Nouveau
+                        </button>
+                    @endif
                     <a href="{{ route('resources.index') }}" class="btn btn-sm btn-outline-secondary" style="padding: 4px 10px; font-size: 0.8rem;">
-                        <i class="fas fa-arrow-left me-1"></i> Retour
+                        <i class="fas fa-arrow-left me-1"></i> Retour aux ressources
                     </a>
                 </div>
             </div>
@@ -642,20 +645,33 @@ class SchemaManager {
 
     renderSchemas(schemas) {
         const container = document.getElementById('schemasContent');
-        
-        if (schemas.length === 0) {
-            container.innerHTML = `
-                <div class="text-center py-5 text-muted">
-                    <i class=""bx bxs-file-pdf fa-3x mb-3 opacity-25"></i>
-                    <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
-                    <button onclick="openCreateSchemaModal('${this.currentGt}')" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
-                        <i class="fas fa-plus me-1"></i> Ajouter un CR
-                    </button>
-                </div>
-            `;
-            return;
+        //visible que pour l'administrateur
+        if(auth()->user()->role === 'admin') {
+            if (schemas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <i class=""bx bxs-file-pdf fa-3x mb-3 opacity-25"></i>
+                        <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
+                        
+                        <button onclick="openCreateSchemaModal('${this.currentGt}')" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
+                            <i class="fas fa-plus me-1"></i> Ajouter un CR
+                        </button>
+                    </div>
+                `;
+                return;
+            }
         }
-
+        else {
+            if (schemas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-file-alt fa-3x mb-3 opacity-25"></i>
+                        <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
+                    </div>
+                `;
+                return;
+            }
+        }
         if (this.currentView === 'grid') {
             this.renderGridView(schemas);
         } else {
