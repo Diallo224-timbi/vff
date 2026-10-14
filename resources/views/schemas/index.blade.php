@@ -642,35 +642,17 @@ class SchemaManager {
             bg: '#f3f4f6'
         };
     }
-
     renderSchemas(schemas) {
         const container = document.getElementById('schemasContent');
-        //visible que pour l'administrateur
-        if(auth()->user()->role === 'admin') {
-            if (schemas.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-5 text-muted">
-                        <i class=""bx bxs-file-pdf fa-3x mb-3 opacity-25"></i>
-                        <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
-                        
-                        <button onclick="openCreateSchemaModal('${this.currentGt}')" class="btn btn-sm" style="background: #145f68; color: white; padding: 4px 12px; font-size: 0.8rem;">
-                            <i class="fas fa-plus me-1"></i> Ajouter un CR
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-        }
-        else {
-            if (schemas.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-5 text-muted">
-                        <i class="fas fa-file-alt fa-3x mb-3 opacity-25"></i>
-                        <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
-                    </div>
-                `;
-                return;
-            }
+        
+        if (schemas.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-5 text-muted">
+                    <i class=""bx bxs-file-pdf fa-3x mb-3 opacity-25"></i>
+                    <p style="font-size: 0.95rem;">Aucun compte rendu pour ce groupe</p>
+                </div>
+            `;
+            return;
         }
         if (this.currentView === 'grid') {
             this.renderGridView(schemas);
@@ -678,7 +660,6 @@ class SchemaManager {
             this.renderListView(schemas);
         }
     }
-
     // ============================================ //
     // RENDU EN MODE GRILLE (CARTES)                //
     // ============================================ //
