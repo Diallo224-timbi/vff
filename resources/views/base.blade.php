@@ -532,42 +532,40 @@
     <aside id="sidebar" class="sidebar">
       <nav class="sidebar-nav">
          <a href="{{ route('dashboardUser') }}" class="sidebar-link">
-          <i class='bx bx-home'></i>
+          <i class='bx bx-home' title="Accueil" ></i>
           <span>Accueil</span>
         </a>
         <div>
           <a href="#" id="openSecondarySidebar" class="sidebar-link">
-            <i class='bx bx-book-reader'></i>
+            <i class='bx bx-file' title="annuaire"></i>
             <span title="Acceder à la liste et à la carte interactive de l'annuaire">Annuaire</span>
           </a>
         </div>
         <a href="/ressources" class="sidebar-link">
-          <i class='bx bx-book-open'></i>
+          <i class='bx bx-book-open' title="ressources"></i>
           <span title="Explorer et partager des ressources">Ressources</span>
         </a>
-        @if (Auth::user()->role === 'admin')
             <a href="{{ route('schemas.index') }}" class="sidebar-link">
-              <i class='bx bx-book'></i>
+              <i class='bx bx-book' title="schéma"></i>
               <span title="Explorer et partager des documents schèma">Schéma</span>
             </a>
-        @endif
         <a href="{{ route('forum.index') }}" class="sidebar-link">
-          <i class='bx bx-chat'></i>
+          <i class='bx bx-chat' title="forum"></i>
           <span title="Acceder au forum d'échange">Forum</span>
         </a>
         <a href="/events" class="sidebar-link">
-          <i class='bx bx-calendar'></i>
+          <i class='bx bx-calendar' title="événements"></i>
           <span title="Consulter l'agenda des évenements">Agenda</span>
         </a>
         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur_classique' || Auth::user()->role === 'moderateur')
         <a href="{{ route('admin.users') }}" class="sidebar-link">
-          <i class='bx bx-shield'></i>
+          <i class='bx bx-shield' title="administration"></i>
           <span title="Gestion administrative">Administration</span>
         </a>
         @endif
         @if(Auth::user()->role === 'admin')
         <a href="{{ route('activity_logs.index') }}" class="sidebar-link">
-          <i class='bx bx-list-ul'></i>
+          <i class='bx bx-list-ul' title="logs"></i>
           <span title="visualiser les logs">Logs d'activités</span>
         </a>
         @endif
@@ -590,7 +588,6 @@
         </div>
       </div>
     </aside>
-
     <!-- SIDEBAR SECONDAIRE (OFFCANVAS) -->
     <div class="offcanvas offcanvas-start drawer-sub" id="secondarySidebar" tabindex="-1">
       <div class="offcanvas-header">
@@ -601,22 +598,22 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
       </div>
       <div class="offcanvas-body">
-        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur')
+        @if(Auth::user()->role === 'admin' )
         <a href="{{ route('organismes.index') }}" class="sidebar-link">
           <i class='bx bx-building'></i>
-          <span title="Gérer les organismes et structures">Organismes</span>
+          <span title="Gérer les organismes">Organismes</span>
         </a>
         @endif
         @if(Auth::user()->role === 'admin' || Auth::user()->role === 'moderateur_classique' || Auth::user()->role === 'moderateur')
-        <a href="{{ route('annuaire.index') }}" class="drawer-link">
-          <i class='bx bx-building'></i>
-          Structures
-        </a>
+          <a href="{{ route('annuaire.index') }}" class="drawer-link">
+            <i class='bx bx-building'></i>
+            Structures
+          </a>
         @else
-        <a href="{{ route('annuaire.list') }}" class="drawer-link">
-          <i class='bx bx-building'></i>
-          Structures
-        </a>
+          <a href="{{ route('annuaire.list') }}" class="drawer-link">
+            <i class='bx bx-building'></i>
+            Structures
+          </a>
         @endif
         <a href="{{ route('annuaire.membre') }}" class="drawer-link">
           <i class='bx bx-group'></i>
@@ -629,7 +626,6 @@
       </div>
     </div>
     @endauth
-
     <!-- MAIN CONTENT RESPONSIVE -->
     <main class="main-content">
       <div class="container-fluid-responsive">
@@ -637,38 +633,32 @@
       </div>
     </main>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       @auth
       // ===== SIDEBAR TOGGLE RESPONSIVE =====
       const sidebar = document.getElementById('sidebar');
       const toggleBtn = document.getElementById('sidebarToggle');
-
       if (toggleBtn && sidebar) {
         toggleBtn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
           sidebar.classList.toggle('collapsed');
-
           // Sauvegarde préférence utilisateur
           localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
         });
-
         // Restaurer état sidebar
         const savedState = localStorage.getItem('sidebarCollapsed');
         if (savedState === 'true') {
           sidebar.classList.add('collapsed');
         }
       }
-
       // ===== OFFCANVAS SECONDAIRE =====
       const openSecondarySidebar = document.getElementById('openSecondarySidebar');
       if (openSecondarySidebar) {
         openSecondarySidebar.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-
           const secondaryDrawer = document.getElementById('secondarySidebar');
           if (secondaryDrawer) {
             const offcanvas = new bootstrap.Offcanvas(secondaryDrawer);
@@ -676,7 +666,6 @@
           }
         });
       }
-
       // Fermer offcanvas au clic sur un lien
       document.querySelectorAll('.drawer-link').forEach(link => {
         link.addEventListener('click', () => {
@@ -685,11 +674,9 @@
         });
       });
       @endauth
-
       // ===== PROFIL DROPDOWN =====
       const profileBtn = document.getElementById('profileBtn');
       const profileMenu = document.getElementById('profileMenu');
-
       if (profileBtn && profileMenu) {
         profileBtn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -697,7 +684,6 @@
           profileMenu.classList.toggle('show');
         });
       }
-
       // ===== GESTION DES CLICS EN DEHORS (ESPACE VIDE) =====
       document.addEventListener('click', function(e) {
         // 1. Fermeture du profil dropdown s'il est ouvert

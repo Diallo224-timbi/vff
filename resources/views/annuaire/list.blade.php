@@ -1,7 +1,5 @@
 @extends('base')
-
 @section('title', 'Liste groupée des structures')
-
 @section('content')
 <div class="max-w-10xl mx-auto px-0 sm:px-6 lg:px-4 py-2 space-y-2">
     <!-- Message succès -->
@@ -14,10 +12,9 @@
             </button>
         </div>
     @endif
-
     <!-- HEADER SIMPLIFIÉ -->
     <div class="rounded-2xl p-4 shadow-xl text-white d-flex flex-wrap justify-content-between align-items-center gap-3"
-         style="background: linear-gradient(135deg, #255156, #1e7c86);">
+        style="background: linear-gradient(135deg, #255156, #1e7c86);">
         
         <div class="d-flex align-items-center gap-3">
             <i class="fas fa-building" style="font-size: 1.3rem;"></i>
@@ -25,7 +22,7 @@
                 <h5 class="mb-0 fw-bold">Structure par organisme</h5>
                 <small class="text-white/80">
                     <i class="fas fa-info-circle me-1"></i>
-                    {{ $totalStructures }} structures - {{ count($groupes) }} sièges
+                    {{ $totalStructures }} structures
                 </small>
             </div>
         </div>
@@ -41,7 +38,6 @@
                 </div>
          @endif
             </div>
-   
     <!-- FILTRES -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <div class="p-3" style="background: linear-gradient(135deg, #255156, #1e7c86);">
@@ -55,8 +51,8 @@
                     <div class="relative">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
                         <input type="text" id="searchGroupes" 
-                               placeholder="Rechercher..."
-                               class="w-full pl-8 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none transition-all bg-white">
+                            placeholder="Rechercher..."
+                            class="w-full pl-8 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none transition-all bg-white">
                     </div>
                 </div>
                 

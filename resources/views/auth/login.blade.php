@@ -1,15 +1,10 @@
 @extends('base')
-
 @section('title', 'Se connecter | Plateforme Multi-Acteurs')
-
 @section('content')
 <div class="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-[#E3FCFF] to-[#B3D2D4] font-sans" style="font-family: 'Montserrat', sans-serif;">
-
     <!-- PARTIE HAUTE : FORMULAIRE (mobile) / GAUCHE (desktop) -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-6 lg:py-0">
-        
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-[#255156]/20 my-4 lg:my-0">
-            
+    <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-6 lg:py-0">   
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-[#255156]/20 my-4 lg:my-0"> 
             <!-- Titre charté -->
             <div class="text-center mb-4 sm:mb-6">
                 <span class="text-xl sm:text-2xl font-bold tracking-tight text-[#173235] block">PLATEFORME</span>
@@ -17,18 +12,15 @@
                 <span class="text-lg sm:text-xl font-light tracking-wider text-[#2D6268] block ">VFF 06</span>
                 <div class="w-12 h-0.5 bg-[#255156] mx-auto mt-2 sm:mt-3"></div>
             </div>
-
             <h2 class="text-lg sm:text-xl font-semibold text-center text-[#173235] mb-4 sm:mb-6">
                 Se connecter
             </h2>
-
             @if ($errors->any())
                 <div class="mb-4 sm:mb-5 bg-[#E3FCFF] border-l-4 border-[#41797F] text-[#173235] px-3 sm:px-4 py-2 sm:py-3 rounded-r-lg text-xs sm:text-sm flex items-start">
                     <span class="mr-2 text-[#41797F]"><i class='bx bx-error'></i></span>
                     <span>{{ $errors->first() }}</span>
                 </div>
             @endif
-
             <form action="{{ route('login.submit') }}" method="POST" class="space-y-4 sm:space-y-5">
                 @csrf
                 <!-- Email -->
@@ -41,14 +33,13 @@
                             <span class="text-[#255156] text-sm"><i class='bx bx-envelope'></i></span>
                         </div>
                         <input type="email"
-                               name="email"
-                               required
-                               value="{{ old('email') }}"
-                               class="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#255156] focus:ring-2 focus:ring-[#255156]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
-                               placeholder="votre@email.fr">
+                            name="email"
+                            required
+                            value="{{ old('email') }}"
+                            class="w-full pl-10 pr-4 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#255156] focus:ring-2 focus:ring-[#255156]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
+                            placeholder="votre@email.fr">
                     </div>
                 </div>
-
                 <!-- Mot de passe -->
                 <div>
                     <label class="block text-xs font-semibold text-[#173235] uppercase tracking-wider mb-1">
@@ -59,11 +50,11 @@
                             <span class="text-[#255156] text-sm"><i class='bx bx-lock'></i></span>
                         </div>
                         <input type="password"
-                               name="password"
-                               id="password"
-                               required
-                               class="w-full pl-10 pr-12 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#255156] focus:ring-2 focus:ring-[#255156]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
-                               placeholder="••••••••">
+                            name="password"
+                            id="password"
+                            required
+                            class="w-full pl-10 pr-12 py-2 sm:py-2.5 rounded-lg border-2 border-[#B3D2D4] focus:border-[#255156] focus:ring-2 focus:ring-[#255156]/20 text-xs sm:text-sm text-[#173235] placeholder-[#8EC0C6] bg-white transition"
+                            placeholder="••••••••">
                         <button type="button"
                                 onclick="togglePassword()"
                                 class="absolute right-3 top-2 sm:top-2.5 text-[#255156] hover:text-[#255156] transition">
@@ -72,7 +63,7 @@
                     </div>
                     <div class="mt-1 sm:mt-2 text-right">
                         <a href="{{ route('password.request') }}"
-                           class="text-xs text-[#41797F] hover:text-[#255156] hover:underline font-medium">
+                        class="text-xs text-[#41797F] hover:text-[#255156] hover:underline font-medium">
                             Mot de passe oublié ?
                         </a>
                     </div>
@@ -87,29 +78,26 @@
                 <div class="text-center text-xs text-[#2D6268] pt-3 sm:pt-4 border-t border-[#B3D2D4] mt-3 sm:mt-4">
                     Vous découvrez la Plateforme ?
                     <a href="{{ route('register') }}"
-                       class="text-[#255156] font-bold hover:underline ml-1">
+                    class="text-[#255156] font-bold hover:underline ml-1">
                         Créer un compte
                     </a>
                 </div>
             </form>
         </div>
     </div>
-
     <!-- PARTIE BASSE : IMAGE (mobile) / DROITE (desktop) -->
-    <div class="w-full lg:w-1/2 relative bg-gradient-to-br from-[#255156] to-[#173235] overflow-hidden min-h-[250px] sm:min-h-[300px] lg:min-h-0 flex items-center justify-center">
-        
+    <div class="w-full lg:w-1/2 relative bg-gradient-to-br from-[#255156] to-[#173235] overflow-hidden min-h-[250px] sm:min-h-[300px] lg:min-h-0 flex items-center justify-center"> 
         <!-- Éléments graphiques charte (cercles) -->
         <div class="absolute -top-20 -right-20 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-[#255156] opacity-20"></div>
         <div class="absolute -bottom-20 -left-20 w-64 sm:w-80 h-64 sm:h-80 rounded-full bg-[#2D6268] opacity-20"></div>
         <div class="absolute inset-0 opacity-10" 
-             style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 12px 12px sm:15px 15px;">
+            style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 12px 12px sm:15px 15px;">
         </div>
         
         <!-- Image en arrière-plan avec overlay -->
         <img src="{{ asset('img/1photo.png') }}" 
-             alt="Image connexion"
-             class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay">
-        
+            alt="Image connexion"
+            class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay">      
         <!-- Contenu texte par-dessus l'image -->
         <div class="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-0">
             <!-- Logo version blanche -->
@@ -118,15 +106,12 @@
                 <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">MULTI-ACTEURS</span>
                 <span class="text-lg sm:text-xl lg:text-2xl font-light tracking-wider block drop-shadow-lg">VIOLENCES FAITES AUX FEMMES 06</span>
             </div>
-            
             <!-- Message inspirant -->
             <div class="my-4 sm:my-6 lg:my-10 px-3 sm:px-6 max-w-6xl mx-auto">
-    
     <!-- Icône avec animation pulsante -->
     <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto rounded-full bg-gradient-to-br from-white/25 to-white/5 flex items-center justify-center mb-3 sm:mb-4 lg:mb-5 backdrop-blur-sm shadow-lg shadow-white/5 ring-1 ring-white/15 animate-pulse-slow">
         <span class="text-2xl sm:text-3xl lg:text-4xl">🤝</span>
     </div>
-
     <!-- Bloc titre avec espacement réduit -->
     <div class="text-center max-w-2xl mx-auto">
         <p class="text-[0.85rem] sm:text-sm lg:text-base font-light italic text-white/70 tracking-wide">
@@ -139,7 +124,6 @@
             et collaborative
         </p>
     </div>
-
     <!-- Séparateur minimal -->
     <div class="flex justify-center items-center gap-2 my-3 sm:my-4">
         <span class="h-px w-6 sm:w-10 bg-gradient-to-r from-transparent to-white/20"></span>
@@ -163,15 +147,9 @@
         <span class="block w-12 h-[2px] rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent"></span>
     </div>
 </div>
-
-
-            
-            <!-- Pictogrammes charte -->
-           
         </div>
     </div>
 </div>
-
 <!-- Script pour toggle password -->
 <script>
 function togglePassword() {
@@ -283,7 +261,6 @@ document.addEventListener('DOMContentLoaded', function() {
         animation: pulse-slow 3s ease-in-out infinite;
     }
 </style>
-
 <!-- Fallback Tailwind CDN si nécessaire -->
 <script src="https://cdn.tailwindcss.com"></script>
 @endsection

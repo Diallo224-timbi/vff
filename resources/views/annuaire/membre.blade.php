@@ -1,14 +1,10 @@
 @extends('base')
-
 @section('title', 'Annuaire des membres')
-
 @section('head')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 @endsection
-
 @section('content')
 <div class="vff-annuaire">
-
     {{-- ══════════ EN-TÊTE ══════════ --}}
     <div class="vff-ann-head">
         <div class="vff-ann-head-left">
@@ -42,7 +38,7 @@
             <div class="vff-ann-field vff-ann-field-search">
                 <i class='bx bx-search'></i>
                 <input type="text" id="search"
-                       placeholder="Rechercher par nom, email, fonction, structure, ville...">
+                    placeholder="Rechercher par nom, email, fonction, structure, ville...">
             </div>
 
             <div class="vff-ann-field">
@@ -86,16 +82,13 @@
     <div class="vff-ann-grid" id="members-container">
         @foreach($membres as $membre)
             <div class="vff-mcard"
-                 data-city="{{ strtolower($membre->structure->ville ?? '') }}"
-                 data-name="{{ strtolower($membre->prenom . ' ' . $membre->name) }}"
-                 data-email="{{ strtolower($membre->email) }}"
-                 data-structure="{{ strtolower($membre->structure->organisme->nom_organisme ?? '') }}">
-
+                data-city="{{ strtolower($membre->structure->ville ?? '') }}"
+                data-name="{{ strtolower($membre->prenom . ' ' . $membre->name) }}"
+                data-email="{{ strtolower($membre->email) }}"
+                data-structure="{{ strtolower($membre->structure->organisme->nom_organisme ?? '') }}">
                 {{-- Bandeau supérieur --}}
                 <div class="vff-mcard-top"></div>
-
                 <div class="vff-mcard-body">
-
                     {{-- En-tête --}}
                     <div class="vff-mcard-head">
                         <div class="vff-mcard-avatar">
@@ -109,7 +102,6 @@
                             </p>
                         </div>
                     </div>
-
                     {{-- Infos --}}
                     <div class="vff-mcard-info">
                         <div class="vff-mcard-line">
@@ -129,7 +121,7 @@
                                 <i class='bx bx-building'></i>
                             </span>
                             <span class="vff-mcard-line-txt vff-mcard-line-strong">
-                                {{ $membre->structure->organisme->nom_organisme ?? 'N/A' }}
+                                {{ $membre->structure->organisme->nom_organisme ?? 'Organisme non renseigné' }}
                             </span>
                         </div>
                         <div class="vff-mcard-line">
@@ -141,7 +133,6 @@
                             </span>
                         </div>
                     </div>
-
                     {{-- Footer --}}
                     <div class="vff-mcard-foot">
                         <div class="vff-mcard-badges">
@@ -161,7 +152,6 @@
             </div>
         @endforeach
     </div>
-
     {{-- ══════════ AUCUN RÉSULTAT ══════════ --}}
     <div id="no-results" class="vff-ann-empty" style="display:none;">
         <div class="vff-ann-empty-card">
@@ -173,7 +163,6 @@
             </button>
         </div>
     </div>
-
     {{-- ══════════ PAGINATION ══════════ --}}
     @if(method_exists($membres, 'links'))
         <div class="vff-ann-pagination">
@@ -181,7 +170,6 @@
         </div>
     @endif
 </div>
-
 {{-- ══════════════════════════════════════════════════════════════
      STYLE
 ══════════════════════════════════════════════════════════════ --}}

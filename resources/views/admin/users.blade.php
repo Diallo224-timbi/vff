@@ -246,9 +246,9 @@
                     <select name="role" id="editRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                         @if(auth()->user()->role === 'admin')
                          <option value="admin">Administrateur</option>
-                         <option value="moderateur">Modérateur organisme</option>
+                         <option value="moderateur">Responsable organisme</option>
                         @endif
-                         <option value="moderateur_classique">Modérateur structure</option>
+                         <option value="moderateur_classique">Responsable structure</option>
                          <option value="user">Utilisateur</option>
                     </select>
                 </div>

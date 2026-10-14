@@ -73,13 +73,17 @@ Route::get('/sitemap.xml', function () {
 // routes/web.php
 Route::middleware(['auth','admin'])->group(function () {
     // Routes pour les schémas
-    Route::get('/schemas', [SchemaController::class, 'index'])->name('schemas.index');
-    Route::get('/schemas/{id}', [SchemaController::class, 'show'])->name('schemas.show');
     Route::post('/schemas', [SchemaController::class, 'store'])->name('schemas.store');
     Route::delete('/schemas/{id}', [SchemaController::class, 'destroy'])->name('schemas.destroy');  
     // Routes API
     Route::get('/schemas/filter/{gt?}', [SchemaController::class, 'filterByGt'])->name('schemas.filter');
     Route::get('/schemas/counts', [SchemaController::class, 'getCounts'])->name('schemas.counts');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/schemas', [SchemaController::class, 'index'])->name('schemas.index');
+    Route::get('/schemas/{id}', [SchemaController::class, 'show'])->name('schemas.show');
+    Route::get('/schemas/download/{id}', [SchemaController::class, 'download'])->name('schemas.download');
 });
 // Route pour le tableau de bord général (accessible à tous les utilisateurs connectés)
 Route::get('/dashboardUser', [DashboardUserController::class, 'index'])
@@ -133,6 +137,8 @@ Route::middleware(['auth','organisme.access'])->group(function () {
     Route::put('/organismes/{id}', [OrganismeController::class, 'update'])->name('organismes.update');
     Route::delete('/organismes/{id}',[OrganismeController::class, 'destroy'])->name('organismes.destroy');
     Route::get('/organismes/{id}', [OrganismeController::class, 'show'])->name('organismes.show');
+    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
+    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
 });
 // Route pour le profil utilisateur
 Route::middleware(['auth'])->group(function () {
@@ -174,14 +180,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-    Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
-    Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
 });
 // Routes pour la gestion des structures
 Route::middleware(['auth','structure.access'])->group(function () {
     Route::get('/structures', [StructureController::class, 'index'])->name('structures.index');
-    //Route::get('/structures/create', [StructureController::class, 'create'])->name('structures.create');
-    //Route::post('/structures', [StructureController::class, 'store'])->name('structures.store');
     Route::get('/structures/{structure}/edit', [StructureController::class, 'edit'])->name('structures.edit');
     Route::put('/structures/{structure}', [StructureController::class, 'update'])->name('structures.update');
     Route::delete('/structures/{structure}', [StructureController::class, 'destroy'])->name('structures.destroy');

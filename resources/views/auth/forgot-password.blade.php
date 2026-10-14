@@ -1,15 +1,10 @@
 @extends("base")
-
 @section("title", "Mot de passe oublié")
-
 @section("content")
-
 <div class="min-h-[calc(100vh-200px)] flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md">
-        
+    <div class="w-full max-w-md">       
         <!-- Carte principale -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-10 border border-gray-100">
-            
+        <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-10 border border-gray-100">            
             <!-- Icône et titre -->
             <div class="text-center mb-8">
                 <div class="w-16 h-16 mx-auto rounded-full bg-[#4fd1d9]/10 flex items-center justify-center mb-4">
@@ -24,7 +19,6 @@
                     Entrez votre email pour recevoir un lien de réinitialisation
                 </p>
             </div>
-
             <!-- Messages de statut -->
             @if(session('success'))
                 <div class="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm flex items-start gap-3">
@@ -41,11 +35,9 @@
                     <span>{{ session('error') }}</span>
                 </div>
             @endif
-
             <!-- Formulaire -->
             <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
                 @csrf
-
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">
                         Adresse email
@@ -76,7 +68,6 @@
                         </p>
                     @enderror
                 </div>
-
                 <button 
                     type="submit" 
                     class="w-full py-3.5 px-4 bg-gradient-to-r from-[#4fd1d9] to-[#255156] hover:from-[#5dd9e0] hover:to-[#2d6a6f] text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#4fd1d9]/25 flex items-center justify-center gap-2"
@@ -87,7 +78,6 @@
                     Envoyer le lien
                 </button>
             </form>
-
             <!-- Lien de retour -->
             <div class="mt-6 text-center">
                 <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-[#255156] transition-colors duration-200 inline-flex items-center gap-2">
@@ -97,16 +87,13 @@
                     Retour à la connexion
                 </a>
             </div>
-
         </div>
-
         <!-- Footer subtil -->
         <p class="text-center text-gray-400 text-xs mt-6">
             Plateforme Multi-Acteurs VFF 06 · Alpes-Maritimes
         </p>
     </div>
 </div>
-
 <style>
     /* Animation douce au chargement */
     .max-w-md {
@@ -123,7 +110,6 @@
             transform: translateY(0);
         }
     }
-
     /* Amélioration de l'autofill */
     input:-webkit-autofill {
         -webkit-box-shadow: 0 0 0 30px #f9fafb inset !important;

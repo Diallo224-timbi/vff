@@ -1,8 +1,6 @@
-{{-- resources/views/schemas/index.blade.php --}}
 @extends('base')
 @section('title', 'Schéma violences - Gestion des GT')
 @section('content')
-
 <div class="container-fluid px-4 mt-3">
     <div class="row">
         <div class="col-12">
@@ -23,7 +21,6 @@
                     </a>
                 </div>
             </div>
-
             <!-- ============ MESSAGES DE SUCCÈS / ERREUR ============ -->
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show shadow-sm mb-3 py-2" role="alert" style="border-left: 5px solid #28a745; border-radius: 10px; background: #f0fff4; font-size: 0.85rem;">
@@ -37,7 +34,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3 py-2" role="alert" style="border-left: 5px solid #dc3545; border-radius: 10px; background: #fff5f5; font-size: 0.85rem;">
                     <div class="d-flex align-items-center">
@@ -50,7 +46,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-
             @if($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3 py-2" role="alert" style="border-left: 5px solid #dc3545; border-radius: 10px; background: #fff5f5; font-size: 0.85rem;">
                     <div class="d-flex align-items-start">
@@ -68,7 +63,6 @@
                 </div>
             @endif
             <!-- ============================================= -->
-
             <!-- Vue principale -->
             <div class="row g-3">
                 <!-- Colonne de gauche : Arborescence -->
@@ -82,7 +76,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Colonne de droite : Contenu -->
                 <div class="col-lg-8 col-xl-9">
                     <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
@@ -118,7 +111,6 @@
                                     <span id="visibleSchemasCount">0</span> documents
                                 </div>
                             </div>
-
                             <!-- Zone de contenu -->
                             <div id="schemasContent" style="min-height: 380px;">
                                 <div class="text-center py-5 text-muted">
