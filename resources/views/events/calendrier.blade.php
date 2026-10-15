@@ -1,7 +1,6 @@
 @extends('base')
 @section('title', 'Calendrier des événements')
 @section('content')
-
 <!-- En-tête -->
 <div class="container-fluid py-0">
     <div class="row mb-2">
@@ -20,14 +19,13 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('events.index') }}" class="btn btn-outline-primary rounded-pill px-3 shadow-sm">
+                    <a href="{{ route('events.index') }}" class="btn btn-outline-primary rounded-pill px-3 shadow-sm" title="retour à la vue liste pour ajouter un nouveau événement">
                         <i class="fas fa-list me-2"></i>Vue liste
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Légende -->
     <div class="row mb-2">
         <div class="col-12">
@@ -75,7 +73,6 @@
             </div>
         </div>
     </div>
-
     <!-- Calendrier -->
     <div class="row">
         <div class="col-12">
@@ -87,7 +84,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal Détails -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -110,7 +106,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal Notification -->
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -126,17 +121,14 @@
         </div>
     </div>
 </div>
-
 <!-- Bibliothèques -->
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales/fr.js'></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var events = @json($events);
     console.log('Événements:', events);
-
     // Fonction couleur
     function getEventColor(type) {
         const colors = {
@@ -147,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         return colors[type] || '#6b7280';
     }
-
     // Fonction pour formater les dates
     function formatDate(dateStr) {
         if (!dateStr) return '';
@@ -160,38 +151,45 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit'
         });
     }
-
+    // Fonction pour tronquer un texte
+    function truncateText(text, maxLength = 50) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+    // Fonction pour échapper le HTML (sécurité)
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
     // Calendrier
     var calendarEl = document.getElementById('calendar');
     window.calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth',
         locale: 'fr',
-        timeZone: 'local',
-        
+        timeZone: 'local',     
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,listWeek'
-        },
-        
+        },    
         buttonText: {
             today: "Aujourd'hui",
             month: 'Mois',
             week: 'Semaine',
             list: 'Liste'
         },
-        
         eventTimeFormat: {
             hour: '2-digit',
             minute: '2-digit',
             hour12: false
         },
-        
         displayEventTime: true,
         displayEventEnd: true,
         allDayText: 'Toute la journée',
         noEventsText: 'Aucun événement',
-        
         events: events.map(event => ({
             id: event.id,
             title: event.title,
@@ -212,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 cree_par: event.cree_par_nom || 'Inconnu'
             }
         })),
-        
         eventDidMount: function(info) {
             // Tooltip
             const tooltipContent = `
@@ -220,8 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <small>${info.event.extendedProps.type || 'Événement'}</small><br>
                 ${info.event.extendedProps.location ? `<small>📍 ${info.event.extendedProps.location}</small><br>` : ''}
                 <small>🕐 ${info.event.startStr}</small>
-            `;
-            
+            `; 
             new bootstrap.Tooltip(info.el, {
                 title: tooltipContent,
                 html: true,
@@ -230,15 +226,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 container: 'body'
             });
         },
-        
         eventClick: function(info) {
             showEventModal(info.event);
             info.jsEvent.preventDefault();
         }
     });
-
     calendar.render();
-
     // === MODALE DÉTAILS ===
     function showEventModal(event) {
         const modal = new bootstrap.Modal(document.getElementById('eventModal'));
@@ -249,8 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'atelier': 'bg-teal-100 text-teal-700',
             'autre': 'bg-gray-100 text-gray-700'
         };
-        const typeColor = typeColors[event.extendedProps.type] || typeColors['autre'];
-        
+        const typeColor = typeColors[event.extendedProps.type] || typeColors['autre'];             
         // Statut
         const now = new Date();
         const start = new Date(event.start);
@@ -266,22 +258,19 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             statutHtml = 'À venir';
             statutColor = 'bg-primary';
-        }
-        
+        }        
         // Pièce jointe
         let pieceJointeHtml = '';
         if (event.extendedProps.piece_jointe) {
             const fileName = event.extendedProps.piece_jointe_nom || 'Fichier joint';
             const fileUrl = `/storage/${event.extendedProps.piece_jointe}`;
-            // Déterminer l'icône selon l'extension
             const ext = fileName.split('.').pop().toLowerCase();
             let icon = 'fa-file';
             if (['pdf'].includes(ext)) icon = 'fa-file-pdf';
             else if (['doc', 'docx'].includes(ext)) icon = 'fa-file-word';
             else if (['xls', 'xlsx'].includes(ext)) icon = 'fa-file-excel';
             else if (['png', 'jpg', 'jpeg', 'gif'].includes(ext)) icon = 'fa-file-image';
-            else if (['zip', 'rar'].includes(ext)) icon = 'fa-file-archive';
-            
+            else if (['zip', 'rar'].includes(ext)) icon = 'fa-file-archive';    
             pieceJointeHtml = `
                 <div class="mt-3 p-3 rounded-3" style="background: rgba(1, 39, 37, 0.05);">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
@@ -298,12 +287,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             `;
-        }
-        
+        }      
+        // Préparer la description tronquée pour le champ Lieu
+        const fullDescription = event.extendedProps.description || '';
+        const truncatedDescription = truncateText(fullDescription, 50);
+        const escapedFullDescription = escapeHtml(fullDescription);
+        const escapedTruncatedDescription = escapeHtml(truncatedDescription);
         document.getElementById('eventModalTitle').innerHTML = `
             <i class="fas fa-calendar-alt me-2"></i> ${event.title}
         `;
-        
         document.getElementById('eventModalBody').innerHTML = `
             <div class="row g-3">
                 <div class="col-12">
@@ -312,8 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="d-flex flex-wrap align-items-center gap-2 mb-3 pb-2 border-bottom" style="border-color: ${getEventColor(event.extendedProps.type)}20 !important;">
                             <span class="badge ${typeColor} px-3 py-2">${event.extendedProps.type || 'Non défini'}</span>
                             <span class="badge ${statutColor} px-3 py-2">${statutHtml}</span>
-                        </div>
-                        
+                        </div>  
                         <!-- Dates -->
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-md-6">
@@ -328,19 +319,27 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <strong class="text-dark">${formatDate(event.end)}</strong>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Informations -->
+                        </div> 
+                        <!-- Informations : Lieu + Description tronquée côte à côte -->
                         <div class="row g-3">
                             ${event.extendedProps.location ? `
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-12">
                                     <div class="p-2 rounded-3" style="background: rgba(0,0,0,0.03);">
                                         <small class="text-muted d-block">📍 Lieu</small>
                                         <strong class="text-dark">${event.extendedProps.location}</strong>
                                     </div>
                                 </div>
-                            ` : ''}
-                            
+                            ` : ''}   
+                            ${fullDescription ? `
+                                <div class="col-12 col-md-6">
+                                    <div class="p-2 rounded-3" style="background: rgba(0,0,0,0.03);">
+                                        <small class="text-muted d-block">📝 Description</small>
+                                        <span class="text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="${escapedFullDescription}">
+                                            ${escapedTruncatedDescription}
+                                        </span>
+                                    </div>
+                                </div>
+                            ` : ''}  
                             ${event.extendedProps.organisateur ? `
                                 <div class="col-12 col-md-6">
                                     <div class="p-2 rounded-3" style="background: rgba(0,0,0,0.03);">
@@ -348,8 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <strong class="text-dark">${event.extendedProps.organisateur}</strong>
                                     </div>
                                 </div>
-                            ` : ''}
-                            
+                            ` : ''}  
                             ${event.extendedProps.nombre_places ? `
                                 <div class="col-12 col-md-6">
                                     <div class="p-2 rounded-3" style="background: rgba(0,0,0,0.03);">
@@ -360,11 +358,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             ` : ''}
                         </div>
                         
-                        <!-- Description -->
-                        ${event.extendedProps.description ? `
+                        <!-- Description complète -->
+                        ${fullDescription ? `
                             <div class="mt-3 p-3 rounded-3" style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05);">
-                                <small class="text-muted d-block mb-1">📝 Description</small>
-                                <p class="mb-0 text-dark" style="white-space: pre-line;">${event.extendedProps.description}</p>
+                                <small class="text-muted d-block mb-1">📝 Description complète</small>
+                                <p class="mb-0 text-dark" style="white-space: pre-line;">${fullDescription}</p>
                             </div>
                         ` : ''}
                         
@@ -383,6 +381,16 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         modal.show();
+        
+        // Initialiser les tooltips après l'ouverture de la modale
+        setTimeout(() => {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('#eventModalBody [data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    container: 'body'
+                });
+            });
+        }, 100);
     }
 
     // === FILTRES ===
@@ -527,6 +535,29 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 .modal-footer {
     padding: 1rem 1.5rem;
+}
+
+/* Tooltip personnalisé */
+.tooltip-inner {
+    max-width: 350px;
+    text-align: left;
+    padding: 8px 12px;
+    background-color: #1f2937;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: #1f2937;
+}
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: #1f2937;
+}
+.tooltip.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: #1f2937;
+}
+.tooltip.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: #1f2937;
 }
 
 /* Responsive */

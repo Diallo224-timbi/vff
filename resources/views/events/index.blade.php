@@ -209,116 +209,123 @@
 </div>
 
 <!-- ============================================ -->
-<!-- MODALE SHOW (AFFICHAGE) -->
+<!-- MODALE SHOW (AFFICHAGE) - CENTRÉE FORCÉE -->
 <!-- ============================================ -->
-<div id="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 overflow-y-auto" style="display: none;">
-    <div class="flex items-center justify-center min-h-screen p-4">
+<div id="showModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); overflow-y: auto;">
+    <!-- Conteneur de centrage -->
+    <div style="display: flex !important; align-items: center !important; justify-content: center !important; min-height: 100vh !important; width: 100% !important; padding: 16px !important; margin: 0 !important;">
         <div id="showModalBox"
-            class="bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden resize
-                    w-[600px] min-w-[380px] max-w-[95vw]
-                    h-auto min-h-[400px] max-h-[85vh] my-auto">
+            style="background: #fff; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column; overflow: hidden; resize: both; width: 520px; min-width: 360px; max-width: 95vw; max-height: 85vh; margin: 0 auto;">
 
-            <!-- Header : Type + Titre + Fermer -->
-            <div class="px-6 py-5 flex justify-between items-start gap-4 shrink-0
-                        bg-gradient-to-r from-[#255156] to-[#1a3a3f]">
-                <div class="flex-1 min-w-0">
+            <!-- Header compact -->
+            <div style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0; border-bottom: 1px solid #e5e7eb;">
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
                     <span id="show_type"
-                        class="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2
-                        bg-white/20 text-white"></span>
-                    <h2 id="show_titre" class="text-lg font-bold text-white leading-snug break-words"></h2>
+                        style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: #f3f4f6; color: #374151;"></span>
+                    <h2 id="show_titre" style="font-size: 14px; font-weight: 600; color: #1f2937; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></h2>
                 </div>
                 <button type="button" onclick="closeShowModal()"
-                        class="text-white/70 hover:text-white hover:bg-white/10 rounded-lg p-1.5 transition shrink-0 mt-0.5">
-                    <i class="fas fa-times text-lg"></i>
+                        style="color: #9ca3af; background: none; border: none; cursor: pointer; padding: 4px; border-radius: 4px; flex-shrink: 0;">
+                    <i class="fas fa-times" style="font-size: 14px;"></i>
                 </button>
             </div>
             
-            <!-- Corps -->
-            <div class="p-6 space-y-5 flex-1 min-h-0 overflow-y-auto">
+            <!-- Corps compact -->
+            <div style="padding: 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; overflow-y: auto;">
+                
                 <!-- Dates -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-3.5">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <i class="fas fa-play text-blue-500 text-[11px]"></i>
-                            <p class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Date de début</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <div style="width: 28px; height: 28px; border-radius: 6px; background: #eff6ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                            <i class="fas fa-play" style="color: #3b82f6; font-size: 10px;"></i>
                         </div>
-                        <p id="show_date_debut" class="text-base font-bold text-gray-800 leading-tight break-words"></p>
+                        <div style="min-width: 0;">
+                            <p style="font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px 0;">Début</p>
+                            <p id="show_date_debut" style="font-size: 12px; font-weight: 600; color: #1f2937; margin: 0; line-height: 1.3;"></p>
+                        </div>
                     </div>
-                    <div class="bg-red-50/50 border border-red-100 rounded-xl p-3.5">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <i class="fas fa-stop text-red-500 text-[11px]"></i>
-                            <p class="text-[10px] font-bold text-red-600 uppercase tracking-wider">Date de fin</p>
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <div style="width: 28px; height: 28px; border-radius: 6px; background: #fef2f2; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                            <i class="fas fa-stop" style="color: #ef4444; font-size: 10px;"></i>
                         </div>
-                        <p id="show_date_fin" class="text-base font-bold text-gray-800 leading-tight break-words"></p>
-                    </div>
-                    <!-- description -->
-                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i class="fas fa-align-left text-gray-500 text-[12px]"></i>
-                            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Description</p>
+                        <div style="min-width: 0;">
+                            <p style="font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px 0;">Fin</p>
+                            <p id="show_date_fin" style="font-size: 12px; font-weight: 600; color: #1f2937; margin: 0; line-height: 1.3;"></p>
                         </div>
-                        <p id="show_description" class="text-sm text-gray-800 leading-relaxed"></p>
                     </div>
                 </div>
+
+                <div style="border-top: 1px solid #f3f4f6;"></div>
                 
                 <!-- Lieu + Organisateur -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-orange-50/50 border border-orange-100 rounded-xl p-3.5">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <i class="fas fa-map-marker-alt text-orange-500 text-[12px]"></i>
-                            <p class="text-[10px] font-bold text-orange-600 uppercase tracking-wider">Lieu</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <div style="width: 28px; height: 28px; border-radius: 6px; background: #fff7ed; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                            <i class="fas fa-map-marker-alt" style="color: #f97316; font-size: 10px;"></i>
                         </div>
-                        <p id="show_lieu" class="text-sm font-semibold text-gray-800 leading-snug break-words"></p>
+                        <div style="min-width: 0;">
+                            <p style="font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px 0;">Lieu</p>
+                            <p id="show_lieu" style="font-size: 12px; font-weight: 600; color: #1f2937; margin: 0; line-height: 1.3; word-wrap: break-word;"></p>
+                        </div>
                     </div>
-                    <div class="bg-purple-50/50 border border-purple-100 rounded-xl p-3.5">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <i class="fas fa-user text-purple-500 text-[12px]"></i>
-                            <p class="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Organisateur</p>
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <div style="width: 28px; height: 28px; border-radius: 6px; background: #faf5ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                            <i class="fas fa-user" style="color: #a855f7; font-size: 10px;"></i>
                         </div>
-                        <p id="show_organisateur" class="text-sm font-semibold text-gray-800 leading-snug break-words"></p>
+                        <div style="min-width: 0;">
+                            <p style="font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px 0;">Organisateur</p>
+                            <p id="show_organisateur" style="font-size: 12px; font-weight: 600; color: #1f2937; margin: 0; line-height: 1.3; word-wrap: break-word;"></p>
+                        </div>
                     </div>
                 </div>
+
+                <div style="border-top: 1px solid #f3f4f6;"></div>
                 
                 <!-- Description -->
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="fas fa-align-left text-gray-500 text-[12px]"></i>
-                        <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Description</p>
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <div style="width: 28px; height: 28px; border-radius: 6px; background: #f9fafb; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+                        <i class="fas fa-align-left" style="color: #6b7280; font-size: 10px;"></i>
                     </div>
-                    <div class="text-sm text-gray-700 whitespace-pre-line leading-relaxed break-words"
-                        id="show_description">
+                    <div style="min-width: 0; flex: 1;">
+                        <p style="font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 4px 0;">Description</p>
+                        <div id="show_description" style="font-size: 12px; color: #374151; line-height: 1.6; white-space: pre-line; word-wrap: break-word;"></div>
                     </div>
                 </div>
                 
                 <!-- Pièce jointe -->
-                <div id="show_piece_jointe_wrapper" class="hidden bg-emerald-50/50 border border-emerald-100 rounded-xl p-3.5">
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <i class="fas fa-paperclip text-emerald-500 text-[12px]"></i>
-                        <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Pièce jointe</p>
+                <div id="show_piece_jointe_wrapper" style="display: none;">
+                    <div style="border-top: 1px solid #f3f4f6; padding-top: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 28px; height: 28px; border-radius: 6px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-paperclip" style="color: #10b981; font-size: 10px;"></i>
+                            </div>
+                            <div style="min-width: 0; flex: 1;">
+                                <p style="font-size: 10px; font-weight: 500; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 2px 0;">Pièce jointe</p>
+                                <a id="show_piece_jointe" href="#" target="_blank"
+                                   style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #047857; text-decoration: none;">
+                                    <i class="fas fa-download" style="font-size: 10px;"></i>
+                                    <span>Télécharger</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <a id="show_piece_jointe" href="#" target="_blank"
-                       class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">
-                        <i class="fas fa-download"></i>
-                        <span>Télécharger la pièce jointe</span>
-                    </a>
                 </div>
             </div>
             
-            <!-- Footer -->
-            <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0">
-                <div class="flex items-center gap-4 text-[11px] text-gray-500 min-w-0">
-                    <span class="flex items-center gap-1.5 truncate">
-                        <i class="fas fa-user-circle text-gray-400"></i>
-                        <span id="show_cree_par" class="font-medium text-gray-700 truncate"></span>
+            <!-- Footer compact -->
+            <div style="padding: 10px 20px; background: #f9fafb; border-top: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 12px; font-size: 10px; color: #6b7280; min-width: 0;">
+                    <span style="display: flex; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <i class="fas fa-user-circle" style="color: #9ca3af;"></i>
+                        <span id="show_cree_par" style="font-weight: 500; color: #4b5563;"></span>
                     </span>
-                    <span class="flex items-center gap-1.5 shrink-0">
-                        <i class="far fa-calendar-alt text-gray-400"></i>
-                        <span id="show_created_at" class="font-medium text-gray-700"></span>
+                    <span style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+                        <i class="far fa-calendar-alt" style="color: #9ca3af;"></i>
+                        <span id="show_created_at" style="font-weight: 500; color: #4b5563;"></span>
                     </span>
                 </div>
                 <button type="button" onclick="closeShowModal()"
-                        class="px-4 py-2 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f]
-                            text-xs font-semibold transition shrink-0">
+                        style="padding: 6px 12px; background: #255156; color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; flex-shrink: 0;">
                     Fermer
                 </button>
             </div>
@@ -327,175 +334,175 @@
 </div>
 
 <!-- ============================================ -->
-<!-- MODALE CRÉATION -->
+<!-- MODALE CRÉATION - CENTRÉE FORCÉE -->
 <!-- ============================================ -->
-<div id="createModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" style="display: none;">
-    <div class="bg-white rounded-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="p-5">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-gray-800">
-                    <i class="fas fa-plus-circle text-[#255156] mr-2"></i>Nouvel événement
-                </h3>
-                <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600 text-xl">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form action="{{ route('events.store') }}" method="POST" id="createForm" enctype="multipart/form-data">
-                @csrf
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
-                        <input type="text" name="titre" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea name="description" rows="3" class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent"></textarea>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Début *</label>
-                            <input type="datetime-local" name="date_debut" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Fin *</label>
-                            <input type="datetime-local" name="date_fin" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
-                        <select name="type" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                            <option value="réunion">Réunion</option>
-                            <option value="formation">Formation</option>
-                            <option value="atelier">Atelier</option>
-                            <option value="autre">Autre</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
-                            <input type="text" name="lieu" class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Organisateur</label>
-                            <input type="text" name="organisateur" class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pièce jointe</label>
-                        <input type="file" name="piece_jointe" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                            class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
-                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, PNG, JPG (Max 5MB)</p>
-                    </div>
-                </div>
-                <div class="flex flex-col sm:flex-row justify-end gap-2 mt-4 pt-3 border-t">
-                    <button type="button" onclick="closeCreateModal()" class="px-3 py-1.5 text-gray-600 border rounded-lg hover:bg-gray-50 text-sm order-2 sm:order-1">Annuler</button>
-                    <button type="submit" class="px-3 py-1.5 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f] text-sm flex items-center justify-center gap-2 order-1 sm:order-2">
-                        <i class="fas fa-save"></i>Créer
+<div id="createModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); overflow-y: auto;">
+    <div style="display: flex !important; align-items: center !important; justify-content: center !important; min-height: 100vh !important; width: 100% !important; padding: 16px !important; margin: 0 !important;">
+        <div style="background: white; border-radius: 16px; width: 100%; max-width: 512px; margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); max-height: 95vh; display: flex; flex-direction: column;">
+            <div style="padding: 16px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0;">
+                    <h3 style="font-size: 18px; font-weight: 700; color: #1f2937; margin: 0;">
+                        <i class="fas fa-plus-circle" style="color: #255156; margin-right: 8px;"></i>Nouvel événement
+                    </h3>
+                    <button onclick="closeCreateModal()" style="color: #9ca3af; background: none; border: none; cursor: pointer; font-size: 20px;">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
-            </form>
+                <form action="{{ route('events.store') }}" method="POST" id="createForm" enctype="multipart/form-data" style="display: flex; flex-direction: column; min-height: 0;">
+                    @csrf
+                    <div style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 4px;">
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Titre *</label>
+                            <input type="text" name="titre" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Description</label>
+                            <textarea name="description" rows="2" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none; resize: none;"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Début *</label>
+                                <input type="datetime-local" name="date_debut" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Fin *</label>
+                                <input type="datetime-local" name="date_fin" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Type *</label>
+                            <select name="type" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                                <option value="réunion">Réunion</option>
+                                <option value="formation">Formation</option>
+                                <option value="atelier">Atelier</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Lieu</label>
+                                <input type="text" name="lieu" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Organisateur</label>
+                                <input type="text" name="organisateur" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: row; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; flex-shrink: 0;">
+                        <button type="button" onclick="closeCreateModal()" style="padding: 6px 12px; color: #4b5563; background: white; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; cursor: pointer;">Annuler</button>
+                        <button type="submit" style="padding: 6px 12px; background: #255156; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-save"></i>Créer
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- ============================================ -->
-<!-- MODALE ÉDITION -->
+<!-- MODALE ÉDITION - CENTRÉE FORCÉE -->
 <!-- ============================================ -->
-<div id="editModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" style="display: none;">
-    <div class="bg-white rounded-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="p-5">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-gray-800">
-                    <i class="fas fa-edit text-[#255156] mr-2"></i>Modifier l'événement
-                </h3>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 text-xl">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form id="editForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
-                        <input type="text" name="titre" id="edit_titre" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea name="description" id="edit_description" rows="3" class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent"></textarea>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Début *</label>
-                            <input type="datetime-local" name="date_debut" id="edit_date_debut" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Fin *</label>
-                            <input type="datetime-local" name="date_fin" id="edit_date_fin" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
-                        <select name="type" id="edit_type" required class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                            <option value="réunion">Réunion</option>
-                            <option value="formation">Formation</option>
-                            <option value="atelier">Atelier</option>
-                            <option value="autre">Autre</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
-                            <input type="text" name="lieu" id="edit_lieu" class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Organisateur</label>
-                            <input type="text" name="organisateur" id="edit_organisateur" class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pièce jointe</label>
-                        <input type="file" name="piece_jointe" id="edit_piece_jointe" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                            class="w-full border rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-[#255156] focus:border-transparent file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-[#255156] file:text-white hover:file:bg-[#1a3a3f]">
-                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX, PNG, JPG (Max 5MB) — Laisser vide pour conserver l'actuelle</p>
-                    </div>
-                </div>
-                <div class="flex flex-col sm:flex-row justify-end gap-2 mt-4 pt-3 border-t">
-                    <button type="button" onclick="closeEditModal()" class="px-3 py-1.5 text-gray-600 border rounded-lg hover:bg-gray-50 text-sm order-2 sm:order-1">Annuler</button>
-                    <button type="submit" class="px-3 py-1.5 bg-[#255156] text-white rounded-lg hover:bg-[#1a3a3f] text-sm flex items-center justify-center gap-2 order-1 sm:order-2">
-                        <i class="fas fa-save"></i>Mettre à jour
+<div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); overflow-y: auto;">
+    <div style="display: flex !important; align-items: center !important; justify-content: center !important; min-height: 100vh !important; width: 100% !important; padding: 16px !important; margin: 0 !important;">
+        <div style="background: white; border-radius: 16px; width: 100%; max-width: 512px; margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); max-height: 95vh; display: flex; flex-direction: column;">
+            <div style="padding: 16px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0;">
+                    <h3 style="font-size: 18px; font-weight: 700; color: #1f2937; margin: 0;">
+                        <i class="fas fa-edit" style="color: #255156; margin-right: 8px;"></i>Modifier l'événement
+                    </h3>
+                    <button onclick="closeEditModal()" style="color: #9ca3af; background: none; border: none; cursor: pointer; font-size: 20px;">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
-            </form>
+                <form id="editForm" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; min-height: 0;">
+                    @csrf
+                    @method('PUT')
+                    <div style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 4px;">
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Titre *</label>
+                            <input type="text" name="titre" id="edit_titre" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Description</label>
+                            <textarea name="description" id="edit_description" rows="2" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none; resize: none;"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Début *</label>
+                                <input type="datetime-local" name="date_debut" id="edit_date_debut" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Fin *</label>
+                                <input type="datetime-local" name="date_fin" id="edit_date_fin" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Type *</label>
+                            <select name="type" id="edit_type" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                                <option value="réunion">Réunion</option>
+                                <option value="formation">Formation</option>
+                                <option value="atelier">Atelier</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Lieu</label>
+                                <input type="text" name="lieu" id="edit_lieu" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Organisateur</label>
+                                <input type="text" name="organisateur" id="edit_organisateur" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Pièce jointe</label>
+                            <input type="file" name="piece_jointe" id="edit_piece_jointe" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                                style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                            <p style="font-size: 12px; color: #9ca3af; margin-top: 4px;">PDF, DOC, DOCX, PNG, JPG (Max 5MB) — Laisser vide pour conserver l'actuelle</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: row; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; flex-shrink: 0;">
+                        <button type="button" onclick="closeEditModal()" style="padding: 6px 12px; color: #4b5563; background: white; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; cursor: pointer;">Annuler</button>
+                        <button type="submit" style="padding: 6px 12px; background: #255156; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-save"></i>Mettre à jour
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- ============================================ -->
-<!-- MODALE SUPPRESSION -->
+<!-- MODALE SUPPRESSION - CENTRÉE FORCÉE -->
 <!-- ============================================ -->
-<div id="deleteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" style="display: none;">
-    <div class="bg-white rounded-2xl w-full max-w-md mx-auto shadow-2xl">
-        <div class="p-5 text-center">
-            <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <i class="fas fa-trash text-red-500 text-xl"></i>
-            </div>
-            <h3 class="text-lg font-bold text-gray-800 mb-2">Confirmer la suppression</h3>
-            <p class="text-gray-600 text-sm mb-4">
-                Êtes-vous sûr de vouloir supprimer l'événement <br>
-                <span id="delete_titre" class="font-semibold text-gray-800"></span> ?
-                <br><span class="text-xs text-red-500">Cette action est irréversible.</span>
-            </p>
-            <form id="deleteForm" method="POST">
-                @csrf
-                @method('DELETE')
-                <div class="flex flex-col sm:flex-row justify-center gap-3">
-                    <button type="button" onclick="closeDeleteModal()" class="px-4 py-1.5 text-gray-600 border rounded-lg hover:bg-gray-50 text-sm">Annuler</button>
-                    <button type="submit" class="px-4 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm flex items-center justify-center gap-2">
-                        <i class="fas fa-trash"></i>Supprimer
-                    </button>
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); overflow-y: auto;">
+    <div style="display: flex !important; align-items: center !important; justify-content: center !important; min-height: 100vh !important; width: 100% !important; padding: 16px !important; margin: 0 !important;">
+        <div style="background: white; border-radius: 16px; width: 100%; max-width: 448px; margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            <div style="padding: 16px; text-align: center;">
+                <div style="width: 56px; height: 56px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                    <i class="fas fa-trash" style="color: #ef4444; font-size: 20px;"></i>
                 </div>
-            </form>
+                <h3 style="font-size: 18px; font-weight: 700; color: #1f2937; margin: 0 0 8px 0;">Confirmer la suppression</h3>
+                <p style="color: #4b5563; font-size: 14px; margin-bottom: 16px;">
+                    Êtes-vous sûr de vouloir supprimer l'événement <br>
+                    <span id="delete_titre" style="font-weight: 600; color: #1f2937;"></span> ?
+                    <br><span style="font-size: 12px; color: #ef4444;">Cette action est irréversible.</span>
+                </p>
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <div style="display: flex; flex-direction: row; justify-content: center; gap: 12px;">
+                        <button type="button" onclick="closeDeleteModal()" style="padding: 6px 16px; color: #4b5563; background: white; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; cursor: pointer;">Annuler</button>
+                        <button type="submit" style="padding: 6px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-trash"></i>Supprimer
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -508,7 +515,30 @@
 #createModal, #editModal, #showModal, #deleteModal {
     animation: fadeIn 0.2s ease-in-out;
 }
-.modal-open { overflow: hidden; }
+.modal-open { overflow: hidden !important; }
+
+/* FORCE LE CENTRAGE ABSOLU */
+#createModal, #editModal, #showModal, #deleteModal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+}
+
+/* Force le conteneur interne à centrer */
+#createModal > div, #editModal > div, #showModal > div, #deleteModal > div {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
 
 #showModalBox {
     resize: both;
@@ -537,22 +567,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // === MODALE SHOW (AFFICHAGE) ===
 function openShowModal(eventId, eventData) {
-    // Titre
     document.getElementById('show_titre').textContent = eventData.titre || '';
 
-    // Description
     const descriptionEl = document.getElementById('show_description');
     if (eventData.description && eventData.description.trim() !== '') {
         descriptionEl.textContent = eventData.description;
-        descriptionEl.classList.remove('italic', 'text-gray-400');
-        descriptionEl.classList.add('text-gray-700');
+        descriptionEl.style.fontStyle = 'normal';
+        descriptionEl.style.color = '#374151';
     } else {
         descriptionEl.textContent = 'Aucune description fournie.';
-        descriptionEl.classList.add('italic', 'text-gray-400');
-        descriptionEl.classList.remove('text-gray-700');
+        descriptionEl.style.fontStyle = 'italic';
+        descriptionEl.style.color = '#9ca3af';
     }
 
-    // Dates
     document.getElementById('show_date_debut').textContent = eventData.date_debut || '';
     document.getElementById('show_date_fin').textContent = eventData.date_fin || '';
     document.getElementById('show_lieu').textContent = eventData.lieu || 'Non précisé';
@@ -560,35 +587,32 @@ function openShowModal(eventId, eventData) {
     document.getElementById('show_cree_par').textContent = eventData.cree_par || 'Inconnu';
     document.getElementById('show_created_at').textContent = eventData.created_at || '';
 
-    // Pièce jointe
     const pjWrapper = document.getElementById('show_piece_jointe_wrapper');
     const pjLink = document.getElementById('show_piece_jointe');
     if (eventData.piece_jointe) {
-        pjWrapper.classList.remove('hidden');
+        pjWrapper.style.display = 'block';
         pjLink.href = eventData.piece_jointe;
     } else {
-        pjWrapper.classList.add('hidden');
+        pjWrapper.style.display = 'none';
         pjLink.href = '#';
     }
 
-    // Badge Type avec couleur dynamique
     const typeBadge = document.getElementById('show_type');
     const type = (eventData.type || 'autre').toLowerCase();
     typeBadge.textContent = type;
 
     const typeColors = {
-        'réunion':   'bg-blue-500/30 text-white',
-        'formation': 'bg-emerald-500/30 text-white',
-        'atelier':   'bg-amber-500/30 text-white',
-        'autre':     'bg-gray-500/30 text-white',
+        'réunion':   { bg: '#eff6ff', color: '#1d4ed8' },
+        'formation': { bg: '#ecfdf5', color: '#047857' },
+        'atelier':   { bg: '#fffbeb', color: '#b45309' },
+        'autre':     { bg: '#f3f4f6', color: '#374151' },
     };
-    typeBadge.className = 'inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2 '
-                        + (typeColors[type] || typeColors['autre']);
+    const colors = typeColors[type] || typeColors['autre'];
+    typeBadge.style.background = colors.bg;
+    typeBadge.style.color = colors.color;
 
-    // Reset taille
     const box = document.getElementById('showModalBox');
-    box.style.width = '600px';
-    box.style.height = 'auto';
+    box.style.width = '520px';
     box.style.maxHeight = '85vh';
 
     document.getElementById('showModal').style.display = 'block';
@@ -602,7 +626,7 @@ function closeShowModal() {
 
 // === MODALE CRÉATION ===
 function openCreateModal() {
-    document.getElementById('createModal').style.display = 'flex';
+    document.getElementById('createModal').style.display = 'block';
     document.body.classList.add('modal-open');
 }
 function closeCreateModal() {
@@ -624,10 +648,9 @@ function openEditModal(eventId, eventData, updateUrl) {
     const form = document.getElementById('editForm');
     form.action = updateUrl || `/events/${eventId}`;
     
-    // Reset du champ fichier
     document.getElementById('edit_piece_jointe').value = '';
     
-    document.getElementById('editModal').style.display = 'flex';
+    document.getElementById('editModal').style.display = 'block';
     document.body.classList.add('modal-open');
 }
 function closeEditModal() {
@@ -639,7 +662,7 @@ function closeEditModal() {
 function openDeleteModal(eventId, titre, deleteUrl) {
     document.getElementById('delete_titre').textContent = titre || '';
     document.getElementById('deleteForm').action = deleteUrl || `/events/${eventId}`;
-    document.getElementById('deleteModal').style.display = 'flex';
+    document.getElementById('deleteModal').style.display = 'block';
     document.body.classList.add('modal-open');
 }
 function closeDeleteModal() {

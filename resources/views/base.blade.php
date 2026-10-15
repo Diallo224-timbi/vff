@@ -17,17 +17,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4Vl4F7+v1wZ0z+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
   <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- changement de vite pour O2switch -->
   <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
   <script src="{{ asset('build/assets/app.css') }}" defer></script>
-
   <style>
     /* ===== VARIABLES RESPONSIVES ===== */
     :root {
@@ -36,14 +32,12 @@
       --header-height: 70px;
       --drawer-width: 280px;
     }
-
     /* ===== RESET & BASE ===== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       font-family: 'Montserrat', sans-serif;
       background-color: #E9F7F6;
@@ -93,7 +87,6 @@
       color: white;
       text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
-
     /* ===== PROFIL DROPDOWN - À DROITE SUR MOBILE ===== */
     .profile-dropdown {
       position: relative;
@@ -101,7 +94,6 @@
       display: flex;
       align-items: center;
     }
-
     .profile-btn {
       display: flex;
       align-items: center;
@@ -504,7 +496,7 @@
           <i class='bx bx-user'></i>
           Profil
         </a>
-        <a href="/guide" class="dropdown-item">
+        <a href="{{ asset('doc/Tutoriel.pdf') }}" class="dropdown-item" download ="Tutoriel.pdf">
           <i class='bx bx-book-open'></i>
           Guide
         </a>
