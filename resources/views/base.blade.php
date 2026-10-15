@@ -47,7 +47,6 @@
       display: flex;
       flex-direction: column;
     }
-
     /* ===== LAYOUT PRINCIPAL ===== */
     .app-wrapper {
       display: flex;
@@ -56,7 +55,6 @@
       overflow: hidden;
       position: relative;
     }
-
     /* ===== NAVBAR RESPONSIVE ===== */
     .navbar {
       background-color: #1a3c40;
@@ -73,7 +71,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       border-bottom: 2px solid #0f2a2d;
     }
-
     .navbar-brand {
       display: flex;
       align-items: center;
