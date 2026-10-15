@@ -76,7 +76,6 @@
       align-items: center;
       gap: 1rem;
     }
-
     .logo-text {
       font-weight: 700;
       font-size: 1.25rem;
