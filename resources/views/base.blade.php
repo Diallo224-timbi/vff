@@ -440,22 +440,18 @@
         padding: 0 0.5rem;
       }
     }
-
     /* ===== SCROLLBAR PERSONNALISÉE ===== */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
-
     ::-webkit-scrollbar-track {
       background: rgba(0,0,0,0.05);
     }
-
     ::-webkit-scrollbar-thumb {
       background: rgba(45, 98, 104, 0.6);
       border-radius: 10px;
     }
-
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(45, 98, 104, 0.9);
     }
@@ -558,7 +554,6 @@
         </a>
         @endif
       </nav>
-
       <div class="sidebar-bottom">
         <div class="user-avatar">
           {{ strtoupper(substr(Auth::user()->prenom, 0, 1)) }}
@@ -680,11 +675,9 @@
             profileMenu.classList.remove('show');
           }
         }
-
         // 2. Fermeture de la sidebar si cliquée à l'extérieur
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('sidebarToggle');
-
         if (sidebar && toggleBtn) {
           const isExpanded = !sidebar.classList.contains('collapsed');
           // Si le menu est ouvert et le clic a lieu hors du menu et du bouton de bascule
@@ -694,7 +687,6 @@
           }
         }
       });
-
       // ===== TOUCHE ECHAP (ESCAPE) =====
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
@@ -707,7 +699,6 @@
           }
         }
       });
-
       // ===== RESPONSIVE: Fermer sidebar sur mobile quand un lien est cliqué =====
       if (window.innerWidth < 1024) {
         document.querySelectorAll('.sidebar-link').forEach(link => {
@@ -720,7 +711,6 @@
         });
       }
     });
-
     // ===== RESIZE HANDLER =====
     let resizeTimer;
     window.addEventListener('resize', function() {
@@ -738,7 +728,6 @@
       }, 250);
     });
   </script>
-
   @yield('scripts')
 </body>
 </html>

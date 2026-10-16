@@ -163,10 +163,10 @@
                                 <div class="col-md-3 col-lg-2">
                                     <label class="small fw-semibold text-secondary mb-1 d-none d-md-block">Affichage</label>
                                     <div class="btn-group btn-group-sm w-100" role="group" style="height: 32px;">
-                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('grid')" style="font-size: 0.8rem; white-space: nowrap; padding: 2px 6px;">
+                                        <button type="button" id="gridViewBtn" class="btn btn-outline-primary" onclick="setViewMode('grid')" style="font-size: 0.8rem; white-space: nowrap; padding: 2px 6px;">
                                             <i class="fas fa-th-large me-1"></i> Cartes
                                         </button>
-                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary" onclick="setViewMode('list')" style="font-size: 0.8rem; white-space: nowrap; padding: 2px 6px;">
+                                        <button type="button" id="listViewBtn" class="btn btn-outline-primary active" onclick="setViewMode('list')" style="font-size: 0.8rem; white-space: nowrap; padding: 2px 6px;">
                                             <i class="fas fa-list me-1"></i> Liste
                                         </button>
                                     </div>
@@ -206,8 +206,8 @@
                                      data-downloads="{{ $resource->download_count }}"
                                      data-title="{{ strtolower($resource->title) }}"
                                      data-description="{{ strtolower($resource->description ?? '') }}">
-                                    <!-- Mode Carte (par défaut) -->
-                                    <div class="card h-100 border-0 shadow-sm card-view" style="border-radius: 12px; overflow: hidden; transition: transform 0.2s;">
+                                    <!-- Mode Carte (caché par défaut) -->
+                                    <div class="card h-100 border-0 shadow-sm card-view" style="border-radius: 12px; overflow: hidden; transition: transform 0.2s; display: none;">
                                         <!-- Zone image / icône -->
                                         <div style="height: 95px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; position: relative;">
                                             @if($resource->is_image)
@@ -312,8 +312,8 @@
                                         </div>
                                     </div>
 
-                                    <!-- Mode Liste (caché par défaut) -->
-                                    <div class="list-view w-100" style="display: none;">
+                                    <!-- Mode Liste (affiché par défaut) -->
+                                    <div class="list-view w-100">
                                         <div class="d-flex align-items-center justify-content-between p-2 mb-1 rounded" style="background: #f8f9fa; border-left: 4px solid #145f68;">
                                             <div class="d-flex align-items-center gap-3 flex-wrap flex-grow-1">
                                                 <div style="width: 40px; height: 40px; background: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
@@ -729,7 +729,7 @@
     // ============================================
     let currentCategoryFilter = 'all';
     let currentSubCategoryFilter = null;
-    let currentViewMode = 'grid'; // 'grid' ou 'list'
+    let currentViewMode = 'list'; // 'grid' ou 'list' — LISTE PAR DÉFAUT
 
     // ============================================
     // TRI PAR DATE
@@ -1049,8 +1049,8 @@
         filterResourcesByCategory();
         sortResourcesByDate();
 
-        // Initialiser le mode d'affichage par défaut (grille)
-        setViewMode('grid');
+        // Initialiser le mode d'affichage par défaut (LISTE)
+        setViewMode('list');
 
         document.getElementById('resourceForm')?.addEventListener('submit', function(e) {
             if (selectedResourceType === 'file') {
