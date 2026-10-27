@@ -229,39 +229,26 @@ Route::middleware(['auth'])->group(function () {
     // Téléchargement
     Route::get('/ressources/{resource}/telecharger', [ResourceController::class, 'download'])->name('resources.download');
     // Routes pour la corbeille
-    Route::post('/resources/{id}/restore', [ResourceController::class, 'restore'])->name('resources.restore');
-    Route::delete('/resources/{id}/force-delete', [ResourceController::class, 'forceDelete'])->name('resources.force-delete');
-    //route vider la corbeille
-    Route::delete('/resources/trash/empty', [ResourceController::class, 'emptyTrash'])->name('resources.trash.empty');
 });
 //securite route corbeille
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/resources/trash', [ResourceController::class, 'trash'])->name('resources.trash');
-});
-// Route de test pour vérifier (à supprimer après test)
-Route::get('/test-routes', function() {
-    return [
-        'resources.index' => route('resources.index', [], false),
-        'resources.create' => route('resources.create', [], false),
-        'resources.store' => route('resources.store', [], false),
-    ];
+    Route::post('/resources/{id}/restore', [ResourceController::class, 'restore'])->name('resources.restore');
+    Route::delete('/resources/{id}/force-delete', [ResourceController::class, 'forceDelete'])->name('resources.force-delete');
+    //route vider la corbeille
+    Route::delete('/resources/trash/empty', [ResourceController::class, 'emptyTrash'])->name('resources.trash.empty');
 });
 //route pour events
 Route::middleware(['auth'])->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
-    // ROUTE SPÉCIFIQUE - À PLACER AVANT LES ROUTES AVEC PARAMÈTRES
     Route::get('/events/calendrier', [EventController::class, 'calendrier'])->name('events.calendrier'); 
-    // Routes avec paramètre {event} - À PLACER APRÈS
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
     Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
     // Routes d'inscription (avec paramètre aussi)
-    Route::post('/events/{event}/inscrire', [EventController::class, 'inscrire'])->name('events.inscrire'); 
-    Route::post('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
-    Route::delete('/events/{event}/desinscrire', [EventController::class, 'desinscrire'])->name('events.desinscrire');
 });
 // Routes pour le formulaire d'inscription avec génération de PDF
 Route::get('/formulaire/inscription', [StructureController::class, 'createPDF'])->name('auth.create');

@@ -4,26 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <title>@yield('title', 'Plateforme Multi Acteurs')</title>
-  <link rel="apple-touch-icon" type="image/x-icon" href="{{ asset('logo.png') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <!-- Fonts -->
+
+  <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-papKZ4I+Z2zZsmq4Vl4F7+v1wZ0z+RcbZbZP4qH+o1MR4uI/eY0+uhvC+F6sZw3e1l5zB+8uqEwb6zPR0bZklA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <!-- Tailwind CSS -->
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Tailwind CSS (temporaire) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- changement de vite pour O2switch -->
-  <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
-  <script src="{{ asset('build/assets/app.css') }}" defer></script>
+
+<!-- Assets application -->
+<link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
+<script src="{{ asset('build/assets/app.js') }}" defer></script>
   <style>
     /* ===== VARIABLES RESPONSIVES ===== */
     :root {

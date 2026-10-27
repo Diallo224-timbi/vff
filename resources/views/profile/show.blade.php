@@ -38,7 +38,7 @@
                             @if($user->role === 'admin')
                                 Administrateur
                             @elseif(str_contains($user->role, 'moderateur'))
-                                Modérateur {{ str_contains($user->role, 'classique') ? 'structure' : 'organisme' }}
+                                Responsable {{ str_contains($user->role, 'classique') ? 'structure' : 'organisme' }}
                             @else
                                 Utilisateur
                             @endif
@@ -177,6 +177,9 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Section structure en hidden -->
+                    <input type="hidden" name="id_structure" value="{{ $user->id_structure }}" >
+                    
                     <!-- section fonction professionnel, activation des notifications -->
                     <div class="mb-8">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -259,9 +262,9 @@
                             @if($user->role === 'admin')
                                 Administrateur
                             @elseif($user->role === 'moderateur')
-                                Modérateur organisme
+                                Responsable organisme
                             @elseif($user->role === 'moderateur_classique')
-                                Modérateur structure
+                                Responsable structure
                             @else
                                 Utilisateur
                             @endif
@@ -273,9 +276,9 @@
                             <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
                             <div>
                                 @if($user->role === 'moderateur')
-                                    <p class="text-sm text-blue-700 mb-1">En tant que modérateur organisme, vous avez accès à la gestion de votre organisme et de ses structures.</p>
+                                    <p class="text-sm text-blue-700 mb-1">En tant que responsable d'organisme, vous avez accès à la gestion de votre organisme et de ses structures.</p>
                                 @elseif($user->role === 'moderateur_classique')
-                                    <p class="text-sm text-blue-700 mb-1">En tant que modérateur structure, vous avez accès à la gestion de votre structure et de ses membres.</p>
+                                    <p class="text-sm text-blue-700 mb-1">En tant que responsable de structure, vous avez accès à la gestion de votre structure et de ses membres.</p>
                                 @else
                                     <p class="text-sm text-blue-700 mb-1">En tant qu'utilisateur, vous avez accès à votre profil et à vos informations personnelles.</p>
                                 @endif

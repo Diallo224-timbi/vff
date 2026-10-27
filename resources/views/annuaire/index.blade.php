@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', 'Annuaire des structures')
+@section('title', 'Espace des structures')
 @section('content')
 <div class="container-fluid px-0 py-0">
     <!-- Messages de succès -->
@@ -70,7 +70,7 @@
     <div class="sticky top-0 z-40 pt-4 pb-2 shadow-sm" style="background: linear-gradient(180deg, #E9F7F6 0%, #f5fafa 100%); margin-top: -1px;">
         <div class="mb-2 flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-bold" style="color: #255156;"><i class="bx bx-building"></i> Annuaire des structures</h1>
+                <h1 class="text-3xl font-bold" style="color: #255156;"><i class="bx bx-building"></i> Espace des structures</h1>
                 <small style="color: #4a7a7f;"><i class="bx bx-info-circle"></i>Accédez aux informations détaillées et réalisez les mises à jour autorisées selon vos droits d’accès.</small>
             </div>
         </div>       
@@ -104,7 +104,7 @@
                 onmouseover="this.style.background='#255156'; this.style.color='white';"
                 onmouseout="this.style.background='transparent'; this.style.color='#255156';">
                     <i class="fas fa-list"></i>
-                    Voir fiche structure
+                    Annuaire des structures
                 </a>
             </div>
             <div class="mt-4 md:mt-0">
@@ -114,7 +114,6 @@
                 </div>
             </div>
         </div> 
-        
         <!-- Section recherche et filtres -->
         <div class="rounded-xl p-3" style="background: white; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #dceeec;">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">

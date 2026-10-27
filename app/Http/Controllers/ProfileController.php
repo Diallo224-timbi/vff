@@ -19,7 +19,6 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
       
-
         // Validation des données
         $request->validate([
             'name' => 'required|string|max:255',
