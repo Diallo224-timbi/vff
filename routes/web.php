@@ -251,8 +251,6 @@ Route::middleware(['auth'])->group(function () {
     // Routes d'inscription (avec paramètre aussi)
 });
 // Routes pour le formulaire d'inscription avec génération de PDF
-Route::get('/formulaire/inscription', [StructureController::class, 'createPDF'])->name('auth.create');
-Route::post('/formulaire/inscription/pdf', [StructureController::class, 'generatePDF'])->name('auth.pdf');
 
 
 
