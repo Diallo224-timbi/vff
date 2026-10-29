@@ -35,53 +35,54 @@
                             </div>
                             <div class="col-md-7">
                                 <label for="nom" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-tag me-1" style="color: #255156;"></i>Nom de l'organisme *
+                                    <i class="fas fa-tag me-1" style="color: #255156;"></i>Nom de l'organisme <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-sm" id="nom" name="nom_organisme" 
-                                       placeholder="Ex: Association Culturelle" required>
+                                    placeholder="Ex: Association Culturelle" required>
                             </div>
                         </div>
 
                         <!-- Description -->
                         <div class="mb-3">
                             <label for="signification" class="form-label fw-semibold mb-1">
-                                <i class="fas fa-align-left me-1" style="color: #255156;"></i>Description *
+                                <i class="fas fa-align-left me-1" style="color: #255156;"></i>Description <span class="text-danger">*</span>
                             </label>
                             <textarea class="form-control form-control-sm" id="signification" name="signification" rows="3" 
-                                      placeholder="Décrivez la mission et les activités de l'organisme..." required></textarea>
+                                    placeholder="Décrivez la mission et les activités de l'organisme..." required></textarea>
                         </div>
 
-                        <!-- Adresse -->
-                        <div class="mb-3">
-                            <label for="adresse" class="form-label fw-semibold mb-1">
-                                <i class="fas fa-map-marker-alt me-1" style="color: #255156;"></i>Adresse *
-                            </label>
-                            <input type="text" class="form-control form-control-sm" id="adresse" name="adresse" 
-                                   placeholder="Numéro et nom de rue" required>
-                        </div>
-
-                        <!-- Ligne : Code postal + Ville + Site web -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-3">
-                                <label for="code_postal" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-hashtag me-1" style="color: #255156;"></i>Code postal *
+                        <!-- Adresse + Code postal sur une seule ligne -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label for="adresse" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-map-marker-alt me-1" style="color: #255156;"></i>Adresse <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control form-control-sm" id="code_postal" name="code_postal" 
-                                       placeholder="06000" maxlength="5" required>
+                                <input type="text" class="form-control form-control-sm" id="adresse" name="adresse" 
+                                    placeholder="Numéro et nom de rue" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="ville" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-city me-1" style="color: #255156;"></i>Ville *
+                                <label for="code_postal" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-hashtag me-1" style="color: #255156;"></i>Code postal <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control form-control-sm" id="ville" name="ville" 
-                                       placeholder="Nice" required>
+                                <input type="text" class="form-control form-control-sm" id="code_postal" name="code_postal" 
+                                    placeholder="06000" maxlength="5" required>
                             </div>
+                        </div>
+
+                        <!-- Ligne : Ville + Site web -->
+                        <div class="row g-3 mb-4">
                             <div class="col-md-5">
+                                <label for="ville" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-city me-1" style="color: #255156;"></i>Ville <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="ville" name="ville" placeholder="Nice" required>
+                            </div>
+                            <div class="col-md-7">
                                 <label for="site_web" class="form-label fw-semibold mb-1">
                                     <i class="fas fa-globe me-1" style="color: #255156;"></i>Site web
                                 </label>
                                 <input type="url" class="form-control form-control-sm" id="site_web" name="site_web" 
-                                       placeholder="https://exemple.org">
+                                    placeholder="https://exemple.org">
                             </div>
                         </div>
 

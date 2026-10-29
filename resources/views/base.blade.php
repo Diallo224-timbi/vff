@@ -493,18 +493,18 @@
       </button>
       <div id="profileMenu" class="dropdown-menu-custom text-[#076a75]">
         <a href="/profile" class="dropdown-item">
-          <i class='bx bx-user'></i>
+          <i class='bx bx-user' title="Accéder à votre profil"></i>
           Profil
         </a>
         <a href="{{ asset('doc/Tutoriel.pdf') }}" class="dropdown-item" download ="Tutoriel.pdf">
-          <i class='bx bx-book-open'></i>
+          <i class='bx bx-book-open' title="Télécharger le guide"></i>
           Guide
         </a>
         <div class="border-t border-gray-200 my-1"></div>
         <form method="POST" action="{{ route('logout') }}">
           @csrf
           <button type="submit" class="dropdown-item">
-            <i class='bx bx-log-out'></i>
+            <i class='bx bx-log-out' title="Quitter la plateforme"></i>
             Déconnexion
           </button>
         </form>
@@ -571,9 +571,9 @@
           @if(Auth::user()->role === 'admin')
             <div class="text-xs text-gray-200">Administrateur</div>
           @elseif(Auth::user()->role === 'moderateur_classique')
-            <div class="text-xs text-gray-200">Modérateur structure</div>
+            <div class="text-xs text-gray-200">Responsable structure</div>
           @elseif(Auth::user()->role === 'moderateur')
-            <div class="text-xs text-gray-200">Modérateur organisme</div>
+            <div class="text-xs text-gray-200">Responsable organisme</div>
           @endif
           <div class="text-xs text-gray-400">{{ Auth::user()->structure->organisme->nom_organisme ?? '-'}}</div>
         </div>

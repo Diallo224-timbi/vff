@@ -26,7 +26,7 @@
                 <!-- Email -->
                 <div>
                     <label class="block text-xs font-semibold text-[#173235] uppercase tracking-wider mb-1">
-                        Adresse e-mail
+                        Adresse e-mail <span class="text-[#ff0909]">*</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -43,7 +43,7 @@
                 <!-- Mot de passe -->
                 <div>
                     <label class="block text-xs font-semibold text-[#173235] uppercase tracking-wider mb-1">
-                        Mot de passe
+                        Mot de passe <span class="text-[#ff0909]">*</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

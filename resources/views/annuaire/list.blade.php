@@ -12,14 +12,15 @@
             </button>
         </div>
     @endif
+    
     <!-- HEADER SIMPLIFIÉ -->
-    <div class="rounded-2xl p-4 shadow-xl text-white d-flex flex-wrap justify-content-between align-items-center gap-3"
+    <div class="rounded-2xl p-2 shadow-xl text-white d-flex flex-wrap justify-content-between align-items-center gap-3"
         style="background: linear-gradient(135deg, #255156, #1e7c86);">
         
         <div class="d-flex align-items-center gap-3">
             <i class="fas fa-building" style="font-size: 1.3rem;"></i>
             <div>
-                <h5 class="mb-0 fw-bold">Structure par organisme</h5>
+                <h5 class="mb-0 fw-bold">Annuaire des structures</h5>
                 <small class="text-white/80">
                     <i class="fas fa-info-circle me-1"></i>
                     {{ $totalStructures }} structures
@@ -37,7 +38,18 @@
                     </a>
                 </div>
          @endif
-            </div>
+         <!-- voir la carte de l'annuaire -->
+        <div class="d-flex flex-wrap gap-2"></div>
+            <a href="{{ route('structures.map') }}" 
+                class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
+                style="border: 1px solid rgba(255,255,255,0.3); color: white;"
+                onmouseover="this.style.background='rgba(255,255,255,0.15)';"
+                onmouseout="this.style.background='transparent';">
+                <i class="fas fa-map-marked-alt me-1"></i> Voir la carte
+            </a>
+        </div>  
+    </div>
+
     <!-- FILTRES -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <div class="p-3" style="background: linear-gradient(135deg, #255156, #1e7c86);">
@@ -46,12 +58,13 @@
             </h6>
         </div>
         <div class="p-3" style="background: #f8fcfc;">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
+            <!-- Ligne 1 : Recherche, Organisme, Ville -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 mb-3">
                 <div class="lg:col-span-2">
                     <div class="relative">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
                         <input type="text" id="searchGroupes" 
-                            placeholder="Rechercher..."
+                            placeholder="Nom, ville, responsable..."
                             class="w-full pl-8 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:border-[#255156] focus:ring-1 focus:ring-[#255156] outline-none transition-all bg-white">
                     </div>
                 </div>
@@ -79,13 +92,62 @@
                     </select>
                 </div>
             </div>
-            
-            <div class="flex flex-wrap items-center justify-between mt-2">
+
+            <!-- Ligne 2 : Tableau des catégories (Style Carto) -->
+            @php
+                $categories = $structures
+                    ->pluck('categories')
+                    ->filter()
+                    ->map(fn($item) => array_map('trim', explode(',', $item)))
+                    ->flatten()
+                    ->unique()
+                    ->sort()
+                    ->values();
+            @endphp
+
+            @if($categories->count() > 0)
+            <div class="pt-2 border-t" style="border-color: #dceeec;">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <!-- Label + Boutons Tous/Aucun -->
+                    <div class="flex items-center gap-1.5 flex-shrink-0 flex-wrap">
+                        <span class="text-[11px] font-bold flex items-center gap-1" style="color: #255156;">
+                            <i class="fas fa-filter text-[10px]"></i> Catégories:
+                        </span>
+                        <button type="button" onclick="checkAllCats()" 
+                                class="text-[10px] px-2 py-0.5 rounded font-semibold cursor-pointer transition-colors"
+                                style="background: #255156; color: white;">
+                            Tous
+                        </button>
+                        <button type="button" onclick="uncheckAllCats()" 
+                                class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-800 px-2 py-0.5 rounded font-semibold cursor-pointer transition-colors">
+                            Aucun
+                        </button>
+                    </div>
+
+                    <!-- Puces défilables -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto py-1 px-1 w-full flex-1 scrollbar-thin"
+                         style="border: 1px solid #dceeec; border-radius: 6px; background: #f8fcfc;">
+                        @foreach($categories as $category)
+                            <label class="inline-flex items-center flex-shrink-0 cursor-pointer text-[11px] bg-white px-2 py-1 rounded transition-colors font-medium"
+                                   style="border: 1px solid #dceeec; color: #255156;">
+                                <input type="checkbox" value="{{ $category }}" 
+                                       class="category-filter mr-1.5 rounded w-3 h-3" 
+                                       style="accent-color: #255156;" checked>
+                                <span class="truncate max-w-[140px]">{{ $category }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Ligne 3 : Badges de filtres actifs et reset -->
+            <div class="flex flex-wrap items-center justify-between mt-3 pt-2 border-t" style="border-color: #e8f3f2;">
                 <div id="activeFilters" class="hidden">
                     <div id="filterBadges" class="flex flex-wrap gap-1"></div>
                 </div>
                 <button id="resetFilters"
-                        class="text-xs text-[#255156] hover:underline px-2 py-1 rounded transition-all">
+                        class="text-xs text-[#255156] hover:underline px-2 py-1 rounded transition-all ml-auto">
                     <i class="fas fa-undo-alt me-1"></i> Réinitialiser
                 </button>
             </div>
@@ -197,6 +259,7 @@
                                      style="background: {{ $rowColor }}; border-color: {{ $borderColor }};"
                                      data-organisme="{{ strtolower($structure->organisme->nom_organisme ?? '') }}"
                                      data-ville="{{ strtolower($structure->ville ?? '') }}"
+                                     data-categorie="{{ strtolower($structure->categories ?? '') }}"
                                      data-search="{{ strtolower($structure->organisme->nom_organisme ?? '') . ' ' . ($structure->ville ?: '') . ' ' . ($structure->adresse ?: '') . ' ' . ($structure->categories ?: '') }}"
                                      data-siege-id="siege-{{ $loop->parent->index }}"
                                      onmouseover="this.style.borderColor='#2d6268'; this.style.boxShadow='0 4px 12px rgba(45,98,104,0.12)'; this.style.transform='translateY(-2px)';"
@@ -204,7 +267,6 @@
                                     
                                     <div class="flex justify-between items-start mb-2">
                                         <div class="flex items-start gap-2">
-                                            <!-- Logo structure avec zoom -->
                                             <div class="logo-container w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden cursor-pointer"
                                                  style="background: linear-gradient(135deg, #255156, #4a8599);"
                                                  onclick="event.stopPropagation(); openLogoZoom('{{ $structLogoPath ? asset('storage/' . $structLogoPath) : '' }}', '{{ $structure->organisme->nom_organisme ?? 'Structure' }}')">
@@ -545,7 +607,23 @@ select {
     padding-right: 30px !important;
 }
 
-/* Scrollbar */
+/* Scrollbar personnalisée pour la rangée de catégories */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+.scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 2px;
+}
+
+/* Scrollbar générale */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #e8f3f2; border-radius: 10px; }
 ::-webkit-scrollbar-thumb { background: #4a8599; border-radius: 10px; }
@@ -672,36 +750,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const filterOrganisme = document.getElementById('filterOrganisme')?.value.toLowerCase().trim() || '';
         const filterVille = document.getElementById('filterVille')?.value.toLowerCase().trim() || '';
         
+        // Récupération des catégories cochées
+        const checkedCats = Array.from(document.querySelectorAll('.category-filter:checked'))
+            .map(cb => cb.value.toLowerCase());
+        
         const groupeCards = document.querySelectorAll('.groupe-card');
-        let totalVisibleStructures = 0;
-        let activeFilters = [];
-        
-        if (filterOrganisme) activeFilters.push('Organisme');
-        if (filterVille) activeFilters.push('Ville');
-        if (searchQuery) activeFilters.push('Recherche');
-        
-        const activeFiltersDiv = document.getElementById('activeFilters');
-        const filterBadges = document.getElementById('filterBadges');
-        
-        if (activeFilters.length > 0) {
-            activeFiltersDiv.classList.remove('hidden');
-            filterBadges.innerHTML = '';
-            
-            if (filterOrganisme) {
-                filterBadges.innerHTML += `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
-                    style="background: #e8f3f2; color: #255156;">
-                    <i class="fas fa-filter text-[8px]"></i> ${document.getElementById('filterOrganisme').value}
-                </span>`;
-            }
-            if (filterVille) {
-                filterBadges.innerHTML += `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
-                    style="background: #e8f3f2; color: #255156;">
-                    <i class="fas fa-city text-[8px]"></i> ${document.getElementById('filterVille').value}
-                </span>`;
-            }
-        } else {
-            activeFiltersDiv.classList.add('hidden');
-        }
         
         groupeCards.forEach(card => {
             const siegeNom = card.querySelector('.groupe-header h2').textContent.toLowerCase();
@@ -712,13 +765,19 @@ document.addEventListener('DOMContentLoaded', function() {
             structuresCards.forEach(structure => {
                 const organisme = structure.dataset.organisme || '';
                 const ville = structure.dataset.ville || '';
+                const categorie = structure.dataset.categorie || '';
                 const structureText = structure.textContent.toLowerCase();
                 
                 const matchesSearch = searchQuery === '' || structureText.includes(searchQuery) || siegeNom.includes(searchQuery);
                 const matchesOrganisme = filterOrganisme === '' || organisme.includes(filterOrganisme);
                 const matchesVille = filterVille === '' || ville.includes(filterVille);
                 
-                const matches = matchesSearch && matchesOrganisme && matchesVille;
+                // Match catégories : si aucune cochée => tout caché (comportement carto)
+                const matchesCategorie = checkedCats.length === 0 
+                    ? false 
+                    : checkedCats.some(cat => categorie.includes(cat));
+                
+                const matches = matchesSearch && matchesOrganisme && matchesVille && matchesCategorie;
                 
                 structure.style.display = matches ? '' : 'none';
                 if (matches) {
@@ -730,13 +789,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const countSpan = card.querySelector('.structures-count');
             if (countSpan) countSpan.textContent = visibleInSiege;
             
-            if (searchQuery === '' && filterOrganisme === '' && filterVille === '') {
-                card.style.display = '';
-                totalVisibleStructures += structuresCards.length;
-            } else {
-                card.style.display = hasVisibleStructure ? '' : 'none';
-                totalVisibleStructures += visibleInSiege;
-            }
+            card.style.display = hasVisibleStructure ? '' : 'none';
         });
     }
 
@@ -764,15 +817,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Fonctions globales Tous/Aucun
+    window.checkAllCats = function() {
+        document.querySelectorAll('.category-filter').forEach(cb => cb.checked = true);
+        filterStructures();
+    };
+
+    window.uncheckAllCats = function() {
+        document.querySelectorAll('.category-filter').forEach(cb => cb.checked = false);
+        filterStructures();
+    };
+
     // Écouteurs
     document.getElementById('searchGroupes')?.addEventListener('input', filterStructures);
     document.getElementById('filterOrganisme')?.addEventListener('change', filterStructures);
     document.getElementById('filterVille')?.addEventListener('change', filterStructures);
     
+    document.querySelectorAll('.category-filter').forEach(cb => {
+        cb.addEventListener('change', filterStructures);
+    });
+    
     document.getElementById('resetFilters')?.addEventListener('click', function() {
         document.getElementById('searchGroupes').value = '';
         document.getElementById('filterOrganisme').value = '';
         document.getElementById('filterVille').value = '';
+        
+        // Toutes les catégories cochées
+        document.querySelectorAll('.category-filter').forEach(cb => cb.checked = true);
+        
         filterStructures();
         document.querySelectorAll('.search-structure').forEach(input => {
             input.value = '';
@@ -822,7 +894,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Description
             document.getElementById('modal-description').textContent = structure.description || 'Aucune description disponible';
             
-            // ==================== GESTION DU LOGO DANS LA MODALE ====================
+            // Gestion du logo dans la modale
             const modalLogoImg = document.getElementById('modal-logo-img-detail');
             const modalLogoIcon = document.getElementById('modal-logo-icon-detail');
             

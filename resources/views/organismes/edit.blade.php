@@ -2,149 +2,117 @@
 @section('title', 'Modifier un organisme')
 @section('content')
 
-<div class="container mt-5">
+<div class="container form-container mt-3">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- Carte principale avec animation -->
-            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 20px; overflow: hidden;">
-                
-                <!-- En-tête avec dégradé personnalisé -->
-                <div class="card-header text-white py-4" style="background: linear-gradient(135deg, #255156 0%, #255156 100%); border: none;">
+        <div class="col-lg-8 col-xl-7">
+            <!-- Carte principale -->
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                <!-- En-tête sobre -->
+                <div class="card-header text-white py-3 px-4" style="background: #255156; border: none;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <i class="fas fa-edit fa-2x me-2"></i>
-                            <h1 class="d-inline-block mb-0 fw-bold">Modifier l'Organisme</h1>
-                            <p class="mt-2 mb-0 opacity-75">Modifiez les informations ci-dessous</p>
+                            <h1 class="h5 mb-0 fw-bold">
+                                <i class="fas fa-edit me-2"></i>Modifier l'Organisme
+                            </h1>
+                            <small class="opacity-75">{{ $organisme->nom_organisme }}</small>
                         </div>
-                        <div class="text-end">
-                            <i class="fas fa-building fa-3x opacity-50"></i>
-                        </div>
+                        <i class="fas fa-building fa-lg opacity-50"></i>
                     </div>
                 </div>
-
-                <!-- Corps du formulaire -->
-                <div class="card-body p-5">
+                <!-- Corps du formulaire compact -->
+                <div class="card-body form-body">
                     <form action="{{ route('organismes.update', $organisme->id) }}" method="POST" id="organismeForm" enctype="multipart/form-data">
                         @csrf
-                        @method('PUT')
-                        
-                        <!-- logo actuel et modification -->
-                        <div class="mb-4 form-group-animate">
-                            <label class="form-label fw-semibold mb-2">
-                                <i class="fas fa-image me-2" style="color: #255156;"></i>Logo actuel
-                            </label>
-                            <div class="mb-3">
-                                @if($organisme->logo_path)
-                                    <img src="{{ asset('storage/' . $organisme->logo_path) }}" alt="Logo de {{ $organisme->nom_organisme }}" 
-                                         class="img-fluid rounded mb-3" style="max-width: 150px; max-height: 150px;">
-                                @else
-                                    <span class="text-muted">Aucun logo disponible</span>
-                                @endif
-                            </div>
-                            <label for="logo" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-upload me-2" style="color: #255156;"></i>Modifier le logo  
-                            </label>
-                            <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
-                            <small class="text-muted mt-1"><i class="fas fa-info-circle"></i> Formats acceptés: jpeg, png, jpg, gif, svg. Taille max: 2MB.</small>
-                        </div>
-                        <!-- Champ Nom avec icône -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="nom" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-building me-2" style="color: #255156;"></i>Nom de l'organisme
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-tag text-muted"></i>
-                                </span>
-                                <input type="text" class="form-control border-start-0 ps-0" id="nom" name="nom_organisme" 
-                                       value="{{ $organisme->nom_organisme }}" placeholder="Ex: Association Culturelle" required>
-                            </div>
-                            <div class="invalid-feedback">Veuillez saisir le nom de l'organisme</div>
-                        </div>
-
-                        <!-- Champ Description avec éditeur amélioré -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="signification" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-align-left me-2" style="color: #255156;"></i>Description
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light align-items-start pt-3">
-                                    <i class="fas fa-file-alt text-muted"></i>
-                                </span>
-                                <textarea class="form-control" id="signification" name="signification" rows="4" 
-                                          placeholder="Décrivez la mission et les activités de l'organisme..." required>{{ $organisme->signification }}</textarea>
-                            </div>
-                        </div>
-
-                        <!-- Adresse -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="adresse" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-location-dot me-2" style="color: #255156;"></i>Adresse
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-map-marker-alt text-muted"></i>
-                                </span>
-                                <input type="text" class="form-control border-start-0 ps-0" id="adresse" name="adresse" 
-                                       value="{{ $organisme->adresse }}" placeholder="Numéro et nom de rue" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Code Postal -->
-                            <div class="col-md-4 mb-4 form-group-animate">
-                                <label for="code_postal" class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-mail-bulk me-2" style="color: #255156;"></i>Code postal
+                        @method('PUT')   
+                        <!-- Ligne 1 : Logo actuel + Upload + Nom -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-image me-1" style="color: #255156;"></i>Logo actuel
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="fas fa-hashtag text-muted"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-start-0 ps-0" id="code_postal" name="code_postal" 
-                                           value="{{ $organisme->code_postal }}" placeholder="75001" maxlength="5" required>
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    @if($organisme->logo_path && file_exists(storage_path('app/public/' . $organisme->logo_path)))
+                                        <div class="logo-container rounded-xl d-flex align-items-center justify-content-center overflow-hidden cursor-pointer"
+                                            style="width: 48px; height: 48px; background: linear-gradient(135deg, #f8fbfc, #e3e7e9);"
+                                            onclick="openLogoZoom('{{ asset('storage/' . $organisme->logo_path) }}', '{{ $organisme->nom_organisme }}')">
+                                            <img src="{{ asset('storage/' . $organisme->logo_path) }}"
+                                                alt="Logo de {{ $organisme->nom_organisme }}"
+                                                style="width: 100%; height: 100%; object-fit: contain; padding: 3px;">
+                                        </div>
+                                        <small class="text-muted" style="font-size: 0.75rem; color: #7fa8ac !important;">
+                                            <i class="fas fa-mouse-pointer me-1"></i>Agrandir
+                                        </small>
+                                    @else
+                                        <span class="text-muted" style="font-size: 0.85rem; color: #7fa8ac !important;">Aucun logo</span>
+                                    @endif
+                                </div>
+                                <!-- INPUT FICHIER PLEINE LARGEUR -->
+                                <div class="w-100">
+                                    <input type="file" class="form-control form-control-sm w-100" id="logo" name="logo" accept="image/*">
                                 </div>
                             </div>
-
-                            <!-- Ville -->
-                            <div class="col-md-8 mb-4 form-group-animate">
-                                <label for="ville" class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-city me-2" style="color: #255156;"></i>Ville
+                            <div class="col-md-7">
+                                <label for="nom" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-tag me-1" style="color: #255156;"></i>Nom de l'organisme <span class="text-danger">*</span>
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="fas fa-map-pin text-muted"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-start-0 ps-0" id="ville" name="ville" 
-                                           value="{{ $organisme->ville }}" placeholder="Paris" required>
-                                </div>
+                                <input type="text" class="form-control form-control-sm" id="nom" name="nom_organisme" 
+                                    value="{{ $organisme->nom_organisme }}" placeholder="Ex: Association Culturelle" required>
                             </div>
                         </div>
-
-                        <!-- Site Web -->
-                        <div class="mb-4 form-group-animate">
-                            <label for="site_web" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-globe me-2" style="color: #255156;"></i>Site web
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="signification" class="form-label fw-semibold mb-1">
+                                <i class="fas fa-align-left me-1" style="color: #255156;"></i>Description <span class="text-danger">*</span>
                             </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0">
-                                    <i class="fas fa-link text-muted"></i>
-                                </span>
-                                <input type="url" class="form-control border-start-0 ps-0" id="site_web" name="site_web" 
-                                       value="{{ $organisme->site_web }}" placeholder="https://exemple.org">
+                            <textarea class="form-control form-control-sm" id="signification" name="signification" rows="3" 
+                                    placeholder="Décrivez la mission et les activités de l'organisme..." required>{{ $organisme->signification }}</textarea>
+                        </div>
+                        <!-- Adresse + Code postal sur une seule ligne -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label for="adresse" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-map-marker-alt me-1" style="color: #255156;"></i>Adresse <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="adresse" name="adresse" 
+                                    value="{{ $organisme->adresse }}" placeholder="Numéro et nom de rue" required>
                             </div>
-                            <small class="text-muted mt-1"><i class="fas fa-info-circle"></i> Optionnel - Format URL valide recommandé</small>
+                            <div class="col-md-4">
+                                <label for="code_postal" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-hashtag me-1" style="color: #255156;"></i>Code postal <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="code_postal" name="code_postal" 
+                                    value="{{ $organisme->code_postal }}" placeholder="06000" maxlength="5" required>
+                            </div>
                         </div>
 
-                        <!-- Séparateur -->
-                        <hr class="my-4" style="border-top: 2px dashed #e0e0e0;">
-
+                        <!-- Ligne : Ville + Site web -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-5">
+                                <label for="ville" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-city me-1" style="color: #255156;"></i>Ville <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="ville" name="ville" 
+                                    value="{{ $organisme->ville }}" placeholder="Nice" required>
+                            </div>
+                            <div class="col-md-7">
+                                <label for="site_web" class="form-label fw-semibold mb-1">
+                                    <i class="fas fa-globe me-1" style="color: #255156;"></i>Site web
+                                </label>
+                                <input type="url" class="form-control form-control-sm" id="site_web" name="site_web" 
+                                    value="{{ $organisme->site_web }}" placeholder="https://exemple.org">
+                            </div>
+                        </div>
                         <!-- Boutons d'action -->
-                        <div class="d-flex gap-3 justify-content-end">
-                            <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary btn-lg px-4">
-                                <i class="fas fa-times me-2"></i>Annuler
+                        <div class="d-flex gap-1 justify-content-end pt-1 border-top">
+                            <small class="text-muted" style="font-size: 0.6rem;">
+                                Les champs marqués d'un <span class="text-danger">*</span> sont obligatoires
+                            </small>
+                            <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary btn-sm px-4">
+                                <i class="fas fa-times me-1"></i>Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn" style="background: linear-gradient(135deg, #255156 0%, #255156 100%); border: none;">
-                                <i class="fas fa-save me-2"></i>Enregistrer les modifications
+                            <button type="submit" class="btn btn-sm px-4 text-white" id="submitBtn" 
+                                    style="background: #255156; border: none;">
+                                <i class="fas fa-save me-1"></i>Enregistrer
                             </button>
                         </div>
                     </form>
@@ -154,103 +122,198 @@
     </div>
 </div>
 
-<!-- Styles CSS supplémentaires pour les animations -->
+<!-- MODAL ZOOM LOGO -->
+<div class="modal fade" id="logoZoomModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+        <div class="modal-content border-0 shadow-2xl" style="border-radius: 1rem;">
+            <div class="modal-body p-4 text-center">
+                <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="modal"></button>
+                <div class="mt-2">
+                    <img id="logoZoomImage" src="" alt="Logo agrandi"
+                        style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 0.5rem;">
+                    <p id="logoZoomTitle" class="text-white mt-3 font-semibold"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles CSS -->
 <style>
-    /* Animation d'apparition des champs */
-    .form-group-animate {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: slideInUp 0.5s forwards;
+    /* ============================================
+       BASE
+       ============================================ */
+    .form-container {
+        min-height: auto;
     }
-    
-    @keyframes slideInUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .form-container .row {
+        width: 100%;
     }
-    
-    /* Délais d'animation pour chaque champ */
-    .form-group-animate:nth-child(1) { animation-delay: 0.1s; }
-    .form-group-animate:nth-child(2) { animation-delay: 0.2s; }
-    .form-group-animate:nth-child(3) { animation-delay: 0.3s; }
-    .form-group-animate:nth-child(4) { animation-delay: 0.4s; }
-    .form-group-animate:nth-child(5) { animation-delay: 0.5s; }
-    .form-group-animate:nth-child(6) { animation-delay: 0.6s; }
-    
-    /* Effet focus sur les inputs */
+
+    /* Taille de base des écritures */
+    .form-label {
+        font-size: 0.95rem;
+        color: #333;
+    }
+    .form-control-sm {
+        font-size: 0.92rem;
+    }
+    .form-control::placeholder {
+        font-size: 0.9rem;
+        color: #adb5bd;
+    }
+
+    /* Focus */
     .form-control:focus {
         border-color: #255156;
-        box-shadow: 0 0 0 0.2rem rgba(37, 81, 86, 0.25);
+        box-shadow: 0 0 0 0.15rem rgba(37, 81, 86, 0.15);
     }
-    
-    /* Effet hover sur le bouton */
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(37, 81, 86, 0.4);
-        transition: all 0.3s ease;
-        background: linear-gradient(135deg, #1d3f43 0%, #1d3f43 100%) !important;
+
+    /* Hover bouton principal */
+    #submitBtn:hover {
+        background: #1a3a3f !important;
+        transition: background 0.2s ease;
     }
-    
-    /* Animation du curseur dans les inputs */
-    .form-control {
-        transition: all 0.3s ease;
+
+    /* Logo zoom */
+    .logo-container {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    
-    /* Style des input group au focus */
-    .input-group:focus-within .input-group-text {
-        border-color: #255156;
-        background-color: #f8f9fa;
+    .logo-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(37,81,86,0.3);
     }
-    
-    /* Card hover effect */
-    .card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #e8f3f2; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #4a8599; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #255156; }
+
+    /* ============================================
+       CORRECTION POUR L'INPUT FICHIER
+       ============================================ */
+    input[type="file"].form-control {
+        display: block;
+        width: 100%;
     }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    input[type="file"]::file-selector-button {
+        padding: 0.375rem 0.75rem;
+        margin-right: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        background-color: #f0f6f5;
+        color: #255156;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
     }
-    
-    /* Animation du bouton au clic */
-    .btn-primary:active {
-        transform: translateY(0px) !important;
+    input[type="file"]::file-selector-button:hover {
+        background-color: #dceeec;
     }
-    
-    /* Style pour les champs pré-remplis */
-    .form-control {
-        background-color: #fff;
-    }
-    
-    /* Badge d'information modification */
-    .info-badge {
-        background: linear-gradient(135deg, #255156 0%, #1d3f43 100%);
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        color: white;
-        display: inline-block;
-        margin-bottom: 15px;
+
+    /* ============================================
+       OPTIMISATION RÉSOLUTION 1920x1080 @ 125%
+       ============================================ */
+    @media screen and (min-width: 1400px) and (max-width: 1600px)
+       and (min-height: 800px) and (max-height: 900px) {
+
+        .form-container {
+            min-height: auto !important;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            margin-top: 0 !important;
+        }
+
+        .form-container .col-lg-8.col-xl-7 {
+            max-width: 760px;
+            flex: 0 0 auto;
+        }
+
+        .card-header {
+            padding: 0.7rem 1rem !important;
+        }
+        .card-header h1.h5 {
+            font-size: 1.1rem !important;
+            margin: 0 !important;
+        }
+        .card-header .fa-lg {
+            font-size: 1.2em !important;
+        }
+
+        .form-body {
+            padding: 1.1rem 1.25rem !important;
+        }
+
+        .form-label {
+            font-size: 0.92rem !important;
+            margin-bottom: 0.2rem !important;
+        }
+
+        .form-control-sm {
+            padding: 0.4rem 0.7rem !important;
+            font-size: 0.9rem !important;
+            height: calc(1.6em + 0.8rem) !important;
+        }
+
+        .form-control::placeholder {
+            font-size: 0.88rem !important;
+        }
+
+        .mb-2 { margin-bottom: 0.55rem !important; }
+        .mb-3 { margin-bottom: 0.75rem !important; }
+        .mb-4 { margin-bottom: 0.9rem !important; }
+        .row.g-3 { --bs-gutter-x: 0.7rem; --bs-gutter-y: 0.7rem; }
+
+        textarea.form-control-sm {
+            min-height: 70px !important;
+            resize: vertical;
+        }
+
+        .btn-sm {
+            padding: 0.42rem 1rem !important;
+            font-size: 0.88rem !important;
+        }
+
+        .border-top.pt-3 {
+            padding-top: 0.65rem !important;
+            margin-top: 0.25rem !important;
+        }
+
+        .form-label i {
+            font-size: 0.85rem;
+        }
     }
 </style>
 
 <!-- Script pour la validation en temps réel -->
 <script>
-    // Validation du code postal (uniquement chiffres, 5 caractères)
+    function openLogoZoom(imageUrl, title) {
+        const modal = new bootstrap.Modal(document.getElementById('logoZoomModal'));
+        const img = document.getElementById('logoZoomImage');
+        const titleEl = document.getElementById('logoZoomTitle');
+        if (imageUrl && imageUrl !== '') {
+            img.src = imageUrl;
+            img.style.display = 'block';
+            titleEl.textContent = title || 'Logo';
+        } else {
+            img.style.display = 'none';
+            titleEl.textContent = 'Aucun logo disponible';
+        }
+        modal.show();
+    }
+
     const codePostalInput = document.getElementById('code_postal');
-    if(codePostalInput) {
-        codePostalInput.addEventListener('input', function(e) {
+    if (codePostalInput) {
+        codePostalInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);
         });
     }
     
-    // Validation URL en temps réel
     const siteWebInput = document.getElementById('site_web');
-    if(siteWebInput) {
-        siteWebInput.addEventListener('input', function(e) {
+    if (siteWebInput) {
+        siteWebInput.addEventListener('input', function() {
             const url = this.value;
-            if(url && !url.match(/^https?:\/\/.+/)) {
+            if (url && !url.match(/^https?:\/\/.+/)) {
                 this.setCustomValidity('Veuillez saisir une URL valide commençant par http:// ou https://');
             } else {
                 this.setCustomValidity('');
@@ -258,38 +321,17 @@
         });
     }
     
-    // Animation au submit
     const form = document.getElementById('organismeForm');
-    const submitBtn = document.getElementById('submitBtn');
-    
-    if(form && submitBtn) {
-        form.addEventListener('submit', function(e) {
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enregistrement en cours...';
-            submitBtn.disabled = true;
+    if (form) {
+        form.addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Enregistrement...';
+            btn.disabled = true;
         });
     }
-    
-    // Effet de focus sur les inputs
-    const inputs = document.querySelectorAll('.form-control');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.parentElement.classList.add('focused');
-        });
-        
-        // Animation légère au chargement des valeurs existantes
-        setTimeout(() => {
-            input.style.backgroundColor = '#fffef7';
-            setTimeout(() => {
-                input.style.backgroundColor = '';
-            }, 500);
-        }, 500);
-    });
-    
-    // Notification de modification (optionnel)
-    console.log('Formulaire de modification prêt - Organisation: {{ $organisme->nom_organisme }}');
 </script>
 
-<!-- Ajouter Font Awesome si pas déjà présent dans base -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 @endsection

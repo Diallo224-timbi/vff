@@ -91,7 +91,7 @@
                             @enderror
                         </div>
                         <div class="mb-3" id="editSubCategoryContainer">
-                            <label class="form-label fw-semibold">Sous-catégorie</label>
+                            <label class="form-label fw-semibold">Sous-catégorie <span class="text-danger">*</span></label>
                             <select id="editSubCategory" name="sub_category" class="form-select">
                                 <option value="">Aucune</option>
                             </select>
@@ -121,23 +121,28 @@
 const subCategoriesMap = {
     'guides_etudes': [
         { value: 'national', label: 'National' },
-        { value: 'departemental', label: 'Départemental' }
+        { value: 'departemental', label: 'Départemental' },
+        { value: 'autres', label: 'Autres' }
     ],
     'affiches_flyers': [
         { value: 'victimes', label: 'Victimes' },
-        { value: 'auteurs', label: 'Auteurs' }
+        { value: 'auteurs', label: 'Auteurs' },
+        { value: 'autres', label: 'Autres' }
     ],
     'reseaux': [
         { value: 'guides', label: 'Guides' },
-        { value: 'kit_creation', label: 'Kit création réseau' }
+        { value: 'kit_creation', label: 'Kit création réseau' },
+        { value: 'autres', label: 'Autres' }
     ],
     'outils': [
         { value: 'coordination', label: 'Coordination acteurs' },
-        { value: 'prevention', label: 'Prévention & sensibilisation' }
+        { value: 'prevention', label: 'Prévention & sensibilisation' },
+        { value: 'autres', label: 'Autres' }
     ],
     'conventions': [
         { value: 'victimes', label: 'Victimes' },
-        { value: 'auteurs', label: 'Auteurs' }
+        { value: 'auteurs', label: 'Auteurs' },
+        { value: 'autres', label: 'Autres' }
     ]
 };
 
@@ -146,14 +151,12 @@ let selectedEditResourceType = '{{ $resource->is_link ? "link" : "file" }}';
 
 function selectEditResourceType(type) {
     selectedEditResourceType = type;
-    
     const btnFile = document.getElementById('editBtnFileType');
     const btnLink = document.getElementById('editBtnLinkType');
     const fileSection = document.getElementById('editFileUploadSection');
     const linkSection = document.getElementById('editLinkSection');
     const fileInput = document.getElementById('editFile');
     const linkUrlInput = document.getElementById('edit_link_url');
-    
     if (type === 'file') {
         btnFile?.classList.add('active');
         btnLink?.classList.remove('active');
