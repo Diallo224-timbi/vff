@@ -2,123 +2,101 @@
 @section('title', 'Modifier un organisme')
 @section('content')
 
-<div class="container form-container mt-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7">
-            <!-- Carte principale -->
-            <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
-                <!-- En-tête sobre -->
-                <div class="card-header text-white py-3 px-4" style="background: #255156; border: none;">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h1 class="h5 mb-0 fw-bold">
-                                <i class="fas fa-edit me-2"></i>Modifier l'Organisme
-                            </h1>
-                            <small class="opacity-75">{{ $organisme->nom_organisme }}</small>
-                        </div>
-                        <i class="fas fa-building fa-lg opacity-50"></i>
+<div class="modal fade" id="organismeEditModal" tabindex="-1" aria-labelledby="organismeEditModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable organisme-edit-dialog">
+        <form class="modal-content organisme-edit-modal" action="{{ route('organismes.update', $organisme->id) }}" method="POST" id="organismeForm" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="modal-header text-white organisme-edit-modal-header">
+                <div>
+                    <h1 class="modal-title fs-5" id="organismeEditModalTitle">
+                        <i class="fas fa-edit me-2" aria-hidden="true"></i>Modifier l'organisme
+                    </h1>
+                    <small class="opacity-75">{{ $organisme->nom_organisme }}</small>
+                </div>
+                @if($organisme->logo_path && file_exists(storage_path('app/public/' . $organisme->logo_path)))
+                    <button type="button" class="organisme-header-logo" aria-label="Agrandir le logo de {{ $organisme->nom_organisme }}"
+                        onclick="openLogoZoom(@js(asset('storage/' . $organisme->logo_path)), @js($organisme->nom_organisme))">
+                        <img src="{{ asset('storage/' . $organisme->logo_path) }}" alt="">
+                    </button>
+                @else
+                    <span class="organisme-header-logo organisme-header-logo-empty" aria-hidden="true">
+                        <i class="fas fa-building"></i>
+                    </span>
+                @endif
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body organisme-edit-modal-body">
+                @if(session('error'))
+                    <div class="alert alert-danger py-2 mb-2" role="alert">{{ session('error') }}</div>
+                @endif
+                <div class="organisme-edit-section">
+            
+                    <div class="row g-3">
+                    <div class="col-12 col-lg-6">
+                        <label for="nom" class="form-label fw-semibold mb-1">
+                            <i class="fas fa-tag me-1" aria-hidden="true"></i>Nom de l'organisme <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="nom" name="nom_organisme"
+                               value="{{ old('nom_organisme', $organisme->nom_organisme) }}" placeholder="Ex : Association culturelle" required>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label for="site_web" class="form-label fw-semibold mb-1">
+                            <i class="fas fa-globe me-1" aria-hidden="true"></i>Site web <span class="text-danger">*</span>
+                        </label>
+                        <input type="url" class="form-control" id="site_web" name="site_web"
+                               value="{{ old('site_web', $organisme->site_web) }}" placeholder="https://exemple.org" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="signification" class="form-label fw-semibold mb-1">
+                            <i class="fas fa-align-left me-1" aria-hidden="true"></i>Description <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="signification" name="signification" rows="3"
+                                placeholder="Décrivez la mission et les activités de l'organisme..." required>{{ old('signification', $organisme->signification) }}</textarea>
+                    </div>
+                    <div class="col-12 organisme-logo-upload">
+                        <label class="form-label fw-semibold mb-1" for="logo">
+                            <i class="fas fa-image me-1" aria-hidden="true"></i>Remplacer le logo
+                        </label>
+                        <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                    </div>
                     </div>
                 </div>
-                <!-- Corps du formulaire compact -->
-                <div class="card-body form-body">
-                    <form action="{{ route('organismes.update', $organisme->id) }}" method="POST" id="organismeForm" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')   
-                        <!-- Ligne 1 : Logo actuel + Upload + Nom -->
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-5">
-                                <label class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-image me-1" style="color: #255156;"></i>Logo actuel
-                                </label>
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    @if($organisme->logo_path && file_exists(storage_path('app/public/' . $organisme->logo_path)))
-                                        <div class="logo-container rounded-xl d-flex align-items-center justify-content-center overflow-hidden cursor-pointer"
-                                            style="width: 48px; height: 48px; background: linear-gradient(135deg, #f8fbfc, #e3e7e9);"
-                                            onclick="openLogoZoom('{{ asset('storage/' . $organisme->logo_path) }}', '{{ $organisme->nom_organisme }}')">
-                                            <img src="{{ asset('storage/' . $organisme->logo_path) }}"
-                                                alt="Logo de {{ $organisme->nom_organisme }}"
-                                                style="width: 100%; height: 100%; object-fit: contain; padding: 3px;">
-                                        </div>
-                                        <small class="text-muted" style="font-size: 0.75rem; color: #7fa8ac !important;">
-                                            <i class="fas fa-mouse-pointer me-1"></i>Agrandir
-                                        </small>
-                                    @else
-                                        <span class="text-muted" style="font-size: 0.85rem; color: #7fa8ac !important;">Aucun logo</span>
-                                    @endif
-                                </div>
-                                <!-- INPUT FICHIER PLEINE LARGEUR -->
-                                <div class="w-100">
-                                    <input type="file" class="form-control form-control-sm w-100" id="logo" name="logo" accept="image/*">
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <label for="nom" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-tag me-1" style="color: #255156;"></i>Nom de l'organisme <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control form-control-sm" id="nom" name="nom_organisme" 
-                                    value="{{ $organisme->nom_organisme }}" placeholder="Ex: Association Culturelle" required>
-                            </div>
-                        </div>
-                        <!-- Description -->
-                        <div class="mb-3">
-                            <label for="signification" class="form-label fw-semibold mb-1">
-                                <i class="fas fa-align-left me-1" style="color: #255156;"></i>Description <span class="text-danger">*</span>
+                <div class="organisme-edit-section">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <label for="adresse" class="form-label fw-semibold mb-1">
+                                <i class="fas fa-map-marker-alt me-1" aria-hidden="true"></i>Adresse <span class="text-danger">*</span>
                             </label>
-                            <textarea class="form-control form-control-sm" id="signification" name="signification" rows="3" 
-                                    placeholder="Décrivez la mission et les activités de l'organisme..." required>{{ $organisme->signification }}</textarea>
+                            <input type="text" class="form-control" id="adresse" name="adresse"
+                                   value="{{ old('adresse', $organisme->adresse) }}" placeholder="Numéro et nom de rue" required>
                         </div>
-                        <!-- Adresse + Code postal sur une seule ligne -->
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-8">
-                                <label for="adresse" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-map-marker-alt me-1" style="color: #255156;"></i>Adresse <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control form-control-sm" id="adresse" name="adresse" 
-                                    value="{{ $organisme->adresse }}" placeholder="Numéro et nom de rue" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="code_postal" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-hashtag me-1" style="color: #255156;"></i>Code postal <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control form-control-sm" id="code_postal" name="code_postal" 
-                                    value="{{ $organisme->code_postal }}" placeholder="06000" maxlength="5" required>
-                            </div>
+                        <div class="col-12 col-lg-3">
+                            <label for="code_postal" class="form-label fw-semibold mb-1">
+                                <i class="fas fa-hashtag me-1" aria-hidden="true"></i>Code postal <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="code_postal" name="code_postal"
+                                   value="{{ old('code_postal', $organisme->code_postal) }}" placeholder="06000" maxlength="5" required>
                         </div>
-
-                        <!-- Ligne : Ville + Site web -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-5">
-                                <label for="ville" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-city me-1" style="color: #255156;"></i>Ville <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control form-control-sm" id="ville" name="ville" 
-                                    value="{{ $organisme->ville }}" placeholder="Nice" required>
-                            </div>
-                            <div class="col-md-7">
-                                <label for="site_web" class="form-label fw-semibold mb-1">
-                                    <i class="fas fa-globe me-1" style="color: #255156;"></i>Site web
-                                </label>
-                                <input type="url" class="form-control form-control-sm" id="site_web" name="site_web" 
-                                    value="{{ $organisme->site_web }}" placeholder="https://exemple.org">
-                            </div>
+                        <div class="col-12 col-lg-3">
+                            <label for="ville" class="form-label fw-semibold mb-1">
+                                <i class="fas fa-city me-1" aria-hidden="true"></i>Ville <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="ville" name="ville"
+                                   value="{{ old('ville', $organisme->ville) }}" placeholder="Nice" required>
                         </div>
-                        <!-- Boutons d'action -->
-                        <div class="d-flex gap-1 justify-content-end pt-1 border-top">
-                            <small class="text-muted" style="font-size: 0.6rem;">
-                                Les champs marqués d'un <span class="text-danger">*</span> sont obligatoires
-                            </small>
-                            <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary btn-sm px-4">
-                                <i class="fas fa-times me-1"></i>Annuler
-                            </a>
-                            <button type="submit" class="btn btn-sm px-4 text-white" id="submitBtn" 
-                                    style="background: #255156; border: none;">
-                                <i class="fas fa-save me-1"></i>Enregistrer
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="modal-footer organisme-edit-modal-footer">
+                <a href="{{ route('organismes.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-1" aria-hidden="true"></i>Annuler
+                </a>
+                <button type="submit" class="btn btn-primary organisme-edit-submit" id="submitBtn">
+                    <i class="fas fa-save me-1" aria-hidden="true"></i>Enregistrer
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -140,147 +118,159 @@
 
 <!-- Styles CSS -->
 <style>
-    /* ============================================
-       BASE
-       ============================================ */
-    .form-container {
-        min-height: auto;
-    }
-    .form-container .row {
-        width: 100%;
+    .organisme-edit-modal {
+        border: 0;
+        border-radius: 0.9rem;
+        overflow: hidden;
     }
 
-    /* Taille de base des écritures */
-    .form-label {
-        font-size: 0.95rem;
-        color: #333;
+    .organisme-edit-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1rem;
+        background: #255156;
     }
-    .form-control-sm {
+
+    .organisme-edit-modal-header .modal-title {
+        color: #fff;
+    }
+
+    .organisme-edit-modal-header > div {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .organisme-header-logo {
+        display: inline-flex;
+        width: 2.75rem;
+        height: 2.75rem;
+        flex: 0 0 2.75rem;
+        align-items: center;
+        justify-content: center;
+        margin: 0 1rem;
+        padding: 0.15rem;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 0.55rem;
+        background: rgba(255, 255, 255, 0.95);
+        cursor: pointer;
+    }
+
+    .organisme-header-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .organisme-header-logo-empty {
+        color: #255156;
+        font-size: 1.25rem;
+    }
+
+    .organisme-edit-modal-body {
+        padding: 1rem;
+    }
+
+    .organisme-edit-section + .organisme-edit-section {
+        margin-top: 1.25rem;
+    }
+
+    .organisme-edit-section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.45rem;
+        border-bottom: 1px solid #e5eeee;
+        color: #255156;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+    }
+
+    .organisme-edit-section-title i {
+        font-size: 0.9rem;
+    }
+
+    .organisme-edit-modal-body .form-label {
+        margin-bottom: 0.25rem;
+        color: #333;
         font-size: 0.92rem;
     }
-    .form-control::placeholder {
-        font-size: 0.9rem;
-        color: #adb5bd;
+
+    .organisme-edit-modal-body .form-control {
+        min-width: 0;
+        padding: 0.4rem 0.7rem;
     }
 
-    /* Focus */
-    .form-control:focus {
+    .organisme-edit-modal-body input[type="file"] {
+        display: block;
+        width: 100%;
+        height: 2.15rem;
+        padding: 0.2rem 0.35rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 0.72rem;
+        line-height: 1.6;
+    }
+
+    .organisme-edit-modal-body input[type="file"]::file-selector-button {
+        margin: -0.1rem 0.35rem -0.1rem -0.1rem;
+        padding: 0.2rem 0.35rem;
+        border: 0;
+        border-radius: 0.25rem;
+        background: #eaf2f1;
+        color: #255156;
+        white-space: nowrap;
+        font-size: 0.72rem;
+    }
+
+    .organisme-edit-modal-body .form-control:focus {
         border-color: #255156;
         box-shadow: 0 0 0 0.15rem rgba(37, 81, 86, 0.15);
     }
 
-    /* Hover bouton principal */
-    #submitBtn:hover {
-        background: #1a3a3f !important;
-        transition: background 0.2s ease;
+    .organisme-edit-modal-body .form-control::placeholder {
+        color: #adb5bd;
+        font-size: 0.9rem;
     }
 
-    /* Logo zoom */
-    .logo-container {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .logo-container:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 16px rgba(37,81,86,0.3);
+    .organisme-edit-modal-footer {
+        padding: 0.75rem 1rem;
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #e8f3f2; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #4a8599; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #255156; }
-
-    /* ============================================
-       CORRECTION POUR L'INPUT FICHIER
-       ============================================ */
-    input[type="file"].form-control {
-        display: block;
-        width: 100%;
-    }
-    input[type="file"]::file-selector-button {
-        padding: 0.375rem 0.75rem;
-        margin-right: 0.5rem;
-        border: none;
-        border-radius: 4px;
-        background-color: #f0f6f5;
-        color: #255156;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-    input[type="file"]::file-selector-button:hover {
-        background-color: #dceeec;
+    .organisme-edit-submit {
+        border-color: #255156;
+        background: #255156;
     }
 
-    /* ============================================
-       OPTIMISATION RÉSOLUTION 1920x1080 @ 125%
-       ============================================ */
-    @media screen and (min-width: 1400px) and (max-width: 1600px)
-       and (min-height: 800px) and (max-height: 900px) {
+    .organisme-edit-submit:hover,
+    .organisme-edit-submit:focus {
+        border-color: #1a3a3f;
+        background: #1a3a3f;
+    }
 
-        .form-container {
-            min-height: auto !important;
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            margin-top: 0 !important;
+    @media (max-width: 575.98px) {
+        .organisme-edit-dialog {
+            margin: 0.5rem;
         }
 
-        .form-container .col-lg-8.col-xl-7 {
-            max-width: 760px;
-            flex: 0 0 auto;
+        .organisme-edit-modal-body {
+            padding: 0.75rem;
         }
 
-        .card-header {
-            padding: 0.7rem 1rem !important;
-        }
-        .card-header h1.h5 {
-            font-size: 1.1rem !important;
-            margin: 0 !important;
-        }
-        .card-header .fa-lg {
-            font-size: 1.2em !important;
+        .organisme-header-logo {
+            width: 2.25rem;
+            height: 2.25rem;
+            flex-basis: 2.25rem;
+            margin: 0 0.5rem;
         }
 
-        .form-body {
-            padding: 1.1rem 1.25rem !important;
-        }
-
-        .form-label {
-            font-size: 0.92rem !important;
-            margin-bottom: 0.2rem !important;
-        }
-
-        .form-control-sm {
-            padding: 0.4rem 0.7rem !important;
-            font-size: 0.9rem !important;
-            height: calc(1.6em + 0.8rem) !important;
-        }
-
-        .form-control::placeholder {
-            font-size: 0.88rem !important;
-        }
-
-        .mb-2 { margin-bottom: 0.55rem !important; }
-        .mb-3 { margin-bottom: 0.75rem !important; }
-        .mb-4 { margin-bottom: 0.9rem !important; }
-        .row.g-3 { --bs-gutter-x: 0.7rem; --bs-gutter-y: 0.7rem; }
-
-        textarea.form-control-sm {
-            min-height: 70px !important;
-            resize: vertical;
-        }
-
-        .btn-sm {
-            padding: 0.42rem 1rem !important;
-            font-size: 0.88rem !important;
-        }
-
-        .border-top.pt-3 {
-            padding-top: 0.65rem !important;
-            margin-top: 0.25rem !important;
-        }
-
-        .form-label i {
-            font-size: 0.85rem;
+        .organisme-edit-section + .organisme-edit-section {
+            margin-top: 1rem;
         }
     }
 </style>
@@ -288,7 +278,7 @@
 <!-- Script pour la validation en temps réel -->
 <script>
     function openLogoZoom(imageUrl, title) {
-        const modal = new bootstrap.Modal(document.getElementById('logoZoomModal'));
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('logoZoomModal'));
         const img = document.getElementById('logoZoomImage');
         const titleEl = document.getElementById('logoZoomTitle');
         if (imageUrl && imageUrl !== '') {
@@ -302,36 +292,43 @@
         modal.show();
     }
 
-    const codePostalInput = document.getElementById('code_postal');
-    if (codePostalInput) {
-        codePostalInput.addEventListener('input', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const editModalElement = document.getElementById('organismeEditModal');
+        const logoModalElement = document.getElementById('logoZoomModal');
+        const codePostalInput = document.getElementById('code_postal');
+        const siteWebInput = document.getElementById('site_web');
+        const form = document.getElementById('organismeForm');
+
+        if (editModalElement) {
+            document.body.appendChild(editModalElement);
+            const editModal = bootstrap.Modal.getOrCreateInstance(editModalElement);
+            editModalElement.addEventListener('hidden.bs.modal', function() {
+                window.location.assign(@json(route('organismes.index')));
+            }, { once: true });
+            editModal.show();
+        }
+
+        if (logoModalElement) {
+            document.body.appendChild(logoModalElement);
+        }
+
+        codePostalInput?.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);
         });
-    }
-    
-    const siteWebInput = document.getElementById('site_web');
-    if (siteWebInput) {
-        siteWebInput.addEventListener('input', function() {
-            const url = this.value;
-            if (url && !url.match(/^https?:\/\/.+/)) {
-                this.setCustomValidity('Veuillez saisir une URL valide commençant par http:// ou https://');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
-    }
-    
-    const form = document.getElementById('organismeForm');
-    if (form) {
-        form.addEventListener('submit', function() {
-            const btn = document.getElementById('submitBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Enregistrement...';
-            btn.disabled = true;
-        });
-    }
-</script>
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        siteWebInput?.addEventListener('input', function() {
+            const isValidHttpUrl = /^https?:\/\/.+/i.test(this.value);
+            this.setCustomValidity(this.value && !isValidHttpUrl
+                ? 'Veuillez saisir une URL valide commençant par http:// ou https://'
+                : '');
+        });
+
+        form?.addEventListener('submit', function() {
+            const button = document.getElementById('submitBtn');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1" aria-hidden="true"></i>Enregistrement...';
+            button.disabled = true;
+        });
+    });
+</script>
 
 @endsection

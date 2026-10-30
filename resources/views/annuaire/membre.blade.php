@@ -4,7 +4,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 @endsection
 @section('content')
-<div class="vff-annuaire">
+<div class="vff-annuaire vff-annuaire-members">
     {{-- ══════════ EN-TÊTE ══════════ --}}
     <div class="vff-ann-head">
         <div class="vff-ann-head-left">
@@ -34,7 +34,6 @@
     {{-- ══════════ FILTRES ══════════ --}}
     <div class="vff-ann-filters">
         <div class="vff-ann-filters-row">
-
             <div class="vff-ann-field vff-ann-field-search">
                 <i class='bx bx-search'></i>
                 <input type="text" id="search"
@@ -65,6 +64,19 @@
             </div>
 
             <div class="vff-ann-field">
+                <i class='bx bx-building'></i>
+                <select id="structureFilter" aria-label="Filtrer par structure">
+                    <option value="">Toutes les structures</option>
+                    @foreach($structures as $structure)
+                        <option value="{{ $structure->id }}">
+                            {{ $structure->organisme->nom_organisme ?? 'Organisme non renseigné' }} — {{ $structure->ville ?? 'Ville non renseignée' }}
+                        </option>
+                    @endforeach
+                </select>
+                <i class='bx bx-chevron-down vff-ann-field-chev'></i>
+            </div>
+
+            <div class="vff-ann-field">
                 <i class='bx bx-sort-alt-2'></i>
                 <select id="sortFilter">
                     <option value="name_asc">Nom (A-Z)</option>
@@ -85,7 +97,8 @@
                 data-city="{{ strtolower($membre->structure->ville ?? '') }}"
                 data-name="{{ strtolower($membre->prenom . ' ' . $membre->name) }}"
                 data-email="{{ strtolower($membre->email) }}"
-                data-structure="{{ strtolower($membre->structure->organisme->nom_organisme ?? '') }}">
+                data-structure="{{ strtolower($membre->structure->organisme->nom_organisme ?? '') }}"
+                data-structure-id="{{ $membre->id_structure }}">
                 {{-- Bandeau supérieur --}}
                 <div class="vff-mcard-top"></div>
                 <div class="vff-mcard-body">
@@ -105,27 +118,39 @@
                     {{-- Infos --}}
                     <div class="vff-mcard-info">
                         <div class="vff-mcard-line">
-                            <span class="vff-mcard-line-icon" style="background:#008C95;">
+                            <span class="vff-mcard-line-icon" style="background:#255156;">
                                 <i class='bx bx-envelope'></i>
                             </span>
                             <span class="vff-mcard-line-txt">{{ $membre->email }}</span>
                         </div>
                         <div class="vff-mcard-line">
-                            <span class="vff-mcard-line-icon" style="background:#008C95;">
+                            <span class="vff-mcard-line-icon" style="background:#255156;">
                                 <i class='bx bx-phone'></i>
                             </span>
                             <span class="vff-mcard-line-txt">{{ $membre->phone ?? 'Non renseigné' }}</span>
                         </div>
                         <div class="vff-mcard-line">
-                            <span class="vff-mcard-line-icon" style="background:#008C95;">
+                            <span class="vff-mcard-line-icon" style="background:#255156;">
                                 <i class='bx bx-building'></i>
                             </span>
                             <span class="vff-mcard-line-txt vff-mcard-line-strong">
-                                {{ $membre->structure->organisme->nom_organisme ?? 'Organisme non renseigné' }}
+                                @if($membre->structure)
+                                    <a class="vff-member-structure-link"
+                                       href="{{ route('structures.map', ['structure_id' => $membre->structure->id]) }}"
+                                       aria-label="Afficher {{ $membre->structure->organisme->nom_organisme ?? 'la structure' }} sur la carte à {{ $membre->structure->ville ?? 'ville non renseignée' }}">
+                                        {{ $membre->structure->organisme->nom_organisme ?? 'Organisme non renseigné' }}
+                                        <span class="vff-member-map-indicator" aria-hidden="true">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Voir sur la carte
+                                        </span>
+                                    </a>
+                                @else
+                                    Organisme non renseigné
+                                @endif
                             </span>
                         </div>
                         <div class="vff-mcard-line">
-                            <span class="vff-mcard-line-icon" style="background:#008C95;">
+                            <span class="vff-mcard-line-icon" style="background:#255156;">
                                 <i class='fas fa-map'></i>
                             </span>
                             <span class="vff-mcard-line-txt vff-mcard-line-strong">
@@ -174,19 +199,59 @@
      STYLE
 ══════════════════════════════════════════════════════════════ --}}
 <style>
+.vff-member-structure-link {
+    color: var(--vff-primary);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 2px;
+    transition: color .2s ease, text-decoration-color .2s ease;
+}
+
+.vff-member-map-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: 5px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(84, 167, 177, .14);
+    color: var(--vff-primary);
+    font-size: .68rem;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.vff-member-structure-link:hover,
+.vff-member-structure-link:focus-visible {
+    color: #1a3c40;
+    text-decoration-color: currentColor;
+}
+
+.vff-member-structure-link:hover .vff-member-map-indicator,
+.vff-member-structure-link:focus-visible .vff-member-map-indicator {
+    background: var(--vff-primary);
+    color: #fff;
+}
+
+.vff-member-structure-link:focus-visible {
+    outline: 2px solid #0a9dad;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
 :root {
     /* ═══ PALETTE STRICTE ═══ */
-    --vff-primary:   #008C95;
-    --vff-secondary: #59BEC9;
-    --vff-purple:    #9B7EA4;
-    --vff-brown:     #C79674;
-    --vff-salmon:    #CCA1A6;
-    --vff-gold:      #D2B467;
+    --vff-primary:   #255156;
+    --vff-secondary: #54A7B1;
+    --vff-teal:      #0A9DAD;
+    --vff-dark:      #1A3C40;
     --vff-gray:      #C4CEC2;
-    --vff-text:      #2D2926;
+    --vff-text:      #263638;
 
     /* ═══ UI NETTE ET CONTRASTÉE ═══ */
-    --bg:        #F2F4F3;
+    --bg:        #E9F7F6;
     --card:      #FFFFFF;
     --border:    #DDE2E0;
     --border-str:#CDD4D1;
@@ -194,8 +259,8 @@
     --muted-str: #4A4F4D;
     --radius:    14px;
     --radius-sm: 10px;
-    --shadow-sm: 0 1px 3px rgba(45,41,38,.08), 0 2px 6px rgba(45,41,38,.05);
-    --shadow-md: 0 4px 14px rgba(45,41,38,.10), 0 8px 24px rgba(45,41,38,.08);
+    --shadow-sm: 0 1px 3px rgba(37,81,86,.08), 0 2px 6px rgba(37,81,86,.05);
+    --shadow-md: 0 4px 14px rgba(37,81,86,.10), 0 8px 24px rgba(37,81,86,.08);
     --ease:      cubic-bezier(.4,0,.2,1);
 }
 
@@ -211,6 +276,12 @@
     flex-direction: column;
     gap: 1rem;
     min-height: 100vh;
+}
+
+.vff-annuaire-members {
+    margin-top: -1rem;
+    padding-top: .5rem;
+    gap: .75rem;
 }
 
 .vff-annuaire h1,
@@ -232,7 +303,7 @@
     padding: 1.25rem 1.5rem;
     border-radius: var(--radius);
     color: #fff;
-    background: linear-gradient(135deg, #256156 0%, #008C95 50%, #046B73 100%);
+    background: linear-gradient(110deg, #255156, #0A9DAD);
     box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
@@ -327,7 +398,7 @@
 }
 .vff-ann-filters-row {
     display: grid;
-    grid-template-columns: 1fr 240px 200px;
+    grid-template-columns: minmax(220px, 1fr) minmax(180px, 220px) minmax(180px, 220px) minmax(180px, 220px);
     gap: .75rem;
 }
 .vff-ann-field {
@@ -376,7 +447,7 @@
 .vff-ann-field select:focus {
     border-color: var(--vff-primary);
     background: #FFFFFF;
-    box-shadow: 0 0 0 4px rgba(0,140,149,.14);
+    box-shadow: 0 0 0 4px rgba(10,157,173,.16);
 }
 
 /* Filtres actifs */
@@ -393,8 +464,8 @@
     gap: .4rem;
     padding: .35rem .75rem;
     border-radius: 999px;
-    background: #E6F4F5;
-    color: #005C63;
+    background: #E9F7F6;
+    color: #255156;
     border: 1px solid var(--vff-primary);
     font-size: .74rem;
     font-weight: 600;
@@ -447,7 +518,7 @@
     background: linear-gradient(90deg,
         var(--vff-primary) 0%,
         var(--vff-secondary) 50%,
-        var(--vff-purple) 100%);
+        var(--vff-primary) 100%);
     background-size: 200% 100%;
     transition: background-position .5s var(--ease);
 }
@@ -479,7 +550,7 @@
     font-weight: 800;
     font-size: 1rem;
     flex-shrink: 0;
-    box-shadow: 0 4px 10px rgba(0,140,149,.28);
+    box-shadow: 0 4px 10px rgba(37,81,86,.24);
     transition: transform .3s var(--ease);
 }
 .vff-mcard:hover .vff-mcard-avatar {
@@ -574,8 +645,8 @@
     white-space: nowrap;
 }
 .vff-badge-active {
-    background: #E6F4F5;
-    color: #005C63;
+    background: #E9F7F6;
+    color: #255156;
 }
 .vff-badge-active .vff-badge-dot {
     width: 6px; height: 6px;
@@ -584,8 +655,8 @@
     animation: vffPulse 2s infinite;
 }
 .vff-badge-city {
-    background: #F5F0F8;
-    color: #6A4F72;
+    background: #E9F7F6;
+    color: #255156;
 }
 .vff-badge-city i { font-size: .75rem; }
 
@@ -657,7 +728,7 @@
     transition: background .2s var(--ease), transform .15s var(--ease);
 }
 .vff-ann-reset-btn:hover {
-    background: #00707A;
+    background: #1A3C40;
     transform: translateY(-1px);
 }
 
@@ -700,13 +771,13 @@
     color: #FFFFFF;
     border-color: var(--vff-primary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,140,149,.25);
+    box-shadow: 0 4px 12px rgba(37,81,86,.25);
 }
 .vff-ann-pagination .active .page-link {
     background: var(--vff-primary);
     color: #FFFFFF;
     border-color: var(--vff-primary);
-    box-shadow: 0 4px 12px rgba(0,140,149,.25);
+    box-shadow: 0 4px 12px rgba(37,81,86,.25);
 }
 .vff-ann-pagination .disabled .page-link {
     color: var(--muted);
@@ -727,7 +798,8 @@
     .vff-ann-field-search { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) {
-    .vff-annuaire { padding: .85rem .75rem 1.5rem; gap: .75rem; }
+    .vff-annuaire { padding: .65rem .75rem 1.5rem; gap: .65rem; }
+    .vff-annuaire-members { margin-top: -.5rem; padding-top: .35rem; }
     .vff-ann-grid { grid-template-columns: 1fr; }
     .vff-ann-head { padding: 1rem 1.1rem; }
     .vff-ann-title { font-size: 1.05rem; }
@@ -763,7 +835,7 @@
 
     /* Filtres compacts */
     .vff-ann-filters { padding: .8rem 1rem; gap: .55rem; }
-    .vff-ann-filters-row { grid-template-columns: 1fr 200px 170px; gap: .6rem; }
+    .vff-ann-filters-row { grid-template-columns: minmax(0, 1fr) 180px 180px 200px; gap: .6rem; }
     .vff-ann-field input,
     .vff-ann-field select {
         padding: .65rem .9rem .65rem 2.5rem;
@@ -825,6 +897,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const searchInput = document.getElementById('search');
     const cityFilter  = document.getElementById('cityFilter');
+    const structureFilter = document.getElementById('structureFilter');
     const sortFilter  = document.getElementById('sortFilter');
     const memberCards = document.querySelectorAll('.vff-mcard');
     const noResults   = document.getElementById('no-results');
@@ -832,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsCountSpan = document.getElementById('resultsCount');
     const resetAllBtn = document.getElementById('resetAllBtn');
 
-    let currentFilters = { search: '', city: '', sort: 'name_asc' };
+    let currentFilters = { search: '', city: '', structure: '', sort: 'name_asc' };
     let searchTimeout = null;
 
     /* ═══ TRI ═══ */
@@ -869,6 +942,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             hasFilters = true;
         }
+        if (currentFilters.structure) {
+            const opt = structureFilter.options[structureFilter.selectedIndex];
+            addFilterBadge('🏢 ' + opt.text, () => {
+                structureFilter.value = '';
+                currentFilters.structure = '';
+                applyFilters();
+            });
+            hasFilters = true;
+        }
         if (currentFilters.search) {
             addFilterBadge('🔍 "' + currentFilters.search + '"', () => {
                 searchInput.value = '';
@@ -892,6 +974,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         currentFilters.search = searchInput.value.toLowerCase().trim();
         currentFilters.city   = cityFilter.value;
+        currentFilters.structure = structureFilter.value;
         currentFilters.sort   = sortFilter.value;
 
         let visibleCount = 0;
@@ -901,6 +984,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name      = card.dataset.name || '';
             const email     = card.dataset.email || '';
             const structure = card.dataset.structure || '';
+            const structureId = card.dataset.structureId || '';
             const city      = card.dataset.city || '';
             const textContent = card.textContent.toLowerCase();
 
@@ -916,8 +1000,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const matchCity = !currentFilters.city ||
                              city === currentFilters.city.toLowerCase();
+            const matchStructure = !currentFilters.structure ||
+                                   structureId === currentFilters.structure;
 
-            if (matchSearch && matchCity) {
+            if (matchSearch && matchCity && matchStructure) {
                 card.style.display = '';
                 visibleCount++;
                 card.style.opacity = '0';
@@ -941,8 +1027,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetAllFilters() {
         searchInput.value = '';
         cityFilter.value = '';
+        structureFilter.value = '';
         sortFilter.value = 'name_asc';
-        currentFilters = { search: '', city: '', sort: 'name_asc' };
+        currentFilters = { search: '', city: '', structure: '', sort: 'name_asc' };
         applyFilters();
         searchInput.focus();
     }
@@ -954,6 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
         searchTimeout = setTimeout(applyFilters, 200);
     });
     cityFilter.addEventListener('change', applyFilters);
+    structureFilter.addEventListener('change', applyFilters);
     sortFilter.addEventListener('change', applyFilters);
     searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {

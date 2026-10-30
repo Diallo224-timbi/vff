@@ -147,10 +147,10 @@
                 <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1 flex-wrap">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                            @if($event->type == 'réunion') bg-blue-100 text-blue-700
-                            @elseif($event->type == 'formation') bg-emerald-100 text-emerald-700
-                            @elseif($event->type == 'atelier') bg-amber-100 text-amber-700
-                            @else bg-gray-100 text-gray-700 @endif">
+                            @if($event->type == 'réunion') bg-blue-100
+                            @elseif($event->type == 'formation')
+                            @elseif($event->type == 'atelier')
+                            @else text-gray-700 @endif">
                             {{ ucfirst($event->type) }}
                         </span>
                         @if($event->date_debut >= now())
@@ -352,26 +352,27 @@
                     @csrf
                     <div style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 4px;">
                         <div>
-                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Titre *</label>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Titre <span class="text-danger">*</span></label>
                             <input type="text" name="titre" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
                         </div>
                         <div>
-                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Description</label>
-                            <textarea name="description" rows="2" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none; resize: none;"></textarea>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Description <span class="text-danger">*</span></label>
+                            <textarea name="description" required rows="2" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none; resize: none;"></textarea>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                             <div>
-                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Début *</label>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Début <span class="text-danger">*</span></label>
                                 <input type="datetime-local" name="date_debut" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
                             </div>
                             <div>
-                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Fin *</label>
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Fin <span class="text-danger">*</span></label>
                                 <input type="datetime-local" name="date_fin" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
                             </div>
                         </div>
                         <div>
-                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Type *</label>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Type <span class="text-danger">*</span></label>
                             <select name="type" required style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                                <option value="">Sélectionner un type</option>
                                 <option value="réunion">Réunion</option>
                                 <option value="formation">Formation</option>
                                 <option value="atelier">Atelier</option>
@@ -380,12 +381,12 @@
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                             <div>
-                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Lieu</label>
-                                <input type="text" name="lieu" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Lieu <span class="text-danger">*</span></label>
+                                <input type="text" required name="lieu" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
                             </div>
                             <div>
-                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Organisateur</label>
-                                <input type="text" name="organisateur" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
+                                <label style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px;">Organisateur <span class="text-danger">*</span></label>
+                                <input type="text" required name="organisateur" style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 6px 10px; font-size: 14px; outline: none;">
                             </div>
                         </div>
                     </div>
@@ -562,6 +563,10 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('filterForm').submit();
         });
     });
+
+    @if(request()->boolean('create') && in_array(auth()->user()->role, ['admin', 'moderateur', 'user'], true))
+        openCreateModal();
+    @endif
 });
 
 // === MODALE SHOW (AFFICHAGE) ===

@@ -26,7 +26,7 @@
             <!-- Nom -->
             <div>
                 <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                    Nom de la catégorie
+                    Nom de la catégorie <span class="text-red-500">*</span>
                 </label>
                 <input 
                     type="text" 
@@ -43,7 +43,7 @@
             <!-- Description -->
             <div>
                 <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
-                    Description
+                    Description <span class="text-red-500">*</span>
                 </label>
                 <textarea 
                     name="description" 
@@ -62,7 +62,7 @@
             <div class="flex items-center justify-between pt-4">
 
                 <a href="{{ route('forum.index') }}" 
-                   class="text-gray-500 hover:text-gray-700 transition text-sm">
+                    class="text-gray-500 hover:text-gray-700 transition text-sm">
                     ← retour
                 </a>
 

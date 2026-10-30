@@ -1,22 +1,20 @@
 @extends('base')
 @section('title', 'Modifier la ressource')
 @section('content')
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
-                <div class="card-header text-white py-3" style="background: #255156; border: none; border-radius: 15px 15px 0 0;">
-                    <h5 class="modal-title mb-0">
-                        <i class="fas fa-edit me-2"></i> Modifier la ressource
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <form action="{{ route('resources.update', $resource) }}" 
-                        method="POST" 
-                        enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')   
-                        <div class="mb-3">
+<div class="modal fade" id="resourceEditModal" tabindex="-1" aria-labelledby="resourceEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable resource-edit-dialog">
+        <form class="modal-content resource-edit-modal-content" action="{{ route('resources.update', $resource) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="modal-header text-white resource-edit-modal-header">
+                <h1 class="modal-title fs-5" id="resourceEditModalLabel">
+                    <i class="fas fa-edit me-2" aria-hidden="true"></i>Modifier la ressource
+                </h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body resource-edit-modal-body">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
                             <input type="text" 
                                 name="title" 
@@ -27,55 +25,17 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div> 
-                        <div class="mb-3">
+                        <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold">Description</label>
-                            <textarea name="description" 
-                                    rows="3" 
-                                    class="form-control @error('description') is-invalid @enderror">{{ old('description', $resource->description) }}</textarea>
+                            <input type="text"
+                                   name="description"
+                                   value="{{ old('description', $resource->description) }}"
+                                   class="form-control @error('description') is-invalid @enderror">
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
-                            <div class="btn-group w-100" role="group">
-                                <button type="button" id="editBtnFileType" class="btn btn-outline-primary {{ !$resource->is_link ? 'active' : '' }}" onclick="selectEditResourceType('file')">
-                                    <i class="fas fa-upload me-1"></i> Fichier
-                                </button>
-                                <button type="button" id="editBtnLinkType" class="btn btn-outline-primary {{ $resource->is_link ? 'active' : '' }}" onclick="selectEditResourceType('link')">
-                                    <i class="fas fa-link me-1"></i> Lien externe
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Section Fichier -->
-                        <div id="editFileUploadSection" class="mb-3 {{ $resource->is_link ? 'd-none' : '' }}">
-                            @if(!$resource->is_link && $resource->file_path)
-                                <div class="alert alert-info mb-3 border-0" style="background: #f0f9ff; color: #0369a1;">
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                        <div>
-                                            <i class="fas fa-paperclip me-2 text-primary"></i>
-                                            <strong>Fichier actuel :</strong> 
-                                            <a href="{{ Storage::url($resource->file_path) }}" target="_blank" class="text-decoration-underline fw-semibold text-primary">
-                                                {{ $resource->file_name }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif                        
-                            <label class="form-label fw-semibold">
-                                {{ !$resource->is_link && $resource->file_path ? 'Remplacer le fichier' : 'Fichier' }}
-                                @if(!$resource->file_path) <span class="text-danger">*</span> @endif
-                            </label>
-                            <input type="file" id="editFile" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
-                            <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
-                        </div>
-                        <!-- Section Lien -->
-                        <div id="editLinkSection" class="mb-3 {{ !$resource->is_link ? 'd-none' : '' }}">
-                            <label class="form-label fw-semibold">URL du lien <span class="text-danger">*</span></label>
-                            <input type="url" id="edit_link_url" name="link_url" class="form-control" placeholder="https://exemple.com/document" value="{{ old('link_url', $resource->link_url) }}">
-                            <small class="text-muted">Entrez l'URL complète du lien externe</small>
-                        </div>
-                        <div class="mb-3">
+                        <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
                             <select name="category" required class="form-select @error('category') is-invalid @enderror">
                                 <option value="">Sélectionner une catégorie</option>
@@ -90,30 +50,66 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="mb-3" id="editSubCategoryContainer">
+                        <div class="col-12 col-md-6" id="editSubCategoryContainer">
                             <label class="form-label fw-semibold">Sous-catégorie <span class="text-danger">*</span></label>
                             <select id="editSubCategory" name="sub_category" class="form-select">
                                 <option value="">Aucune</option>
                             </select>
                         </div>
+                        <div class="col-12 col-md-6">
+                            <div class="resource-type-heading">
+                                <label class="form-label fw-semibold mb-0">Type de ressource <span class="text-danger">*</span></label>
+                                @if(!$resource->is_link && $resource->file_path)
+                                    <span class="resource-current-file" title="{{ $resource->file_name }}">
+                                        <i class="fas fa-paperclip" aria-hidden="true"></i>
+                                        <strong>Fichier actuel :</strong>
+                                        <a href="{{ Storage::url($resource->file_path) }}" target="_blank" rel="noopener noreferrer">
+                                            {{ $resource->file_name }}
+                                        </a>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="btn-group w-100" role="group">
+                                <button type="button" id="editBtnFileType" class="btn btn-outline-primary {{ !$resource->is_link ? 'active' : '' }}" onclick="selectEditResourceType('file')">
+                                    <i class="fas fa-upload me-1"></i> Fichier
+                                </button>
+                                <button type="button" id="editBtnLinkType" class="btn btn-outline-primary {{ $resource->is_link ? 'active' : '' }}" onclick="selectEditResourceType('link')">
+                                    <i class="fas fa-link me-1"></i> Lien externe
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Section Fichier -->
+                        <div id="editFileUploadSection" class="col-12 {{ $resource->is_link ? 'd-none' : '' }}">
+                            <label class="form-label fw-semibold">
+                                {{ !$resource->is_link && $resource->file_path ? 'Remplacer le fichier' : 'Fichier' }}
+                                @if(!$resource->file_path) <span class="text-danger">*</span> @endif
+                            </label>
+                            <input type="file" id="editFile" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
+                            <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
+                        </div>
+                        <!-- Section Lien -->
+                        <div id="editLinkSection" class="col-12 col-md-6 {{ !$resource->is_link ? 'd-none' : '' }}">
+                            <label class="form-label fw-semibold">URL du lien <span class="text-danger">*</span></label>
+                            <input type="url" id="edit_link_url" name="link_url" class="form-control" placeholder="https://exemple.com/document" value="{{ old('link_url', $resource->link_url) }}">
+                            <small class="text-muted">Entrez l'URL complète du lien externe</small>
+                        </div>
                         @if(auth()->user()->role === 'admin')
-                        <div class="mb-3 form-check">
+                        <div class="col-12 form-check">
                             <input type="checkbox" class="form-check-input" id="editImportant" name="important" value="1" {{ old('important', $resource->important) ? 'checked' : '' }}>
                             <label class="form-check-label fw-semibold" for="editImportant">Marquer comme ressource importante</label>
                         </div>
                         @endif                    
-                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
-                            <a href="{{ route('resources.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i> Annuler
-                            </a>
-                            <button type="submit" class="btn" style="background: #255156; color: white;">
-                                <i class="fas fa-save me-1"></i> Mettre à jour
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+                <div class="modal-footer resource-edit-modal-footer">
+                    <a href="{{ route('resources.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1" aria-hidden="true"></i>Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary resource-edit-submit">
+                        <i class="fas fa-save me-1" aria-hidden="true"></i>Mettre à jour
+                    </button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script>
@@ -197,21 +193,120 @@ function updateEditSubCategories(category) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-    const categorySelect = document.querySelector('select[name="category"]');
-    const currentCategory = categorySelect.value;
-    
-    if (currentCategory) {
-        updateEditSubCategories(currentCategory);
+    const editModalElement = document.getElementById('resourceEditModal');
+    if (editModalElement) {
+        document.body.appendChild(editModalElement);
+        const editModal = bootstrap.Modal.getOrCreateInstance(editModalElement);
+        editModalElement.addEventListener('hidden.bs.modal', function() {
+            window.location.assign(@json(route('resources.index')));
+        }, { once: true });
+        editModal.show();
     }
 
-    // Événement au changement de catégorie
-    categorySelect.addEventListener('change', function() {
-        updateEditSubCategories(this.value);
-    });
+    const categorySelect = document.querySelector('select[name="category"]');
+    if (categorySelect) {
+        const currentCategory = categorySelect.value;
+
+        if (currentCategory) {
+            updateEditSubCategories(currentCategory);
+        }
+
+        categorySelect.addEventListener('change', function() {
+            updateEditSubCategories(this.value);
+        });
+    }
 });
 </script>
 
 <style>
+.resource-edit-modal-content {
+    border: 0;
+    border-radius: 0.9rem;
+    overflow: hidden;
+}
+
+.resource-edit-modal-header {
+    padding: 0.85rem 1rem;
+    background: #255156;
+}
+
+.resource-edit-modal-body {
+    padding: 1rem;
+}
+
+.resource-edit-modal-body .form-label {
+    margin-bottom: 0.25rem;
+}
+
+.resource-type-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    min-width: 0;
+}
+
+.resource-current-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 0;
+    color: #0369a1;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.resource-current-file a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.resource-edit-modal-body .form-control,
+.resource-edit-modal-body .form-select {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+
+.resource-edit-modal-body small {
+    font-size: 0.75rem;
+}
+
+.resource-edit-modal-footer {
+    padding: 0.75rem 1rem;
+}
+
+.resource-edit-submit {
+    background: #255156;
+    border-color: #255156;
+}
+
+.resource-edit-submit:hover,
+.resource-edit-submit:focus {
+    background: #1d4145;
+    border-color: #1d4145;
+}
+
+@media (max-width: 575.98px) {
+    .resource-edit-dialog {
+        margin: 0.5rem;
+    }
+
+    .resource-edit-modal-body {
+        padding: 0.75rem;
+    }
+
+    .resource-type-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .resource-current-file {
+        max-width: 100%;
+    }
+}
+
 .btn-group .btn.active {
     background-color: #255156 !important;
     color: white !important;

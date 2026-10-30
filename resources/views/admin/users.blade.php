@@ -7,9 +7,9 @@
     <!-- Messages de succès -->
     @if(session('success'))
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg shadow-sm"
-             x-data="{ show: true }"
-             x-show="show"
-             x-init="setTimeout(() => show = false, 3000)">
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)">
             <div class="flex items-center">
                 <i class="fas fa-check-circle mr-2"></i>
                 <p>{{ session('success') }}</p>
@@ -49,7 +49,7 @@
     <div id="usersContainer" class="space-y-2">
         @forelse($users as $user)
         <div class="user-card bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow"
-             data-search="{{ strtolower($user->prenom.' '.$user->name.' '.$user->email.' '.($user->structure->organisme->nom_organisme ?? '')) }}">
+            data-search="{{ strtolower($user->prenom.' '.$user->name.' '.$user->email.' '.($user->structure->organisme->nom_organisme ?? '')) }}">
             <!-- Infos principales -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -103,32 +103,34 @@
                 </form>
                 @endif
                 @if($user->etatV === 'bloqué')
-                <button type="button" onclick="showReason('{{ addslashes($user->block_reason) }}')"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Voir motif">
+                <button type="button"
+                        class="show-reason-button bg-yellow-500 hover:bg-yellow-600 text-white w-7 h-7 rounded flex items-center justify-center"
+                        data-block-reason="{{ $user->block_reason ?? '' }}" title="Voir motif">
                     <i class="bx bx-info-circle text-xs"></i>
                 </button>
                 @endif
                 <button type="button"
-                        onclick="openEditModal(
-                        {{ $user->id }},
-                        '{{ addslashes($user->prenom) }}',
-                        '{{ addslashes($user->name) }}',
-                        '{{ addslashes($user->email) }}',
-                        '{{ addslashes($user->phone) }}',
-                        '{{ addslashes($user->adresse) }}',
-                        '{{ addslashes($user->ville) }}',
-                        '{{ addslashes($user->code_postal) }}',
-                        {{ $user->id_structure ?? 'null' }},
-                        {{ $user->structure->id_organisme ?? 'null' }},
-                        '{{ addslashes($user->role) }}'
-                        )"
-                        class="bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center"
+                        class="edit-user-button bg-blue-500 hover:bg-blue-600 text-white w-7 h-7 rounded flex items-center justify-center"
+                        data-user-id="{{ $user->id }}"
+                        data-prenom="{{ $user->prenom }}"
+                        data-nom="{{ $user->name }}"
+                        data-email="{{ $user->email }}"
+                        data-phone="{{ $user->phone }}"
+                        data-adresse="{{ $user->adresse }}"
+                        data-ville="{{ $user->ville }}"
+                        data-code-postal="{{ $user->code_postal }}"
+                        data-structure-id="{{ $user->id_structure }}"
+                        data-organisme-id="{{ $user->structure->id_organisme ?? '' }}"
+                        data-role="{{ $user->role }}"
                         title="Modifier">
                             <i class="bx bx-edit text-xs"></i>
                 </button>
                 @if($user->etatV !== 'bloqué')
-                <button type="button" onclick="openBlockModal({{ $user->id }}, '{{ addslashes($user->prenom) }} {{ addslashes($user->name) }}')"
-                        class="bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded flex items-center justify-center" title="Bloquer">
+                <button type="button"
+                        class="open-block-modal-button bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded flex items-center justify-center"
+                        data-user-id="{{ $user->id }}"
+                        data-user-name="{{ $user->prenom }} {{ $user->name }}"
+                        title="Bloquer">
                     <i class="bx bx-block text-xs"></i>
                 </button>
                 @endif
@@ -143,7 +145,7 @@
 </div>
 
 <!-- MODAL MOTIF BLOCAGE -->
-<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="reasonModal">
+<div class="admin-user-modal fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center" id="reasonModal" style="z-index: 2000;">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
         <div class="bg-yellow-600 text-white px-4 py-3 flex justify-between items-center">
             <h3 class="font-semibold">
@@ -166,9 +168,9 @@
 </div>
 
 <!-- MODAL MODIFICATION  -->
-<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="editModal">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div class="bg-[#255156] text-white px-4 py-3 flex justify-between items-center sticky top-0">
+<div class="admin-user-modal fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center" id="editModal" style="z-index: 2000;">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4">
+        <div class="bg-[#255156] text-white px-4 py-3 flex justify-between items-center rounded-t-lg">
             <h3 class="font-semibold">
                 <i class="fas fa-edit mr-2"></i>
                 Modifier l'utilisateur
@@ -177,84 +179,77 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="p-4">
+        <div class="p-4 md:p-5">
             <form id="editForm" method="POST" action="">
                 @csrf
                 @method('PUT')    
-                <!-- Identité -->
-                <div class="grid grid-cols-2 gap-2 mb-3">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2">
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">Prénom</label>
-                        <input type="text" name="prenom" id="editPrenom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required readonly>
+                        <label for="editPrenom" class="block text-xs text-gray-600 mb-1">Prénom <span class="text-danger">*</span></label>
+                        <input type="text" name="prenom" id="editPrenom" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">Nom</label>
-                        <input type="text" name="name" id="editNom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required readonly>
-                    </div>
-                </div>
-                <!-- Contact -->
-                <div class="mb-3">
-                    <label class="block text-xs text-gray-600 mb-1">Email</label>
-                    <input type="email" name="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" required readonly>
-                </div>  
-                <div class="mb-3">
-                    <label class="block text-xs text-gray-600 mb-1">Téléphone</label>
-                    <input type="text" name="phone" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
-                </div>
-                <!-- Adresse -->
-                <div class="mb-3">
-                    <label class="block text-xs text-gray-600 mb-1">Adresse</label>
-                    <input type="text" name="adresse" id="editAdresse" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-2 mb-3">
-                    <div>
-                        <label class="block text-xs text-gray-600 mb-1">Ville</label>
-                        <input type="text" name="ville" id="editVille" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
+                        <label for="editNom" class="block text-xs text-gray-600 mb-1">Nom <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="editNom" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">Code postal</label>
-                        <input type="text" name="code_postal" id="editCodePostal" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
+                        <label for="editEmail" class="block text-xs text-gray-600 mb-1">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="editEmail" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
                     </div>
-                </div>
-                <!-- Structure de rattachement -->
-                <div class="mb-3">
-                    <label class="block text-xs text-gray-600 mb-1">Structure de rattachement</label>
-                    <!-- liste deroulante des organismes parents -->
-                    <select required name="id_organisme" id="editOrganisme" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm mb-2">
-                        <option value="">Aucun organisme</option>
-                        @foreach($organismes as $organisme)
-                            <option value="{{ $organisme->id }}" >
-                                {{ $organisme->nom_organisme }} - {{ $organisme->ville }} -({{ $organisme->code_postal }})
-                            </option>
-                        @endforeach
-                    </select>
-                    <select  required name="id_structure" id="editStructure" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <option value="">Aucune structure</option>
-                        @foreach($structures as $structure)
-                            <option value="{{ $structure->id}}" 
-                                data-organisme-id="{{ $structure->id_organisme }}">
-                                {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }}) - {{ $structure->adresse }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>   
-                <!-- Rôle (admin seulement) -->
-                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
-                <div class="mb-3">
-                    <label class="block text-xs text-gray-600 mb-1">Rôle</label>
-                    <select name="role" id="editRole" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        @if(auth()->user()->role === 'admin')
-                         <option value="admin">Administrateur</option>
-                         <option value="moderateur">Responsable organisme</option>
-                        @endif
-                         <option value="moderateur_classique">Responsable structure</option>
-                         <option value="user">Utilisateur</option>
-                    </select>
-                </div>
-                @endif 
+                    <div>
+                        <label for="editPhone" class="block text-xs text-gray-600 mb-1">Téléphone <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" id="editPhone" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="editAdresse" class="block text-xs text-gray-600 mb-1">Adresse <span class="text-danger">*</span></label>
+                        <input type="text" name="adresse" id="editAdresse" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
+                    </div>
+                    <div>
+                        <label for="editVille" class="block text-xs text-gray-600 mb-1">Ville <span class="text-danger">*</span></label>
+                        <input type="text" name="ville" id="editVille" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
+                    </div>
+                    <div>
+                        <label for="editCodePostal" class="block text-xs text-gray-600 mb-1">Code postal <span class="text-danger">*</span></label>
+                        <input type="text" name="code_postal" id="editCodePostal" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm" required readonly>
+                    </div>
+                    <div>
+                        <label for="editOrganisme" class="block text-xs text-gray-600 mb-1">Organisme <span class="text-danger">*</span></label>
+                        <select required name="id_organisme" id="editOrganisme" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+                            <option value="">Aucun organisme</option>
+                            @foreach($organismes as $organisme)
+                                <option value="{{ $organisme->id }}">
+                                    {{ $organisme->nom_organisme }} - {{ $organisme->ville }} ({{ $organisme->code_postal }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editStructure" class="block text-xs text-gray-600 mb-1">Structure de rattachement <span class="text-danger">*</span></label>
+                        <select required name="id_structure" id="editStructure" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+                            <option value="">Aucune structure</option>
+                            @foreach($structures as $structure)
+                                <option value="{{ $structure->id }}"
+                                    data-organisme-id="{{ $structure->id_organisme }}">
+                                    {{ $structure->organisme->nom_organisme ?? '-' }} - {{ $structure->ville }} ({{ $structure->code_postal }}) - {{ $structure->adresse }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
+                    <div>
+                        <label for="editRole" class="block text-xs text-gray-600 mb-1">Rôle <span class="text-danger">*</span></label>
+                        <select required name="role" id="editRole" class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+                            @if(auth()->user()->role === 'admin')
+                                <option value="admin">Administrateur</option>
+                                <option value="moderateur">Responsable organisme</option>
+                            @endif
+                            <option value="moderateur_classique">Responsable structure</option>
+                            <option value="user">Utilisateur</option>
+                        </select>
+                    </div>
+                    @endif
                 <!-- Boutons -->
-                <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-gray-200">
+                <div class="col-span-2 flex justify-end gap-2 mt-1 pt-3 border-t border-gray-200">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm">
                         Annuler
                     </button>
@@ -262,12 +257,13 @@
                         Enregistrer
                     </button>
                 </div>
+                </div>
             </form>
         </div>
     </div>
 </div>
 <!-- MODAL BLOCAGE -->
-<div class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50" id="blockModal">
+<div class="admin-user-modal fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center" id="blockModal" style="z-index: 2000;">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
         <div class="bg-red-600 text-white px-4 py-3 flex justify-between items-center">
             <h3 class="font-semibold">
@@ -278,11 +274,11 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="p-4">
+        <div class="p-6">
             <form id="blockForm" method="POST" action="">
                 @csrf
                 <div class="mb-3">
-                    <label class="block text-xs text-gray-600 mb-1">Motif du blocage</label>
+                    <label class="block text-xs text-gray-600 mb-1">Motif du blocage <span class="text-danger">*</span></label>
                     <textarea name="reason" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" rows="3" required></textarea>
                 </div>
                 <div class="flex justify-end gap-2">
@@ -298,6 +294,10 @@
     </div>
 </div>
 <script>
+    document.querySelectorAll('.admin-user-modal').forEach(modal => {
+        document.body.appendChild(modal);
+    });
+
     // Stocker toutes les structures avec leurs données pour le filtrage dynamique
     const allStructures = @json($structures->map(function($structure) {
         return [
@@ -360,31 +360,27 @@
         }
     }
     // MODAL MODIFICATION (avec tous les champs et gestion dynamique des structures)
-    function openEditModal(id, prenom, nom, email, phone, adresse, ville, codePostal, structureId, organismeId, role) {
-        document.getElementById('editPrenom').value = prenom;
-        document.getElementById('editNom').value = nom;
-        document.getElementById('editEmail').value = email;
-        document.getElementById('editPhone').value = phone || '';
-        document.getElementById('editAdresse').value = adresse || '';
-        document.getElementById('editVille').value = ville || '';
-        document.getElementById('editCodePostal').value = codePostal || '';
+    function openEditModal(userData) {
+        document.getElementById('editPrenom').value = userData.prenom;
+        document.getElementById('editNom').value = userData.nom;
+        document.getElementById('editEmail').value = userData.email;
+        document.getElementById('editPhone').value = userData.phone;
+        document.getElementById('editAdresse').value = userData.adresse;
+        document.getElementById('editVille').value = userData.ville;
+        document.getElementById('editCodePostal').value = userData.codePostal;
         
         // Sélectionner l'organisme
         const organismeSelect = document.getElementById('editOrganisme');
-        if (organismeId) {
-            organismeSelect.value = organismeId;
-        } else {
-            organismeSelect.value = '';
-        }
+        organismeSelect.value = userData.organismeId;
         
         // Filtrer les structures en fonction de l'organisme sélectionné
-        filterStructuresByOrganisme(organismeId || '', structureId);
+        filterStructuresByOrganisme(userData.organismeId, userData.structureId);
         
         if(document.getElementById('editRole')) {
-            document.getElementById('editRole').value = role;
+            document.getElementById('editRole').value = userData.role;
         }
         
-        document.getElementById('editForm').action = `/admin/users/${id}`;
+        document.getElementById('editForm').action = `/admin/users/${userData.id}`;
         document.getElementById('editModal').classList.remove('hidden');
         document.getElementById('editModal').classList.add('flex');
     }
@@ -406,6 +402,34 @@
         document.getElementById('blockModal').classList.add('hidden');
         document.getElementById('blockModal').classList.remove('flex');
     }
+
+    document.querySelectorAll('.edit-user-button').forEach(button => {
+        button.addEventListener('click', () => {
+            openEditModal({
+                id: button.dataset.userId,
+                prenom: button.dataset.prenom,
+                nom: button.dataset.nom,
+                email: button.dataset.email,
+                phone: button.dataset.phone,
+                adresse: button.dataset.adresse,
+                ville: button.dataset.ville,
+                codePostal: button.dataset.codePostal,
+                structureId: button.dataset.structureId,
+                organismeId: button.dataset.organismeId,
+                role: button.dataset.role
+            });
+        });
+    });
+
+    document.querySelectorAll('.show-reason-button').forEach(button => {
+        button.addEventListener('click', () => showReason(button.dataset.blockReason));
+    });
+
+    document.querySelectorAll('.open-block-modal-button').forEach(button => {
+        button.addEventListener('click', () => {
+            openBlockModal(button.dataset.userId, button.dataset.userName);
+        });
+    });
 
     // Filtrage dynamique des structures rattachées en fonction de l'organisme
     document.getElementById('editOrganisme').addEventListener('change', function() {

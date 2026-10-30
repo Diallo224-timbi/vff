@@ -58,11 +58,11 @@
             <i class='bx bx-search' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #7fa8ac; font-size: 1.1rem;"></i>
             <form method="GET" action="{{ route('structures.index') }}" class="w-full">
                 <input type="text" name="search" value="{{ request('search') }}" 
-                       placeholder="Rechercher une structure..." 
-                       class="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all"
-                       style="border: 1px solid #dceeec; background: #f8fcfc; color: #255156;"
-                       onfocus="this.style.borderColor='#2d6268'; this.style.boxShadow='0 0 0 4px rgba(45,98,104,0.08)';"
-                       onblur="this.style.borderColor='#dceeec'; this.style.boxShadow='none';">
+                    placeholder="Rechercher une structure..." 
+                    class="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all"
+                    style="border: 1px solid #dceeec; background: #f8fcfc; color: #255156;"
+                    onfocus="this.style.borderColor='#2d6268'; this.style.boxShadow='0 0 0 4px rgba(45,98,104,0.08)';"
+                    onblur="this.style.borderColor='#dceeec'; this.style.boxShadow='none';">
             </form>
         </div>
     </div>

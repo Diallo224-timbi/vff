@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Structures;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -11,40 +11,27 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $structures = Structures::all();
-        return view('profile.show', compact('user', 'structures'));
+        return view('profile.show', compact('user'));
     }
 
     public function update(Request $request)
     {
         $user = Auth::user();
       
-        // Validation des données
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'fonction' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'adresse' => 'nullable|string|max:255',
             'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:20',
-            'id_structure' => 'nullable|exists:structure,id',
-            'notification' => 'nullable|boolean'
+            'notification' => 'required|boolean',
         ]);
-        // Mise à jour des informations de l'utilisateur
-        $user->update([
-            'name' => $request->name,
-            'prenom' => $request->prenom,
-            'email' => $request->email,
-            'fonction' => $request->fonction,
-            'phone' => $request->phone,
-            'adresse' => $request->adresse,
-            'ville' => $request->ville,
-            'code_postal' => $request->code_postal,
-            'id_structure' => $request->id_structure,
-            'notification' => $request->notification ?? false
-        ]);
+
+        $user->update($validated);
+
         return redirect()->route('profile.show')->with('success', 'Profil mis à jour avec succès.');
-    }   
+    }
 }

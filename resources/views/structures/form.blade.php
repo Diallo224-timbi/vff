@@ -8,8 +8,7 @@
         <div class="row mb-2">
             <div class="col-md-6">
                 <label class="form-label">Organisme <span class="text-danger">*</span></label>
-               
-                 <select name="id_organisme" class="form-select" required>
+                <select name="id_organisme" class="form-select" required>
                     <option value="">-- Choisir --</option>
                     @foreach($organismes as $organisme)
                         <option value="{{ $organisme->id }}" {{ old('id_organisme', $structure->id_organisme ?? '') == $organisme->id ? 'selected' : '' }}>
@@ -18,10 +17,10 @@
                     @endforeach
                 </select>   
             </div>   
-      
+
             <div class="col-md-6">
-                <label class="form-label">Description</label>
-                <textarea name="description" class="form-control" rows="1">{{ old('description', $structure->description ?? '') }}</textarea>
+                <label class="form-label">Description @if($method === 'POST')<span class="text-danger">*</span>@endif</label>
+                <textarea name="description" class="form-control" rows="1" {{ $method === 'POST' ? 'required' : '' }}>{{ old('description', $structure->description ?? '') }}</textarea>
             </div>
             <div class="col-md-12">
                 <label class="form-label">Détails spécifiques</label>
@@ -55,7 +54,7 @@
             <div class="col-md-3">
                 <label class="form-label">Catégories</label>
                 <div class="d-flex gap-1">
-                    <select id="categoriesSelect" class="form-select form-select-sm grow">
+                    <select id="categoriesSelect" class="form-select form-select-sm grow category-select">
                         <option value="">-- Choisir --</option>
                         <option value="juridique">Juridique</option>
                         <option value="judiciaire">Judiciaire</option>
@@ -69,7 +68,7 @@
                         <option value="social">Social</option>
                         <option value="autres">Autres</option>
                     </select>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="addCategory()">Ajouter</button>
+                    <button type="button" class="btn btn-sm btn-primary category-add-button" onclick="addCategory()">Ajouter</button>
                 </div>
                 <div class="position-relative mt-1">
                     <textarea name="categories" id="categoriesTextarea" class="form-control" rows="1" readonly>{{ old('categories', $structure->categories ?? '') }}</textarea>
@@ -85,7 +84,7 @@
             <div class="col-md-3">
                 <label class="form-label">Publics cibles</label>
                 <div class="d-flex gap-1">
-                    <select id="publicSelect" class="form-select form-select-sm grow">
+                    <select id="publicSelect" class="form-select form-select-sm grow public-select">
                         <option value="">-- Choisir --</option>
                         <option value="victimes">Victimes</option>
                         <option value="auteurs">Auteurs</option>
@@ -93,7 +92,7 @@
                         <option value="majeurs">Majeurs</option>
                         <option value="tous">Tous publics</option>
                     </select>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="addPublic()">Ajouter</button>
+                    <button type="button" class="btn btn-sm btn-primary public-add-button" onclick="addPublic()">Ajouter</button>
                 </div>
                 <div class="position-relative mt-1">
                     <textarea name="public_cible" id="publicTextarea" class="form-control" rows="1" readonly>{{ old('public_cible', $structure->public_cible ?? '') }}</textarea>
@@ -213,7 +212,10 @@
         </fieldset>
 
         <!-- BOUTONS D'ACTION -->
-        <div class="d-flex justify-content-between mt-2">
+        <div class="d-flex justify-content-between mt-2 form-actions">
+            <a href="{{ route('annuaire.index') }}" class="btn btn-secondary">
+                Annuler
+            </a>
             <button type="submit" class="btn btn-success">
                 <i class="fas fa-save"></i> 
                 @if($method === 'PUT')
@@ -222,9 +224,6 @@
                     Enregistrer
                 @endif
             </button>
-            <a href="{{ route('annuaire.index') }}" class="btn btn-secondary">
-                Annuler
-            </a>
         </div>
     </form>
 </div>
@@ -237,13 +236,55 @@
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         padding: 15px;
-        max-width: none;
+        max-width: 100%;
         width: 100%;
-        max-height: 98vh;
-        overflow-y: auto;#20939d
+        min-width: 0;
+        overflow-x: clip;
     }
-    
-    .row { margin-left: -5px; margin-right: -5px; }
+
+    .form-compact form,
+    .form-compact .row,
+    .form-compact fieldset,
+    .form-compact .col-md-12,
+    .form-compact .col-md-7,
+    .form-compact .col-md-6,
+    .form-compact .col-md-4,
+    .form-compact .col-md-3,
+    .form-compact .col-md-2 {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .form-compact .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .form-compact .form-control,
+    .form-compact .form-select,
+    .form-compact .input-group,
+    .form-compact .d-flex {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .form-compact input,
+    .form-compact select,
+    .form-compact textarea {
+        max-width: 100%;
+    }
+
+    .form-compact .category-select,
+    .form-compact .public-select {
+        flex: 1 1 0;
+        width: 0;
+    }
+
+    .form-compact .category-add-button,
+    .form-compact .public-add-button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
     
     .col-md-4, .col-md-3, .col-md-2, .col-md-6, .col-md-7 {
         padding-left: 5px;
@@ -324,9 +365,6 @@
     .border { border-width: 1px; }
     .rounded { border-radius: 8px !important; }
     
-    .form-compact::-webkit-scrollbar { width: 4px; }
-    .form-compact::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
-    
     .logo-preview-container { transition: all 0.3s ease; }
     .logo-preview-container:hover { border-color: #4299e1; background: #ebf8ff; }
     
@@ -337,10 +375,40 @@
     .spinner-border { animation: spin 0.75s linear infinite; }
     
     @media (max-height: 700px) {
-        .form-compact { max-height: 96vh; padding: 10px; }
+        .form-compact { padding: 10px; }
         .form-label { font-size: 0.7rem; }
         .form-control, .form-select { font-size: 0.75rem; height: 30px; }
         .logo-preview-container { width: 70px; height: 70px; }
+    }
+
+    @media (max-width: 576px) {
+        .form-compact {
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .form-compact fieldset {
+            padding: 8px !important;
+        }
+
+        .form-compact legend {
+            max-width: 100%;
+            white-space: normal;
+        }
+
+        .form-compact .d-flex.justify-content-between {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .form-compact .d-flex.justify-content-between > * {
+            min-width: 0;
+        }
+
+        .form-compact .form-actions {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
     }
 </style>
 

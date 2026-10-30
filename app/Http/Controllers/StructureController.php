@@ -71,7 +71,7 @@ public function index(Request $request)
     {
         $validated = $request->validate([
             'id_organisme' => 'required|exists:organisme,id',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'ville' => 'nullable|string|max:100',
             'code_postal' => 'nullable|string|max:10',
             'pays' => 'nullable|string|max:100',
@@ -208,9 +208,10 @@ public function index(Request $request)
         return redirect()->route('annuaire.index')
             ->with('success', 'Structure supprimée avec succès !');    
     }
-    public function map()
+    public function map(Request $request)
     {
         $structures = Structures::with('organisme')->get();
+        $selectedStructureId = $request->integer('structure_id');
 
         $structures->transform(function ($structure) {
             $structure->logo = $structure->logo
@@ -220,7 +221,7 @@ public function index(Request $request)
             return $structure;
         });
 
-        return view('structures.map', compact('structures'));
+        return view('structures.map', compact('structures', 'selectedStructureId'));
     }
     // afficher les détails d'une structure dans la carte
     public function details(Structures $structure)

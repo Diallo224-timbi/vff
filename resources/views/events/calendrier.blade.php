@@ -2,25 +2,31 @@
 @section('title', 'Calendrier des événements')
 @section('content')
 <!-- En-tête -->
-<div class="container-fluid py-0">
+<div class="container-fluid py-0 calendar-page">
     <div class="row mb-2">
         <div class="col-12">
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <div class="d-flex align-items-center mb-2 mb-sm-0">
-                    <div class="rounded-circle bg-primary bg-gradient p-3 me-3 shadow-lg">
+                    <div class="rounded-circle calendar-brand-icon p-3 me-3 shadow-lg">
                         <i class="fas fa-calendar-alt fa-2x text-white"></i>
                     </div>
                     <div>
-                        <h1 class="h2 mb-1 fw-bold text-gradient">Calendrier des événements</h1>
+                        <h1 class="h2 mb-1 fw-bold calendar-title">Calendrier des événements</h1>
                         <p class="text-muted mb-0">
                             <i class="bx bx-info-circle"></i>
                             <span id="totalEventsCount">{{ count($events) }}</span> événements programmés
                         </p>
                     </div>
                 </div>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('events.index') }}" class="btn btn-outline-primary rounded-pill px-3 shadow-sm" title="retour à la vue liste pour ajouter un nouveau événement">
-                        <i class="fas fa-list me-2"></i>Vue liste
+                <div class="calendar-header-actions d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
+                    <a href="{{ route('events.index', ['create' => 1]) }}"
+                       class="btn calendar-primary-btn btn-sm rounded-2 px-3 shadow-sm"
+                       aria-label="Créer un nouvel événement">
+                        <i class="fas fa-plus me-2" aria-hidden="true"></i>Nouvel événement
+                    </a>
+                    <a href="{{ route('events.index') }}"
+                       class="btn calendar-outline-btn btn-sm rounded-2 px-3 shadow-sm">
+                        <i class="fas fa-list me-2" aria-hidden="true"></i>Vue liste
                     </a>
                 </div>
             </div>
@@ -30,7 +36,7 @@
     <div class="row mb-2">
         <div class="col-12">
             <div class="card border-0 shadow-sm bg-light">
-                <div class="card-body">
+                <div class="card-body calendar-legend-body">
                     <div class="d-flex flex-wrap align-items-center justify-content-between">
                         <div class="d-flex flex-wrap gap-3">
                             <span class="badge-filter active" data-type="all">
@@ -43,7 +49,7 @@
                                 <span class="badge" style="background-color: #22c55e;">●</span>Formation
                             </span>
                             <span class="badge-filter" data-type="atelier">
-                                <span class="badge" style="background-color: #012725;">●</span>Atelier
+                                <span class="badge" style="background-color: #255156;">●</span>Atelier
                             </span>
                             <span class="badge-filter" data-type="autre">
                                 <span class="badge" style="background-color: #6b7280;">●</span>Autre
@@ -51,19 +57,19 @@
                         </div>
                         <div class="mt-2 mt-sm-0">
                             <div class="btn-group btn-group-sm" role="group">
-                                <button class="btn btn-outline-secondary refresh-calendar" title="Rafraîchir">
+                                <button class="btn btn-outline-secondary calendar-view-btn refresh-calendar" title="Rafraîchir" aria-label="Rafraîchir le calendrier">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
-                                <button class="btn btn-outline-secondary" onclick="calendar.today()" title="Aujourd'hui">
+                                <button class="btn btn-outline-secondary calendar-view-btn" onclick="calendar.today()" title="Aujourd'hui" aria-label="Afficher aujourd'hui">
                                     <i class="fas fa-calendar-day"></i>
                                 </button>
-                                <button class="btn btn-outline-secondary" onclick="calendar.changeView('dayGridMonth')" title="Mois">
+                                <button class="btn btn-outline-secondary calendar-view-btn" onclick="calendar.changeView('dayGridMonth')" title="Mois" aria-label="Vue mensuelle">
                                     <i class="fas fa-calendar-alt"></i>
                                 </button>
-                                <button class="btn btn-outline-secondary" onclick="calendar.changeView('timeGridWeek')" title="Semaine">
+                                <button class="btn btn-outline-secondary calendar-view-btn" onclick="calendar.changeView('timeGridWeek')" title="Semaine" aria-label="Vue hebdomadaire">
                                     <i class="fas fa-calendar-week"></i>
                                 </button>
-                                <button class="btn btn-outline-secondary" onclick="calendar.changeView('listWeek')" title="Liste">
+                                <button class="btn btn-outline-secondary calendar-view-btn" onclick="calendar.changeView('listWeek')" title="Liste" aria-label="Vue liste hebdomadaire">
                                     <i class="fas fa-list"></i>
                                 </button>
                             </div>
@@ -87,8 +93,8 @@
 <!-- Modal Détails -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header border-0" style="background: linear-gradient(135deg, #012725, #12626b); color: white;">
+        <div class="modal-content border-0 shadow-lg calendar-detail-modal-content">
+            <div class="modal-header border-0 calendar-modal-header">
                 <h5 class="modal-title" id="eventModalTitle">
                     <i class="fas fa-calendar-alt me-2"></i>
                     Détails de l'événement
@@ -99,7 +105,7 @@
                 <!-- Contenu dynamique -->
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                <button type="button" class="btn calendar-primary-btn rounded-pill px-4" data-bs-dismiss="modal">
                     Fermer
                 </button>
             </div>
@@ -109,14 +115,14 @@
 <!-- Modal Notification -->
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
+        <div class="modal-content border-0 shadow-lg calendar-notification-modal-content">
             <div class="modal-body text-center p-4">
                 <div class="mb-3">
                     <i class="fas fa-check-circle fa-3x text-success" id="notificationIcon"></i>
                 </div>
                 <h5 id="notificationTitle">Succès</h5>
                 <p id="notificationMessage" class="text-muted mb-3">Opération réussie</p>
-                <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn calendar-primary-btn rounded-pill px-4" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
@@ -134,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const colors = {
             'réunion': '#3b82f6',
             'formation': '#22c55e',
-            'atelier': '#012725',
+            'atelier': '#255156',
             'autre': '#6b7280'
         };
         return colors[type] || '#6b7280';
@@ -237,10 +243,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const modal = new bootstrap.Modal(document.getElementById('eventModal'));
         
         const typeColors = {
-            'réunion': 'bg-blue-100 text-blue-700',
-            'formation': 'bg-green-100 text-green-700',
-            'atelier': 'bg-teal-100 text-teal-700',
-            'autre': 'bg-gray-100 text-gray-700'
+            'réunion': 'calendar-type-meeting',
+            'formation': 'calendar-type-training',
+            'atelier': 'calendar-type-workshop',
+            'autre': 'calendar-type-other'
         };
         const typeColor = typeColors[event.extendedProps.type] || typeColors['autre'];             
         // Statut
@@ -257,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statutColor = 'bg-success';
         } else {
             statutHtml = 'À venir';
-            statutColor = 'bg-primary';
+            statutColor = 'calendar-status-upcoming';
         }        
         // Pièce jointe
         let pieceJointeHtml = '';
@@ -275,13 +281,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="mt-3 p-3 rounded-3" style="background: rgba(1, 39, 37, 0.05);">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="fas ${icon} fa-lg text-primary"></i>
+                            <i class="fas ${icon} fa-lg calendar-modal-accent"></i>
                             <div>
                                 <div class="fw-semibold text-dark">${fileName}</div>
                                 <div class="text-muted small">Pièce jointe</div>
                             </div>
                         </div>
-                        <a href="${fileUrl}" download class="btn btn-primary btn-sm rounded-pill px-3">
+                        <a href="${fileUrl}" download class="btn calendar-primary-btn btn-sm rounded-pill px-3">
                             <i class="fas fa-download me-1"></i> Télécharger
                         </a>
                     </div>
@@ -443,12 +449,128 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
+/* Charte visuelle commune */
+.calendar-page {
+    --calendar-deep: #255156;
+    --calendar-dark: #1a3c40;
+    --calendar-teal: #0a9dad;
+    --calendar-accent: #54a7b1;
+    --calendar-soft: #e9f7f6;
+}
+
+.calendar-brand-icon {
+    background: linear-gradient(135deg, var(--calendar-deep), var(--calendar-teal));
+}
+
+.calendar-title {
+    color: var(--calendar-deep);
+}
+
+.calendar-primary-btn {
+    border-color: var(--calendar-deep);
+    background: var(--calendar-deep);
+    color: #fff;
+}
+
+.calendar-primary-btn:hover,
+.calendar-primary-btn:focus-visible {
+    border-color: var(--calendar-dark);
+    background: var(--calendar-dark);
+    color: #fff;
+}
+
+.calendar-outline-btn {
+    border-color: var(--calendar-deep);
+    color: var(--calendar-deep);
+}
+
+.calendar-outline-btn:hover,
+.calendar-outline-btn:focus-visible {
+    border-color: var(--calendar-deep);
+    background: var(--calendar-deep);
+    color: #fff;
+}
+
+.calendar-legend-body {
+    padding: 0.75rem 1rem;
+}
+
+.calendar-modal-header {
+    background: linear-gradient(110deg, #255156, #0a9dad);
+    color: #fff;
+}
+
+.calendar-view-btn {
+    border-color: #255156;
+    color: #255156;
+}
+
+.calendar-view-btn:hover,
+.calendar-view-btn:focus-visible {
+    border-color: #255156;
+    background: #255156;
+    color: #fff;
+}
+
+.calendar-page :is(.btn, .badge-filter, .fc-button):focus-visible {
+    outline: 3px solid #f2c94c;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #255156;
+}
+
+.calendar-detail-modal-content,
+.calendar-notification-modal-content {
+    border-radius: 0.85rem;
+    overflow: hidden;
+}
+
+.calendar-detail-modal-content .modal-header {
+    padding: 1rem 1.25rem;
+}
+
+.calendar-detail-modal-content .modal-body {
+    padding: 1.25rem;
+}
+
+.calendar-detail-modal-content .modal-footer {
+    padding: 0.75rem 1.25rem;
+}
+
+.calendar-modal-accent {
+    color: #255156;
+}
+
+.calendar-type-meeting {
+    background: #e8f1ff;
+    color: #174b8a;
+}
+
+.calendar-type-training {
+    background: #e7f5ec;
+    color: #21643b;
+}
+
+.calendar-type-workshop {
+    background: #e9f7f6;
+    color: #255156;
+}
+
+.calendar-type-other {
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.calendar-status-upcoming {
+    background: #255156;
+    color: #fff;
+}
+
 /* Styles généraux */
 .bg-gradient-primary {
-    background: linear-gradient(135deg, #012725, #12626b);
+    background: linear-gradient(135deg, #255156, #0a9dad);
 }
 .text-gradient {
-    background: linear-gradient(135deg, #012725, #1f6469);
+    background: linear-gradient(135deg, #255156, #0a9dad);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -478,7 +600,7 @@ document.addEventListener('DOMContentLoaded', function() {
     background: #f8f9fa;
 }
 .badge-filter.active {
-    background: #012725;
+    background: #255156;
     color: white;
 }
 .badge-filter.active .badge {
@@ -503,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function() {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 .fc-day-today {
-    background: rgba(1, 39, 37, 0.05) !important;
+    background: rgba(10, 157, 173, 0.08) !important;
 }
 .fc-button {
     border-radius: 50px !important;
@@ -511,32 +633,18 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: 500 !important;
     transition: all 0.3s ease !important;
     border: none !important;
-    background: #012725 !important;
+    background: #255156 !important;
 }
 .fc-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(1, 39, 37, 0.3) !important;
+    box-shadow: 0 5px 15px rgba(37, 81, 86, 0.3) !important;
 }
 .fc-button-primary:not(:disabled):active,
 .fc-button-primary:not(:disabled).fc-button-active {
-    background: #12626b !important;
+    background: #0a9dad !important;
 }
 
 /* Modal */
-.modal-content {
-    border-radius: 20px;
-    overflow: hidden;
-}
-.modal-header {
-    padding: 1.5rem;
-}
-.modal-body {
-    padding: 2rem;
-}
-.modal-footer {
-    padding: 1rem 1.5rem;
-}
-
 /* Tooltip personnalisé */
 .tooltip-inner {
     max-width: 350px;
@@ -562,6 +670,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Responsive */
 @media (max-width: 767.98px) {
+    .calendar-header-actions {
+        width: 100%;
+        justify-content: flex-start !important;
+    }
+
     #calendar {
         min-height: 400px;
         padding: 5px;
@@ -577,7 +690,7 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 4px 10px;
         font-size: 0.75rem;
     }
-    .modal-body {
+    .calendar-detail-modal-content .modal-body {
         padding: 1rem;
     }
 }
@@ -586,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
 :root {
     --reunion-color: #3b82f6;
     --formation-color: #22c55e;
-    --atelier-color: #012725;
+    --atelier-color: #255156;
     --autre-color: #6b7280;
 }
 </style>

@@ -16,7 +16,7 @@
     @endif
     <!-- Header -->
     <div class="rounded-2xl p-2 shadow-xl text-white d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2"
-     style="background: linear-gradient(135deg, #255156, #1e7c86);">
+        style="background: linear-gradient(135deg, #255156, #1e7c86);">
 
         <!-- Titre + rappel -->
         <div class="grow">
@@ -30,7 +30,7 @@
                 Ce forum est un espace d'échange entre professionnels. Merci de privilégier des discussions respectueuses et conformes à la charte.<br> Aucune information permettant d'identifier une victime ne doit être publiée.
             </div>
         </div>
-         <!-- Actions -->
+        <!-- Actions -->
         <div class="d-flex flex-wrap gap-2 align-items-center">
             <input
                 type="search"
@@ -82,7 +82,7 @@
                     <div class="relative">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                         <input type="text" id="categorySearch" placeholder="Rechercher une catégorie..." 
-                               class="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent">
+                            class="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#255156] focus:border-transparent">
                         <button id="clearCategorySearch" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
                             <i class="fas fa-times-circle text-sm"></i>
                         </button>
@@ -109,9 +109,9 @@
                             $categoryThreadCount = $threads->where('category_id', $category->id)->count();
                         @endphp
                         <div class="category-item border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer" 
-                             data-category-name="{{ strtolower($category->name) }}" 
-                             data-category-id="{{ $category->id }}"
-                             data-category-display="{{ $category->name }}">
+                            data-category-name="{{ strtolower($category->name) }}" 
+                            data-category-id="{{ $category->id }}"
+                            data-category-display="{{ $category->name }}">
                             <div class="p-2 flex items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <div>
@@ -170,17 +170,17 @@
                         <div class="thread-item rounded-xl shadow-sm hover:shadow-md transition p-3 border 
                             @if($thread->is_resolved) bg-green-100 border-green-400 
                             @else bg-white border-gray-200 @endif" 
-                             data-created="{{ $thread->created_at }}" 
-                             data-comments="{{ $thread->commentsCount() ?? 0 }}"
-                             data-thread-id="{{ $thread->id }}"
-                             data-title="{{ strtolower($thread->title) }}"
-                             data-body="{{ strtolower(strip_tags($thread->body)) }}"
-                             data-category="{{ strtolower($thread->category->name) }}"
-                             data-category-id="{{ $thread->category_id }}"
-                             data-thread-title="{{ addslashes($thread->title) }}"
-                             data-thread-body="{{ addslashes(strip_tags($thread->body)) }}"
-                             data-category-id-edit="{{ $thread->category_id }}">
-                            <div class="flex justify-between items-start mb-1">
+                            data-created="{{ $thread->created_at }}" 
+                            data-comments="{{ $thread->commentsCount() ?? 0 }}"
+                            data-thread-id="{{ $thread->id }}"
+                            data-title="{{ strtolower($thread->title) }}"
+                            data-body="{{ strtolower(strip_tags($thread->body)) }}"
+                            data-category="{{ strtolower($thread->category->name) }}"
+                            data-category-id="{{ $thread->category_id }}"
+                            data-thread-title="{{ addslashes($thread->title) }}"
+                            data-thread-body="{{ addslashes(strip_tags($thread->body)) }}"
+                            data-category-id-edit="{{ $thread->category_id }}">
+                        <div class="flex justify-between items-start mb-1">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2 flex-wrap">
                                         <a href="{{ route('forum.show', $thread) }}" class="flex-1">
@@ -281,9 +281,11 @@
       <form action="{{ route('forum.store') }}" method="POST">
         @csrf
         <div class="modal-body py-2">
+            <label for="title" class="form-label mb-1" style="font-size: 0.85rem;">Titre du sujet <span class="text-danger">*</span></label>
             <input type="text" name="title" class="form-control form-control-sm mb-2" placeholder="Titre" required>
+            <label for="body" class="form-label mb-1" style="font-size: 0.85rem;">Contenu du sujet <span class="text-danger">*</span></label>
             <textarea name="body" class="form-control form-control-sm mb-2" rows="4" placeholder="Message" required></textarea>
-            <label for="category_id" class="form-label mb-1" style="font-size: 0.85rem;">Catégorie: <a href="{{ route('categories.create') }}" target="_blank" style="color: blue"><i> créer une catégorie si elle n'existe pas.</i></a></label>
+            <label for="category_id" class="form-label mb-1" style="font-size: 0.85rem;">Catégorie: <span class="text-danger">*</span> <a href="{{ route('categories.create') }}" target="_blank" style="color: blue"><i> créer une catégorie si elle n'existe pas.</i></a></label>
             <select name="category_id" id="category_id" class="form-select form-select-sm" required>
               <option value="">Sélectionnez une catégorie</option>
               @foreach($categories as $category)

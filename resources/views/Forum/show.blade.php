@@ -32,15 +32,15 @@
                 <div class="flex-1">
                     <div class="flex items-center justify-between mb-2">
                         <span class="cursor-pointer user-info-trigger font-semibold text-gray-800 hover:text-[#255156] transition-colors" 
-                              data-user-id="{{ $comment->user->id }}"
-                              data-user-prenom="{{ $comment->user->prenom }}"
-                              data-user-nom="{{ $comment->user->name ?? '' }}"
-                              data-user-email="{{ $comment->user->email }}"
-                              data-user-role="{{ $comment->user->role ?? 'Membre' }}"
-                              data-user-structure="{{ $comment->user->structure->ville ?? '' }} ({{ $comment->user->structure->code_postal ?? '' }})"
-                              data-user-organisme="{{ $comment->user->structure->organisme->nom_organisme ?? '' }}"
-                              data-user-telephone="{{ $comment->user->phone ?? 'Non renseigné' }}"
-                              data-user-fonction="{{ $comment->user->fonction ?? 'Non renseigné' }}">
+                            data-user-id="{{ $comment->user->id }}"
+                            data-user-prenom="{{ $comment->user->prenom }}"
+                            data-user-nom="{{ $comment->user->name ?? '' }}"
+                            data-user-email="{{ $comment->user->email }}"
+                            data-user-role="{{ $comment->user->role ?? 'Membre' }}"
+                            data-user-structure="{{ $comment->user->structure->ville ?? '' }} ({{ $comment->user->structure->code_postal ?? '' }})"
+                            data-user-organisme="{{ $comment->user->structure->organisme->nom_organisme ?? '' }}"
+                            data-user-telephone="{{ $comment->user->phone ?? 'Non renseigné' }}"
+                            data-user-fonction="{{ $comment->user->fonction ?? 'Non renseigné' }}">
                             {{ $comment->user->prenom }} {{ $comment->user->nom ?? '' }}
                             <small style="color: rgb(11, 131, 131)">
                                 <i class="fas fa-building"></i> {{ $comment->user->structure->organisme->nom_organisme ?? '' }} 

@@ -440,48 +440,28 @@
 </div>
 
 <!-- MODAL CRÉATION DOCUMENT -->
-<div id="resourceModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header" style="background: #255156; color: white; border-radius: 15px 15px 0 0;">
-                <h5 class="modal-title">Ajouter une ressource</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+<div id="resourceModal" class="modal fade" tabindex="-1" aria-labelledby="resourceModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable resource-form-dialog">
+        <form id="resourceForm" class="modal-content resource-form-modal" enctype="multipart/form-data" method="POST" action="{{ route('resources.store') }}">
+            @csrf
+            <div class="modal-header text-white resource-form-modal-header">
+                <h2 class="modal-title fs-5" id="resourceModalTitle">
+                    <i class="fas fa-folder-plus me-2" aria-hidden="true"></i>Ajouter une ressource
+                </h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
-            <form id="resourceForm" enctype="multipart/form-data" method="POST" action="{{ route('resources.store') }}">
-                <div class="modal-body">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
+            <div class="modal-body resource-form-modal-body">
+                <div class="row g-2">
+                    <div class="col-12 col-md-6">
+                        <label for="title" class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
                         <input type="text" id="title" name="title" required class="form-control">
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
-                        <textarea id="description" name="description" rows="3" class="form-control" required></textarea>
+                    <div class="col-12 col-md-6">
+                        <label for="description" class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                        <input type="text" id="description" name="description" required class="form-control">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
-                        <div class="btn-group w-100" role="group">
-                            <button type="button" id="btnFileType" class="btn btn-outline-primary active" onclick="selectResourceType('file')">
-                                <i class="fas fa-upload me-1"></i> Fichier
-                            </button>
-                            <button type="button" id="btnLinkType" class="btn btn-outline-primary" onclick="selectResourceType('link')">
-                                <i class="fas fa-link me-1"></i> Lien externe
-                            </button>
-                        </div>
-                    </div>
-                    <div id="fileUploadSection" class="mb-3">
-                        <label class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
-                        <small class="text-muted">Formats acceptés: PDF, DOC, ODT, DOCX, JPG, PNG, GIF, Max 50Mo</small>
-                    </div>
-                    <div id="linkSection" class="mb-3 d-none">
-                        <label class="form-label fw-semibold">URL du lien <span class="text-danger">*</span></label>
-                        <input type="url" id="linkUrl" name="link_url" class="form-control" placeholder="https://exemple.com/document">
-                        <small class="text-muted">Entrez l'URL complète du lien externe</small>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
+                    <div class="col-12 col-md-6">
+                        <label for="category" class="form-label fw-semibold">Catégorie <span class="text-danger">*</span></label>
                         <select id="category" name="category" required class="form-select" onchange="updateSubCategories(this.value)">
                             <option value="">Sélectionner une catégorie</option>
                             <option value="guides_etudes">Guides & Études violences faites aux femmes</option>
@@ -492,27 +472,50 @@
                             <option value="conventions">Conventions, protocoles & dispositif</option>
                         </select>
                     </div>
-                    <div class="mb-3" id="subCategoryContainer">
-                        <label class="form-label fw-semibold">Sous-catégorie <span class="text-danger">*</span></label>
+                    <div class="col-12 col-md-6" id="subCategoryContainer">
+                        <label for="subCategory" class="form-label fw-semibold">Sous-catégorie <span class="text-danger">*</span></label>
                         <select id="subCategory" name="sub_category" class="form-select" required>
                             <option value="">Aucune</option>
                         </select>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Type de ressource <span class="text-danger">*</span></label>
+                        <div class="btn-group w-100" role="group" aria-label="Type de ressource">
+                            <button type="button" id="btnFileType" class="btn btn-outline-primary active" onclick="selectResourceType('file')">
+                                <i class="fas fa-upload me-1" aria-hidden="true"></i>Fichier
+                            </button>
+                            <button type="button" id="btnLinkType" class="btn btn-outline-primary" onclick="selectResourceType('link')">
+                                <i class="fas fa-link me-1" aria-hidden="true"></i>Lien externe
+                            </button>
+                        </div>
+                    </div>
+                    <div id="fileUploadSection" class="col-12 col-md-6">
+                        <label for="file" class="form-label fw-semibold">Fichier <span class="text-danger">*</span></label>
+                        <input type="file" id="file" name="file" class="form-control" accept=".pdf,.doc,.odt,.docx,.xls,.csv,.jpg,.jpeg,.png,.gif,.webm,.avi">
+                        <small class="text-muted">Formats acceptés : PDF, DOC, ODT, DOCX, JPG, PNG, GIF (50 Mo max)</small>
+                    </div>
+                    <div id="linkSection" class="col-12 col-md-6 d-none">
+                        <label for="linkUrl" class="form-label fw-semibold">URL du lien <span class="text-danger">*</span></label>
+                        <input type="url" id="linkUrl" name="link_url" class="form-control" placeholder="https://exemple.com/document">
+                        <small class="text-muted">Entrez l'URL complète du lien externe</small>
+                    </div>
                     @if(auth()->user()->role === 'admin')
-                    <div class="mb-3 form-check">
+                    <div class="col-12 form-check">
                         <input type="checkbox" class="form-check-input" id="important" name="important" value="1">
                         <label class="form-check-label fw-semibold" for="important">Marquer comme ressource importante</label>
                     </div>
                     @endif
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn" style="background: #255156; color: white;">
-                        <i class="fas fa-save me-1"></i> Enregistrer
-                    </button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer resource-form-modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1" aria-hidden="true"></i>Annuler
+                </button>
+                <button type="submit" class="btn btn-primary resource-form-submit">
+                    <i class="fas fa-save me-1" aria-hidden="true"></i>Enregistrer
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -520,6 +523,90 @@
 
 @section('scripts')
 <style>
+    .resource-form-modal {
+        border: 0;
+        border-radius: 0.9rem;
+        overflow: hidden;
+    }
+
+    .resource-form-modal-header {
+        display: flex;
+        align-items: center;
+        padding: 0.85rem 1rem;
+        background: #255156;
+    }
+
+    #resourceModalTitle {
+        display: block;
+        flex: 1 1 auto;
+        margin: 0;
+        color: #fff !important;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .resource-form-modal-body {
+        padding: 1rem;
+    }
+
+    .resource-form-modal-body .form-label {
+        margin-bottom: 0.25rem;
+    }
+
+    .resource-form-modal-body .form-control,
+    .resource-form-modal-body .form-select {
+        min-width: 0;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+
+    .resource-form-modal-body small {
+        font-size: 0.75rem;
+    }
+
+    .resource-form-modal .btn-group .btn.active {
+        background-color: #255156;
+        color: #fff;
+        border-color: #255156;
+        box-shadow: none;
+    }
+
+    .resource-form-modal .btn-group .btn-outline-primary {
+        border-color: #dee2e6;
+        color: #495057;
+    }
+
+    .resource-form-modal .btn-group .btn-outline-primary:hover:not(.active) {
+        background-color: #f8f9fa;
+        border-color: #ced4da;
+        color: #212529;
+    }
+
+    .resource-form-modal-footer {
+        padding: 0.75rem 1rem;
+    }
+
+    .resource-form-submit {
+        background: #255156;
+        border-color: #255156;
+    }
+
+    .resource-form-submit:hover,
+    .resource-form-submit:focus {
+        background: #1d4145;
+        border-color: #1d4145;
+    }
+
+    @media (max-width: 575.98px) {
+        .resource-form-dialog {
+            margin: 0.5rem;
+        }
+
+        .resource-form-modal-body {
+            padding: 0.75rem;
+        }
+    }
+
     .resource-card .card {
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -1026,7 +1113,10 @@
         const resourceModalEl = document.getElementById('resourceModal');
 
         if (imageModalEl) imageModal = new bootstrap.Modal(imageModalEl);
-        if (resourceModalEl) resourceModal = new bootstrap.Modal(resourceModalEl);
+        if (resourceModalEl) {
+            document.body.appendChild(resourceModalEl);
+            resourceModal = new bootstrap.Modal(resourceModalEl);
+        }
 
         // Événements d'écoute en temps réel pour le filtre et la recherche
         const searchInput = document.getElementById('searchInput');

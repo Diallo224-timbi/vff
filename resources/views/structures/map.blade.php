@@ -4,8 +4,7 @@
 
 @section('content')
 <!-- CONTENEUR PRINCIPAL - TIENT DANS LA FENÊTRE SANS SCROLL -->
-<div class="w-full flex flex-col p-0 bg-gray-50/50 overflow-hidden"
-     style="height: calc(100vh - 100px); max-height: calc(100vh - 100px);">
+<main class="map-page w-full flex flex-col p-0 bg-gray-50/50">
     <!-- 1. HEADER COMPACT -->
     <div class="shrink-0 flex flex-wrap justify-between items-center gap-0 mb-0.5" style="min-height: 22px;">
         <h1 class="text-sm font-bold text-gray-800 flex items-center gap-1.5">
@@ -28,7 +27,7 @@
         <div class="bg-white px-2.5 py-1 rounded-lg border border-gray-200 shadow-2xs flex items-center justify-between">
             <div>
                 <div class="text-[10px] font-medium text-gray-500 leading-tight">Structures visibles</div>
-                <div class="text-sm font-bold text-green-800 leading-tight" id="visibleCount">{{ $structures->count() }}</div>
+                <div class="text-sm font-bold text-green-800 leading-tight" id="visibleCount" role="status" aria-live="polite">{{ $structures->count() }}</div>
             </div>
             <div class="w-6 h-6 rounded-md bg-green-50 flex items-center justify-center text-green-600">
                 <i class="fas fa-eye text-[10px]"></i>
@@ -47,12 +46,13 @@
 
     <!-- 3. FILTRES COMPACTS -->
     <div class="flex-shrink-0 bg-white border border-gray-200 rounded-lg shadow-2xs p-1.5 mb-1" style="min-height: 36px;">
-        <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-1.5 justify-between">  
+        <div class="map-toolbar-row flex flex-col lg:flex-row items-stretch lg:items-center gap-1.5 justify-between">
             <!-- Recherche -->
             <div class="w-full lg:w-56 flex-shrink-0">
                 <div class="relative">
                     <i class="fas fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-[11px]"></i>
-                    <input type="text" id="mapSearch" 
+                    <label class="visually-hidden" for="mapSearch">Rechercher une structure par nom, ville ou responsable</label>
+                    <input type="search" id="mapSearch"
                            placeholder="Nom, ville, responsable..."
                            class="w-full pl-7 pr-2 py-1 border border-gray-300 rounded-md text-xs focus:ring-1 focus:ring-[#255156] focus:outline-none">
                 </div>
@@ -63,15 +63,16 @@
                     <span class="text-[11px] font-bold text-gray-700 flex items-center gap-1">
                         <i class="fas fa-filter text-[#255156]"></i> Catégories:
                     </span>
-                    <button type="button" onclick="checkAll('.category-filter')" class="text-[10px] bg-[#255156] hover:bg-[#1d4144] text-white px-1.5 py-0.5 rounded font-semibold cursor-pointer transition-colors">
+                    <button type="button" data-category-action="all" class="text-[10px] bg-[#255156] hover:bg-[#1d4144] text-white px-1.5 py-0.5 rounded font-semibold cursor-pointer transition-colors">
                         Tous
                     </button>
-                    <button type="button" onclick="uncheckAll('.category-filter')" class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-800 px-1.5 py-0.5 rounded font-semibold cursor-pointer transition-colors">
+                    <button type="button" data-category-action="none" class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-800 px-1.5 py-0.5 rounded font-semibold cursor-pointer transition-colors">
                         Aucun
                     </button>
                 </div>
                 <!-- Puces défilables -->
-                <div class="flex items-center gap-1 overflow-x-auto py-0.5 px-1 scrollbar-thin border border-gray-200 rounded-md bg-gray-50/50 w-full flex-1">
+                <div class="map-category-list flex items-center gap-1 overflow-x-auto py-1 px-1 scrollbar-thin border border-gray-200 rounded-md bg-gray-50/50 w-full flex-1"
+                     role="group" aria-label="Filtrer par catégorie" tabindex="0">
                     @php
                         $categories = $structures
                             ->pluck('categories')
@@ -83,8 +84,8 @@
                             ->values();
                     @endphp
                     @foreach($categories as $category)
-                        <label class="inline-flex items-center flex-shrink-0 cursor-pointer text-[11px] bg-white border border-gray-200 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors font-medium">
-                            <input type="checkbox" value="{{ $category }}" class="category-filter mr-1 rounded text-[#255156] focus:ring-0 w-3 h-3" checked>
+                        <label class="map-category-option inline-flex items-center flex-shrink-0 cursor-pointer text-[11px] bg-white border border-gray-200 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors font-medium">
+                            <input type="checkbox" value="{{ $category }}" class="category-filter mr-1 rounded text-[#255156] focus:ring-0" checked>
                             <span class="truncate max-w-[140px] text-gray-800">{{ $category }}</span>
                         </label>
                     @endforeach
@@ -92,7 +93,7 @@
             </div>
             <!-- Réinitialiser -->
             <div class="flex-shrink-0">
-                <button id="resetViewBtn" 
+                <button type="button" id="resetViewBtn"
                         class="w-full lg:w-auto bg-[#255156] hover:bg-[#1d4144] text-white px-2.5 py-1 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors">
                     <i class="fas fa-sync-alt text-[10px]"></i>
                     <span>Réinitialiser</span>
@@ -102,25 +103,26 @@
     </div>
 
     <!-- 4. CARTE + DÉTAILS — PREND TOUT L'ESPACE RESTANT -->
-    <div class="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-1.5 overflow-hidden">
+    <div class="map-content flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-1.5 overflow-hidden">
         
         <!-- CARTE -->
         <div class="lg:col-span-3 relative h-full">
-            <div class="bg-white border border-gray-200 rounded-lg shadow-2xs overflow-hidden h-full w-full relative">
-                <div id="map" class="w-full h-full"></div>
+            <div class="map-panel-frame bg-white border border-gray-200 rounded-lg shadow-2xs overflow-hidden h-full w-full relative">
+                <div id="map" class="w-full h-full" role="region" aria-label="Carte interactive des structures" tabindex="0"></div>
             </div>
         </div>
 
         <!-- PANNEAU DÉTAILS -->
         <div class="lg:col-span-1 relative h-full">
-            <div class="bg-white border border-gray-200 rounded-lg shadow-2xs h-full flex flex-col overflow-hidden">
+            <div class="map-details-frame bg-white border border-gray-200 rounded-lg shadow-2xs h-full flex flex-col overflow-hidden">
                 <div class="bg-gradient-to-r from-[#255156] to-[#3a757b] text-white px-2.5 py-1.5 flex-shrink-0">
                     <h3 class="font-bold text-xs flex items-center">
                         <i class="fas fa-info-circle mr-1.5"></i>
                         Détails de la structure
                     </h3>
                 </div>
-                <div class="flex-1 min-h-0 overflow-y-auto p-2" id="detailsPanelContent">
+                <div class="flex-1 min-h-0 overflow-y-auto p-2" id="detailsPanelContent" role="region" aria-label="Informations sur la structure sélectionnée">
+                    <p id="mapSelectionAnnouncement" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
                     <div id="defaultMessage" class="text-center py-6">
                         <div class="w-10 h-10 bg-[#255156]/10 text-[#255156] rounded-full flex items-center justify-center mx-auto mb-2">
                             <i class="fas fa-map-marker-alt text-base"></i>
@@ -133,7 +135,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <!-- MODAL DÉTAILS -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
@@ -156,8 +158,8 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="text-gray-500 hover:bg-gray-100 rounded-lg p-1 transition-colors flex-shrink-0" data-bs-dismiss="modal">
-                        <i class="fas fa-times text-sm"></i>
+                    <button type="button" class="text-gray-500 hover:bg-gray-100 rounded-lg p-1 transition-colors flex-shrink-0" data-bs-dismiss="modal" aria-label="Fermer les détails de la structure">
+                        <i class="fas fa-times text-sm" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>  
@@ -299,12 +301,8 @@
 
 @section('scripts')
 <!-- Leaflet CSS et JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -359,12 +357,55 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(invalidateMap, 300);
 
     const structures = @json($structures);
+    const selectedStructureId = @json($selectedStructureId ?? null);
 
     function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    function getStorageUrl(path) {
+        if (typeof path !== 'string' || !path.trim() || path.includes('\\')) return null;
+
+        const segments = path.split('/');
+        if (segments.some(segment => !segment || segment === '.' || segment === '..')) return null;
+
+        return `/storage/${segments.map(encodeURIComponent).join('/')}`;
+    }
+
+    function getSafeHttpUrl(value) {
+        if (typeof value !== 'string') return null;
+
+        try {
+            const url = new URL(value.trim());
+            return ['http:', 'https:'].includes(url.protocol) ? url.href : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function getSafePhoneUri(value) {
+        if (typeof value !== 'string') return null;
+
+        const phone = value.trim().replace(/[^\d+(). -]/g, '');
+        return phone && /\d/.test(phone) ? `tel:${encodeURIComponent(phone.replace(/\s/g, ''))}` : null;
+    }
+
+    function getSafeEmailUri(value) {
+        if (typeof value !== 'string') return null;
+
+        const email = value.trim();
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+            ? `mailto:${encodeURIComponent(email)}`
+            : null;
+    }
+
+    function isValidCoordinate(value, min, max) {
+        if (value === null || value === undefined || value === '') return false;
+        const coordinate = Number(value);
+        return Number.isFinite(coordinate) && coordinate >= min && coordinate <= max;
     }
 
     function escapeJsonForAttribute(obj) {
@@ -400,8 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentStructure = structure;
         if (!structure) return;
         
-        const logoPath = structure.organisme?.logo_path;
-        const logoUrl = logoPath ? `/storage/${logoPath}` : null;
+        const logoUrl = getStorageUrl(structure.organisme?.logo_path);
         
         const modalLogoImg = document.getElementById('modal-logo-img');
         const modalLogoPlaceholder = document.getElementById('modal-logo-placeholder');
@@ -423,14 +463,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-zone').textContent = structure.zone || 'Non spécifié';
         
         const siteElement = document.getElementById('modal-site');
-        if (structure.organisme?.site_web && structure.organisme.site_web.trim() !== '') {
-            const url = structure.organisme.site_web.trim();
-            siteElement.innerHTML = `
-                <a href="${url}" target="_blank" class="text-[#255156] hover:underline break-all text-[11px]">
-                ${escapeHtml(url)} <i class="fas fa-external-link-alt text-[9px] ml-1"></i>
-                </a>`;
+        const safeSiteUrl = getSafeHttpUrl(structure.organisme?.site_web);
+        siteElement.replaceChildren();
+        if (safeSiteUrl) {
+            const link = document.createElement('a');
+            link.href = safeSiteUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.className = 'text-[#255156] hover:underline break-all text-[11px]';
+            link.textContent = safeSiteUrl;
+            siteElement.append(link);
         } else {
-            siteElement.innerHTML = '<span class="text-gray-400 italic text-[11px]">Non disponible</span>';
+            siteElement.textContent = 'Non disponible';
         }
 
         const descriptionElement = document.getElementById('modal-description');
@@ -458,17 +502,29 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-adresse').textContent = structure.adresse || 'Non spécifiée';
         
         const telephoneElement = document.getElementById('modal-telephone');
-        if (structure.telephone && structure.telephone.trim() !== '') {
-            telephoneElement.innerHTML = `<a href="tel:${structure.telephone.replace(/\s/g, '')}" class="text-[#255156] hover:underline">${escapeHtml(structure.telephone)}</a>`;
+        const phoneUri = getSafePhoneUri(structure.telephone);
+        telephoneElement.replaceChildren();
+        if (phoneUri) {
+            const link = document.createElement('a');
+            link.href = phoneUri;
+            link.className = 'text-[#255156] hover:underline';
+            link.textContent = structure.telephone;
+            telephoneElement.append(link);
         } else {
-            telephoneElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+            telephoneElement.textContent = 'Non disponible';
         }
         
         const emailElement = document.getElementById('modal-email');
-        if (structure.email && structure.email.trim() !== '') {
-            emailElement.innerHTML = `<a href="mailto:${structure.email}" class="text-[#255156] hover:underline break-all">${escapeHtml(structure.email)}</a>`;
+        const emailUri = getSafeEmailUri(structure.email);
+        emailElement.replaceChildren();
+        if (emailUri) {
+            const link = document.createElement('a');
+            link.href = emailUri;
+            link.className = 'text-[#255156] hover:underline break-all';
+            link.textContent = structure.email.trim();
+            emailElement.append(link);
         } else {
-            emailElement.innerHTML = '<span class="text-gray-400 italic">Non disponible</span>';
+            emailElement.textContent = 'Non disponible';
         }
         
         document.getElementById('modal-contact').textContent = structure.contact || 'Non spécifié';
@@ -492,16 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dateElement.textContent = '-';
         }
     }
-
-    window.checkAll = function(selector) {
-        document.querySelectorAll(selector).forEach(cb => cb.checked = true);
-        filterMarkers();
-    };
-    
-    window.uncheckAll = function(selector) {
-        document.querySelectorAll(selector).forEach(cb => cb.checked = false);
-        filterMarkers();
-    };
 
     function createCustomIcon(color) {
         return L.divIcon({
@@ -534,9 +580,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createPopupContent(structure) {
-        const logoPath = structure.organisme?.logo_path;
-        const logoUrl = logoPath ? `/storage/${logoPath}` : null;
+        const logoUrl = getStorageUrl(structure.organisme?.logo_path);
         const safeStructureJson = escapeJsonForAttribute(structure);
+        const phoneUri = getSafePhoneUri(structure.telephone);
+        const hasCoordinates = isValidCoordinate(structure.latitude, -90, 90)
+            && isValidCoordinate(structure.longitude, -180, 180);
+        const directionsUrl = hasCoordinates
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${Number(structure.latitude)},${Number(structure.longitude)}`)}`
+            : null;
         
         return `
             <div class="popup-content" style="min-width: 200px; max-width: 280px;">
@@ -558,7 +609,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${structure.telephone ? `
                         <p class="flex items-center">
                             <i class="fas fa-phone text-[#255156] w-4"></i>
-                            <span class="text-gray-700 font-medium">${escapeHtml(structure.telephone)}</span>
+                            ${phoneUri
+                                ? `<a href="${escapeHtml(phoneUri)}" class="text-gray-700 font-medium">${escapeHtml(structure.telephone)}</a>`
+                                : `<span class="text-gray-700 font-medium">${escapeHtml(structure.telephone)}</span>`}
                         </p>
                     ` : ''} 
                     ${structure.categories ? `
@@ -580,8 +633,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="fas fa-info-circle mr-1"></i>
                         Voir tous les détails
                     </button>
-                    ${structure.latitude && structure.longitude ? `
-                        <a href="https://www.google.com/maps/search/?api=1&query=${structure.latitude},${structure.longitude}" target="_blank" 
+                    ${directionsUrl ? `
+                        <a href="${directionsUrl}" target="_blank" rel="noopener noreferrer"
                            class="flex items-center justify-center gap-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1.5 rounded-lg font-semibold transition-all duration-200">
                             <i class="fas fa-directions mr-1"></i>
                             Itinéraire
@@ -593,9 +646,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showStructureDetails(structure) {
-        const logoPath = structure.organisme?.logo_path;
-        const logoUrl = logoPath ? `/storage/${logoPath}` : null;
+        const logoUrl = getStorageUrl(structure.organisme?.logo_path);
         const safeStructureJson = escapeJsonForAttribute(structure);
+        const phoneUri = getSafePhoneUri(structure.telephone);
+        const emailUri = getSafeEmailUri(structure.email);
+        const hasCoordinates = isValidCoordinate(structure.latitude, -90, 90)
+            && isValidCoordinate(structure.longitude, -180, 180);
         
         const detailsHtml = `
             <div class="space-y-2 text-xs">
@@ -632,17 +688,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${structure.telephone ? `
                             <div class="flex items-center gap-1.5">
                                 <i class="fas fa-phone text-[#255156] w-3.5 text-[10px]"></i>
-                                <a href="tel:${structure.telephone.replace(/\s/g,'')}" class="text-gray-800 font-semibold hover:text-[#255156] transition-colors">
-                                    ${escapeHtml(structure.telephone)}
-                                </a>
+                                ${phoneUri
+                                    ? `<a href="${escapeHtml(phoneUri)}" class="text-gray-800 font-semibold hover:text-[#255156] transition-colors">${escapeHtml(structure.telephone)}</a>`
+                                    : `<span class="text-gray-800 font-semibold">${escapeHtml(structure.telephone)}</span>`}
                             </div>
                         ` : ''}
                         ${structure.email ? `
                             <div class="flex items-center gap-1.5">
                                 <i class="fas fa-envelope text-[#255156] w-3.5 text-[10px]"></i>
-                                <a href="mailto:${structure.email}" class="text-gray-800 font-medium hover:text-[#255156] break-all transition-colors">
-                                    ${escapeHtml(structure.email)}
-                                </a>
+                                ${emailUri
+                                    ? `<a href="${escapeHtml(emailUri)}" class="text-gray-800 font-medium hover:text-[#255156] break-all transition-colors">${escapeHtml(structure.email)}</a>`
+                                    : `<span class="text-gray-800 font-medium break-all">${escapeHtml(structure.email)}</span>`}
                             </div>
                         ` : ''}
                         ${structure.responsable ? `
@@ -671,8 +727,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     Voir tous les détails
                 </button>
 
-                ${structure.latitude && structure.longitude ? `
-                    <button onclick="window.zoomToStructure(${structure.latitude}, ${structure.longitude})" 
+                ${hasCoordinates ? `
+                    <button type="button" data-zoom-structure data-latitude="${Number(structure.latitude)}" data-longitude="${Number(structure.longitude)}"
                             class="w-full bg-gray-100 text-gray-800 py-1.5 px-2 rounded-lg text-[11px] hover:bg-gray-200 transition-colors flex items-center justify-center gap-1.5 font-semibold">
                         <i class="fas fa-search-plus"></i>
                         Centrer sur la carte
@@ -685,6 +741,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('structureDetails').classList.remove('hidden');
         document.getElementById('defaultMessage').classList.add('hidden');
         document.getElementById('detailsPanelContent').scrollTop = 0;
+        const structureName = structure.organisme?.nom_organisme || 'Structure sans nom';
+        const structureCity = structure.ville ? ` à ${structure.ville}` : '';
+        document.getElementById('mapSelectionAnnouncement').textContent = `${structureName}${structureCity} sélectionnée.`;
+
+        document.querySelector('#structureDetails [data-zoom-structure]')?.addEventListener('click', function () {
+            const latitude = Number(this.dataset.latitude);
+            const longitude = Number(this.dataset.longitude);
+            if (isValidCoordinate(latitude, -90, 90) && isValidCoordinate(longitude, -180, 180)) {
+                window.zoomToStructure(latitude, longitude);
+            }
+        });
     }
 
     window.zoomToStructure = function(lat, lon) {
@@ -692,12 +759,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function addMarker(structure) {
-        if (!structure.latitude || !structure.longitude) return;
+        if (!isValidCoordinate(structure.latitude, -90, 90)
+            || !isValidCoordinate(structure.longitude, -180, 180)) return;
         
         const color = getColorByType(structure.type_structure);
         const icon = createCustomIcon(color);
         
-        const marker = L.marker([structure.latitude, structure.longitude], { icon }).addTo(map);
+        const latitude = Number(structure.latitude);
+        const longitude = Number(structure.longitude);
+        const structureLabel = structure.organisme?.nom_organisme || 'Structure';
+        const marker = L.marker([latitude, longitude], {
+            icon,
+            keyboard: true,
+            title: structureLabel,
+            alt: `Localisation de ${structureLabel}`,
+        }).addTo(map);
         
         const popupContent = createPopupContent(structure);
         marker.bindPopup(popupContent, {
@@ -716,13 +792,25 @@ document.addEventListener('DOMContentLoaded', () => {
             currentSelectedMarker = { marker, structure, originalColor: color };
             
             showStructureDetails(structure);
-            map.setView([structure.latitude, structure.longitude], Math.max(map.getZoom(), 13));
+            map.setView([latitude, longitude], Math.max(map.getZoom(), 13));
         });
 
         markers.push({ marker, structure, originalColor: color });
     }
 
     structures.forEach(addMarker);
+
+    if (selectedStructureId) {
+        const selectedStructure = structures.find(structure => Number(structure.id) === Number(selectedStructureId));
+        if (selectedStructure) {
+            const selectedMarker = markers.find(item => Number(item.structure.id) === Number(selectedStructure.id));
+            if (selectedMarker) {
+                selectedMarker.marker.fire('click');
+            } else {
+                showStructureDetails(selectedStructure);
+            }
+        }
+    }
 
     function filterMarkers() {
         const search = document.getElementById('mapSearch').value.toLowerCase();
@@ -749,6 +837,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (currentSelectedMarker?.marker === marker) {
                     document.getElementById('structureDetails').classList.add('hidden');
                     document.getElementById('defaultMessage').classList.remove('hidden');
+                    document.getElementById('mapSelectionAnnouncement').textContent =
+                        'La structure sélectionnée est masquée par les filtres.';
                     currentSelectedMarker = null;
                 }
             }
@@ -761,6 +851,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('mapSearch').addEventListener('input', filterMarkers);
     document.querySelectorAll('.category-filter').forEach(cb => {
         cb.addEventListener('change', filterMarkers);
+    });
+    document.querySelectorAll('[data-category-action]').forEach(button => {
+        button.addEventListener('click', () => {
+            const shouldCheck = button.dataset.categoryAction === 'all';
+            document.querySelectorAll('.category-filter').forEach(checkbox => {
+                checkbox.checked = shouldCheck;
+            });
+            filterMarkers();
+        });
     });
 
     document.getElementById('resetViewBtn').addEventListener('click', () => {
@@ -775,6 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('structureDetails').classList.add('hidden');
         document.getElementById('defaultMessage').classList.remove('hidden');
+        document.getElementById('mapSelectionAnnouncement').textContent = '';
         map.closePopup();
     });
 
@@ -815,18 +915,59 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style>
-/* ════════════════════════════════════════════════
-   LAYOUT GLOBAL — SANS SCROLL SUR 1920×1080 @125%
-════════════════════════════════════════════════ */
-html, body {
-    overflow: hidden !important;
-    height: 100% !important;
+.map-page {
+    height: calc(100dvh - var(--header-height, 70px) - 3rem);
+    min-height: 520px;
+    gap: 0.35rem;
 }
 
-/* Le header global (base.blade) ne doit pas dépasser 70px */
-body > nav, body > header, body > .navbar {
-    max-height: 70px;
-    flex-shrink: 0;
+.map-category-list {
+    min-width: 0;
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+}
+
+.map-category-option {
+    min-height: 30px;
+    padding-inline: 0.4rem;
+    gap: 0.3rem;
+}
+
+.map-page .map-category-option input {
+    width: 1rem;
+    height: 1rem;
+    min-height: 1rem;
+    flex: 0 0 auto;
+}
+
+.map-page button,
+.map-page input {
+    min-height: 2rem;
+}
+
+.map-page :is(button, input, #map, .map-category-list):focus-visible {
+    outline: 3px solid #f2c94c;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #255156;
+    z-index: 2;
+}
+
+.map-panel-frame,
+.map-details-frame {
+    position: absolute;
+    inset: 0;
+}
+
+.map-panel-frame #map {
+    background: #e9f7f6;
+}
+
+#detailsPanelContent {
+    overflow-wrap: anywhere;
+}
+
+.map-page .map-content {
+    min-width: 0;
 }
 
 /* ════════════════════════════════════════════════
@@ -946,62 +1087,110 @@ body > nav, body > header, body > .navbar {
     border-radius: 2px;
 }
 
-input[type="checkbox"] {
+.map-page input[type="checkbox"] {
     accent-color: #255156;
 }
 
-/* ════════════════════════════════════════════════
-   MODAL
-════════════════════════════════════════════════ */
-.modal-dialog {
+/* La mise en page de la modale reste isolée de celles des autres pages. */
+#detailsModal .modal-dialog {
     margin: 0.5rem;
 }
 
 @media (min-width: 576px) {
-    .modal-dialog {
+    #detailsModal .modal-dialog {
         margin: 1rem auto;
         max-width: 95vw;
     }
 }
 
 @media (min-width: 992px) {
-    .modal-dialog {
+    #detailsModal .modal-dialog {
         max-width: 1100px;
         width: 90vw;
     }
 }
 
 @media (min-width: 1400px) {
-    .modal-dialog {
+    #detailsModal .modal-dialog {
         max-width: 1200px;
         width: 80vw;
     }
 }
 
-.modal-body {
+#detailsModal .modal-body {
     -webkit-overflow-scrolling: touch;
 }
 
-.modal {
+#detailsModal.modal {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-content {
+#detailsModal .modal-content {
     max-height: 88vh;
     display: flex;
     flex-direction: column;
 }
 
-.relative {
-    position: relative;
+@media (max-width: 1024px) {
+    .map-page {
+        height: auto;
+        min-height: 0;
+    }
+
+    .map-page .map-content {
+        grid-template-columns: minmax(0, 1fr);
+        overflow: visible;
+    }
+
+    .map-page .map-content > div {
+        grid-column: auto !important;
+        min-height: 0;
+    }
+
+    .map-toolbar-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .map-page .map-panel-frame {
+        position: relative;
+        min-height: min(60vh, 560px);
+    }
+
+    .map-page .map-details-frame {
+        position: relative;
+        min-height: 280px;
+    }
 }
 
-.relative > .bg-white {
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+@media (max-width: 640px) {
+    .map-page {
+        gap: 0.5rem;
+    }
+
+    .map-page .map-category-option {
+        font-size: 0.75rem;
+        min-height: 36px;
+        padding-inline: 0.55rem;
+    }
+
+    .map-page .map-content {
+        gap: 0.75rem;
+    }
+
+    .map-page .map-panel-frame {
+        min-height: 55vh;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .map-page *,
+    .marker-pulse {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* ════════════════════════════════════════════════
@@ -1009,7 +1198,7 @@ input[type="checkbox"] {
 ════════════════════════════════════════════════ */
 @media screen and (min-width: 1500px) and (max-width: 1600px)
               and (min-height: 850px) and (max-height: 900px) {
-    /* Rien de plus — le layout fluide s'adapte déjà via calc(100vh - 100px) */
+    .map-page { min-height: 0; }
 }
 </style>
 @endsection

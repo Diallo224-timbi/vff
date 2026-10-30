@@ -2,21 +2,21 @@
 @section('title', 'Espace des organismes')
 @section('content')
 
-<div class="container mt-5">
+<div class="container organisme-index-page mt-2 mt-md-3">
     <!-- En-tête avec animation -->
-    <div class="row mb-4 animate__animated animate__fadeInDown">
+    <div class="row organisme-page-header mb-3 animate__animated animate__fadeInDown">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <h1 class="display-5 fw-bold mb-2" style="color: #255156;">
-                        <i class="fas fa-building me-3"></i>Espace des Organismes
+                    <h1 class="organisme-page-title fw-bold mb-1" style="color: #255156;">
+                        <i class="fas fa-building me-2"></i>Espace des Organismes
                     </h1>
-                    <p class="text-muted lead">Gérez l'ensemble des organismes partenaires</p>
+                    <p class="organisme-page-subtitle text-muted mb-0">Gérez l'ensemble des organismes partenaires</p>
                 </div>
                 @if(Auth::user()->role === 'admin')
                     <div>
-                        <a href="{{ route('organismes.create') }}" class="btn btn-primary btn-lg shadow-sm" 
-                        style="background: linear-gradient(135deg, #255156 0%, #1d3f43 100%); border: none; border-radius: 50px; padding: 12px 30px;">
+                        <a href="{{ route('organismes.create') }}" class="btn btn-primary organisme-add-btn shadow-sm"
+                        style="background: linear-gradient(135deg, #255156 0%, #1d3f43 100%); border: none;">
                             <i class="fas fa-plus-circle me-2"></i>Ajouter un Organisme
                         </a>
                     </div>
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Statistiques + Filtres -->
-    <div class="row mb-4 animate__animated animate__fadeInUp">
+    <div class="row organisme-toolbar mb-3 animate__animated animate__fadeInUp">
         <div class="col-md-8">
             <div class="card border-0 shadow-sm" style="border-radius: 15px;">
                 <div class="card-body">
@@ -73,13 +73,13 @@
     <!-- Cartes horizontales -->
     <div class="row" id="cardsContainer">
         @forelse($organismes as $organisme)
-        <div class="col-12 mb-3 organism-card" data-name="{{ strtolower($organisme->nom_organisme) }}" 
+        <div class="col-12 mb-2 organism-card" data-name="{{ strtolower($organisme->nom_organisme) }}"
              data-city="{{ strtolower($organisme->ville) }}" 
              data-description="{{ strtolower($organisme->signification) }}">
             <div class="card border-0 shadow-sm animate__animated animate__fadeInUp" style="border-radius: 15px; overflow: hidden; transition: all 0.3s ease;">
                 <div class="row g-0">
                     <!-- Section Logo (colonne de gauche) -->
-                    <div class="col-md-3 col-lg-2 d-flex align-items-center justify-content-center p-3" 
+                    <div class="col-md-3 col-lg-2 organism-logo-column d-flex align-items-center justify-content-center p-2"
                          style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
                         @if($organisme->logo_path)
                             <div class="logo-container" onclick="openLogoModal('{{ asset('storage/' . $organisme->logo_path) }}', '{{ $organisme->nom_organisme }}')">
@@ -100,14 +100,14 @@
                     </div>
 
                     <!-- Section Contenu (colonne du milieu) -->
-                    <div class="col-md-7 col-lg-8">
-                        <div class="card-body h-100">
+                    <div class="col-md-7 col-lg-8 organism-info-column">
+                        <div class="card-body h-100 organism-info-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h3 class="card-title mb-2" style="color: #255156; font-weight: 700;">
+                                    <h3 class="card-title mb-1" style="color: #255156; font-weight: 700;">
                                         {{ $organisme->nom_organisme }}
                                     </h3>
-                                    <div class="d-flex flex-wrap gap-3 mb-2">
+                                    <div class="d-flex flex-wrap gap-2 mb-1">
                                         <span class="badge" style="background: rgba(10, 157, 173, 0.2); color: #255156;">
                                             <i class="fas fa-map-marker-alt me-1"></i>{{ $organisme->ville }}
                                         </span>
@@ -118,12 +118,12 @@
                                 </div>
                             </div>
                             
-                            <p class="card-text text-muted mb-2">
+                            <p class="card-text text-muted mb-1">
                                 <i class="fas fa-quote-left me-1" style="color: #0a9dad; font-size: 12px;"></i>
-                                {{ Str::limit($organisme->signification, 150) }}
+                                {{ Str::limit($organisme->signification, 120) }}
                             </p>
                             
-                            <div class="row mt-2">
+                            <div class="row organism-contact-row mt-1">
                                 <div class="col-md-6">
                                     <small class="text-muted d-block">
                                         <i class="fas fa-location-dot me-1" style="color: #0a9dad;"></i>
@@ -146,7 +146,7 @@
                     </div>
 
                     <!-- Section Actions (colonne de droite) -->
-                    <div class="col-md-2 col-lg-2 d-flex flex-column justify-content-center align-items-center p-3" 
+                    <div class="col-md-2 col-lg-2 organism-actions-column d-flex flex-column justify-content-center align-items-center p-2"
                          style="background: #f8f9fa; border-left: 1px solid #e9ecef;">
                         <div class="d-flex flex-column gap-2 w-100">
                             <a href="{{ route('organismes.show', $organisme->id) }}" class="btn btn-sm btn-info w-100" 
@@ -502,6 +502,188 @@
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
+        }
+    }
+
+    .organisme-index-page {
+        padding-bottom: 0.5rem;
+    }
+
+    .organisme-page-title {
+        font-size: clamp(1.6rem, 2.4vw, 2.25rem);
+        line-height: 1.15;
+    }
+
+    .organisme-page-title i {
+        font-size: 0.85em;
+    }
+
+    .organisme-page-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .organisme-add-btn {
+        padding: 0.55rem 1.15rem;
+        border-radius: 2rem;
+        font-size: 0.9rem;
+    }
+
+    .organisme-toolbar > div {
+        margin-bottom: 0;
+    }
+
+    .organisme-toolbar .card-body {
+        padding: 0.6rem 0.8rem;
+    }
+
+    .organisme-toolbar .form-control,
+    .organisme-toolbar .form-select,
+    .organisme-toolbar .input-group-text,
+    .organisme-toolbar .input-group .btn {
+        min-height: 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .organisme-toolbar .card-body.text-white {
+        display: flex;
+        align-items: center;
+    }
+
+    .organisme-toolbar #organismCount {
+        font-size: 1.5rem;
+    }
+
+    .organism-card {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .organism-card > .card {
+        border-radius: 0.8rem !important;
+    }
+
+    .organism-card .row.g-0 {
+        align-items: stretch;
+    }
+
+    .organism-logo-column {
+        min-height: 7rem;
+    }
+
+    .organism-card .logo-container {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 0.65rem;
+    }
+
+    .organism-card .logo-img {
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    .organism-card .no-logo {
+        padding: 0.25rem;
+    }
+
+    .organism-card .no-logo i {
+        font-size: 2rem !important;
+    }
+
+    .organism-info-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .organism-info-body .card-title {
+        font-size: 1.05rem;
+        line-height: 1.2;
+    }
+
+    .organism-info-body .badge {
+        padding: 0.3rem 0.55rem;
+        font-size: 0.75rem;
+    }
+
+    .organism-info-body .card-text {
+        display: -webkit-box;
+        margin-bottom: 0.25rem;
+        overflow: hidden;
+        font-size: 0.82rem;
+        line-height: 1.35;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .organism-contact-row {
+        --bs-gutter-x: 0.75rem;
+        --bs-gutter-y: 0.25rem;
+    }
+
+    .organism-contact-row small {
+        overflow-wrap: anywhere;
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+
+    .organism-actions-column {
+        border-left: 1px solid #e9ecef;
+    }
+
+    .organism-actions-column .d-flex {
+        gap: 0.35rem !important;
+    }
+
+    .organism-actions-column .btn-sm {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.78rem;
+        line-height: 1.2;
+    }
+
+    @media (max-width: 767.98px) {
+        .organisme-page-header {
+            gap: 0.65rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+
+        .organisme-page-title {
+            font-size: 1.55rem;
+        }
+
+        .organisme-page-subtitle {
+            font-size: 0.85rem;
+        }
+
+        .organisme-add-btn {
+            padding: 0.45rem 0.85rem;
+            font-size: 0.82rem;
+        }
+
+        .organisme-toolbar {
+            row-gap: 0.5rem;
+            margin-bottom: 0.75rem !important;
+        }
+
+        .organisme-toolbar .card {
+            height: auto !important;
+        }
+
+        .organism-logo-column {
+            min-height: 5.5rem;
+        }
+
+        .organism-actions-column {
+            border-top: 1px solid #e9ecef;
+            border-left: 0;
+        }
+
+        .organism-actions-column .d-flex {
+            flex-direction: row !important;
+        }
+
+        .organism-actions-column .d-flex > *,
+        .organism-actions-column .delete-form {
+            flex: 1 1 0;
         }
     }
 </style>

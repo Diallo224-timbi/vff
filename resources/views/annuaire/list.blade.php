@@ -27,19 +27,17 @@
                 </small>
             </div>
         </div>
-        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'moderateur_classique')
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{{ route('annuaire.index') }}" 
-                    class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
-                    style="border: 1px solid rgba(255,255,255,0.3); color: white;"
-                    onmouseover="this.style.background='rgba(255,255,255,0.15)';"
-                    onmouseout="this.style.background='transparent';">
-                        <i class="fas fa-arrow-left me-1"></i> Retour
-                    </a>
-                </div>
-         @endif
-         <!-- voir la carte de l'annuaire -->
-        <div class="d-flex flex-wrap gap-2"></div>
+        <div class="d-flex flex-wrap align-items-center gap-2 ms-auto">
+            @if (auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur' || auth()->user()->role === 'moderateur_classique')
+                <a href="{{ route('annuaire.index') }}"
+                   class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
+                   style="border: 1px solid rgba(255,255,255,0.3); color: white;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.15)';"
+                   onmouseout="this.style.background='transparent';">
+                    <i class="fas fa-arrow-left me-1"></i> Retour
+                </a>
+            @endif
+            <!-- Voir la carte de l'annuaire -->
             <a href="{{ route('structures.map') }}" 
                 class="btn btn-outline-light btn-sm fw-semibold px-3 py-1.5 rounded-lg transition-all"
                 style="border: 1px solid rgba(255,255,255,0.3); color: white;"
@@ -47,7 +45,7 @@
                 onmouseout="this.style.background='transparent';">
                 <i class="fas fa-map-marked-alt me-1"></i> Voir la carte
             </a>
-        </div>  
+        </div>
     </div>
 
     <!-- FILTRES -->
@@ -140,17 +138,6 @@
                 </div>
             </div>
             @endif
-
-            <!-- Ligne 3 : Badges de filtres actifs et reset -->
-            <div class="flex flex-wrap items-center justify-between mt-3 pt-2 border-t" style="border-color: #e8f3f2;">
-                <div id="activeFilters" class="hidden">
-                    <div id="filterBadges" class="flex flex-wrap gap-1"></div>
-                </div>
-                <button id="resetFilters"
-                        class="text-xs text-[#255156] hover:underline px-2 py-1 rounded transition-all ml-auto">
-                    <i class="fas fa-undo-alt me-1"></i> Réinitialiser
-                </button>
-            </div>
         </div>
     </div>
 
@@ -416,8 +403,8 @@
                          onclick="event.stopPropagation(); openLogoZoom(document.getElementById('modal-logo-img-detail').src, document.getElementById('modal-organisme-detail').textContent)">
                         <i class="fas fa-building text-white text-2xl" id="modal-logo-icon-detail"></i>
                         <img id="modal-logo-img-detail" src="" alt="Logo" 
-                             class="w-full h-full object-contain" 
-                             style="width:100%; height:100%; object-fit:contain; object-position:center; padding:4px; display:none;">
+                            class="w-full h-full object-contain" 
+                            style="width:100%; height:100%; object-fit:contain; object-position:center; padding:4px; display:none;">
                     </div>
                     <div>
                         <h5 class="modal-title text-lg font-bold" id="detailsModalLabel">

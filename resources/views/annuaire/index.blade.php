@@ -1,7 +1,7 @@
 @extends('base')
 @section('title', 'Espace des structures')
 @section('content')
-<div class="container-fluid px-0 py-0">
+<div class="container-fluid annuaire-index-page px-0 py-0">
     <!-- Messages de succès -->
     <div class="container-fluid px-1 py-1">
     @if(session('success'))
@@ -12,7 +12,7 @@
                 <i class="fas fa-check-circle me-2" style="color: #4caf50;"></i>
                 <div>{{ session('success') }}</div>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer le message de succès"></button>
         </div>
         <script>
             setTimeout(function() {
@@ -32,7 +32,7 @@
                 <i class="fas fa-exclamation-circle me-2" style="color: #ef5350;"></i>
                 <div>{{ session('error') }}</div>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer le message d’erreur"></button>
         </div>
         <script>
             setTimeout(function() {
@@ -52,7 +52,7 @@
                         <i class="fas fa-exclamation-triangle me-2" style="color: #ef5350;"></i>
                         <div>{{ $error }}</div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer le message d’erreur"></button>
                 </div>
             @endforeach
         </div>  
@@ -67,7 +67,7 @@
     @endif
 
     <!-- En-tête fixe -->
-    <div class="sticky top-0 z-40 pt-4 pb-2 shadow-sm" style="background: linear-gradient(180deg, #E9F7F6 0%, #f5fafa 100%); margin-top: -1px;">
+    <div class="sticky top-0 z-40 pt-0 pb-2 shadow-sm" style="background: linear-gradient(180deg, #E9F7F6 0%, #f5fafa 100%);">
         <div class="mb-2 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold" style="color: #255156;"><i class="bx bx-building"></i> Espace des structures</h1>
@@ -75,50 +75,42 @@
             </div>
         </div>       
         <!-- Barre d'actions -->
-        <div class="flex flex-wrap items-center justify-between mb-2 p-3 rounded-xl" style="background: white; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #dceeec;">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 mb-2 p-3 rounded-xl" style="background: white; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #dceeec;">
             @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
             <div class="flex flex-wrap items-center gap-3">
-                <button class="text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium" 
-                        style="background: linear-gradient(135deg, #255156, #3a7378); box-shadow: 0 4px 12px rgba(37,81,86,0.25);"
-                        data-bs-toggle="modal" 
+                <button type="button" class="toolbar-action toolbar-action-primary min-h-[44px] w-full sm:w-auto text-white px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-2 font-medium"
+                        data-bs-toggle="modal"
                         data-bs-target="#addModal"
-                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(37,81,86,0.35)';"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(37,81,86,0.25)';">
-                    <i class="fas fa-plus-circle"></i>
+                        aria-label="Ajouter une structure locale">
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
                     Ajouter une structure
                 </button>
             </div>
             @endif  
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-wrap items-center gap-2 sm:ml-auto">
                 <a href="{{ route('structures.map') }}" 
-                class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
-                style="border: 2px solid #255156; color: #255156;"
-                onmouseover="this.style.background='#255156'; this.style.color='white';"
-                onmouseout="this.style.background='transparent'; this.style.color='#255156';">
-                    <i class="fas fa-map-marked-alt"></i>
+                class="toolbar-action min-h-[44px] px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
+                aria-label="Voir la carte des structures">
+                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
                     Voir la carte
                 </a>
                 <a href="{{ route('annuaire.list') }}" 
-                class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
-                style="border: 2px solid #255156; color: #255156;"
-                onmouseover="this.style.background='#255156'; this.style.color='white';"
-                onmouseout="this.style.background='transparent'; this.style.color='#255156';">
-                    <i class="fas fa-list"></i>
+                class="toolbar-action min-h-[44px] px-4 py-2 rounded-lg transition-all flex items-center gap-2 font-medium"
+                aria-label="Consulter l’annuaire des structures">
+                    <i class="fas fa-list" aria-hidden="true"></i>
                     Annuaire des structures
                 </a>
             </div>
-            <div class="mt-4 md:mt-0">
-                <div class="text-sm px-4 py-2 rounded-lg" style="background: #f8fcfc; color: #4a7a7f; border: 1px solid #dceeec;">
-                    <i class="fas fa-info-circle mr-2" style="color: #255156;"></i>
-                    <span id="resultCount">{{ $structures->total() }} structures</span>
-                </div>
+            <div class="text-sm px-4 py-2 rounded-lg sm:ml-0 ml-auto" style="background: #f8fcfc; color: #4a7a7f; border: 1px solid #dceeec;" role="status" aria-live="polite">
+                <i class="fas fa-info-circle mr-2" style="color: #255156;" aria-hidden="true"></i>
+                <span id="resultCount">{{ $structures->total() }} structures</span>
             </div>
         </div> 
         <!-- Section recherche et filtres -->
         <div class="rounded-xl p-3" style="background: white; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid #dceeec;">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div class="lg:col-span-2">
-                    <label class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-search mr-2"></i>Recherche globale</label>
+                    <label for="searchInput" class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-search mr-2" aria-hidden="true"></i>Recherche globale</label>
                     <div class="relative">
                         <input type="text" id="searchInput" 
                             placeholder="Rechercher par nom, ville, catégorie..."
@@ -130,7 +122,7 @@
                     </div>
                 </div>   
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-building mr-2"></i>Organisme</label>
+                    <label for="filterOrganisme" class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-building mr-2" aria-hidden="true"></i>Organisme</label>
                     <div class="relative">
                         <select id="filterOrganisme" 
                                 class="w-full pl-10 pr-10 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer"
@@ -150,7 +142,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-city mr-2"></i>Ville</label>
+                    <label for="filterCity" class="block text-sm font-semibold mb-2" style="color: #255156;"><i class="fas fa-city mr-2" aria-hidden="true"></i>Ville</label>
                     <div class="relative">
                         <select id="filterCity" 
                                 class="w-full pl-10 pr-10 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all appearance-none cursor-pointer"
@@ -186,9 +178,11 @@
                     <div class="organisme-group" data-organisme="{{ $organismeNom }}">
                         <!-- En-tête de l'organisme -->
                         <div class="organisme-header cursor-pointer transition-colors duration-200"
-                            style="background: linear-gradient(90deg, #f8fcfc, #f0f6f5);"
-                            onmouseover="this.style.background='linear-gradient(90deg, #f0f6f5, #e8f3f2)';"
-                            onmouseout="this.style.background='linear-gradient(90deg, #f8fcfc, #f0f6f5)';">
+                            role="button"
+                            tabindex="0"
+                            aria-expanded="false"
+                            aria-controls="organisme-body-{{ $loop->index }}"
+                            style="background: linear-gradient(90deg, #f8fcfc, #f0f6f5);">
                             <div class="px-4 py-3 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="flex-shrink-0">
@@ -240,20 +234,20 @@
                             </div>
                         </div>
                         <!-- Corps de l'organisme -->
-                        <div class="organisme-body hidden">
+                        <div class="organisme-body hidden" id="organisme-body-{{ $loop->index }}">
                             <div class="overflow-x-auto">
                                 <table class="w-full">
                                     <thead style="background: #255156; color: white;">
                                         <tr>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Ville</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Code Postal</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Adresse</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Description</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Site Web</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Catégories</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Public cible</th>
-                                            <th class="px-3 py-2.5 text-left text-xs font-semibold">Zone</th>
-                                            <th class="px-3 py-2.5 text-center text-xs font-semibold">Actions</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Ville</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Code postal</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Adresse</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Description</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Site web</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Catégories</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Public cible</th>
+                                            <th scope="col" class="px-3 py-2.5 text-left text-xs font-semibold">Zone</th>
+                                            <th scope="col" class="px-3 py-2.5 text-center text-xs font-semibold">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
@@ -284,13 +278,24 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-3 py-2">
-                                                    @if($structure->organisme && $structure->organisme->site_web)
-                                                        <a href="{{ $structure->organisme->site_web }}" target="_blank" 
-                                                        class="hover:underline text-sm font-medium truncate max-w-[120px] block"
-                                                        style="color: #255156;"
-                                                        title="{{ $structure->organisme->site_web }}">
-                                                        {{ Str::limit($structure->organisme->site_web, 25) }}
+                                                    @php
+                                                        $siteWeb = trim((string) ($structure->organisme->site_web ?? ''));
+                                                        $siteWebScheme = strtolower((string) parse_url($siteWeb, PHP_URL_SCHEME));
+                                                        $siteWebIsSafe = filter_var($siteWeb, FILTER_VALIDATE_URL)
+                                                            && in_array($siteWebScheme, ['http', 'https'], true);
+                                                    @endphp
+                                                    @if($siteWebIsSafe)
+                                                        <a href="{{ $siteWeb }}" target="_blank" rel="noopener noreferrer"
+                                                           class="hover:underline text-sm font-medium truncate max-w-[120px] block"
+                                                           style="color: #255156;"
+                                                           aria-label="Ouvrir le site web de {{ $structure->organisme->nom_organisme }} dans un nouvel onglet"
+                                                           title="{{ $siteWeb }}">
+                                                            {{ Str::limit($siteWeb, 25) }}
                                                         </a>
+                                                    @elseif($siteWeb !== '')
+                                                        <span class="text-gray-700 text-sm truncate max-w-[120px] block" title="{{ $siteWeb }}">
+                                                            {{ Str::limit($siteWeb, 25) }}
+                                                        </span>
                                                     @else
                                                         <span class="text-gray-400 text-sm">-</span>
                                                     @endif
@@ -313,62 +318,52 @@
                                                 </td>
                                                 <td class="px-3 py-2">
                                                     <div class="flex items-center justify-center gap-1">
-                                                        <button class="p-2 rounded-lg transition-colors view-details-btn" 
-                                                                style="background: #e8f3f2; color: #255156;"
+                                                        <button type="button" class="structure-action structure-action-view p-2 rounded-lg transition-colors view-details-btn"
                                                                 title="Voir les détails"
+                                                                aria-label="Voir les détails de la structure située à {{ $structure->ville ?? 'ville inconnue' }}"
                                                                 data-bs-toggle="modal" 
                                                                 data-bs-target="#detailsModal"
-                                                                data-structure='@json($structure)'
-                                                                onmouseover="this.style.background='#255156'; this.style.color='white';"
-                                                                onmouseout="this.style.background='#e8f3f2'; this.style.color='#255156';">
-                                                            <i class="fas fa-eye text-xs"></i>
+                                                                data-structure='@json($structure)'>
+                                                            <i class="fas fa-eye text-xs" aria-hidden="true"></i>
                                                         </button>
                                                         @if(auth()->user()->role === 'admin')
-                                                            <a href="{{ route('structures.edit', $structure) }}" 
-                                                            class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
-                                                            style="background: #fff3cd; color: #856404;"
-                                                            title="Modifier"
-                                                            onmouseover="this.style.background='#ffc107'; this.style.color='white';"
-                                                            onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
-                                                            <i class="fas fa-edit text-xs"></i>
+                                                            <a href="{{ route('structures.edit', $structure) }}"
+                                                               class="structure-action structure-action-edit p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                                                               title="Modifier"
+                                                               aria-label="Modifier la structure située à {{ $structure->ville ?? 'ville inconnue' }}">
+                                                                <i class="fas fa-edit text-xs" aria-hidden="true"></i>
                                                             </a>
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
                                                                 method="POST" 
-                                                                class="inline"
-                                                                onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure ?')">
+                                                                class="inline delete-structure-form"
+                                                                data-confirm-message="Voulez-vous vraiment supprimer cette structure ?">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button class="p-2 rounded-lg transition-colors" 
-                                                                        style="background: #ffebee; color: #c62828;"
+                                                                <button class="structure-action structure-action-delete p-2 rounded-lg transition-colors"
                                                                         type="submit" 
                                                                         title="Supprimer"
-                                                                        onmouseover="this.style.background='#ef5350'; this.style.color='white';"
-                                                                        onmouseout="this.style.background='#ffebee'; this.style.color='#c62828';">
-                                                                    <i class="fas fa-trash text-xs"></i>
+                                                                        aria-label="Supprimer la structure située à {{ $structure->ville ?? 'ville inconnue' }}">
+                                                                    <i class="fas fa-trash text-xs" aria-hidden="true"></i>
                                                                 </button>
                                                             </form>
                                                         @elseif(str_contains(auth()->user()->role, 'moderateur') && isset(auth()->user()->id_structure) && auth()->user()->id_structure === $structure->id)
-                                                            <a href="{{ route('structures.edit', $structure) }}" 
-                                                            class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
-                                                            style="background: #fff3cd; color: #856404;"
-                                                            title="Modifier ma structure"
-                                                            onmouseover="this.style.background='#ffc107'; this.style.color='white';"
-                                                            onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
-                                                                <i class="fas fa-edit text-xs"></i>
+                                                            <a href="{{ route('structures.edit', $structure) }}"
+                                                               class="structure-action structure-action-edit p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                                                               title="Modifier ma structure"
+                                                               aria-label="Modifier ma structure à {{ $structure->ville ?? 'ville inconnue' }}">
+                                                                <i class="fas fa-edit text-xs" aria-hidden="true"></i>
                                                             </a>
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
                                                                 method="POST" 
-                                                                class="inline"
-                                                                onsubmit="return confirm('Voulez-vous vraiment supprimer votre structure ?')">
+                                                                class="inline delete-structure-form"
+                                                                data-confirm-message="Voulez-vous vraiment supprimer votre structure ?">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button class="p-2 rounded-lg transition-colors" 
-                                                                        style="background: #ffebee; color: #c62828;"
+                                                                <button class="structure-action structure-action-delete p-2 rounded-lg transition-colors"
                                                                         type="submit" 
                                                                         title="Supprimer ma structure"
-                                                                        onmouseover="this.style.background='#ef5350'; this.style.color='white';"
-                                                                        onmouseout="this.style.background='#ffebee'; this.style.color='#c62828';">
-                                                                    <i class="fas fa-trash text-xs"></i>
+                                                                        aria-label="Supprimer ma structure à {{ $structure->ville ?? 'ville inconnue' }}">
+                                                                    <i class="fas fa-trash text-xs" aria-hidden="true"></i>
                                                                 </button>
                                                             </form>
                                                         @elseif(auth()->user()->role === 'moderateur'
@@ -376,27 +371,23 @@
                                                                 && auth()->user()->structure->id_organisme
                                                                 && $structure->organisme
                                                                 && auth()->user()->structure->id_organisme === $structure->organisme->id)
-                                                            <a href="{{ route('structures.edit', $structure) }}" 
-                                                            class="p-2 rounded-lg transition-colors inline-flex items-center justify-center"
-                                                            style="background: #fff3cd; color: #856404;"
-                                                            title="Modifier une structure de mon organisme"
-                                                            onmouseover="this.style.background='#ffc107'; this.style.color='white';"
-                                                            onmouseout="this.style.background='#fff3cd'; this.style.color='#856404';">
-                                                                <i class="fas fa-edit text-xs"></i>
+                                                            <a href="{{ route('structures.edit', $structure) }}"
+                                                               class="structure-action structure-action-edit p-2 rounded-lg transition-colors inline-flex items-center justify-center"
+                                                               title="Modifier une structure de mon organisme"
+                                                               aria-label="Modifier la structure de mon organisme située à {{ $structure->ville ?? 'ville inconnue' }}">
+                                                                <i class="fas fa-edit text-xs" aria-hidden="true"></i>
                                                             </a>
                                                             <form action="{{ route('structures.destroy', $structure) }}" 
                                                                 method="POST" 
-                                                                class="inline"
-                                                                onsubmit="return confirm('Voulez-vous vraiment supprimer cette structure de votre organisme ?')">
+                                                                class="inline delete-structure-form"
+                                                                data-confirm-message="Voulez-vous vraiment supprimer cette structure de votre organisme ?">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button class="p-2 rounded-lg transition-colors" 
-                                                                        style="background: #ffebee; color: #c62828;"
+                                                                <button class="structure-action structure-action-delete p-2 rounded-lg transition-colors"
                                                                         type="submit" 
                                                                         title="Supprimer une structure de mon organisme"
-                                                                        onmouseover="this.style.background='#ef5350'; this.style.color='white';"
-                                                                        onmouseout="this.style.background='#ffebee'; this.style.color='#c62828';">
-                                                                    <i class="fas fa-trash text-xs"></i>
+                                                                        aria-label="Supprimer une structure de mon organisme située à {{ $structure->ville ?? 'ville inconnue' }}">
+                                                                    <i class="fas fa-trash text-xs" aria-hidden="true"></i>
                                                                 </button>
                                                             </form>
                                                         @endif
@@ -427,15 +418,15 @@
 
 <!-- MODAL AJOUT -->
 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'moderateur')
-<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content border-0 shadow-2xl" style="border-radius: 1rem; overflow: hidden;">
             <div style="background: linear-gradient(135deg, #255156, #3a7378); color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                <h5 class="text-xl font-bold flex items-center gap-3">
-                    <i class="fas fa-plus-circle"></i>
+                <h5 class="text-xl font-bold flex items-center gap-3" id="addModalLabel">
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
                     Ajouter une structure locale
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer la fenêtre Ajouter une structure locale"></button>
             </div>
             <div class="p-6" style="background: #f8fcfc;">
                 @include('structures.form', [
@@ -472,7 +463,7 @@
                         <p class="text-sm text-white/80 font-medium">Structure détaillée</p>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer les détails"></button>
             </div>
             <div class="modal-body p-4" style="background: #f8fcfc; max-height: 70vh; overflow-y: auto;">
                 <!-- 2 colonnes : Informations principales et Localisation -->
@@ -582,12 +573,10 @@
             </div>
             <div class="modal-footer bg-white p-3 border-t" style="border-color: #dceeec;">
                 <div class="flex justify-end gap-2 w-full">
-                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-                            style="background: #e8f3f2; color: #255156;"
+                    <button type="button" class="modal-close-action px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
                             data-bs-dismiss="modal"
-                            onmouseover="this.style.background='#d4ecea';"
-                            onmouseout="this.style.background='#e8f3f2';">
-                        <i class="fas fa-times"></i> Fermer
+                            aria-label="Fermer les détails">
+                        <i class="fas fa-times" aria-hidden="true"></i> Fermer
                     </button>
                 </div>
             </div>
@@ -610,6 +599,81 @@
 
 @section('styles')
 <style>
+.annuaire-index-page {
+    margin-top: -1.5rem;
+}
+@media (max-width: 1024px) {
+    .annuaire-index-page {
+        margin-top: -1rem;
+    }
+}
+@media (max-width: 640px) {
+    .annuaire-index-page {
+        margin-top: -0.75rem;
+    }
+}
+.toolbar-action {
+    border: 2px solid #255156;
+    color: #255156;
+    text-decoration: none;
+}
+.toolbar-action:hover {
+    background: #255156;
+    color: #fff;
+}
+.toolbar-action:focus-visible,
+.toolbar-action-primary:focus-visible,
+.organisme-header:focus-visible,
+.structure-action:focus-visible {
+    outline: 3px solid #0b5fff;
+    outline-offset: 2px;
+}
+.toolbar-action-primary {
+    background: linear-gradient(135deg, #255156, #3a7378);
+    box-shadow: 0 4px 12px rgba(37,81,86,0.25);
+    border: 0;
+}
+.toolbar-action-primary:hover {
+    filter: brightness(0.9);
+}
+.structure-action {
+    min-width: 44px;
+    min-height: 44px;
+}
+.structure-action-view {
+    background: #e8f3f2;
+    color: #255156;
+}
+.structure-action-view:hover {
+    background: #255156;
+    color: #fff;
+}
+.structure-action-edit {
+    background: #fff3cd;
+    color: #856404;
+}
+.structure-action-edit:hover {
+    background: #ffc107;
+    color: #fff;
+}
+.structure-action-delete {
+    background: #ffebee;
+    color: #c62828;
+}
+.structure-action-delete:hover {
+    background: #ef5350;
+    color: #fff;
+}
+.modal-close-action {
+    background: #e8f3f2;
+    color: #255156;
+}
+.modal-close-action:hover {
+    background: #d4ecea;
+}
+.organisme-header:hover {
+    background: linear-gradient(90deg, #f0f6f5, #e8f3f2) !important;
+}
     /* Style net et précis pour l'accordéon */
     .organisme-body { 
         transition: all 0.3s ease-in-out; 
@@ -624,6 +688,10 @@
     }
     .organisme-chevron { 
         transition: transform 0.2s ease; 
+    }
+    .organisme-header:focus-visible {
+        outline: 3px solid #0b5fff;
+        outline-offset: -3px;
     }
     .organisme-header.active .organisme-chevron { 
         transform: rotate(90deg); 
@@ -812,11 +880,19 @@
         // Tous fermés par défaut
         headers.forEach(header => {
             header.classList.remove('active');
+            header.setAttribute('aria-expanded', 'false');
             const body = header.nextElementSibling;
             if(body) body.classList.add('hidden');
         });
         
         headers.forEach(header => {
+            header.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+
             header.addEventListener('click', function(e) {
                 if(e.target.closest('.edit-organisme-btn')) return;
                 const body = this.nextElementSibling;
@@ -826,6 +902,7 @@
                 headers.forEach(h => {
                     if(h !== header && h.classList.contains('active')) {
                         h.classList.remove('active');
+                        h.setAttribute('aria-expanded', 'false');
                         const otherBody = h.nextElementSibling;
                         if(otherBody) otherBody.classList.add('hidden');
                     }
@@ -833,9 +910,11 @@
                 
                 if(isActive) {
                     this.classList.remove('active');
+                    this.setAttribute('aria-expanded', 'false');
                     if(body) body.classList.add('hidden');
                 } else {
                     this.classList.add('active');
+                    this.setAttribute('aria-expanded', 'true');
                     if(body) body.classList.remove('hidden');
                 }
             });
@@ -921,6 +1000,14 @@ function filterAndSearch() {
     
     document.addEventListener('DOMContentLoaded', function() {
         initAccordion();
+
+        document.querySelectorAll('.delete-structure-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                if (!window.confirm(this.dataset.confirmMessage)) {
+                    event.preventDefault();
+                }
+            });
+        });
         
         const searchInput = document.getElementById('searchInput');
         if(searchInput) searchInput.addEventListener('input', filterAndSearch);
@@ -957,7 +1044,36 @@ function filterAndSearch() {
                     document.getElementById('modal-categories').textContent = structure.categories || '-';
                     document.getElementById('modal-public_cible').textContent = structure.public_cible || '-';
                     document.getElementById('modal-zone').textContent = structure.zone || '-';
-                    document.getElementById('modal-site').innerHTML = org.site_web ? `<a href="${org.site_web}" target="_blank" style="color: #255156; text-decoration: underline;">${org.site_web}</a>` : '-';
+                    const siteContainer = document.getElementById('modal-site');
+                    const rawSiteUrl = typeof org.site_web === 'string' ? org.site_web.trim() : '';
+                    siteContainer.replaceChildren();
+
+                    if (rawSiteUrl) {
+                        let parsedSiteUrl;
+                        try {
+                            parsedSiteUrl = new URL(rawSiteUrl);
+                        } catch {
+                            siteContainer.textContent = rawSiteUrl;
+                        }
+
+                        if (parsedSiteUrl) {
+                            if (['http:', 'https:'].includes(parsedSiteUrl.protocol)) {
+                                const siteLink = document.createElement('a');
+                                siteLink.href = parsedSiteUrl.href;
+                                siteLink.target = '_blank';
+                                siteLink.rel = 'noopener noreferrer';
+                                siteLink.style.color = '#255156';
+                                siteLink.style.textDecoration = 'underline';
+                                siteLink.textContent = rawSiteUrl;
+                                siteLink.setAttribute('aria-label', `Ouvrir le site web de ${org.nom_organisme || 'l’organisme'} dans un nouvel onglet`);
+                                siteContainer.appendChild(siteLink);
+                            } else {
+                                siteContainer.textContent = rawSiteUrl;
+                            }
+                        }
+                    } else {
+                        siteContainer.textContent = '-';
+                    }
                     document.getElementById('modal-siege_ville').textContent = org.ville && org.code_postal ? `${org.ville} (${org.code_postal})` : '-';
                     document.getElementById('modal-siege_adresse').textContent = org.adresse || '-';
                     document.getElementById('modal-ville').textContent = structure.ville || '-';

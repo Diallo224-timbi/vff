@@ -37,7 +37,7 @@ class OrganismeController extends Controller
             'adresse' => 'required',
             'code_postal' => 'required',
             'ville' => 'required',
-            'site_web' => 'required',
+            'site_web' => 'required|url:http,https',
             // Validation du logo
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
@@ -45,7 +45,7 @@ class OrganismeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('organismes.index')
+            return redirect()->route('organismes.create')
                 ->with('error', $validator->errors()->first())
                 ->withInput();
         }
@@ -95,7 +95,7 @@ class OrganismeController extends Controller
             'adresse' => 'required',
             'code_postal' => 'required',
             'ville' => 'required',
-            'site_web' => 'required',
+            'site_web' => 'required|url:http,https',
 
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);

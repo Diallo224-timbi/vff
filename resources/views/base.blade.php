@@ -464,6 +464,7 @@
       background: rgba(45, 98, 104, 0.9);
     }
   </style>
+  @yield('styles')
 </head>
 <body>
   <!-- NAVBAR RESPONSIVE -->
